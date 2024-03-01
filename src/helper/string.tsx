@@ -12,4 +12,10 @@ export const strings = {
   Services_for_Women: "Services for Women",
   Services_for_Men: "Services for Men",
   YOUR_Stylists: "YOUR STYLISTS",
+  "Allow us to access your location": "Allow us to access your location",
+  "We need access to your location to show you relevant Stylists, Offers and Packages":
+    "We need access to your location to show you relevant Stylists, Offers and Packages",
+
+  "Don’t Allow": "Don’t Allow",
+  Allow: "Allow",
 };

@@ -31,14 +31,15 @@ const Login: FC = () => {
   const [numbers, setNumbers] = useState<string>("");
 
   const validate = () => {
-    if (validPhonenumber(numbers)) {
-      dispatchNavigation(screenName.OptVerification, numbers);
-    } else {
-      if (numbers.trim() == " ") {
-        errorToast("Enter Valid Number");
-      }
-      errorToast("Enter Valid Number");
-    }
+    dispatchNavigation(screenName.OptVerification, numbers);
+    // if (validPhonenumber(numbers)) {
+    //   dispatchNavigation(screenName.OptVerification, numbers);
+    // } else {
+    //   if (numbers.trim() == " ") {
+    //     errorToast("Enter Valid Number");
+    //   }
+    //   errorToast("Enter Valid Number");
+    // }
   };
 
   return (

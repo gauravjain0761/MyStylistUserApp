@@ -26,6 +26,7 @@ import {
 } from "../../helper/constunts";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { commonFontStyle } from "../../theme/fonts";
+import { LocationModal } from "../../components";
 import Filter_Button from "../../components/common/Filter_Button";
 import Barber_Card from "../../components/Home/Barber_Card";
 // <reference types="react-native-snap-carousel" />
@@ -38,6 +39,7 @@ const Home = () => {
   };
   return (
     <View style={styles?.container}>
+      <LocationModal />
       <HomeHeader />
       <View style={styles?.search_container}>
         <View style={styles?.search_box}>

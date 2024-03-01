@@ -22,6 +22,9 @@ export const images = {
   men_4: require("../assets/image/men_4.png"),
 
   barber: require("../assets/image/barber.png"),
+  gery_button: require("../assets/image/gery_button.png"),
+  blue_button: require("../assets/image/blue_button.png"),
+  location: require("../assets/image/location.png"),
 };
 
 export const icons = {
@@ -34,5 +37,4 @@ export const icons = {
   cart_fill: require("../assets/icon/cart_fill.png"),
   bell_fill: require("../assets/icon/bell_fill.png"),
   search_placehonder: require("../assets/icon/search_placehonder.png"),
-  dropdown_down_arrow: require("../assets/icon/dropdown_down_arrow.svg"),
 };

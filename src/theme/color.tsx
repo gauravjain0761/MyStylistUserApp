@@ -10,4 +10,8 @@ export const colors = {
   inactive_dot: "#7A7A7A",
   stylists_border_color: "#C5C5C5",
   stylists_title_gray: "#444444",
+
+  gery_1: "#707070",
+
+  black_2: "#444444",
 };

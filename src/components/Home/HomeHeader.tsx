@@ -1,12 +1,13 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
-import {colors} from '../../theme/color';
-import {icons, images} from '../../theme/icons';
-import {hp, wp} from '../../helper/globalFunction';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
+import { colors } from "../../theme/color";
+import { icons, images } from "../../theme/icons";
+import { hp, wp } from "../../helper/globalFunction";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const HomeHeader = () => {
   return (
-    <View style={styles?.container}>
+    <SafeAreaView edges={["top"]} style={styles?.container}>
       <TouchableOpacity style={styles?.drawer_btn}>
         <Image
           source={icons?.hamburger}
@@ -38,7 +39,7 @@ const HomeHeader = () => {
           />
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -49,15 +50,15 @@ const styles = StyleSheet.create({
     backgroundColor: colors?.white,
     paddingVertical: hp(17),
     paddingHorizontal: wp(20),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     elevation: 1,
   },
   hemburger_icon: {
     width: wp(28),
     height: wp(28),
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
   },
   drawer_btn: {},
   header_logo: {
@@ -66,9 +67,9 @@ const styles = StyleSheet.create({
     marginLeft: wp(50),
   },
   header_service_container: {
-    flexDirection: 'row',
+    flexDirection: "row",
     gap: wp(10),
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   icons: {
     width: wp(24),

@@ -17,6 +17,7 @@ import {
   errorToast,
   fontSize,
   hp,
+  isIos,
   validPhonenumber,
   wp,
 } from "../../helper/globalFunction";
@@ -46,7 +47,7 @@ const Login: FC = () => {
         contentContainerStyle={{ flexGrow: 1 }}
         enableOnAndroid
         enableAutomaticScroll
-        extraScrollHeight={360}
+        extraScrollHeight={isIos ? 20 : 360}
         keyboardShouldPersistTaps={"handled"}
         style={{ flex: 1 }}
       >

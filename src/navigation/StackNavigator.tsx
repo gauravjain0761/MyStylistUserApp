@@ -11,6 +11,8 @@ import { screenName } from "../helper/routeNames";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
+  animation: "slide_from_bottom",
+  animationDuration: 500,
   // headerStyle: {
   //   backgroundColor: 'transparent',
   // },

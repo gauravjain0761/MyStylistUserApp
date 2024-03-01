@@ -16,7 +16,7 @@ class MainActivity : ReactActivity() {
   override fun getMainComponentName(): String = "barber"
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    SplashScreen.show(this) // here
+    SplashScreen.show(this, R.style.SplashScreenTheme, true)
     super.onCreate(savedInstanceState)
   }
 

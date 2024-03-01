@@ -16,7 +16,7 @@ import {
   wp,
 } from "../../helper/globalFunction";
 import { strings } from "../../helper/string";
-import { commonFontStyle } from "../../theme/fonts";
+import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import Login_Input from "../../components/common/Login_Input";
 import {
   CodeField,
@@ -126,10 +126,10 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   otp_title: {
-    ...commonFontStyle("Inter-SemiBold", 40.33, colors?.white),
+    ...commonFontStyle(fontFamily.semi_bold, 40.33, colors?.white),
   },
   otp_info: {
-    ...commonFontStyle("Inter-Medium", 14.33, colors?.fc_light_gray),
+    ...commonFontStyle(fontFamily.medium, 14.33, colors?.fc_light_gray),
     lineHeight: hp(24),
     marginTop: hp(6),
   },
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     height: wp(28),
   },
   otp_label: {
-    ...commonFontStyle("Inter-Medium", 16, colors?.fc_light_gray_2),
+    ...commonFontStyle(fontFamily.medium, 16, colors?.fc_light_gray_2),
   },
   input_container: {
     paddingLeft: wp(51),
@@ -159,11 +159,11 @@ const styles = StyleSheet.create({
     marginTop: hp(91),
   },
   didnt_otp_title: {
-    ...commonFontStyle("Inter-Medium", 16, "rgba(rgba(164, 164, 164, 0.6))"),
+    ...commonFontStyle(fontFamily.medium, 16, "rgba(rgba(164, 164, 164, 0.6))"),
     marginBottom: hp(15),
   },
   resend_otp_title: {
-    ...commonFontStyle("Inter-SemiBold", 16, colors?.white),
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors?.white),
     textDecorationLine: "underline",
   },
 
@@ -191,6 +191,6 @@ const styles = StyleSheet.create({
   },
   otp_btn_title: {
     color: colors?.black,
-    ...commonFontStyle("Inter-Medium", 20, colors?.black),
+    ...commonFontStyle(fontFamily.medium, 20, colors?.black),
   },
 });

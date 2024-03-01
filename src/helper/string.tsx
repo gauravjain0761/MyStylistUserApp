@@ -24,4 +24,9 @@ export const strings = {
   Login: "Login",
   Add: "ADD",
   "Go To Cart": "Go To Cart",
+  Jobs_Done: "Jobs Done",
+  Flat: "Flat",
+  OFF: "OFF",
+  Select_Date: "Select Date",
+  Select_Time: "Select Time",
 };

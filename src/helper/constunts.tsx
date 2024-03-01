@@ -107,4 +107,324 @@ export const stylists_filter = [
   },
 ];
 
-export const barbers = [{}];
+export const barbers = [
+  {
+    id: 1,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 2,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 3,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 4,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 5,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 6,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 7,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+  {
+    id: 8,
+    name: "Majid Khan",
+    image: [
+      {
+        id: 1,
+        image: images?.barber,
+      },
+      {
+        id: 2,
+        image: images?.barber,
+      },
+      {
+        id: 3,
+        image: images?.barber,
+      },
+      {
+        id: 4,
+        image: images?.barber,
+      },
+      {
+        id: 5,
+        image: images?.barber,
+      },
+    ],
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+  },
+];
+
+export const Dates = [
+  {
+    id: 1,
+    date: 26,
+    day: "Wed",
+  },
+  {
+    id: 2,
+    date: 27,
+    day: "Thu",
+  },
+  {
+    id: 3,
+    date: 28,
+    day: "Fri",
+  },
+  {
+    id: 4,
+    date: 29,
+    day: "Sat",
+  },
+  {
+    id: 5,
+    date: 29,
+    day: "Sat",
+  },
+];
+
+export const Time = [
+  {
+    id: 1,
+    time: "10:00 AM",
+  },
+  {
+    id: 2,
+    time: "11:00 AM",
+  },
+  {
+    id: 3,
+    time: "12:00 PM",
+  },
+  {
+    id: 4,
+    time: "01:00 PM",
+  },
+  {
+    id: 5,
+    time: "02:00 PM",
+  },
+  {
+    id: 6,
+    time: "03:00 PM",
+  },
+  {
+    id: 7,
+    time: "04:00 PM",
+  },
+  {
+    id: 8,
+    time: "05:00 PM",
+  },
+  {
+    id: 9,
+    time: "06:00 PM",
+  },
+  {
+    id: 10,
+    time: "07:00 PM",
+  },
+  {
+    id: 11,
+    time: "08:00 PM",
+  },
+  {
+    id: 12,
+    time: "09:00 PM",
+  },
+];

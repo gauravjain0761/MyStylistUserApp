@@ -20,23 +20,27 @@ import {
 import { icons } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import {
+  Dates,
   Women_Services,
+  barbers,
   carouselItems,
   men_Services,
   stylists_filter,
 } from "../../helper/constunts";
 import Carousel, { Pagination } from "react-native-snap-carousel";
-import { commonFontStyle } from "../../theme/fonts";
+import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { LocationModal } from "../../components";
 import Filter_Button from "../../components/common/Filter_Button";
 import Barber_Card from "../../components/Home/Barber_Card";
+import Modals from "../../components/common/Modals";
+import babelConfig from "../../../babel.config";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-// <reference types="react-native-snap-carousel" />
 const Home = () => {
-  const { navigate } = useNavigation();
-  const [entries, activeSlide] = useState(2);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isModal, setIsModal] = useState(false);
+
+  const { navigate } = useNavigation();
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
     setActiveIndex(index);
@@ -111,10 +115,7 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <TouchableOpacity
-                    onPress={onPressItem}
-                    style={styles?.service_card_container}
-                  >
+                  <TouchableOpacity style={styles?.service_card_container}>
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
@@ -223,6 +224,7 @@ const Home = () => {
               renderItem={({ item, index }: any) => {
                 return (
                   <Filter_Button
+                    onPress={() => setIsModal(!isModal)}
                     title={item?.title}
                     type={item?.isIcon == true ? "icon" : "simple"}
                   />
@@ -235,9 +237,60 @@ const Home = () => {
           </View>
 
           <View style={styles?.barber_card_container}>
-            <Barber_Card name="Majid khan" type="Without Service" />
+            <FlatList
+              data={barbers}
+              renderItem={({ item, index }) => {
+                return (
+                  <Barber_Card
+                    name={item.name}
+                    type="Without Service"
+                    images={item?.image}
+                    rating={item.rating}
+                    jobs={item?.jobs_done}
+                    location={item.address}
+                    offers={item?.offers}
+                    onPress={onPressItem}
+                  />
+                );
+              }}
+              ItemSeparatorComponent={() => (
+                <View style={styles.card_separator}></View>
+              )}
+            />
           </View>
         </View>
+        <Modals
+          visible={isModal}
+          close={setIsModal}
+          contain={
+            <View style={styles.select_date_conatiner}>
+              <Text style={styles.select_date_title}>
+                {strings.Select_Date}
+              </Text>
+              <View style={styles.date_container}>
+                <FlatList
+                  data={Dates}
+                  showsHorizontalScrollIndicator={false}
+                  horizontal
+                  renderItem={({ item, index }) => {
+                    return (
+                      <TouchableOpacity style={styles.date_slot}>
+                        <Text style={styles.day}>{item.day}</Text>
+                        <Text style={styles.date}>{item.date}</Text>
+                      </TouchableOpacity>
+                    );
+                  }}
+                  ItemSeparatorComponent={() => (
+                    <View style={styles.slot_separator}></View>
+                  )}
+                />
+              </View>
+              <View style={styles.time_container}>
+                <Text style={styles.time_title}>{strings.Select_Time}</Text>
+              </View>
+            </View>
+          }
+        />
       </ScrollView>
     </View>
   );
@@ -308,10 +361,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   services_title: {
-    ...commonFontStyle("Inter-Regular", 20, colors?.black),
+    ...commonFontStyle(fontFamily.regular, 20, colors?.black),
   },
   title_bold: {
-    ...commonFontStyle("Inter-SemiBold", 20, colors?.black),
+    ...commonFontStyle(fontFamily.semi_bold, 20, colors?.black),
   },
   services_conatiner: {
     marginTop: hp(19),
@@ -326,7 +379,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   card_title: {
-    ...commonFontStyle("Inter-Medium", 12, colors?.black),
+    ...commonFontStyle(fontFamily.medium, 12, colors?.black),
     marginTop: hp(11),
     marginLeft: wp(14),
   },
@@ -349,7 +402,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderBottomWidth: hp(1),
     borderColor: colors?.stylists_border_color,
-    marginLeft: wp(10),
+    marginHorizontal: wp(10),
     alignSelf: "center",
   },
   stylists_title_container: {
@@ -362,7 +415,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   your_stylists_title: {
-    ...commonFontStyle("Inter-Medium", 17, colors?.stylists_title_gray),
+    ...commonFontStyle(fontFamily.medium, 17, colors?.stylists_title_gray),
     paddingHorizontal: wp(16),
   },
   service_filter_conatiner: {
@@ -372,5 +425,47 @@ const styles = StyleSheet.create({
   filter_item_separator: {
     width: wp(7),
   },
-  barber_card_container: {},
+  barber_card_container: {
+    marginHorizontal: wp(20),
+  },
+  card_separator: {
+    height: hp(24),
+  },
+  select_date_conatiner: {
+    marginHorizontal: wp(15),
+  },
+  select_date_title: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+    marginTop: hp(27),
+  },
+  date_container: {
+    justifyContent: "center",
+    marginTop: hp(16),
+    height: hp(70),
+  },
+  date_slot: {
+    width: wp(62),
+    height: hp(70),
+    borderWidth: wp(1),
+    borderRadius: wp(5),
+    borderColor: colors.date_slot_border,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  slot_separator: {
+    width: wp(14),
+  },
+  date: {
+    ...commonFontStyle(fontFamily.semi_bold, 22, colors.black),
+  },
+  day: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.black),
+    lineHeight: hp(26),
+  },
+  time_container: {
+    marginTop: hp(31),
+  },
+  time_title: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+  },
 });

@@ -1,4 +1,5 @@
 import {
+  ImageBackground,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -9,12 +10,12 @@ import React from "react";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
-import { commonFontStyle } from "../../theme/fonts";
+import { commonFontStyle, fontFamily } from "../../theme/fonts";
 
 type props = {
   title: string;
   type: "icon" | "simple";
-  onPress?: () => void;
+  onPress?: () => any;
   containerStyle?: ViewStyle;
 };
 
@@ -23,16 +24,16 @@ const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
     <>
       {type === "icon" ? (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.btn_conatiner}>
+          <TouchableOpacity style={styles.btn_conatiner} onPress={onPress}>
             <Text style={styles.title}>{title}</Text>
             <Dropdown_Down_Arrow />
           </TouchableOpacity>
         </View>
       ) : (
         <View style={styles.container}>
-          <View style={styles.btn_conatiner}>
+          <TouchableOpacity style={styles.btn_conatiner} onPress={onPress}>
             <Text style={styles?.title}>{title}</Text>
-          </View>
+          </TouchableOpacity>
         </View>
       )}
     </>
@@ -59,6 +60,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors?.white,
   },
   title: {
-    ...commonFontStyle("Inter-Medium", 13, colors?.stylists_title_gray),
+    ...commonFontStyle(fontFamily.medium, 13, colors?.stylists_title_gray),
   },
 });

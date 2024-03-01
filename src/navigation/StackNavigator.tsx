@@ -8,6 +8,7 @@ import Login from "../screen/auth/Login";
 import Home from "../screen/Home/Home";
 import OtpVerification from "../screen/auth/OtpVerification";
 import { screenName } from "../helper/routeNames";
+import YourStylist from "../screen/Details/YourStylist";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -22,13 +23,17 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigator: FC = () => {
   return (
-    <Stack.Navigator screenOptions={options} initialRouteName={screenName.Home}>
+    <Stack.Navigator
+      screenOptions={options}
+      initialRouteName={screenName.Login}
+    >
       <Stack.Screen name={screenName.Login} component={Login} />
       <Stack.Screen
         name={screenName.OptVerification}
         component={OtpVerification}
       />
       <Stack.Screen name={screenName.Home} component={Home} />
+      <Stack.Screen name={screenName.YourStylist} component={YourStylist} />
     </Stack.Navigator>
   );
 };

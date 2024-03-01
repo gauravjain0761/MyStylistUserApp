@@ -102,7 +102,7 @@ const OtpVerification = ({ route }: any) => {
           style={styles?.otp_btn}
           onPress={() => dispatchNavigation(screenName?.Home)}
         >
-          <Text style={styles?.otp_btn_title}>{strings?.Get_OTP}</Text>
+          <Text style={styles?.otp_btn_title}>{strings.Login}</Text>
         </TouchableOpacity>
       </ImageBackground>
     </View>

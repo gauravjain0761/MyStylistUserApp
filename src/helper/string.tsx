@@ -18,4 +18,10 @@ export const strings = {
 
   "Don’t Allow": "Don’t Allow",
   Allow: "Allow",
+  Offers: "Offers",
+  Packages: "Packages",
+  "My Work": "My Work",
+  Login: "Login",
+  Add: "ADD",
+  "Go To Cart": "Go To Cart",
 };

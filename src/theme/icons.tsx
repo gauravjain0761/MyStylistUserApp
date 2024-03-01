@@ -25,6 +25,11 @@ export const images = {
   gery_button: require("../assets/image/gery_button.png"),
   blue_button: require("../assets/image/blue_button.png"),
   location: require("../assets/image/location.png"),
+  gradinet_details: require("../assets/image/gradinet_details.png"),
+  gradient_line: require("../assets/image/gradient_line.png"),
+  grey_border_button: require("../assets/image/grey_border_button.png"),
+  green_button: require("../assets/image/green_button.png"),
+  black_border_button: require("../assets/image/black_border_button.png"),
 };
 
 export const icons = {

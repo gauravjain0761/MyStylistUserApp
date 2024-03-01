@@ -12,6 +12,10 @@ export const colors = {
   stylists_title_gray: "#444444",
 
   gery_1: "#707070",
+  gery_2: "#6E6E6E",
+  gery_3: "#8A8A8A",
 
   black_2: "#444444",
+  green_1: "#1BA041",
+  green_2: "#39938C",
 };

@@ -84,7 +84,7 @@ const Login: FC = () => {
             <View style={styles?.input_container}>
               <Text style={styles?.mobile_title}>{strings?.Mobile_Number}</Text>
               <Login_Input
-                placeholder="9 9 9 9 9 9 9 9 9"
+                placeholder=""
                 input_style={styles?.input_style}
                 onTextChange={setNumbers}
               />

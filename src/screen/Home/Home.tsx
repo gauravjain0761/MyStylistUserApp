@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import React, { useState } from "react";
@@ -29,14 +30,23 @@ import { commonFontStyle } from "../../theme/fonts";
 import { LocationModal } from "../../components";
 import Filter_Button from "../../components/common/Filter_Button";
 import Barber_Card from "../../components/Home/Barber_Card";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 // <reference types="react-native-snap-carousel" />
 const Home = () => {
+  const { navigate } = useNavigation();
   const [entries, activeSlide] = useState(2);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
     setActiveIndex(index);
   };
+
+  const onPressItem = () => {
+    //@ts-ignore
+    navigate(screenName.YourStylist);
+  };
+
   return (
     <View style={styles?.container}>
       <LocationModal />
@@ -101,14 +111,17 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <View style={styles?.service_card_container}>
+                  <TouchableOpacity
+                    onPress={onPressItem}
+                    style={styles?.service_card_container}
+                  >
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
                       source={item?.images}
                       resizeMode="contain"
                     />
-                  </View>
+                  </TouchableOpacity>
                 );
               }}
             />

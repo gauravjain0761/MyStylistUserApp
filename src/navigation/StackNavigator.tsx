@@ -22,10 +22,7 @@ const Stack = createNativeStackNavigator();
 
 const StackNavigator: FC = () => {
   return (
-    <Stack.Navigator
-      screenOptions={options}
-      initialRouteName={screenName.Login}
-    >
+    <Stack.Navigator screenOptions={options} initialRouteName={screenName.Home}>
       <Stack.Screen name={screenName.Login} component={Login} />
       <Stack.Screen
         name={screenName.OptVerification}

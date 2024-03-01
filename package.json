@@ -26,6 +26,7 @@
     "react-native-screens": "^3.29.0",
     "react-native-snap-carousel": "^3.9.1",
     "react-native-splash-screen": "^3.3.0",
+    "react-native-svg": "^15.0.0",
     "react-native-toast-message": "^2.2.0"
   },
   "devDependencies": {

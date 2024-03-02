@@ -17,8 +17,14 @@ export const colors = {
   gery_1: "#707070",
   gery_2: "#6E6E6E",
   gery_3: "#8A8A8A",
+  gery_4: "#8D8D8D",
+  gery_5: "#8B8B8B",
+  gery_6: "#666666",
+  gery_7: "#DEDEDE",
 
   black_2: "#444444",
   green_1: "#1BA041",
   green_2: "#39938C",
+  theme_1: "#28A599",
+  green_opacity: "#E2F3F2",
 };

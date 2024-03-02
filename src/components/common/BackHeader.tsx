@@ -9,9 +9,10 @@ import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   title: string;
+  isSearch?: boolean;
 };
 
-const BackHeader = ({ title }: Props) => {
+const BackHeader = ({ title, isSearch }: Props) => {
   const { goBack } = useNavigation();
 
   const onPressBack = () => goBack();
@@ -22,9 +23,11 @@ const BackHeader = ({ title }: Props) => {
         <BackIcon />
       </TouchableOpacity>
       <Text style={styles.titleTextStyle}>{title}</Text>
-      <TouchableOpacity onPress={onPressSearch}>
-        <SearchIcon />
-      </TouchableOpacity>
+      {isSearch ? (
+        <TouchableOpacity onPress={onPressSearch}>
+          <SearchIcon />
+        </TouchableOpacity>
+      ) : null}
     </SafeAreaView>
   );
 };

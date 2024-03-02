@@ -1,24 +1,24 @@
 import React, { useCallback, useState } from "react";
 import {
-  FlatList,
-  LayoutAnimation,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  LayoutAnimation,
+  FlatList,
+  Image,
 } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
+import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { ArrowUp, TrashIcon } from "../../theme/SvgIcon";
-import { StylistInnerItem } from "..";
+import { PackagesInnerItem } from "..";
 
 type Props = {
-  isOffer?: boolean;
   data: any;
 };
 
-const StylistItem = ({ isOffer, data }: Props) => {
+const MyWorkItem = ({ data }: Props) => {
   const [expanded, setExpanded] = useState(true);
 
   const onPressArrow = () => {
@@ -29,17 +29,29 @@ const StylistItem = ({ isOffer, data }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Offers"}</Text>
+        <Text style={styles.titleTextStyle}>{"Hair Cut"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
       </TouchableOpacity>
       {expanded ? (
         <FlatList
-          data={[1, 2]}
+          style={styles.listContainerStyle}
+          numColumns={3}
+          data={[1, 2, 3, 4, 5, 6, 7, 8]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            return <StylistInnerItem isOffer={isOffer} data={item} />;
+            return (
+              <View style={styles.itemContainer}>
+                <Image
+                  resizeMode="cover"
+                  style={styles.imgStyle}
+                  source={{
+                    uri: "https://i.pinimg.com/736x/0a/21/70/0a217095d0a9aa63c28a6adca86c8a82.jpg",
+                  }}
+                />
+              </View>
+            );
           }}
         />
       ) : null}
@@ -59,7 +71,21 @@ const styles = StyleSheet.create({
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
-  rotationStyle: {},
+  itemContainer: {
+    marginHorizontal: wp(3),
+    height: hp(117),
+    width: hp(117),
+    marginBottom: hp(6),
+    borderRadius: 4,
+  },
+  listContainerStyle: {
+    paddingHorizontal: wp(17),
+  },
+  imgStyle: {
+    height: hp(115),
+    borderRadius: 4,
+    width: hp(117),
+  },
 });
 
-export default StylistItem;
+export default MyWorkItem;

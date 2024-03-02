@@ -30,6 +30,7 @@ export const images = {
   grey_border_button: require("../assets/image/grey_border_button.png"),
   green_button: require("../assets/image/green_button.png"),
   black_border_button: require("../assets/image/black_border_button.png"),
+  book_button: require("../assets/image/book_button.png"),
 };
 
 export const icons = {

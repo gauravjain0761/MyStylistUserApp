@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
   ImageBackground,
+  LayoutAnimation,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
+  UIManager,
   View,
 } from "react-native";
-import { BackHeader, StylistItem } from "../../components";
+import {
+  BackHeader,
+  OfferItem,
+  PackagesItem,
+  StylistItem,
+} from "../../components";
 import { images } from "../../theme/icons";
 import { hp, screen_width, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
@@ -23,45 +31,105 @@ import {
   OfferYellowIcon,
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
+import MyWorkItem from "../../components/Details/MyWorkItem";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type TagViewProps = {
   Icon?: any;
   title: string;
   onPress: () => void;
+  onPressClose: () => void;
   isSelected: boolean;
 };
 
-const TagView = ({ Icon, title, onPress, isSelected }: TagViewProps) => {
+const TagView = ({
+  Icon,
+  title,
+  onPress,
+  isSelected,
+  onPressClose,
+}: TagViewProps) => {
   return (
     <TouchableOpacity onPress={onPress}>
-      <ImageBackground
-        resizeMode="contain"
-        source={
-          isSelected ? images.black_border_button : images.grey_border_button
-        }
-        style={styles.buttonStyle}
-      >
-        {Icon}
-        {Icon ? <View style={{ width: wp(10) }} /> : null}
-        <Text
-          style={{
-            ...styles.btnTextStyle,
-            flex: 1,
-            textAlign: !Icon ? "center" : null,
-          }}
+      {isSelected ? (
+        <ImageBackground
+          resizeMode="contain"
+          source={images.black_border_button}
+          style={{ ...styles.buttonStyle, justifyContent: "space-between" }}
         >
-          {title}
-        </Text>
-        <TouchableOpacity></TouchableOpacity>
-      </ImageBackground>
+          <Text style={styles.btnTextStyle}>{title}</Text>
+          <TouchableOpacity onPress={onPressClose}>
+            <Text style={styles.btnTextStyle}>{"X"}</Text>
+          </TouchableOpacity>
+        </ImageBackground>
+      ) : (
+        <ImageBackground
+          resizeMode="contain"
+          source={images.grey_border_button}
+          style={styles.buttonStyle}
+        >
+          {Icon}
+          {Icon ? <View style={{ width: wp(10) }} /> : null}
+          <Text
+            style={{
+              ...styles.btnTextStyle,
+              flex: 1,
+              textAlign: !Icon ? "center" : null,
+            }}
+          >
+            {title}
+          </Text>
+        </ImageBackground>
+      )}
     </TouchableOpacity>
   );
 };
 
 const YourStylist = () => {
+  const { navigate } = useNavigation();
+  const [isOffers, setIsOffers] = useState(false);
+  const [isPackages, setIsPackages] = useState(false);
+  const [isMyWork, setIsMyWork] = useState(false);
+
+  useEffect(() => {
+    if (Platform.OS === "android") {
+      if (UIManager.setLayoutAnimationEnabledExperimental) {
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+      }
+    }
+  }, []);
+
+  const onPressOffers = () => {
+    setIsOffers(true);
+    setIsPackages(false);
+    setIsMyWork(false);
+  };
+  const onPressPackages = () => {
+    setIsOffers(false);
+    setIsPackages(true);
+    setIsMyWork(false);
+  };
+  const onPressMyWork = () => {
+    setIsOffers(false);
+    setIsPackages(false);
+    setIsMyWork(true);
+  };
+
+  const onPressCloseFilter = () => {
+    setIsOffers(false);
+    setIsPackages(false);
+    setIsMyWork(false);
+  };
+
+  const onPressGoCart = () => {
+    // @ts-ignore
+    navigate(screenName.Cart);
+  };
+
   return (
     <View style={styles.container}>
-      <BackHeader title={"Your Stylist"} />
+      <BackHeader isSearch title={"Your Stylist"} />
       <ScrollView style={{ flex: 1 }}>
         <View style={styles.rowStyle}>
           <Image style={styles.personStyle} source={images.barber} />
@@ -99,30 +167,88 @@ const YourStylist = () => {
             {"NO CODE REQUIRED | ABOVE 999"}
           </Text>
           <View style={styles.rowSpaceStyle}>
-            <TagView Icon={<OfferYellowIcon />} title={strings["Offers"]} />
-            <TagView title={strings["Packages"]} />
-            <TagView title={strings["My Work"]} />
+            <TagView
+              isSelected={isOffers}
+              Icon={<OfferYellowIcon />}
+              title={strings["Offers"]}
+              onPress={onPressOffers}
+              onPressClose={onPressCloseFilter}
+            />
+            <TagView
+              isSelected={isPackages}
+              title={strings["Packages"]}
+              onPress={onPressPackages}
+              onPressClose={onPressCloseFilter}
+            />
+            <TagView
+              isSelected={isMyWork}
+              title={strings["My Work"]}
+              onPress={onPressMyWork}
+              onPressClose={onPressCloseFilter}
+            />
           </View>
-          <TouchableOpacity style={styles.headerRowStyle}>
-            <Text style={styles.titleTextStyle}>{"Hair Treatment"}</Text>
-            <ArrowUp />
-          </TouchableOpacity>
         </ImageBackground>
-        <View>
-          <FlatList
-            style={{ flex: 1 }}
-            data={[1, 2, 3, 4, 5, 6, 7, 8]}
-            scrollEnabled={false}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => {
-              return <StylistItem />;
-            }}
-          />
+
+        <View style={{ marginTop: -hp(80) }}>
+          {!isOffers && !isPackages && !isMyWork ? (
+            <View>
+              <FlatList
+                style={{ flex: 1 }}
+                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                scrollEnabled={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => {
+                  return <StylistItem data={item} />;
+                }}
+              />
+            </View>
+          ) : null}
+
+          {isOffers ? (
+            <View>
+              <FlatList
+                style={{ flex: 1 }}
+                data={[1]}
+                scrollEnabled={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => {
+                  return <StylistItem isOffer={true} data={item} />;
+                }}
+              />
+            </View>
+          ) : null}
+
+          {isPackages ? (
+            <View>
+              <FlatList
+                style={{ flex: 1 }}
+                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                scrollEnabled={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => {
+                  return <PackagesItem data={item} />;
+                }}
+              />
+            </View>
+          ) : null}
+          {isMyWork ? (
+            <View>
+              <FlatList
+                style={{ flex: 1 }}
+                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                scrollEnabled={false}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item, index }) => {
+                  return <MyWorkItem data={item} />;
+                }}
+              />
+            </View>
+          ) : null}
         </View>
       </ScrollView>
       <View style={styles.elevationStyle}>
         <Text style={styles.priceTextStyle}>{"₹200"}</Text>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPressGoCart}>
           <ImageBackground
             resizeMode="cover"
             style={styles.cartBtnStyle}
@@ -234,6 +360,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(20),
     marginVertical: hp(10),
     alignItems: "center",
+    marginTop: -hp(50),
   },
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),

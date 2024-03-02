@@ -3,4 +3,5 @@ export const screenName = {
   OptVerification: "OptVerification",
   Home: "Home",
   YourStylist: "YourStylist",
+  Cart: "Cart",
 };

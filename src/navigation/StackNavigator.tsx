@@ -9,6 +9,7 @@ import Home from "../screen/Home/Home";
 import OtpVerification from "../screen/auth/OtpVerification";
 import { screenName } from "../helper/routeNames";
 import YourStylist from "../screen/Details/YourStylist";
+import Cart from "../screen/Cart";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -34,6 +35,7 @@ const StackNavigator: FC = () => {
       />
       <Stack.Screen name={screenName.Home} component={Home} />
       <Stack.Screen name={screenName.YourStylist} component={YourStylist} />
+      <Stack.Screen name={screenName.Cart} component={Cart} />
     </Stack.Navigator>
   );
 };

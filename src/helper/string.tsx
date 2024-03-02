@@ -29,4 +29,9 @@ export const strings = {
   OFF: "OFF",
   Select_Date: "Select Date",
   Select_Time: "Select Time",
+  Cart: "Cart",
+  "Bill Details": "Bill Details",
+  "Select Date": "Select Date",
+  "Select Time": "Select Time",
+  "Book  Appointment": "Book  Appointment",
 };

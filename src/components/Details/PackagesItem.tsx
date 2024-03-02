@@ -1,24 +1,23 @@
 import React, { useCallback, useState } from "react";
 import {
-  FlatList,
-  LayoutAnimation,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  LayoutAnimation,
+  FlatList,
 } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
+import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { ArrowUp, TrashIcon } from "../../theme/SvgIcon";
-import { StylistInnerItem } from "..";
+import { PackagesInnerItem } from "..";
 
 type Props = {
-  isOffer?: boolean;
   data: any;
 };
 
-const StylistItem = ({ isOffer, data }: Props) => {
+const PackagesItem = ({ data }: Props) => {
   const [expanded, setExpanded] = useState(true);
 
   const onPressArrow = () => {
@@ -29,7 +28,7 @@ const StylistItem = ({ isOffer, data }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Offers"}</Text>
+        <Text style={styles.titleTextStyle}>{"Hair Treatment"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
@@ -39,7 +38,7 @@ const StylistItem = ({ isOffer, data }: Props) => {
           data={[1, 2]}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            return <StylistInnerItem isOffer={isOffer} data={item} />;
+            return <PackagesInnerItem data={item} />;
           }}
         />
       ) : null}
@@ -59,7 +58,6 @@ const styles = StyleSheet.create({
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
-  rotationStyle: {},
 });
 
-export default StylistItem;
+export default PackagesItem;

@@ -15,7 +15,6 @@ export const strings = {
   "Allow us to access your location": "Allow us to access your location",
   "We need access to your location to show you relevant Stylists, Offers and Packages":
     "We need access to your location to show you relevant Stylists, Offers and Packages",
-
   "Don’t Allow": "Don’t Allow",
   Allow: "Allow",
   Offers: "Offers",
@@ -34,4 +33,11 @@ export const strings = {
   "Select Date": "Select Date",
   "Select Time": "Select Time",
   "Book  Appointment": "Book  Appointment",
+  "Timing can be adjusted by calling the Stylist after Booking":
+    "Timing can be adjusted by calling the Stylist after Booking",
+  Cancel: "Cancel",
+  Apply: "Apply",
+  Cost: "Cost",
+  Low_To_High: "Low To High",
+  High_To_Low: "High To Low",
 };

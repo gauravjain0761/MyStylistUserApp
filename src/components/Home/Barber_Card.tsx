@@ -57,32 +57,34 @@ const Barber_Card = ({
         <View style={styles.container}>
           <View style={styles.barber_card_container}>
             <View style={styles.image_conatiner}>
-              <Carousel
-                layout={"default"}
-                data={images}
-                sliderWidth={wp(132)}
-                itemWidth={wp(132)}
-                itemHeight={hp(144)}
-                sliderHeight={hp(144)}
-                inactiveSlideScale={1}
-                renderItem={({ item }: any) => {
-                  return (
-                    <View style={styles?.carousel_img_container}>
-                      <Image
-                        source={item.image}
-                        style={styles?.carousel_img}
-                        resizeMode="stretch"
-                      />
-                    </View>
-                  );
-                }}
-                onSnapToItem={onSnapToItem}
-              />
-              <View style={styles.offer_badge}>
-                <Offer_Badge />
-                <Text style={styles?.offer_title}>
-                  {strings.Flat} {offers} {strings.OFF}
-                </Text>
+              <View style={styles.carousel_view}>
+                <Carousel
+                  layout={"default"}
+                  data={images}
+                  sliderWidth={wp(132)}
+                  itemWidth={wp(132)}
+                  itemHeight={hp(144)}
+                  sliderHeight={hp(144)}
+                  inactiveSlideScale={1}
+                  renderItem={({ item }: any) => {
+                    return (
+                      <View style={styles?.carousel_img_container}>
+                        <Image
+                          source={item.image}
+                          style={styles?.carousel_img}
+                          resizeMode="stretch"
+                        />
+                      </View>
+                    );
+                  }}
+                  onSnapToItem={onSnapToItem}
+                />
+                <View style={styles.offer_badge}>
+                  <Offer_Badge />
+                  <Text style={styles?.offer_title}>
+                    {strings.Flat} {offers} {strings.OFF}
+                  </Text>
+                </View>
               </View>
               <Pagination
                 dotsLength={images.length}
@@ -99,14 +101,12 @@ const Barber_Card = ({
                 <TouchableOpacity onPress={onPress}>
                   <Text style={styles.barber_name}>{name}</Text>
                 </TouchableOpacity>
-                <VerifyIcon />
+                <VerifyIcon width={14} height={14} />
               </View>
               <View style={styles.barber_job_coantiner}>
                 <View style={styles.rating_badge}>
                   <Text style={styles.rating_title}>{rating}</Text>
-                  <View style={styles.star}>
-                    <StarIcon />
-                  </View>
+                  <StarIcon />
                 </View>
                 <View style={styles.seprator}></View>
                 <Text style={styles.jobs_title}>
@@ -137,8 +137,6 @@ const styles = StyleSheet.create({
   image_conatiner: {},
   carousel_img_container: {
     width: "100%",
-    borderRadius: wp(20),
-    overflow: "hidden",
   },
   carousel_img: {
     width: "100%",
@@ -162,14 +160,14 @@ const styles = StyleSheet.create({
     marginTop: hp(12),
   },
   rating_badge: {
-    width: wp(39),
-    height: wp(19),
     backgroundColor: colors.light_green,
     borderRadius: wp(6),
-    alignItems: "center",
-    justifyContent: "center",
+    padding: hp(3),
+    alignSelf: "flex-start",
     flexDirection: "row",
-    gap: wp(5),
+    alignItems: "center",
+    paddingHorizontal: wp(4),
+    gap: wp(3),
   },
   rating_title: {
     ...commonFontStyle(fontFamily.semi_bold, 12, colors.white),
@@ -225,11 +223,14 @@ const styles = StyleSheet.create({
     gap: wp(4),
     position: "absolute",
     top: hp(124),
+    right: "30%",
   },
   offer_title: {
     ...commonFontStyle(fontFamily.semi_bold, 11, colors.black),
   },
-  star: {
-    // paddingBottom: hp(1),
+  carousel_view: {
+    width: "100%",
+    borderRadius: wp(15),
+    overflow: "hidden",
   },
 });

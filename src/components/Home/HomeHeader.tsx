@@ -4,39 +4,24 @@ import { colors } from "../../theme/color";
 import { icons, images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FillBell, FillCart, FillLike, Hamburger } from "../../theme/SvgIcon";
 
 const HomeHeader = () => {
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <TouchableOpacity style={styles?.drawer_btn}>
-        <Image
-          source={icons?.hamburger}
-          style={styles?.hemburger_icon}
-          resizeMode="contain"
-        />
+        <Hamburger />
       </TouchableOpacity>
       <Image source={images?.header_logo} style={styles?.header_logo} />
       <View style={styles?.header_service_container}>
         <TouchableOpacity>
-          <Image
-            source={icons?.like_fill}
-            style={styles?.icons}
-            resizeMode="contain"
-          />
+          <FillLike />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Image
-            source={icons?.cart_fill}
-            style={styles?.icons}
-            resizeMode="contain"
-          />
+          <FillCart />
         </TouchableOpacity>
         <TouchableOpacity>
-          <Image
-            source={icons?.bell_fill}
-            style={styles?.icons}
-            resizeMode="contain"
-          />
+          <FillBell />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

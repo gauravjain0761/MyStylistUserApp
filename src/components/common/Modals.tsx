@@ -1,5 +1,4 @@
 import {
-  Modal,
   StyleSheet,
   Text,
   TextStyle,
@@ -10,11 +9,11 @@ import {
 import React from "react";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
+import Modal from "react-native-modal";
 
 type props = {
   visible: boolean;
   transparent?: boolean;
-  animation?: "fade" | "slide" | "none";
   contain?: any;
   close?: any;
   containStyle?: ViewStyle;
@@ -24,7 +23,6 @@ type props = {
 const Modals = ({
   visible = false,
   transparent = true,
-  animation,
   contain,
   close,
   containStyle,
@@ -32,14 +30,17 @@ const Modals = ({
 }: props) => {
   return (
     <Modal
-      visible={visible}
-      transparent={transparent}
-      animationType={animation}
+      isVisible={visible}
+      animationIn="slideInUp"
+      onBackdropPress={() => close(false)}
+      style={{
+        width: "100%",
+        alignItems: "center",
+        padding: 0,
+        margin: 0,
+        justifyContent: "flex-end",
+      }}
     >
-      <TouchableOpacity
-        onPress={() => close(false)}
-        style={[styles.modal, containerStyle]}
-      ></TouchableOpacity>
       <View style={[styles.contain, containStyle]}>{contain}</View>
     </Modal>
   );
@@ -48,14 +49,7 @@ const Modals = ({
 export default Modals;
 
 const styles = StyleSheet.create({
-  modal: {
-    justifyContent: "flex-end",
-    alignItems: "center",
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-  },
   contain: {
-    position: "absolute",
     width: "100%",
     backgroundColor: colors.white,
     paddingHorizontal: wp(20),
@@ -65,5 +59,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(20),
     borderTopRightRadius: wp(20),
     bottom: 0,
+    // flex: 1,
   },
 });

@@ -1,6 +1,7 @@
 import {
   FlatList,
   Image,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,18 +10,20 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import HomeHeader from "../../components/Home/HomeHeader";
 import { colors } from "../../theme/color";
 import {
+  generateTimes,
+  generateWeekDates,
   hp,
   screen_height,
   screen_width,
   wp,
 } from "../../helper/globalFunction";
-import { icons } from "../../theme/icons";
+import { icons, images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import {
   Dates,
+  Time,
   Women_Services,
   barbers,
   carouselItems,
@@ -29,16 +32,26 @@ import {
 } from "../../helper/constunts";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { LocationModal } from "../../components";
-import Filter_Button from "../../components/common/Filter_Button";
-import Barber_Card from "../../components/Home/Barber_Card";
-import Modals from "../../components/common/Modals";
+import {
+  Barber_Card,
+  Filter_Button,
+  HomeHeader,
+  LocationModal,
+  Modals,
+  TimeSelector,
+} from "../../components";
 import babelConfig from "../../../babel.config";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import DateSchedule from "../../components/common/DateSchedule";
+import TimeSchedule from "../../components/common/TimeSchedule";
+import CostModal from "../../components/common/CostModal";
 const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModal, setIsModal] = useState(false);
+  const [costmodal, setCostmodal] = useState(false);
+  const [dates, setDates] = useState(generateWeekDates());
+  const [times, setTimes] = useState(generateTimes());
 
   const { navigate } = useNavigation();
 
@@ -49,6 +62,26 @@ const Home = () => {
   const onPressItem = () => {
     //@ts-ignore
     navigate(screenName.YourStylist);
+  };
+
+  const ModalHendler = (item: any) => {
+    if (item == 1) {
+      setIsModal(!isModal);
+    } else if (item == 3) {
+      setCostmodal(!costmodal);
+    }
+  };
+
+  const onPressTimeItem = (item: any) => {
+    let data = [...times];
+    times.map((eItem, index) => {
+      if (eItem.id === item.id) {
+        eItem.isSelected = true;
+      } else {
+        eItem.isSelected = false;
+      }
+    });
+    setTimes(data);
   };
 
   return (
@@ -69,7 +102,7 @@ const Home = () => {
         </View>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View>
+        <View style={styles.carousel_container}>
           <Carousel
             layout={"default"}
             data={carouselItems}
@@ -137,14 +170,14 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <View style={styles?.service_card_container}>
+                  <TouchableOpacity style={styles?.service_card_container}>
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
                       source={item?.images}
                       resizeMode="contain"
                     />
-                  </View>
+                  </TouchableOpacity>
                 );
               }}
             />
@@ -171,14 +204,14 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <View style={styles?.service_card_container}>
+                  <TouchableOpacity style={styles?.service_card_container}>
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
                       source={item?.images}
                       resizeMode="contain"
                     />
-                  </View>
+                  </TouchableOpacity>
                 );
               }}
             />
@@ -193,14 +226,14 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <View style={styles?.service_card_container}>
+                  <TouchableOpacity style={styles?.service_card_container}>
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
                       source={item?.images}
                       resizeMode="contain"
                     />
-                  </View>
+                  </TouchableOpacity>
                 );
               }}
             />
@@ -224,7 +257,9 @@ const Home = () => {
               renderItem={({ item, index }: any) => {
                 return (
                   <Filter_Button
-                    onPress={() => setIsModal(!isModal)}
+                    onPress={() => {
+                      ModalHendler(item.id);
+                    }}
                     title={item?.title}
                     type={item?.isIcon == true ? "icon" : "simple"}
                   />
@@ -259,37 +294,61 @@ const Home = () => {
             />
           </View>
         </View>
+
         <Modals
           visible={isModal}
           close={setIsModal}
           contain={
-            <View style={styles.select_date_conatiner}>
+            <View>
               <Text style={styles.select_date_title}>
                 {strings.Select_Date}
               </Text>
-              <View style={styles.date_container}>
-                <FlatList
-                  data={Dates}
-                  showsHorizontalScrollIndicator={false}
-                  horizontal
-                  renderItem={({ item, index }) => {
-                    return (
-                      <TouchableOpacity style={styles.date_slot}>
-                        <Text style={styles.day}>{item.day}</Text>
-                        <Text style={styles.date}>{item.date}</Text>
-                      </TouchableOpacity>
-                    );
-                  }}
-                  ItemSeparatorComponent={() => (
-                    <View style={styles.slot_separator}></View>
-                  )}
-                />
-              </View>
+              <DateSchedule Data={Dates} />
               <View style={styles.time_container}>
                 <Text style={styles.time_title}>{strings.Select_Time}</Text>
+                <View style={styles.timeselect_container}>
+                  <TimeSelector
+                    data={times}
+                    onPressTime={(index) => onPressTimeItem(times[index])}
+                  />
+                </View>
+              </View>
+              <Text style={styles.info}>
+                {
+                  strings[
+                    "Timing can be adjusted by calling the Stylist after Booking"
+                  ]
+                }
+              </Text>
+              <View style={styles.btn_container}>
+                <TouchableOpacity onPress={() => setIsModal(!isModal)}>
+                  <ImageBackground
+                    source={images?.grey_border_button}
+                    style={styles.btn_style}
+                    resizeMode="contain"
+                  >
+                    <Text style={styles.btn_tite}>{strings.Cancel}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => setIsModal(!isModal)}>
+                  <ImageBackground
+                    source={images?.blue_button}
+                    style={styles.btn_style}
+                    resizeMode="contain"
+                  >
+                    <Text style={styles.btn_tite}>{strings.Apply}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
               </View>
             </View>
           }
+        />
+
+        <Modals
+          visible={costmodal}
+          close={setCostmodal}
+          contain={<CostModal visible={costmodal} close={setCostmodal} />}
         />
       </ScrollView>
     </View>
@@ -329,7 +388,6 @@ const styles = StyleSheet.create({
   carousel_img: {
     width: "100%",
     height: hp(467),
-    borderRadius: wp(12),
   },
   carousel_img_container: {},
   pagination_container: {
@@ -431,41 +489,47 @@ const styles = StyleSheet.create({
   card_separator: {
     height: hp(24),
   },
-  select_date_conatiner: {
-    marginHorizontal: wp(15),
+  carousel_container: {
+    width: "100%",
+    borderRadius: wp(12),
+    overflow: "hidden",
   },
   select_date_title: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
-    marginTop: hp(27),
-  },
-  date_container: {
-    justifyContent: "center",
-    marginTop: hp(16),
-    height: hp(70),
-  },
-  date_slot: {
-    width: wp(62),
-    height: hp(70),
-    borderWidth: wp(1),
-    borderRadius: wp(5),
-    borderColor: colors.date_slot_border,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  slot_separator: {
-    width: wp(14),
-  },
-  date: {
-    ...commonFontStyle(fontFamily.semi_bold, 22, colors.black),
-  },
-  day: {
-    ...commonFontStyle(fontFamily.regular, 14, colors.black),
-    lineHeight: hp(26),
+    marginTop: hp(20),
+    paddingHorizontal: wp(10),
   },
   time_container: {
     marginTop: hp(31),
+    paddingHorizontal: wp(10),
   },
   time_title: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+  },
+  info: {
+    ...commonFontStyle(fontFamily.regular, 13.3, colors.info_grey),
+    alignSelf: "center",
+    marginTop: hp(25),
+    // marginHorizontal: wp(15),
+  },
+  btn_container: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginVertical: hp(10),
+    marginTop: hp(41),
+    marginHorizontal: wp(10),
+  },
+  btn_style: {
+    height: hp(60),
+    width: wp(150),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btn_tite: {
+    ...commonFontStyle(fontFamily.medium, 18, colors.black),
+  },
+  timeselect_container: {
+    alignItems: "center",
   },
 });

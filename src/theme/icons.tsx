@@ -38,10 +38,6 @@ export const icons = {
   left_arrow: require("../assets/icon/left_arrow.png"),
 
   // home
-  hamburger: require("../assets/icon/hamburger.png"),
-  like_fill: require("../assets/icon/like_fill.png"),
-  cart_fill: require("../assets/icon/cart_fill.png"),
-  bell_fill: require("../assets/icon/bell_fill.png"),
   search_placehonder: require("../assets/icon/search_placehonder.png"),
   btn_bg: require("../assets/icon/btn_bg.png"),
 };

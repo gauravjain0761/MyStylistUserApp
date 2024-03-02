@@ -27,4 +27,7 @@ export const colors = {
   green_2: "#39938C",
   theme_1: "#28A599",
   green_opacity: "#E2F3F2",
+
+  info_grey: "#8D8D8D",
+  info_grey_2: "#373737",
 };

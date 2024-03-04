@@ -428,3 +428,46 @@ export const Time = [
     time: "09:00 PM",
   },
 ];
+
+export const Make_Up = [
+  {
+    id: 1,
+    service: "Basic\nParty Make-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 2,
+    service: "HD\nParty Make-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 3,
+    service: "MAC\nParty Make-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 4,
+    service: "Reception\nMake-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 5,
+    service: "Engagement\nMake-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 6,
+    service: "Bridal\nBasic Make-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 7,
+    service: "Bridal HD\nMake-Up",
+    image: images.wom_4,
+  },
+  {
+    id: 8,
+    service: "Pre Bridal\nCelebration",
+    image: images.wom_4,
+  },
+];

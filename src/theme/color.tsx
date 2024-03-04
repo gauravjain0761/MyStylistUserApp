@@ -30,4 +30,8 @@ export const colors = {
 
   info_grey: "#8D8D8D",
   info_grey_2: "#373737",
+  review_caed_border: "#EBEBEB",
+  review_card_bg: "#FAFAFA",
+  dark_grey_1: "#1C1C1C",
+  dashed_boredr: "#B0B0B0",
 };

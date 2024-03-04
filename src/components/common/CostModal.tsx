@@ -118,7 +118,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginVertical: hp(10),
     marginTop: hp(41),
-    marginHorizontal: wp(15),
   },
   btn_style: {
     height: hp(60),

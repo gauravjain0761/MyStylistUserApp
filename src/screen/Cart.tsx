@@ -42,6 +42,7 @@ const Cart = () => {
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
+
     dates.map((eItem, index) => {
       if (eItem.id === item.id) {
         eItem.isSelected = true;

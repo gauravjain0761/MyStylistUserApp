@@ -9,9 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { FC, useState } from "react";
 import { colors } from "../../theme/color";
 import {
+  dispatchNavigation,
   generateTimes,
   generateWeekDates,
   hp,
@@ -23,6 +24,7 @@ import { icons, images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import {
   Dates,
+  Make_Up,
   Time,
   Women_Services,
   barbers,
@@ -39,21 +41,35 @@ import {
   LocationModal,
   Modals,
   TimeSelector,
+  WeekDateSelector,
 } from "../../components";
 import babelConfig from "../../../babel.config";
-import { useNavigation } from "@react-navigation/native";
+import {
+  CommonActions,
+  DrawerActions,
+  NavigationProp,
+  useNavigation,
+} from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import DateSchedule from "../../components/common/DateSchedule";
-import TimeSchedule from "../../components/common/TimeSchedule";
 import CostModal from "../../components/common/CostModal";
+import { DrawerNavigationProp } from "@react-navigation/drawer";
+import { navigationRef } from "../../navigation/MainNavigator";
+
+type DrawerNavigationParams = {
+  navigation: DrawerNavigationProp<{}>;
+};
+
 const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [costmodal, setCostmodal] = useState(false);
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
+  const [servicesModal, setServicesModal] = useState(false);
+  const [modalTitle, setModalTitle] = useState(false);
 
   const { navigate } = useNavigation();
+  const navigation = useNavigation();
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
     setActiveIndex(index);
@@ -64,17 +80,35 @@ const Home = () => {
     navigate(screenName.YourStylist);
   };
 
+  const onPresstoNavigate = () => {
+    navigate(screenName.Service);
+  };
+
   const ModalHendler = (item: any) => {
     if (item == 1) {
       setIsModal(!isModal);
+    } else if (item == 2) {
     } else if (item == 3) {
       setCostmodal(!costmodal);
     }
   };
 
+  const onPressDateItem = (item: any) => {
+    let data = [...dates];
+
+    dates.map(({ eItem, index }: any) => {
+      if (eItem.id === item.id) {
+        eItem.isSelected = true;
+      } else {
+        eItem.isSelected = false;
+      }
+    });
+    setDates(data);
+  };
+
   const onPressTimeItem = (item: any) => {
     let data = [...times];
-    times.map((eItem, index) => {
+    times.map(({ eItem, index }: any) => {
       if (eItem.id === item.id) {
         eItem.isSelected = true;
       } else {
@@ -87,7 +121,7 @@ const Home = () => {
   return (
     <View style={styles?.container}>
       <LocationModal />
-      <HomeHeader />
+      <HomeHeader onPressBack={() => navigation.openDrawer()} />
       <View style={styles?.search_container}>
         <View style={styles?.search_box}>
           <Image
@@ -148,7 +182,13 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <TouchableOpacity style={styles?.service_card_container}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setServicesModal(!servicesModal),
+                        setModalTitle(item.services);
+                    }}
+                    style={styles?.service_card_container}
+                  >
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
@@ -170,7 +210,13 @@ const Home = () => {
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <TouchableOpacity style={styles?.service_card_container}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setServicesModal(!servicesModal),
+                        setModalTitle(item.services);
+                    }}
+                    style={styles?.service_card_container}
+                  >
                     <Text style={styles?.card_title}>{item?.services}</Text>
                     <Image
                       style={styles?.images}
@@ -299,17 +345,25 @@ const Home = () => {
           visible={isModal}
           close={setIsModal}
           contain={
-            <View>
+            <View style={styles.select_date_container}>
               <Text style={styles.select_date_title}>
                 {strings.Select_Date}
               </Text>
-              <DateSchedule Data={Dates} />
+              <View style={styles.week_container}>
+                <WeekDateSelector
+                  list={dates}
+                  onPressDate={(index) => onPressDateItem(dates[index])}
+                  containerStyle={styles.date_container}
+                  itemStyle={styles.item_style}
+                />
+              </View>
               <View style={styles.time_container}>
                 <Text style={styles.time_title}>{strings.Select_Time}</Text>
                 <View style={styles.timeselect_container}>
                   <TimeSelector
                     data={times}
                     onPressTime={(index) => onPressTimeItem(times[index])}
+                    itemStyle={styles.timeslot_style}
                   />
                 </View>
               </View>
@@ -349,6 +403,27 @@ const Home = () => {
           visible={costmodal}
           close={setCostmodal}
           contain={<CostModal visible={costmodal} close={setCostmodal} />}
+        />
+
+        <Modals
+          visible={servicesModal}
+          close={setServicesModal}
+          contain={
+            <View style={styles.makeup_modal_container}>
+              <Text style={styles.modal_title}>{modalTitle}</Text>
+              <View style={styles.card_conatiner}>
+                {Make_Up.map((item, index) => (
+                  <TouchableOpacity
+                    onPress={() => onPresstoNavigate()}
+                    style={styles?.makeup_card_container}
+                  >
+                    <Text style={styles?.makeup_title}>{item?.service}</Text>
+                    <Image style={styles?.makeup_images} source={item?.image} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          }
         />
       </ScrollView>
     </View>
@@ -531,5 +606,56 @@ const styles = StyleSheet.create({
   },
   timeselect_container: {
     alignItems: "center",
+    marginTop: hp(10),
+  },
+  date_container: {
+    width: "100%",
+  },
+  select_date_container: {
+    width: "100%",
+  },
+  week_container: {
+    marginHorizontal: wp(10),
+    marginTop: hp(16),
+  },
+  item_style: {
+    width: wp(62),
+    height: hp(70),
+  },
+  timeslot_style: {
+    marginBottom: hp(16),
+  },
+  service_modal_container: {},
+  modal_title: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+  },
+  makeup_card_container: {
+    borderWidth: 1,
+    borderColor: colors?.light_gray_border,
+    backgroundColor: colors?.white,
+    width: wp(100),
+    height: hp(120),
+    borderRadius: wp(8),
+    justifyContent: "space-between",
+    alignItems: "center",
+    overflow: "hidden",
+  },
+  makeup_images: {
+    width: wp(87),
+    height: hp(77.26),
+    marginTop: hp(3),
+  },
+  makeup_title: {
+    ...commonFontStyle(fontFamily.medium, 12, colors?.black),
+    textAlign: "center",
+    marginTop: hp(7),
+  },
+  makeup_modal_container: {},
+  card_conatiner: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: wp(17),
+    justifyContent: "flex-start",
+    marginTop: hp(11),
   },
 });

@@ -31,6 +31,11 @@ export const images = {
   green_button: require("../assets/image/green_button.png"),
   black_border_button: require("../assets/image/black_border_button.png"),
   book_button: require("../assets/image/book_button.png"),
+  grey_border_filter_button: require("../assets/image/grey_border_filter_button.png"),
+  review_user: require("../assets/image/review_user.png"),
+  banner1: require("../assets/image/banner1.png"),
+  banner2: require("../assets/image/banner2.png"),
+  drawerImg: require("../assets/image/drawerImg.png"),
 };
 
 export const icons = {

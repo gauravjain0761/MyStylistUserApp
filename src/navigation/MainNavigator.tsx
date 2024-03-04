@@ -4,6 +4,7 @@ import {
 } from "@react-navigation/native";
 import { FC } from "react";
 import StackNavigator from "./StackNavigator";
+import DrawerNavigator from "./DrawerNavigator";
 
 export const navigationRef = createNavigationContainerRef();
 

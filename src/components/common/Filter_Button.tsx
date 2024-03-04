@@ -15,7 +15,7 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 type props = {
   title: string;
   type: "icon" | "simple";
-  onPress?: () => any;
+  onPress?: (arg?: any) => any;
   containerStyle?: ViewStyle;
 };
 

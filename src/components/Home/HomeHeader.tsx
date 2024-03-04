@@ -6,10 +6,14 @@ import { hp, wp } from "../../helper/globalFunction";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FillBell, FillCart, FillLike, Hamburger } from "../../theme/SvgIcon";
 
-const HomeHeader = () => {
+type HomeProps = {
+  onPressBack?: () => void;
+};
+
+const HomeHeader = ({ onPressBack }: HomeProps) => {
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
-      <TouchableOpacity style={styles?.drawer_btn}>
+      <TouchableOpacity onPress={onPressBack} style={styles?.drawer_btn}>
         <Hamburger />
       </TouchableOpacity>
       <Image source={images?.header_logo} style={styles?.header_logo} />

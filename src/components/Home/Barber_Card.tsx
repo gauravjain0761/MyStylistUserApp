@@ -2,6 +2,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TextStyle,
   TouchableOpacity,
   View,
   ViewStyle,
@@ -31,6 +32,8 @@ type props = {
   jobs?: number | string;
   offers?: number | string;
   images?: any;
+  carouselitemWidth?: ViewStyle | TextStyle | any;
+  carouselitemHeight?: ViewStyle | TextStyle | any;
 };
 const Barber_Card = ({
   type,
@@ -44,6 +47,8 @@ const Barber_Card = ({
   rating,
   service,
   images,
+  carouselitemHeight = wp(144),
+  carouselitemWidth = wp(132),
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -53,7 +58,7 @@ const Barber_Card = ({
 
   return (
     <>
-      {type == "with Service" ? null : (
+      {type == "with Service" ? (
         <View style={styles.container}>
           <View style={styles.barber_card_container}>
             <View style={styles.image_conatiner}>
@@ -61,10 +66,10 @@ const Barber_Card = ({
                 <Carousel
                   layout={"default"}
                   data={images}
-                  sliderWidth={wp(132)}
-                  itemWidth={wp(132)}
-                  itemHeight={hp(144)}
-                  sliderHeight={hp(144)}
+                  sliderWidth={carouselitemWidth}
+                  itemWidth={carouselitemWidth}
+                  itemHeight={carouselitemHeight}
+                  sliderHeight={carouselitemHeight}
                   inactiveSlideScale={1}
                   renderItem={({ item }: any) => {
                     return (
@@ -72,6 +77,77 @@ const Barber_Card = ({
                         <Image
                           source={item.image}
                           style={styles?.carousel_img}
+                          resizeMode="stretch"
+                        />
+                      </View>
+                    );
+                  }}
+                  onSnapToItem={onSnapToItem}
+                />
+                <View style={styles.offer_badge}>
+                  <Offer_Badge />
+                  <Text style={styles?.offer_title}>
+                    {strings.Flat} {offers} {strings.OFF}
+                  </Text>
+                </View>
+              </View>
+              <Pagination
+                dotsLength={images.length}
+                activeDotIndex={activeIndex}
+                containerStyle={styles?.pagination_container}
+                dotStyle={styles?.dotStyle}
+                inactiveDotStyle={styles?.inactiveDotStyle}
+                inactiveDotScale={1}
+                dotContainerStyle={styles?.dotContainerStyle}
+              />
+            </View>
+            <View style={styles.barber_details_continer}>
+              <View style={styles.name_container}>
+                <TouchableOpacity onPress={onPress}>
+                  <Text style={styles.barber_name}>{name}</Text>
+                </TouchableOpacity>
+                <VerifyIcon width={14} height={14} />
+              </View>
+              <View style={styles.barber_job_coantiner}>
+                <View style={styles.rating_badge}>
+                  <Text style={styles.rating_title}>{rating}</Text>
+                  <StarIcon />
+                </View>
+                <View style={styles.seprator}></View>
+                <Text style={styles.jobs_title}>
+                  {jobs} {strings.Jobs_Done}
+                </Text>
+              </View>
+              <View style={styles.location_container}>
+                <CarIcon />
+                <Text style={styles.location_title}>{location}</Text>
+              </View>
+              <View style={styles.price_container}>
+                <Text style={styles.price_title}>{service}</Text>
+                <Text style={styles.price_title}>{price}</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <View style={styles.barber_card_container}>
+            <View style={styles.image_conatiner}>
+              <View style={styles.carousel_view}>
+                <Carousel
+                  layout={"default"}
+                  data={images}
+                  sliderWidth={carouselitemWidth}
+                  itemWidth={carouselitemWidth}
+                  itemHeight={carouselitemHeight}
+                  sliderHeight={carouselitemHeight}
+                  inactiveSlideScale={1}
+                  renderItem={({ item }: any) => {
+                    return (
+                      <View style={styles?.carousel_img_container}>
+                        <Image
+                          source={item.image}
+                          style={[styles?.carousel_img, carouselitemHeight]}
                           resizeMode="stretch"
                         />
                       </View>
@@ -144,7 +220,7 @@ const styles = StyleSheet.create({
   },
   barber_details_continer: {
     marginLeft: wp(28),
-    marginTop: hp(21),
+    // marginTop: hp(21),
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 28, colors.black),
@@ -177,7 +253,7 @@ const styles = StyleSheet.create({
     height: wp(4),
     backgroundColor: colors.dark_grey,
     borderRadius: wp(50),
-    marginHorizontal: wp(9),
+    marginHorizontal: wp(7),
   },
   jobs_title: {
     ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
@@ -185,7 +261,7 @@ const styles = StyleSheet.create({
   location_container: {
     flexDirection: "row",
     gap: wp(5),
-    marginTop: hp(13),
+    marginTop: hp(8),
     alignItems: "center",
   },
   location_title: {
@@ -232,5 +308,17 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: wp(15),
     overflow: "hidden",
+  },
+  price_container: {
+    paddingTop: hp(10),
+    justifyContent: "space-between",
+    flexDirection: "row",
+    borderTopWidth: 1,
+    marginTop: hp(10),
+    borderTopColor: colors.dashed_boredr,
+    borderStyle: "dashed",
+  },
+  price_title: {
+    ...commonFontStyle(fontFamily.medium, 15, colors.dark_grey_1),
   },
 });

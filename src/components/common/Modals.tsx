@@ -58,7 +58,5 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     borderTopLeftRadius: wp(20),
     borderTopRightRadius: wp(20),
-    bottom: 0,
-    // flex: 1,
   },
 });

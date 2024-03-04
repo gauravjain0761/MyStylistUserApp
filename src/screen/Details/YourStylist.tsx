@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import {
   BackHeader,
-  OfferItem,
+  Modals,
   PackagesItem,
   StylistItem,
 } from "../../components";
@@ -34,6 +34,7 @@ import { strings } from "../../helper/string";
 import MyWorkItem from "../../components/Details/MyWorkItem";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import ReviewModel from "../../components/Details/ReviewModal";
 
 type TagViewProps = {
   Icon?: any;
@@ -91,6 +92,7 @@ const YourStylist = () => {
   const [isOffers, setIsOffers] = useState(false);
   const [isPackages, setIsPackages] = useState(false);
   const [isMyWork, setIsMyWork] = useState(false);
+  const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -139,10 +141,13 @@ const YourStylist = () => {
               <VerifyIcon />
             </View>
             <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
-              <View style={styles.startContainer}>
+              <TouchableOpacity
+                style={styles.startContainer}
+                onPress={() => setIsModal(!isModal)}
+              >
                 <Text style={styles.startTextStyle}>{4.6}</Text>
                 <StarIcon />
-              </View>
+              </TouchableOpacity>
               <View style={styles.dotStyle} />
               <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
             </View>
@@ -258,6 +263,12 @@ const YourStylist = () => {
           </ImageBackground>
         </TouchableOpacity>
       </View>
+      <Modals
+        containStyle={{ maxHeight: "80%" }}
+        visible={isModal}
+        close={setIsModal}
+        contain={<ReviewModel />}
+      />
     </View>
   );
 };

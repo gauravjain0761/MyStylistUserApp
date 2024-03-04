@@ -11,6 +11,8 @@ import Login_Input from "./common/Login_Input";
 import Modals from "./common/Modals";
 import Barber_Card from "./Home/Barber_Card";
 import HomeHeader from "./Home/HomeHeader";
+import ReviewModal from "./Details/ReviewModal";
+import CostModal from "./common/CostModal";
 
 export {
   LocationModal,
@@ -26,4 +28,6 @@ export {
   Modals,
   Barber_Card,
   HomeHeader,
+  ReviewModal,
+  CostModal,
 };

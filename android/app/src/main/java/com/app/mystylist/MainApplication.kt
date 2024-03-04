@@ -1,4 +1,4 @@
-package com.barber
+package com.app.mystylist
 
 import android.app.Application
 import com.facebook.react.PackageList

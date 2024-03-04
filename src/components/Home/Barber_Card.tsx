@@ -34,6 +34,7 @@ type props = {
   images?: any;
   carouselitemWidth?: ViewStyle | TextStyle | any;
   carouselitemHeight?: ViewStyle | TextStyle | any;
+  onPressRating?: any;
 };
 const Barber_Card = ({
   type,
@@ -49,6 +50,7 @@ const Barber_Card = ({
   images,
   carouselitemHeight = wp(144),
   carouselitemWidth = wp(132),
+  onPressRating,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -109,10 +111,13 @@ const Barber_Card = ({
                 <VerifyIcon width={14} height={14} />
               </View>
               <View style={styles.barber_job_coantiner}>
-                <View style={styles.rating_badge}>
+                <TouchableOpacity
+                  onPress={() => onPressRating(true)}
+                  style={styles.rating_badge}
+                >
                   <Text style={styles.rating_title}>{rating}</Text>
                   <StarIcon />
-                </View>
+                </TouchableOpacity>
                 <View style={styles.seprator}></View>
                 <Text style={styles.jobs_title}>
                   {jobs} {strings.Jobs_Done}
@@ -180,10 +185,13 @@ const Barber_Card = ({
                 <VerifyIcon width={14} height={14} />
               </View>
               <View style={styles.barber_job_coantiner}>
-                <View style={styles.rating_badge}>
+                <TouchableOpacity
+                  onPress={() => onPressRating(true)}
+                  style={styles.rating_badge}
+                >
                   <Text style={styles.rating_title}>{rating}</Text>
                   <StarIcon />
-                </View>
+                </TouchableOpacity>
                 <View style={styles.seprator}></View>
                 <Text style={styles.jobs_title}>
                   {jobs} {strings.Jobs_Done}

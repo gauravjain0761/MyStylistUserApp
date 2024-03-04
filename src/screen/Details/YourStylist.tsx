@@ -267,6 +267,7 @@ const YourStylist = () => {
         containStyle={{ maxHeight: "80%" }}
         visible={isModal}
         close={setIsModal}
+        isIcon
         contain={<ReviewModel />}
       />
     </View>

@@ -78,15 +78,19 @@ const ReviewModal = () => {
                   <View style={styles.user_info}>
                     <Image source={images.review_user} style={styles.image} />
                     <View style={styles.user_title}>
-                      <Text>{strings.Jeffery_Bills}</Text>
-                      <Text>21-04-2023</Text>
+                      <Text style={styles.username}>
+                        {strings.Jeffery_Bills}
+                      </Text>
+                      <Text style={styles.date}>21-04-2023</Text>
                     </View>
                   </View>
-                  <RatingStars />
-                  <RatingStars />
-                  <RatingStars />
-                  <RatingStars />
-                  <RatingStars />
+                  <View style={styles.star_conatiner}>
+                    <RatingStars />
+                    <RatingStars />
+                    <RatingStars />
+                    <RatingStars />
+                    <RatingStars />
+                  </View>
                 </View>
                 <Text style={styles.review_contntent}>
                   {
@@ -176,9 +180,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginHorizontal: wp(21),
     alignItems: "center",
+    justifyContent: "space-between",
   },
   user_info: {
     flexDirection: "row",
+    alignItems: "center",
+    gap: wp(12),
   },
   image: {
     width: wp(40),
@@ -191,5 +198,17 @@ const styles = StyleSheet.create({
     lineHeight: hp(20),
     marginRight: wp(15),
     marginTop: hp(16),
+  },
+  star_conatiner: {
+    flexDirection: "row",
+    gap: wp(5),
+  },
+  username: {
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    lineHeight: hp(19),
+  },
+  date: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.gery_6),
+    lineHeight: hp(16),
   },
 });

@@ -8,15 +8,16 @@ import { screenName } from "../helper/routeNames";
 import Home from "../screen/Home/Home";
 import CustomDrawer from "../components/common/CustomDrawer";
 import StackNavigator from "./StackNavigator";
+import MyTabs from "../navigation/BottomTabBar";
 
 const DrawerNavigator = () => {
   const Drawer = createDrawerNavigator();
   return (
     <Drawer.Navigator
-      screenOptions={{ headerShown: false }}
+      screenOptions={{ headerShown: false, drawerType: "front" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
     >
-      <Drawer.Screen name={screenName.Home} component={Home} />
+      <Drawer.Screen name={screenName.BttomTabBar} component={MyTabs} />
     </Drawer.Navigator>
   );
 };

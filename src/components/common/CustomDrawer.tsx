@@ -1,88 +1,145 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import { images } from "../../theme/icons";
+import { icons, images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { strings } from "../../helper/string";
-import { Appointment, Favorites, RightArrow } from "../../theme/SvgIcon";
+import {
+  Appointment,
+  Drawer_Notification,
+  FAQ,
+  Favorites,
+  Logout,
+  PrivacyPolicy,
+  RightArrow,
+  Termsandconditions,
+} from "../../theme/SvgIcon";
 
 const CustomDrawer = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.image_container}>
-        <View style={styles.img_conatiner}>
-          <Image
-            resizeMode="contain"
-            source={images.drawerImg}
-            style={styles.img}
-          />
+      <View>
+        <View style={styles.image_container}>
+          <View style={styles.img_conatiner}>
+            <Image
+              resizeMode="contain"
+              source={images.drawerImg}
+              style={styles.img}
+            />
+          </View>
+          <Text style={styles.user_title}>{strings.Nickson_John}</Text>
         </View>
-        <Text style={styles.user_title}>{strings.Nickson_John}</Text>
-      </View>
-      <View style={styles.account_container}>
-        <Text style={styles.account_title}>{strings.Account_Setting}</Text>
-        <View style={styles.drawerTab_conatiner}>
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Favorites />
-              <Text style={styles.tab_title}>{strings.My_Favorites}</Text>
+        <View style={styles.account_container}>
+          <Text style={styles.account_title}>{strings.Account_Setting}</Text>
+          <View style={styles.drawerTab_conatiner}>
+            <View style={styles.drawer_border}>
+              <TouchableOpacity style={styles.Tab_container}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.favorites}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>{strings.My_Favorites}</Text>
+                </View>
+                <RightArrow />
+              </TouchableOpacity>
             </View>
-            <RightArrow />
-          </View>
 
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Appointment />
-              <Text style={styles.tab_title}>{strings.My_Appointments}</Text>
+            <View style={styles.drawer_border}>
+              <TouchableOpacity style={styles.Tab_container}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.appointment}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>
+                    {strings.My_Appointments}
+                  </Text>
+                </View>
+                <RightArrow />
+              </TouchableOpacity>
             </View>
-            <RightArrow />
-          </View>
 
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Favorites />
-              <Text style={styles.tab_title}>
-                {strings.Notification_Settings}
-              </Text>
+            <View style={styles.drawer_border}>
+              <TouchableOpacity style={styles.Tab_container}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.notifications}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>
+                    {strings.Notification_Settings}
+                  </Text>
+                </View>
+                <RightArrow />
+              </TouchableOpacity>
             </View>
-            <RightArrow />
-          </View>
 
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Favorites />
-              <Text style={styles.tab_title}>{strings.FAQ_s}</Text>
+            <View style={styles.drawer_border}>
+              <TouchableOpacity style={styles.Tab_container}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.faq}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>{strings.FAQ_s}</Text>
+                </View>
+                <RightArrow />
+              </TouchableOpacity>
             </View>
-            <RightArrow />
-          </View>
 
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Favorites />
-              <Text style={styles.tab_title}>{strings.Privacy_Policy}</Text>
+            <View style={styles.drawer_border}>
+              <TouchableOpacity style={styles.Tab_container}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.privacypolicy}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>{strings.Privacy_Policy}</Text>
+                </View>
+                <RightArrow />
+              </TouchableOpacity>
             </View>
-            <RightArrow />
-          </View>
 
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Favorites />
-              <Text style={styles.tab_title}>{strings.TermsConditions}</Text>
+            <View style={styles.drawer_border}>
+              <TouchableOpacity style={styles.Tab_container}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.terms}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>
+                    {strings.TermsConditions}
+                  </Text>
+                </View>
+                <RightArrow />
+              </TouchableOpacity>
             </View>
-            <RightArrow />
-          </View>
-
-          <View style={styles.Tab_container}>
-            <View style={styles.tab_img_constiner}>
-              <Favorites />
-              <Text style={styles.tab_title}>{strings.Logout}</Text>
+            <View style={[styles.drawer_border, { borderBottomWidth: 0 }]}>
+              <TouchableOpacity style={[styles.Tab_container]}>
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.logout}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={styles.tab_title}>{strings.Logout}</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-            <RightArrow />
           </View>
         </View>
       </View>
+      <TouchableOpacity style={styles.connect_btn}>
+        <Image source={images.contectus} style={styles.connect_us} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -90,12 +147,16 @@ const CustomDrawer = () => {
 export default CustomDrawer;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    height: "100%",
+    justifyContent: "space-between",
+  },
   image_container: {
     paddingLeft: wp(20),
     paddingBottom: hp(20),
     borderBottomWidth: hp(1),
     borderColor: colors.review_caed_border,
+    marginTop: hp(30),
   },
   img: {
     width: wp(74),
@@ -127,7 +188,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom: hp(20),
     marginTop: hp(20),
   },
   tab_img_constiner: {
@@ -137,5 +197,25 @@ const styles = StyleSheet.create({
   },
   tab_title: {
     ...commonFontStyle(fontFamily.medium, 14, colors.black),
+  },
+  drawer_border: {
+    borderBottomWidth: 1,
+    borderColor: colors.review_caed_border,
+    paddingBottom: hp(20),
+  },
+  connect_us: {
+    width: wp(127),
+    height: hp(48),
+    alignSelf: "flex-start",
+    justifyContent: "flex-start",
+  },
+  connect_btn: {
+    alignSelf: "flex-start",
+    marginBottom: hp(30),
+    paddingLeft: wp(20),
+  },
+  tab_img: {
+    width: wp(20),
+    height: wp(20),
   },
 });

@@ -40,6 +40,7 @@ import {
   HomeHeader,
   LocationModal,
   Modals,
+  ReviewModal,
   TimeSelector,
   WeekDateSelector,
 } from "../../components";
@@ -67,6 +68,7 @@ const Home = () => {
   const [times, setTimes] = useState(generateTimes());
   const [servicesModal, setServicesModal] = useState(false);
   const [modalTitle, setModalTitle] = useState(false);
+  const [reviewModal, setReviewModal] = useState(false);
 
   const { navigate } = useNavigation();
   const navigation = useNavigation();
@@ -334,6 +336,7 @@ const Home = () => {
                     location={item.address}
                     offers={item?.offers}
                     onPress={onPressItem}
+                    onPressRating={setReviewModal}
                   />
                 );
               }}
@@ -411,6 +414,7 @@ const Home = () => {
         <Modals
           visible={servicesModal}
           close={setServicesModal}
+          isIcon
           contain={
             <View style={styles.makeup_modal_container}>
               <Text style={styles.modal_title}>{modalTitle}</Text>
@@ -427,6 +431,14 @@ const Home = () => {
               </View>
             </View>
           }
+        />
+
+        <Modals
+          close={setReviewModal}
+          visible={reviewModal}
+          containStyle={{ maxHeight: "80%" }}
+          contain={<ReviewModal />}
+          isIcon
         />
       </ScrollView>
     </View>

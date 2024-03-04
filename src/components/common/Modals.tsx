@@ -10,6 +10,7 @@ import React from "react";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import Modal from "react-native-modal";
+import { ModalCloseIcon } from "../../theme/SvgIcon";
 
 type props = {
   visible: boolean;
@@ -18,6 +19,7 @@ type props = {
   close?: any;
   containStyle?: ViewStyle;
   containerStyle?: ViewStyle;
+  isIcon?: boolean;
 };
 
 const Modals = ({
@@ -27,6 +29,7 @@ const Modals = ({
   close,
   containStyle,
   containerStyle,
+  isIcon,
 }: props) => {
   return (
     <Modal
@@ -40,8 +43,16 @@ const Modals = ({
         margin: 0,
         justifyContent: "flex-end",
       }}
+      backdropColor="rgba(0, 0, 0, 0.8)"
     >
-      <View style={[styles.contain, containStyle]}>{contain}</View>
+      <>
+        {isIcon && (
+          <TouchableOpacity onPress={() => close(false)}>
+            <ModalCloseIcon />
+          </TouchableOpacity>
+        )}
+        <View style={[styles.contain, containStyle]}>{contain}</View>
+      </>
     </Modal>
   );
 };
@@ -58,5 +69,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     borderTopLeftRadius: wp(20),
     borderTopRightRadius: wp(20),
+    marginTop: hp(10),
   },
 });

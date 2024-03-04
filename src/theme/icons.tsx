@@ -38,6 +38,7 @@ export const images = {
   drawerImg: require("../assets/image/drawerImg.png"),
   book_home: require("../assets/image/book_home.png"),
   cart: require("../assets/image/cart.png"),
+  contectus: require("../assets/icon/contactus.png"),
 };
 
 export const icons = {
@@ -47,4 +48,13 @@ export const icons = {
   // home
   search_placehonder: require("../assets/icon/search_placehonder.png"),
   btn_bg: require("../assets/icon/btn_bg.png"),
+
+  //Drawer
+  favorites: require("../assets/icon/favorites.png"),
+  appointment: require("../assets/icon/receipt-disscount.png"),
+  notifications: require("../assets/icon/bell-notification.png"),
+  faq: require("../assets/icon/Faq.png"),
+  privacypolicy: require("../assets/icon/privacy.png"),
+  terms: require("../assets/icon/terms.png"),
+  logout: require("../assets/icon/logout.png"),
 };

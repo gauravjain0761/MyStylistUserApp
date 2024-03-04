@@ -7,22 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00E356F31AD99517003FC87E /* barberTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* barberTests.m */; };
-		088AED1961BB430DA5C9C7F8 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CEC327D7E3A04608A3CBFA78 /* Inter-Medium.ttf */; };
-		0C80B921A6F3F58F76C31292 /* libPods-barber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-barber.a */; };
-		1187C59DC0834083A0C7FAC6 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E1727D558E2436DBDC0ECB1 /* Inter-ExtraBold.ttf */; };
+		00E356F31AD99517003FC87E /* BarberTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BarberTests.m */; };
+		0C80B921A6F3F58F76C31292 /* libPods-Barber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		21157369CF794F409C515B1D /* Inter-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 19ECDE17AC644391AF73B4C7 /* Inter-Thin.ttf */; };
-		58EC3B3C534D41EA94383907 /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 57B8E1BFC0BF488282F4BB3E /* Inter-Light.ttf */; };
-		5B1D12581EF64A0E81E384DA /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7DBC27C404D24FA0B287372E /* Inter-Black.ttf */; };
-		6127655B8D8141E696ACE60B /* Inter-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BA10773A7385457281968E22 /* Inter-ExtraLight.ttf */; };
-		7699B88040F8A987B510C191 /* libPods-barber-barberTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-barber-barberTests.a */; };
+		42DC3EC352D945D9A52EEF5E /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D267D890D639466E8B37356C /* Inter-Light.ttf */; };
+		4A8F783414BE48C7B0DFE2C6 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 64F4A281A256460FBE2548BF /* Inter-Bold.ttf */; };
+		55831CA2B4E948FFAFDF4AA8 /* Inter-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1E5E23743D9845ED8FCD06E3 /* Inter-Thin.ttf */; };
+		5F4B60F65B384629A7BE8E10 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 54083D0BAE484DD0AC87EC82 /* Inter-ExtraBold.ttf */; };
+		7699B88040F8A987B510C191 /* libPods-Barber-BarberTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		EBD345904344472CAA170C2A /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A75DA053DCD046B8A702ED69 /* Inter-Bold.ttf */; };
-		F45919BD60B942B896FB7A66 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DE74A5F6B21843F8B3D529DB /* Inter-SemiBold.ttf */; };
-		FFAA22BB42C441DB9A11AA2A /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D8269516B32C45CF9A4D94F3 /* Inter-Regular.ttf */; };
+		BA12011446C645119E5E2BBC /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 14C2A0B67A7B4C79A3B5B6A2 /* Inter-Black.ttf */; };
+		CBA6076637374595987B8B0E /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9000EF8D59804A7BA8341C5F /* Inter-Medium.ttf */; };
+		CD23435409B446F59D5347EE /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A6388C3BE394513810977A9 /* Inter-SemiBold.ttf */; };
+		E2C2C95D2A014D62B3C2DA91 /* Inter-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AB090C2D26834D76A6C58D9E /* Inter-ExtraLight.ttf */; };
+		EB3553F42CEE436B818C411C /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 552D30B8F1CD4C50939F6DA6 /* Inter-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,36 +31,36 @@
 			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = barber;
+			remoteInfo = Barber;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		00E356EE1AD99517003FC87E /* barberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = barberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* BarberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BarberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* barberTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = barberTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* barber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = barber.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = barber/AppDelegate.h; sourceTree = "<group>"; };
-		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = barber/AppDelegate.mm; sourceTree = "<group>"; };
-		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = barber/Images.xcassets; sourceTree = "<group>"; };
-		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = barber/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = barber/main.m; sourceTree = "<group>"; };
-		19ECDE17AC644391AF73B4C7 /* Inter-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Thin.ttf"; path = "../assets/fonts/Inter-Thin.ttf"; sourceTree = "<group>"; };
-		19F6CBCC0A4E27FBF8BF4A61 /* libPods-barber-barberTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-barber-barberTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3B4392A12AC88292D35C810B /* Pods-barber.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-barber.debug.xcconfig"; path = "Target Support Files/Pods-barber/Pods-barber.debug.xcconfig"; sourceTree = "<group>"; };
-		5709B34CF0A7D63546082F79 /* Pods-barber.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-barber.release.xcconfig"; path = "Target Support Files/Pods-barber/Pods-barber.release.xcconfig"; sourceTree = "<group>"; };
-		57B8E1BFC0BF488282F4BB3E /* Inter-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Light.ttf"; path = "../assets/fonts/Inter-Light.ttf"; sourceTree = "<group>"; };
-		5B7EB9410499542E8C5724F5 /* Pods-barber-barberTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-barber-barberTests.debug.xcconfig"; path = "Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5DCACB8F33CDC322A6C60F78 /* libPods-barber.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-barber.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E1727D558E2436DBDC0ECB1 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraBold.ttf"; path = "../assets/fonts/Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
-		7DBC27C404D24FA0B287372E /* Inter-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Black.ttf"; path = "../assets/fonts/Inter-Black.ttf"; sourceTree = "<group>"; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = barber/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		89C6BE57DB24E9ADA2F236DE /* Pods-barber-barberTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-barber-barberTests.release.xcconfig"; path = "Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests.release.xcconfig"; sourceTree = "<group>"; };
-		A75DA053DCD046B8A702ED69 /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
-		BA10773A7385457281968E22 /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraLight.ttf"; path = "../assets/fonts/Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
-		CEC327D7E3A04608A3CBFA78 /* Inter-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Medium.ttf"; path = "../assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; };
-		D8269516B32C45CF9A4D94F3 /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
-		DE74A5F6B21843F8B3D529DB /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		00E356F21AD99517003FC87E /* BarberTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BarberTests.m; sourceTree = "<group>"; };
+		0A6388C3BE394513810977A9 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-SemiBold.ttf"; path = "../assets/fonts/Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		13B07F961A680F5B00A75B9A /* Barber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Barber.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Barber/AppDelegate.h; sourceTree = "<group>"; };
+		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Barber/AppDelegate.mm; sourceTree = "<group>"; };
+		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Barber/Images.xcassets; sourceTree = "<group>"; };
+		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Barber/Info.plist; sourceTree = "<group>"; };
+		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Barber/main.m; sourceTree = "<group>"; };
+		14C2A0B67A7B4C79A3B5B6A2 /* Inter-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Black.ttf"; path = "../assets/fonts/Inter-Black.ttf"; sourceTree = "<group>"; };
+		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Barber-BarberTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E5E23743D9845ED8FCD06E3 /* Inter-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Thin.ttf"; path = "../assets/fonts/Inter-Thin.ttf"; sourceTree = "<group>"; };
+		3B4392A12AC88292D35C810B /* Pods-Barber.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber.debug.xcconfig"; path = "Target Support Files/Pods-Barber/Pods-Barber.debug.xcconfig"; sourceTree = "<group>"; };
+		54083D0BAE484DD0AC87EC82 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraBold.ttf"; path = "../assets/fonts/Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
+		552D30B8F1CD4C50939F6DA6 /* Inter-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Regular.ttf"; path = "../assets/fonts/Inter-Regular.ttf"; sourceTree = "<group>"; };
+		5709B34CF0A7D63546082F79 /* Pods-Barber.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber.release.xcconfig"; path = "Target Support Files/Pods-Barber/Pods-Barber.release.xcconfig"; sourceTree = "<group>"; };
+		5B7EB9410499542E8C5724F5 /* Pods-Barber-BarberTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber-BarberTests.debug.xcconfig"; path = "Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests.debug.xcconfig"; sourceTree = "<group>"; };
+		5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Barber.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64F4A281A256460FBE2548BF /* Inter-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Bold.ttf"; path = "../assets/fonts/Inter-Bold.ttf"; sourceTree = "<group>"; };
+		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Barber/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		89C6BE57DB24E9ADA2F236DE /* Pods-Barber-BarberTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber-BarberTests.release.xcconfig"; path = "Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests.release.xcconfig"; sourceTree = "<group>"; };
+		9000EF8D59804A7BA8341C5F /* Inter-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Medium.ttf"; path = "../assets/fonts/Inter-Medium.ttf"; sourceTree = "<group>"; };
+		AB090C2D26834D76A6C58D9E /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-ExtraLight.ttf"; path = "../assets/fonts/Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
+		D267D890D639466E8B37356C /* Inter-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Inter-Light.ttf"; path = "../assets/fonts/Inter-Light.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7699B88040F8A987B510C191 /* libPods-barber-barberTests.a in Frameworks */,
+				7699B88040F8A987B510C191 /* libPods-Barber-BarberTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,20 +77,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C80B921A6F3F58F76C31292 /* libPods-barber.a in Frameworks */,
+				0C80B921A6F3F58F76C31292 /* libPods-Barber.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		00E356EF1AD99517003FC87E /* barberTests */ = {
+		00E356EF1AD99517003FC87E /* BarberTests */ = {
 			isa = PBXGroup;
 			children = (
-				00E356F21AD99517003FC87E /* barberTests.m */,
+				00E356F21AD99517003FC87E /* BarberTests.m */,
 				00E356F01AD99517003FC87E /* Supporting Files */,
 			);
-			path = barberTests;
+			path = BarberTests;
 			sourceTree = "<group>";
 		};
 		00E356F01AD99517003FC87E /* Supporting Files */ = {
@@ -101,7 +101,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		13B07FAE1A68108700A75B9A /* barber */ = {
+		13B07FAE1A68108700A75B9A /* Barber */ = {
 			isa = PBXGroup;
 			children = (
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -111,15 +111,15 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 			);
-			name = barber;
+			name = Barber;
 			sourceTree = "<group>";
 		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5DCACB8F33CDC322A6C60F78 /* libPods-barber.a */,
-				19F6CBCC0A4E27FBF8BF4A61 /* libPods-barber-barberTests.a */,
+				5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */,
+				19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -134,13 +134,13 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				13B07FAE1A68108700A75B9A /* barber */,
+				13B07FAE1A68108700A75B9A /* Barber */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
-				00E356EF1AD99517003FC87E /* barberTests */,
+				00E356EF1AD99517003FC87E /* BarberTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
-				FC384F0A46B34BDA8EF1D67B /* Resources */,
+				8AC855A2F30B4E00BB4EED36 /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -150,46 +150,46 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* barber.app */,
-				00E356EE1AD99517003FC87E /* barberTests.xctest */,
+				13B07F961A680F5B00A75B9A /* Barber.app */,
+				00E356EE1AD99517003FC87E /* BarberTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+		8AC855A2F30B4E00BB4EED36 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3B4392A12AC88292D35C810B /* Pods-barber.debug.xcconfig */,
-				5709B34CF0A7D63546082F79 /* Pods-barber.release.xcconfig */,
-				5B7EB9410499542E8C5724F5 /* Pods-barber-barberTests.debug.xcconfig */,
-				89C6BE57DB24E9ADA2F236DE /* Pods-barber-barberTests.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		FC384F0A46B34BDA8EF1D67B /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				7DBC27C404D24FA0B287372E /* Inter-Black.ttf */,
-				A75DA053DCD046B8A702ED69 /* Inter-Bold.ttf */,
-				5E1727D558E2436DBDC0ECB1 /* Inter-ExtraBold.ttf */,
-				BA10773A7385457281968E22 /* Inter-ExtraLight.ttf */,
-				57B8E1BFC0BF488282F4BB3E /* Inter-Light.ttf */,
-				CEC327D7E3A04608A3CBFA78 /* Inter-Medium.ttf */,
-				D8269516B32C45CF9A4D94F3 /* Inter-Regular.ttf */,
-				DE74A5F6B21843F8B3D529DB /* Inter-SemiBold.ttf */,
-				19ECDE17AC644391AF73B4C7 /* Inter-Thin.ttf */,
+				14C2A0B67A7B4C79A3B5B6A2 /* Inter-Black.ttf */,
+				64F4A281A256460FBE2548BF /* Inter-Bold.ttf */,
+				54083D0BAE484DD0AC87EC82 /* Inter-ExtraBold.ttf */,
+				AB090C2D26834D76A6C58D9E /* Inter-ExtraLight.ttf */,
+				D267D890D639466E8B37356C /* Inter-Light.ttf */,
+				9000EF8D59804A7BA8341C5F /* Inter-Medium.ttf */,
+				552D30B8F1CD4C50939F6DA6 /* Inter-Regular.ttf */,
+				0A6388C3BE394513810977A9 /* Inter-SemiBold.ttf */,
+				1E5E23743D9845ED8FCD06E3 /* Inter-Thin.ttf */,
 			);
 			name = Resources;
 			path = "";
 			sourceTree = "<group>";
 		};
+		BBD78D7AC51CEA395F1C20DB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3B4392A12AC88292D35C810B /* Pods-Barber.debug.xcconfig */,
+				5709B34CF0A7D63546082F79 /* Pods-Barber.release.xcconfig */,
+				5B7EB9410499542E8C5724F5 /* Pods-Barber-BarberTests.debug.xcconfig */,
+				89C6BE57DB24E9ADA2F236DE /* Pods-Barber-BarberTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* barberTests */ = {
+		00E356ED1AD99517003FC87E /* BarberTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "barberTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BarberTests" */;
 			buildPhases = (
 				A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -203,14 +203,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = barberTests;
-			productName = barberTests;
-			productReference = 00E356EE1AD99517003FC87E /* barberTests.xctest */;
+			name = BarberTests;
+			productName = BarberTests;
+			productReference = 00E356EE1AD99517003FC87E /* BarberTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* barber */ = {
+		13B07F861A680F5B00A75B9A /* Barber */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "barber" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Barber" */;
 			buildPhases = (
 				C38B50BA6285516D6DCD4F65 /* [CP] Check Pods Manifest.lock */,
 				13B07F871A680F5B00A75B9A /* Sources */,
@@ -224,9 +224,9 @@
 			);
 			dependencies = (
 			);
-			name = barber;
-			productName = barber;
-			productReference = 13B07F961A680F5B00A75B9A /* barber.app */;
+			name = Barber;
+			productName = Barber;
+			productReference = 13B07F961A680F5B00A75B9A /* Barber.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -246,7 +246,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "barber" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Barber" */;
 			compatibilityVersion = "Xcode 12.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -259,8 +259,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* barber */,
-				00E356ED1AD99517003FC87E /* barberTests */,
+				13B07F861A680F5B00A75B9A /* Barber */,
+				00E356ED1AD99517003FC87E /* BarberTests */,
 			);
 		};
 /* End PBXProject section */
@@ -279,15 +279,15 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				5B1D12581EF64A0E81E384DA /* Inter-Black.ttf in Resources */,
-				EBD345904344472CAA170C2A /* Inter-Bold.ttf in Resources */,
-				1187C59DC0834083A0C7FAC6 /* Inter-ExtraBold.ttf in Resources */,
-				6127655B8D8141E696ACE60B /* Inter-ExtraLight.ttf in Resources */,
-				58EC3B3C534D41EA94383907 /* Inter-Light.ttf in Resources */,
-				088AED1961BB430DA5C9C7F8 /* Inter-Medium.ttf in Resources */,
-				FFAA22BB42C441DB9A11AA2A /* Inter-Regular.ttf in Resources */,
-				F45919BD60B942B896FB7A66 /* Inter-SemiBold.ttf in Resources */,
-				21157369CF794F409C515B1D /* Inter-Thin.ttf in Resources */,
+				BA12011446C645119E5E2BBC /* Inter-Black.ttf in Resources */,
+				4A8F783414BE48C7B0DFE2C6 /* Inter-Bold.ttf in Resources */,
+				5F4B60F65B384629A7BE8E10 /* Inter-ExtraBold.ttf in Resources */,
+				E2C2C95D2A014D62B3C2DA91 /* Inter-ExtraLight.ttf in Resources */,
+				42DC3EC352D945D9A52EEF5E /* Inter-Light.ttf in Resources */,
+				CBA6076637374595987B8B0E /* Inter-Medium.ttf in Resources */,
+				EB3553F42CEE436B818C411C /* Inter-Regular.ttf in Resources */,
+				CD23435409B446F59D5347EE /* Inter-SemiBold.ttf in Resources */,
+				55831CA2B4E948FFAFDF4AA8 /* Inter-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -316,15 +316,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber/Pods-barber-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber/Pods-Barber-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber/Pods-barber-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber/Pods-Barber-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-barber/Pods-barber-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Barber/Pods-Barber-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		A55EABD7B0C7F3A422A6CC61 /* [CP] Check Pods Manifest.lock */ = {
@@ -342,7 +342,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-barber-barberTests-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Barber-BarberTests-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -364,7 +364,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-barber-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-Barber-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -377,15 +377,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
@@ -394,15 +394,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber/Pods-barber-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber/Pods-Barber-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber/Pods-barber-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber/Pods-Barber-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-barber/Pods-barber-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Barber/Pods-Barber-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F6A41C54EA430FDDC6A6ED99 /* [CP] Copy Pods Resources */ = {
@@ -411,15 +411,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-barber-barberTests/Pods-barber-barberTests-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -429,7 +429,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				00E356F31AD99517003FC87E /* barberTests.m in Sources */,
+				00E356F31AD99517003FC87E /* BarberTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -447,7 +447,7 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* barber */;
+			target = 13B07F861A680F5B00A75B9A /* Barber */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -455,14 +455,14 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-barber-barberTests.debug.xcconfig */;
+			baseConfigurationReference = 5B7EB9410499542E8C5724F5 /* Pods-Barber-BarberTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = barberTests/Info.plist;
+				INFOPLIST_FILE = BarberTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -476,17 +476,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/barber.app/barber";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Barber.app/Barber";
 			};
 			name = Debug;
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-barber-barberTests.release.xcconfig */;
+			baseConfigurationReference = 89C6BE57DB24E9ADA2F236DE /* Pods-Barber-BarberTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = barberTests/Info.plist;
+				INFOPLIST_FILE = BarberTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -500,19 +500,19 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/barber.app/barber";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Barber.app/Barber";
 			};
 			name = Release;
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-barber.debug.xcconfig */;
+			baseConfigurationReference = 3B4392A12AC88292D35C810B /* Pods-Barber.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
-				INFOPLIST_FILE = barber/Info.plist;
+				INFOPLIST_FILE = Barber/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -524,7 +524,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = barber;
+				PRODUCT_NAME = Barber;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -533,12 +533,12 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-barber.release.xcconfig */;
+			baseConfigurationReference = 5709B34CF0A7D63546082F79 /* Pods-Barber.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				INFOPLIST_FILE = barber/Info.plist;
+				INFOPLIST_FILE = Barber/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -550,7 +550,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
-				PRODUCT_NAME = barber;
+				PRODUCT_NAME = Barber;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -710,7 +710,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "barberTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "BarberTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -719,7 +719,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "barber" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "Barber" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -728,7 +728,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "barber" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "Barber" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,

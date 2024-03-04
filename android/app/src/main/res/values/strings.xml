@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">barber</string>
-     <color name="status_bar_color">#FFFFFF</color>
+    <string name="app_name">My Stylist</string>
+    <color name="status_bar_color">#FFFFFF</color>
 </resources>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,13 @@ import {
   StyleSheet,
   ImageBackground,
   TouchableOpacity,
-} from "react-native";
-import Modal from "react-native-modal";
-import { colors } from "../../theme/color";
-import { hp, wp } from "../../helper/globalFunction";
-import { strings } from "../../helper/string";
-import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { images } from "../../theme/icons";
+} from 'react-native';
+import Modal from 'react-native-modal';
+import {colors} from '../../theme/color';
+import {hp, wp} from '../../helper/globalFunction';
+import {strings} from '../../helper/string';
+import {commonFontStyle, fontFamily} from '../../theme/fonts';
+import {images} from '../../theme/icons';
 
 const LocationModal = () => {
   const [isModal, setIsModal] = useState(true);
@@ -25,34 +25,32 @@ const LocationModal = () => {
           style={styles.imageStyle}
         />
         <Text style={styles.titleTextStyle}>
-          {strings["Allow us to access your location"]}
+          {strings['Allow us to access your location']}
         </Text>
         <Text style={styles.greyTextStyle}>
           {
             strings[
-              "We need access to your location to show you relevant Stylists, Offers and Packages"
+              'We need access to your location to show you relevant Stylists, Offers and Packages'
             ]
           }
         </Text>
         <View style={styles.rowStyle}>
           <TouchableOpacity onPress={() => setIsModal(false)}>
             <ImageBackground
-              resizeMode="cover"
+              resizeMode="contain"
               style={styles.buttonStyle}
-              source={images.gery_button}
-            >
+              source={images.gery_button}>
               <Text style={styles.buttonTextStyle}>
-                {strings["Don’t Allow"]}
+                {strings['Don’t Allow']}
               </Text>
             </ImageBackground>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setIsModal(false)}>
             <ImageBackground
-              resizeMode="cover"
+              resizeMode="contain"
               style={styles.buttonStyle}
-              source={images.blue_button}
-            >
-              <Text style={styles.buttonTextStyle}>{strings["Allow"]}</Text>
+              source={images.blue_button}>
+              <Text style={styles.buttonTextStyle}>{strings['Allow']}</Text>
             </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -64,7 +62,7 @@ const LocationModal = () => {
 const styles = StyleSheet.create({
   modalContainer: {
     margin: 0,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
   },
   innerContainer: {
     borderTopLeftRadius: 20,
@@ -77,32 +75,32 @@ const styles = StyleSheet.create({
     width: wp(150),
     borderRadius: wp(150 / 2),
     backgroundColor: colors.gray_border,
-    alignSelf: "center",
+    alignSelf: 'center',
     marginVertical: hp(10),
   },
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 23, colors.black),
-    textAlign: "center",
+    textAlign: 'center',
     marginTop: hp(10),
   },
   greyTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.gery_1),
-    textAlign: "center",
+    textAlign: 'center',
     marginVertical: hp(5),
     lineHeight: 20,
   },
   rowStyle: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginVertical: hp(10),
     marginTop: hp(25),
   },
   buttonStyle: {
     height: hp(60),
     width: wp(165),
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   buttonTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black_2),

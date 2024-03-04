@@ -8,9 +8,15 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import { BackHeader, TimeSelector, WeekDateSelector } from "../components";
+import {
+  BackHeader,
+  CongratulationModal,
+  TimeSelector,
+  WeekDateSelector,
+} from "../components";
 import { strings } from "../helper/string";
 import {
+  dispatchNavigation,
   generateTimes,
   generateWeekDates,
   hp,
@@ -21,6 +27,7 @@ import { commonFontStyle, fontFamily } from "../theme/fonts";
 import { CarIcon, StarIcon, VerifyIcon } from "../theme/SvgIcon";
 import { images } from "../theme/icons";
 import moment from "moment";
+import { screenName } from "../helper/routeNames";
 
 type RowItemValueProps = {
   title: string;
@@ -39,6 +46,7 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 const Cart = () => {
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
+  const [isShowCongrestModal, setIsShowCongrestModal] = useState(false);
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
@@ -65,77 +73,114 @@ const Cart = () => {
     setTimes(data);
   };
 
+  let data = ["1"];
+
+  const onPressBook = () => {
+    setIsShowCongrestModal(true);
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Cart"]} />
-      <ScrollView style={{ flex: 1 }}>
-        <View style={styles.whiteContainer}>
-          <View style={styles.rowStyle}>
-            <Image style={styles.personStyle} source={images.barber} />
-            <View style={styles.columStyle}>
-              <View style={styles.rowNameStyle}>
-                <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
-                <VerifyIcon />
-              </View>
-              <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
-                <View style={styles.startContainer}>
-                  <Text style={styles.startTextStyle}>{4.6}</Text>
-                  <StarIcon />
+      {data?.length === 0 ? (
+        <View style={styles.centerContainer}>
+          <Image
+            resizeMode="contain"
+            source={images.cart}
+            style={styles.cartIconStyle}
+          />
+          <Text style={styles.cartTextStyle}>
+            {strings["Your cart is empty"]}
+          </Text>
+          <Text style={styles.greyCartTextStyle}>
+            {
+              strings[
+                "Looks like you have not added anything to you cart.Go ahead & explore top categories."
+              ]
+            }
+          </Text>
+        </View>
+      ) : (
+        <>
+          <ScrollView style={{ flex: 1 }}>
+            <View style={styles.whiteContainer}>
+              <View style={styles.rowStyle}>
+                <Image style={styles.personStyle} source={images.barber} />
+                <View style={styles.columStyle}>
+                  <View style={styles.rowNameStyle}>
+                    <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+                    <VerifyIcon />
+                  </View>
+                  <View
+                    style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}
+                  >
+                    <View style={styles.startContainer}>
+                      <Text style={styles.startTextStyle}>{4.6}</Text>
+                      <StarIcon />
+                    </View>
+                    <View style={styles.dotStyle} />
+                    <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
+                  </View>
+                  <View style={styles.rowNameStyle}>
+                    <CarIcon />
+                    <Text style={styles.locationTextStyle}>
+                      {"Sector 67, Mohali"}
+                    </Text>
+                  </View>
                 </View>
-                <View style={styles.dotStyle} />
-                <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
-              </View>
-              <View style={styles.rowNameStyle}>
-                <CarIcon />
-                <Text style={styles.locationTextStyle}>
-                  {"Sector 67, Mohali"}
-                </Text>
               </View>
             </View>
+            <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
+              <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
+              <RowItemValue title="Hair Cut" value="₹200" />
+              <RowItemValue title="Beard Trim" value="₹100" />
+              <RowItemValue title="Hair color" value="₹500" />
+              <RowItemValue title="Discount Applied" value="-₹300" />
+              <RowItemValue title="Tax" value="₹50" />
+              <RowItemValue title="Payment Method" value="Cash" />
+              <View style={styles.lineStyle} />
+              <View style={styles.rowSpaceStyle}>
+                <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
+                <Text style={styles.valueTextStyle}>{"₹550.00"}</Text>
+              </View>
+            </View>
+            <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
+              <Text style={styles.titleStyle}>{strings["Select Date"]}</Text>
+              <WeekDateSelector
+                list={dates}
+                onPressDate={(index) => onPressDateItem(dates[index])}
+              />
+            </View>
+            <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
+              <Text style={styles.titleStyle}>{strings["Select Time"]}</Text>
+              <TimeSelector
+                data={times}
+                onPressTime={(index) => onPressTimeItem(times[index])}
+              />
+            </View>
+            <CongratulationModal
+              isVisible={isShowCongrestModal}
+              onPressHome={() => {
+                setIsShowCongrestModal(false);
+                dispatchNavigation(screenName.Home);
+              }}
+            />
+          </ScrollView>
+          <View style={styles.bottomStyle}>
+            <TouchableOpacity onPress={onPressBook}>
+              <ImageBackground
+                resizeMode="contain"
+                style={styles.bookImgStyle}
+                source={images.book_button}
+              >
+                <Text style={styles.bookTextStyle}>
+                  {strings["Book  Appointment"]}
+                </Text>
+              </ImageBackground>
+            </TouchableOpacity>
           </View>
-        </View>
-        <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-          <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-          <RowItemValue title="Hair Cut" value="₹200" />
-          <RowItemValue title="Beard Trim" value="₹100" />
-          <RowItemValue title="Hair color" value="₹500" />
-          <RowItemValue title="Discount Applied" value="-₹300" />
-          <RowItemValue title="Tax" value="₹50" />
-          <RowItemValue title="Payment Method" value="Cash" />
-          <View style={styles.lineStyle} />
-          <View style={styles.rowSpaceStyle}>
-            <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-            <Text style={styles.valueTextStyle}>{"₹550.00"}</Text>
-          </View>
-        </View>
-        <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-          <Text style={styles.titleStyle}>{strings["Select Date"]}</Text>
-          <WeekDateSelector
-            list={dates}
-            onPressDate={(index) => onPressDateItem(dates[index])}
-          />
-        </View>
-        <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-          <Text style={styles.titleStyle}>{strings["Select Time"]}</Text>
-          <TimeSelector
-            data={times}
-            onPressTime={(index) => onPressTimeItem(times[index])}
-          />
-        </View>
-      </ScrollView>
-      <View style={styles.bottomStyle}>
-        <TouchableOpacity>
-          <ImageBackground
-            resizeMode="contain"
-            style={styles.bookImgStyle}
-            source={images.book_button}
-          >
-            <Text style={styles.bookTextStyle}>
-              {strings["Book  Appointment"]}
-            </Text>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
+        </>
+      )}
     </View>
   );
 };
@@ -240,6 +285,29 @@ const styles = StyleSheet.create({
   },
   bookTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cartIconStyle: {
+    height: wp(150),
+    width: wp(150),
+    alignSelf: "center",
+    marginLeft: -wp(30),
+    marginBottom: hp(10),
+  },
+  cartTextStyle: {
+    ...commonFontStyle(fontFamily.bold, 20, colors.black),
+    marginTop: hp(20),
+    textAlign: "center",
+  },
+  greyCartTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.gery_8),
+    textAlign: "center",
+    marginHorizontal: wp(20),
+    marginVertical: hp(20),
   },
 });
 

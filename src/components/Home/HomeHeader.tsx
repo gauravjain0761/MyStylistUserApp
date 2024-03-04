@@ -8,9 +8,10 @@ import { FillBell, FillCart, FillLike, Hamburger } from "../../theme/SvgIcon";
 
 type HomeProps = {
   onPressBack?: () => void;
+  onPressCart?: () => void;
 };
 
-const HomeHeader = ({ onPressBack }: HomeProps) => {
+const HomeHeader = ({ onPressBack, onPressCart }: HomeProps) => {
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <TouchableOpacity onPress={onPressBack} style={styles?.drawer_btn}>
@@ -21,7 +22,7 @@ const HomeHeader = ({ onPressBack }: HomeProps) => {
         <TouchableOpacity>
           <FillLike />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPressCart}>
           <FillCart />
         </TouchableOpacity>
         <TouchableOpacity>

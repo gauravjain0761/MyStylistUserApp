@@ -36,6 +36,8 @@ export const images = {
   banner1: require("../assets/image/banner1.png"),
   banner2: require("../assets/image/banner2.png"),
   drawerImg: require("../assets/image/drawerImg.png"),
+  book_home: require("../assets/image/book_home.png"),
+  cart: require("../assets/image/cart.png"),
 };
 
 export const icons = {

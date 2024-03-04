@@ -13,6 +13,7 @@ import Barber_Card from "./Home/Barber_Card";
 import HomeHeader from "./Home/HomeHeader";
 import ReviewModal from "./Details/ReviewModal";
 import CostModal from "./common/CostModal";
+import CongratulationModal from "./Details/CongratulationModal";
 
 export {
   LocationModal,
@@ -30,4 +31,5 @@ export {
   HomeHeader,
   ReviewModal,
   CostModal,
+  CongratulationModal,
 };

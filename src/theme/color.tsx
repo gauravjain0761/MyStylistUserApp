@@ -21,6 +21,7 @@ export const colors = {
   gery_5: "#8B8B8B",
   gery_6: "#666666",
   gery_7: "#DEDEDE",
+  gery_8: "#989898",
 
   black_2: "#444444",
   green_1: "#1BA041",

@@ -121,7 +121,10 @@ const Home = () => {
   return (
     <View style={styles?.container}>
       <LocationModal />
-      <HomeHeader onPressBack={() => navigation.openDrawer()} />
+      <HomeHeader
+        onPressBack={() => navigation.openDrawer()}
+        onPressCart={() => navigate(screenName.Cart)}
+      />
       <View style={styles?.search_container}>
         <View style={styles?.search_box}>
           <Image

@@ -57,4 +57,13 @@ export const strings = {
   Privacy_Policy: "Privacy Policy",
   TermsConditions: "Terms & Conditions",
   Logout: "Logout",
+  Congratulation: "Congratulation",
+  "You can view your booking in the appointment section.":
+    "You can view your booking in the appointment section.",
+  "Please pay in person to the Stylist.":
+    "Please pay in person to the Stylist.",
+  "Back to Home": "Back to Home",
+  "Your cart is empty": "Your cart is empty",
+  "Looks like you have not added anything to you cart.Go ahead & explore top categories.":
+    "Looks like you have not added anything to you cart. Go ahead & explore top categories.",
 };

@@ -1,4 +1,4 @@
-package com.app.mystylist
+package com.mystylist.user
 
 import android.app.Application
 import com.facebook.react.PackageList

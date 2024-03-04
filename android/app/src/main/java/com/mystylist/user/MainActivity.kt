@@ -1,4 +1,4 @@
-package com.app.mystylist
+package com.mystylist.user
 import android.os.Bundle;
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

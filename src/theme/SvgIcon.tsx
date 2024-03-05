@@ -346,8 +346,8 @@ export const PackagesText = () => (
 export const FillLike = () => {
   return (
     <Svg
-      width="24"
-      height="24"
+      width="26"
+      height="26"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -366,8 +366,8 @@ export const FillLike = () => {
 export const FillCart = () => {
   return (
     <Svg
-      width="24"
-      height="24"
+      width="26"
+      height="26"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -386,8 +386,8 @@ export const FillCart = () => {
 export const FillBell = () => {
   return (
     <Svg
-      width="24"
-      height="24"
+      width="26"
+      height="26"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -406,8 +406,8 @@ export const FillBell = () => {
 export const Hamburger = () => {
   return (
     <Svg
-      width="28"
-      height="28"
+      width="30"
+      height="30"
       viewBox="0 0 28 28"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -744,85 +744,6 @@ export const ModalCloseIcon = () => {
       <Path
         d="M20 10L10 20M10 10L20 20M26.25 15C26.25 21.2132 21.2132 26.25 15 26.25C8.7868 26.25 3.75 21.2132 3.75 15C3.75 8.7868 8.7868 3.75 15 3.75C21.2132 3.75 26.25 8.7868 26.25 15Z"
         stroke="white"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </Svg>
-  );
-};
-
-export const TabHome = () => {
-  return (
-    <Svg
-      width="25"
-      height="24"
-      viewBox="0 0 25 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <Path
-        d="M4.5 10L12.5 3L20.5 10L20.5 20H15.5V16C15.5 15.2044 15.1839 14.4413 14.6213 13.8787C14.0587 13.3161 13.2957 13 12.5 13C11.7044 13 10.9413 13.3161 10.3787 13.8787C9.81607 14.4413 9.5 15.2043 9.5 16V20H4.5L4.5 10Z"
-        stroke="#666666"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </Svg>
-  );
-};
-
-export const TabOffer = () => {
-  return (
-    <Svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <Path
-        d="M8 16L16 8M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM17 15C17 16.1046 16.1046 17 15 17C13.8954 17 13 16.1046 13 15C13 13.8954 13.8954 13 15 13C16.1046 13 17 13.8954 17 15ZM11 9C11 10.1046 10.1046 11 9 11C7.89543 11 7 10.1046 7 9C7 7.89543 7.89543 7 9 7C10.1046 7 11 7.89543 11 9Z"
-        stroke="#666666"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </Svg>
-  );
-};
-
-export const Packages = () => {
-  return (
-    <Svg
-      width="25"
-      height="24"
-      viewBox="0 0 25 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <Path
-        d="M8.5 13H14.5M8.5 17H16.5M13.5 3H5.5V21H19.5V9M13.5 3H14.5L19.5 8V9M13.5 3V7C13.5 8 14.5 9 15.5 9H19.5"
-        stroke="#666666"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </Svg>
-  );
-};
-export const Chat = () => {
-  return (
-    <Svg
-      width="25"
-      height="24"
-      viewBox="0 0 25 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <Path
-        d="M8.5 9.5H15.5M8.5 13.5H13.5M15.8 19.1L21.5 21L19.6 15.3C19.6 15.3 20.5 14 20.5 11.5C20.5 6.80558 16.6944 3 12 3C7.30558 3 3.5 6.80558 3.5 11.5C3.5 16.1944 7.30558 20 12 20C14.5847 20 15.8 19.1 15.8 19.1Z"
-        stroke="#666666"
         stroke-width="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"

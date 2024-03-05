@@ -39,6 +39,7 @@ export const images = {
   book_home: require("../assets/image/book_home.png"),
   cart: require("../assets/image/cart.png"),
   contectus: require("../assets/icon/contactus.png"),
+  oval_grey_button: require("../assets/image/oval_grey_button.png"),
 };
 
 export const icons = {

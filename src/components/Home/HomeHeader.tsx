@@ -52,8 +52,8 @@ const styles = StyleSheet.create({
   },
   drawer_btn: {},
   header_logo: {
-    width: wp(85),
-    height: hp(27),
+    width: wp(100),
+    height: hp(35),
     marginLeft: wp(50),
   },
   header_service_container: {

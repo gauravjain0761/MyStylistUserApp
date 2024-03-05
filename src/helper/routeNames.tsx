@@ -8,4 +8,11 @@ export const screenName = {
   DrawerNavigator: "DrawerNavigator",
   StackNavigator: "StackNavigator",
   BttomTabBar: "BttomTabBar",
+  tab_bar_name: {
+    Home: "Home",
+    Offer: "Offers",
+    Appointment: "Appointments",
+    Package: "Packages",
+    Chat: "Chats",
+  },
 };

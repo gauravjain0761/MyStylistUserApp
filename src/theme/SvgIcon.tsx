@@ -751,3 +751,134 @@ export const ModalCloseIcon = () => {
     </Svg>
   );
 };
+
+export const TabHome = ({ color = "#666666" }: { color?: any }) => {
+  return (
+    <Svg
+      width="25"
+      height="24"
+      viewBox="0 0 25 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M4.5 10L12.5 3L20.5 10L20.5 20H15.5V16C15.5 15.2044 15.1839 14.4413 14.6213 13.8787C14.0587 13.3161 13.2957 13 12.5 13C11.7044 13 10.9413 13.3161 10.3787 13.8787C9.81607 14.4413 9.5 15.2043 9.5 16V20H4.5L4.5 10Z"
+        stroke={color}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const TabOffer = ({ color = "#666666" }: { color?: any }) => {
+  return (
+    <Svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M8 16L16 8M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12ZM17 15C17 16.1046 16.1046 17 15 17C13.8954 17 13 16.1046 13 15C13 13.8954 13.8954 13 15 13C16.1046 13 17 13.8954 17 15ZM11 9C11 10.1046 10.1046 11 9 11C7.89543 11 7 10.1046 7 9C7 7.89543 7.89543 7 9 7C10.1046 7 11 7.89543 11 9Z"
+        stroke={color}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const PackagesTabIcon = ({ color = "#666666" }: { color?: any }) => {
+  return (
+    <Svg
+      width="25"
+      height="24"
+      viewBox="0 0 25 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M8.5 13H14.5M8.5 17H16.5M13.5 3H5.5V21H19.5V9M13.5 3H14.5L19.5 8V9M13.5 3V7C13.5 8 14.5 9 15.5 9H19.5"
+        stroke={color}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+export const ChatTabIcon = ({ color = "#666666" }: { color?: any }) => {
+  return (
+    <Svg
+      width="25"
+      height="24"
+      viewBox="0 0 25 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M8.5 9.5H15.5M8.5 13.5H13.5M15.8 19.1L21.5 21L19.6 15.3C19.6 15.3 20.5 14 20.5 11.5C20.5 6.80558 16.6944 3 12 3C7.30558 3 3.5 6.80558 3.5 11.5C3.5 16.1944 7.30558 20 12 20C14.5847 20 15.8 19.1 15.8 19.1Z"
+        stroke={color}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const AppointmentTabIcon = ({ color = "#666666" }: { color?: any }) => {
+  return (
+    <Svg
+      width="18"
+      height="20"
+      viewBox="0 0 18 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M17 19V18C17 16.8954 16.1046 16 15 16H11C9.89543 16 9 16.8954 9 18V19M6 9H1M17 7V5C17 3.89543 16.1046 3 15 3H3C1.89543 3 1 3.89543 1 5V17C1 18.1046 1.89543 19 3 19H5M12 1V5M6 1V5M15 11C15 12.1046 14.1046 13 13 13C11.8954 13 11 12.1046 11 11C11 9.89543 11.8954 9 13 9C14.1046 9 15 9.89543 15 11Z"
+        stroke={color}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const CloseIcon = () => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <G clip-path="url(#clip0_4862_67373)">
+      <Path
+        d="M18 6L6 18"
+        stroke="#666666"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <Path
+        d="M6 6L18 18"
+        stroke="#666666"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </G>
+    <Defs>
+      <ClipPath id="clip0_4862_67373">
+        <Rect width="24" height="24" fill="white" />
+      </ClipPath>
+    </Defs>
+  </Svg>
+);

@@ -35,4 +35,6 @@ export const colors = {
   review_card_bg: "#FAFAFA",
   dark_grey_1: "#1C1C1C",
   dashed_boredr: "#B0B0B0",
+
+  primary_light_blue_2: "#BCF4F1",
 };

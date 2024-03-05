@@ -40,6 +40,11 @@ export const images = {
   cart: require("../assets/image/cart.png"),
   contectus: require("../assets/icon/contactus.png"),
   oval_grey_button: require("../assets/image/oval_grey_button.png"),
+  offers_view: require("../assets/image/offers_view.png"),
+
+  man_hair_cut: require("../assets/image/man_hair_cut.png"),
+  new_offres: require("../assets/image/new_offres.png"),
+  woman_hair_cut: require("../assets/image/woman_hair_cut.png"),
 };
 
 export const icons = {

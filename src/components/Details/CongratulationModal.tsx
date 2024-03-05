@@ -9,7 +9,7 @@ import {
 import ReactNativeModal from "react-native-modal";
 import { colors } from "../../theme/color";
 import { hp, wp } from "../../helper/globalFunction";
-import { CongratulationIcon } from "../../theme/SvgIcon";
+import { CloseIcon, CongratulationIcon } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
@@ -23,6 +23,9 @@ const CongratulationModal = ({ isVisible, onPressHome }: props) => {
   return (
     <ReactNativeModal isVisible={isVisible}>
       <View style={styles.container}>
+        <TouchableOpacity onPress={onPressHome} style={styles.closeContainer}>
+          <CloseIcon />
+        </TouchableOpacity>
         <CongratulationIcon />
         <Text style={styles.titleTextStyle}>{strings["Congratulation"]}</Text>
         <Text style={styles.greyTextStyle}>
@@ -75,6 +78,12 @@ const styles = StyleSheet.create({
   },
   bookTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 17, colors.black),
+  },
+  closeContainer: {
+    position: "absolute",
+    alignSelf: "flex-end",
+    right: wp(20),
+    top: hp(20),
   },
 });
 

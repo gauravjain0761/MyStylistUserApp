@@ -3,25 +3,34 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../theme/color";
 import { hp, wp } from "../../helper/globalFunction";
-import { BackIcon, SearchIcon } from "../../theme/SvgIcon";
+import { BackIcon, Hamburger, SearchIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useNavigation } from "@react-navigation/native";
 
 type Props = {
   title: string;
   isSearch?: boolean;
+  isMenu?: boolean;
+  onPressMenu?: () => void;
 };
 
-const BackHeader = ({ title, isSearch }: Props) => {
+const BackHeader = ({ title, isSearch, isMenu, onPressMenu }: Props) => {
   const { goBack } = useNavigation();
 
   const onPressBack = () => goBack();
   const onPressSearch = () => {};
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <TouchableOpacity onPress={onPressBack}>
-        <BackIcon />
-      </TouchableOpacity>
+      {isMenu ? (
+        <TouchableOpacity onPress={onPressMenu}>
+          <Hamburger />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity onPress={onPressBack}>
+          <BackIcon />
+        </TouchableOpacity>
+      )}
+
       <Text style={styles.titleTextStyle}>{title}</Text>
       {isSearch ? (
         <TouchableOpacity onPress={onPressSearch}>

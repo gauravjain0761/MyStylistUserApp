@@ -15,10 +15,11 @@ import {
   RightArrow,
   Termsandconditions,
 } from "../../theme/SvgIcon";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const CustomDrawer = () => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <View>
         <View style={styles.image_container}>
           <View style={styles.img_conatiner}>
@@ -140,7 +141,7 @@ const CustomDrawer = () => {
       <TouchableOpacity style={styles.connect_btn}>
         <Image source={images.contectus} style={styles.connect_us} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 

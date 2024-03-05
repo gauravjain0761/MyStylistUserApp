@@ -882,3 +882,309 @@ export const CloseIcon = () => (
     </Defs>
   </Svg>
 );
+
+export const DashLineIcon = () => (
+  <Svg
+    width="200"
+    height="1"
+    viewBox="0 0 200 1"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path d="M0 0.5L200 0.499983" stroke="#B0B0B0" stroke-dasharray="6 6" />
+  </Svg>
+);
+
+export const TreeIcon = () => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M16.1694 10.0598H7.82933C6.64933 10.0598 6.23934 9.26982 6.92934 8.30982L11.0994 2.46982C11.5894 1.76982 12.4094 1.76982 12.8894 2.46982L17.0593 8.30982C17.7593 9.26982 17.3494 10.0598 16.1694 10.0598Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M17.5894 18.0001H6.41937C4.83937 18.0001 4.29937 16.9501 5.22937 15.6701L9.21936 10.0601H14.7894L18.7794 15.6701C19.7094 16.9501 19.1694 18.0001 17.5894 18.0001Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M12 22V18"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const MusicIcon = () => (
+  <Svg
+    width="25"
+    height="24"
+    viewBox="0 0 25 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M6.77991 21.9998C8.50304 21.9998 9.89991 20.6029 9.89991 18.8798C9.89991 17.1566 8.50304 15.7598 6.77991 15.7598C5.05678 15.7598 3.65991 17.1566 3.65991 18.8798C3.65991 20.6029 5.05678 21.9998 6.77991 21.9998Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M21.3384 16.7998V4.59985C21.3384 1.99985 19.7084 1.63985 18.0584 2.08985L11.8184 3.78985C10.6784 4.09985 9.89844 4.99985 9.89844 6.29985V8.46985V9.92985V18.8699"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M18.2216 19.9202C19.9447 19.9202 21.3416 18.5233 21.3416 16.8002C21.3416 15.077 19.9447 13.6802 18.2216 13.6802C16.4984 13.6802 15.1016 15.077 15.1016 16.8002C15.1016 18.5233 16.4984 19.9202 18.2216 19.9202Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M9.89844 9.5199L21.3384 6.3999"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const WiFiIcon = () => (
+  <Svg
+    width="25"
+    height="24"
+    viewBox="0 0 25 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M5.40991 11.8401C9.70991 8.5201 15.2999 8.5201 19.5999 11.8401"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M2.5 8.3601C8.56 3.6801 16.44 3.6801 22.5 8.3601"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M7.28906 15.4902C10.4391 13.0502 14.5491 13.0502 17.6991 15.4902"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M9.89844 19.1504C11.4784 17.9304 13.5284 17.9304 15.1084 19.1504"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const CameraIcon = () => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M6.75992 22H17.2399C19.9999 22 21.0999 20.31 21.2299 18.25L21.7499 9.99C21.8899 7.83 20.1699 6 17.9999 6C17.3899 6 16.8299 5.65 16.5499 5.11L15.8299 3.66C15.3699 2.75 14.1699 2 13.1499 2H10.8599C9.82992 2 8.62992 2.75 8.16992 3.66L7.44992 5.11C7.16992 5.65 6.60992 6 5.99992 6C3.82992 6 2.10992 7.83 2.24992 9.99L2.76992 18.25C2.88992 20.31 3.99992 22 6.75992 22Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M10.5 8H13.5"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M12 18C13.79 18 15.25 16.54 15.25 14.75C15.25 12.96 13.79 11.5 12 11.5C10.21 11.5 8.75 12.96 8.75 14.75C8.75 16.54 10.21 18 12 18Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const ProfileIcon = () => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M12.1586 10.87C12.0586 10.86 11.9386 10.86 11.8286 10.87C9.44859 10.79 7.55859 8.84 7.55859 6.44C7.55859 3.99 9.53859 2 11.9986 2C14.4486 2 16.4386 3.99 16.4386 6.44C16.4286 8.84 14.5386 10.79 12.1586 10.87Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M7.15875 14.56C4.73875 16.18 4.73875 18.82 7.15875 20.43C9.90875 22.27 14.4188 22.27 17.1688 20.43C19.5888 18.81 19.5888 16.17 17.1688 14.56C14.4288 12.73 9.91875 12.73 7.15875 14.56Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const CardIcon = () => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M2 8.50488H22"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M6 16.5049H8"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M10.5 16.5049H14.5"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-miterlimit="10"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M6.44 3.50488H17.55C21.11 3.50488 22 4.38488 22 7.89488V16.1049C22 19.6149 21.11 20.4949 17.56 20.4949H6.44C2.89 20.5049 2 19.6249 2 16.1149V7.89488C2 4.38488 2.89 3.50488 6.44 3.50488Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const PetIcon = () => (
+  <Svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M4.40869 16.75C4.16869 19.64 6.34869 22 9.24869 22H14.0387C17.2987 22 19.5387 19.37 18.9987 16.15C18.4287 12.77 15.1687 10 11.7387 10C8.01869 10 4.71869 13.04 4.40869 16.75Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M10.4688 7.5C11.8495 7.5 12.9688 6.38071 12.9688 5C12.9688 3.61929 11.8495 2.5 10.4688 2.5C9.08804 2.5 7.96875 3.61929 7.96875 5C7.96875 6.38071 9.08804 7.5 10.4688 7.5Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M17.3008 8.7002C18.4053 8.7002 19.3008 7.80476 19.3008 6.7002C19.3008 5.59563 18.4053 4.7002 17.3008 4.7002C16.1962 4.7002 15.3008 5.59563 15.3008 6.7002C15.3008 7.80476 16.1962 8.7002 17.3008 8.7002Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M21 12.7002C21.8284 12.7002 22.5 12.0286 22.5 11.2002C22.5 10.3718 21.8284 9.7002 21 9.7002C20.1716 9.7002 19.5 10.3718 19.5 11.2002C19.5 12.0286 20.1716 12.7002 21 12.7002Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M3.96875 10.7002C5.07332 10.7002 5.96875 9.80476 5.96875 8.7002C5.96875 7.59563 5.07332 6.7002 3.96875 6.7002C2.86418 6.7002 1.96875 7.59563 1.96875 8.7002C1.96875 9.80476 2.86418 10.7002 3.96875 10.7002Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);
+
+export const ElectricityIcon = () => (
+  <Svg
+    width="25"
+    height="24"
+    viewBox="0 0 25 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <Path
+      d="M11.0018 16H14.0018C16.5018 16 18.0018 14.2 18.0018 12V6.91C18.0018 5.86 17.1418 5 16.0918 5H8.92177C7.87177 5 7.01177 5.86 7.01177 6.91V12C7.00177 14.2 8.50176 16 11.0018 16Z"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M10 2V5"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M15 2V5"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <Path
+      d="M12.5 22V16"
+      stroke="#292D32"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </Svg>
+);

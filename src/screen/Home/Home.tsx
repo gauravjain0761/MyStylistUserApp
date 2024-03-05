@@ -39,6 +39,7 @@ import {
   LocationModal,
   Modals,
   ReviewModal,
+  SelectDateModal,
   TimeSelector,
   WeekDateSelector,
 } from "../../components";
@@ -92,7 +93,7 @@ const Home = () => {
   const onPressDateItem = (item: any) => {
     let data = [...dates];
 
-    dates.map(({ eItem, index }: any) => {
+    dates.map((eItem, index) => {
       if (eItem.id === item.id) {
         eItem.isSelected = true;
       } else {
@@ -104,7 +105,7 @@ const Home = () => {
 
   const onPressTimeItem = (item: any) => {
     let data = [...times];
-    times.map(({ eItem, index }: any) => {
+    times.map((eItem, index) => {
       if (eItem.id === item.id) {
         eItem.isSelected = true;
       } else {
@@ -135,7 +136,10 @@ const Home = () => {
           />
         </View>
       </View>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        stickyHeaderIndices={[5]}
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.carousel_container}>
           <Carousel
             layout={"default"}
@@ -294,110 +298,61 @@ const Home = () => {
             </Text>
             <View style={styles?.title_border}></View>
           </View>
-
-          <View style={styles?.service_filter_conatiner}>
-            <FlatList
-              data={stylists_filter}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              renderItem={({ item, index }: any) => {
-                return (
-                  <Filter_Button
-                    onPress={() => {
-                      ModalHendler(item.id);
-                    }}
-                    title={item?.title}
-                    type={item?.isIcon == true ? "icon" : "simple"}
-                  />
-                );
-              }}
-              ItemSeparatorComponent={() => (
-                <View style={styles?.filter_item_separator}></View>
-              )}
-            />
-          </View>
-
-          <View style={styles?.barber_card_container}>
-            <FlatList
-              data={barbers}
-              renderItem={({ item, index }) => {
-                return (
-                  <Barber_Card
-                    name={item.name}
-                    type="Without Service"
-                    images={item?.image}
-                    rating={item.rating}
-                    jobs={item?.jobs_done}
-                    location={item.address}
-                    offers={item?.offers}
-                    onPress={onPressItem}
-                    onPressRating={setReviewModal}
-                  />
-                );
-              }}
-              ItemSeparatorComponent={() => (
-                <View style={styles.card_separator}></View>
-              )}
-            />
-          </View>
         </View>
 
-        <Modals
+        <View style={styles?.service_filter_conatiner}>
+          <FlatList
+            data={stylists_filter}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item, index }: any) => {
+              return (
+                <Filter_Button
+                  onPress={() => {
+                    ModalHendler(item.id);
+                  }}
+                  title={item?.title}
+                  type={item?.isIcon == true ? "icon" : "simple"}
+                />
+              );
+            }}
+            ItemSeparatorComponent={() => (
+              <View style={styles?.filter_item_separator}></View>
+            )}
+          />
+        </View>
+
+        <View style={styles?.barber_card_container}>
+          <FlatList
+            data={barbers}
+            renderItem={({ item, index }) => {
+              return (
+                <Barber_Card
+                  name={item.name}
+                  type="Without Service"
+                  images={item?.image}
+                  rating={item.rating}
+                  jobs={item?.jobs_done}
+                  location={item.address}
+                  offers={item?.offers}
+                  onPress={onPressItem}
+                  onPressRating={setReviewModal}
+                />
+              );
+            }}
+            ItemSeparatorComponent={() => (
+              <View style={styles.card_separator}></View>
+            )}
+          />
+        </View>
+        <SelectDateModal
           visible={isModal}
           close={setIsModal}
-          contain={
-            <View style={styles.select_date_container}>
-              <Text style={styles.select_date_title}>
-                {strings.Select_Date}
-              </Text>
-              <View style={styles.week_container}>
-                <WeekDateSelector
-                  list={dates}
-                  onPressDate={(index) => onPressDateItem(dates[index])}
-                  containerStyle={styles.date_container}
-                  itemStyle={styles.item_style}
-                />
-              </View>
-              <View style={styles.time_container}>
-                <Text style={styles.time_title}>{strings.Select_Time}</Text>
-                <View style={styles.timeselect_container}>
-                  <TimeSelector
-                    data={times}
-                    onPressTime={(index) => onPressTimeItem(times[index])}
-                    itemStyle={styles.timeslot_style}
-                  />
-                </View>
-              </View>
-              <Text style={styles.info}>
-                {
-                  strings[
-                    "Timing can be adjusted by calling the Stylist after Booking"
-                  ]
-                }
-              </Text>
-              <View style={styles.btn_container}>
-                <TouchableOpacity onPress={() => setIsModal(!isModal)}>
-                  <ImageBackground
-                    source={images?.grey_border_button}
-                    style={styles.btn_style}
-                    resizeMode="contain"
-                  >
-                    <Text style={styles.btn_tite}>{strings.Cancel}</Text>
-                  </ImageBackground>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => setIsModal(!isModal)}>
-                  <ImageBackground
-                    source={images?.blue_button}
-                    style={styles.btn_style}
-                    resizeMode="contain"
-                  >
-                    <Text style={styles.btn_tite}>{strings.Apply}</Text>
-                  </ImageBackground>
-                </TouchableOpacity>
-              </View>
-            </View>
-          }
+          dates={dates}
+          onPressDateItem={onPressDateItem}
+          onPressTimeItem={onPressTimeItem}
+          setIsModal={setIsModal}
+          times={times}
         />
 
         <Modals
@@ -445,7 +400,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: colors?.white,
+    backgroundColor: colors.background_grey,
   },
   search_box: {
     width: "100%",
@@ -563,13 +518,15 @@ const styles = StyleSheet.create({
   },
   service_filter_conatiner: {
     paddingLeft: wp(20),
-    marginBottom: hp(31),
+    paddingBottom: hp(10),
+    backgroundColor: colors.background_grey,
   },
   filter_item_separator: {
     width: wp(7),
   },
   barber_card_container: {
     marginHorizontal: wp(20),
+    marginTop: hp(20),
   },
   card_separator: {
     height: hp(24),

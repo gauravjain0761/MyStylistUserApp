@@ -35,11 +35,11 @@ type props = {
   carouselitemWidth?: ViewStyle | TextStyle | any;
   carouselitemHeight?: ViewStyle | TextStyle | any;
   onPressRating?: any;
+  isNewYearOffer?: boolean;
 };
 const Barber_Card = ({
   type,
   name,
-  containerStyle,
   jobs,
   location,
   offers,
@@ -51,6 +51,7 @@ const Barber_Card = ({
   carouselitemHeight = wp(144),
   carouselitemWidth = wp(132),
   onPressRating,
+  isNewYearOffer,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -201,6 +202,17 @@ const Barber_Card = ({
                 <CarIcon />
                 <Text style={styles.location_title}>{location}</Text>
               </View>
+              {isNewYearOffer ? (
+                <>
+                  <View style={styles.dashlineStyle} />
+                  <View style={styles.rowSpaceStyle}>
+                    <Text style={styles.newofferTextStyle}>
+                      {strings["New Year Offer"]}
+                    </Text>
+                    <Text style={styles.newofferTextStyle}>{"₹1299"}</Text>
+                  </View>
+                </>
+              ) : null}
             </View>
           </View>
         </View>
@@ -231,7 +243,7 @@ const styles = StyleSheet.create({
     // marginTop: hp(21),
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.bold, 28, colors.black),
+    ...commonFontStyle(fontFamily.bold, 26, colors.black),
   },
   name_container: {
     flexDirection: "row",
@@ -264,7 +276,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(7),
   },
   jobs_title: {
-    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 13, colors.dark_grey),
   },
   location_container: {
     flexDirection: "row",
@@ -273,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   location_title: {
-    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 13, colors.dark_grey),
   },
   pagination_container: {
     justifyContent: "center",
@@ -328,5 +340,20 @@ const styles = StyleSheet.create({
   },
   price_title: {
     ...commonFontStyle(fontFamily.medium, 15, colors.dark_grey_1),
+  },
+  dashlineStyle: {
+    borderWidth: 1,
+    borderStyle: "dashed",
+    borderColor: colors.dashed_boredr,
+    marginVertical: hp(8),
+  },
+  rowSpaceStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: hp(3),
+  },
+  newofferTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.black),
   },
 });

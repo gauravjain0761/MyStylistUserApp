@@ -15,4 +15,5 @@ export const screenName = {
     Package: "Packages",
     Chat: "Chats",
   },
+  NewYearOffer: "NewYearOffer",
 };

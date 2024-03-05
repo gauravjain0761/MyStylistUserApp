@@ -72,4 +72,8 @@ export const strings = {
     "Our service is available for Chandigarh, Mohali,\nKharar, Panchkula and Zirakpur only.",
   Select_City: "Select City",
   Submit: "Submit",
+  "New Year Offer": "New Year Offer",
+  Availability: "Availability",
+  "All Days": "All Days",
+  Amenities: "Amenities",
 };

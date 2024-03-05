@@ -3,7 +3,6 @@ import {
   FlatList,
   Image,
   ImageBackground,
-  LayoutAnimation,
   Platform,
   ScrollView,
   StyleSheet,
@@ -23,18 +22,26 @@ import { hp, screen_width, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import {
-  ArrowUp,
   CarIcon,
   OfferIcon,
   StarIcon,
   VerifyIcon,
   OfferYellowIcon,
+  TreeIcon,
+  MusicIcon,
+  WiFiIcon,
+  CameraIcon,
+  ProfileIcon,
+  CardIcon,
+  PetIcon,
+  ElectricityIcon,
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import MyWorkItem from "../../components/Details/MyWorkItem";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import ReviewModel from "../../components/Details/ReviewModal";
+import LinearGradient from "react-native-linear-gradient";
 
 type TagViewProps = {
   Icon?: any;
@@ -87,6 +94,17 @@ const TagView = ({
   );
 };
 
+const amenitiesData = [
+  { id: 1, title: "Parking Space", icon: <TreeIcon /> },
+  { id: 2, title: "Music", icon: <MusicIcon /> },
+  { id: 2, title: "Wi-Fi", icon: <WiFiIcon /> },
+  { id: 2, title: "Selfie Station", icon: <CameraIcon /> },
+  { id: 2, title: "Child-Friendly", icon: <ProfileIcon /> },
+  { id: 2, title: "Credit Cards Accepted", icon: <CardIcon /> },
+  { id: 2, title: "Pets Friendly", icon: <PetIcon /> },
+  { id: 2, title: "Power Backup", icon: <ElectricityIcon /> },
+];
+
 const YourStylist = () => {
   const { navigate } = useNavigation();
   const [isOffers, setIsOffers] = useState(false);
@@ -132,7 +150,7 @@ const YourStylist = () => {
   return (
     <View style={styles.container}>
       <BackHeader isSearch title={"Your Stylist"} />
-      <ScrollView style={{ flex: 1 }}>
+      <ScrollView stickyHeaderIndices={[1]} style={{ flex: 1 }}>
         <View style={styles.rowStyle}>
           <Image style={styles.personStyle} source={images.barber} />
           <View style={styles.columStyle}>
@@ -250,6 +268,41 @@ const YourStylist = () => {
             </View>
           ) : null}
         </View>
+        <LinearGradient
+          start={{ x: 0.0, y: 0.25 }}
+          end={{ x: 0.5, y: 1.0 }}
+          style={styles.gradinetViewStyle}
+          colors={["#FFFFFF", "#E2F3F2"]}
+        >
+          <View>
+            <Text style={styles.boldTextStyle}>{strings["Availability"]}</Text>
+            <View
+              style={{ ...styles.rowSpaceBottomViewStyle, marginTop: hp(20) }}
+            >
+              <Text>{strings["All Days"]}</Text>
+              <Text>{"10AM - 10PM"}</Text>
+            </View>
+            <View style={styles.rowSpaceBottomViewStyle}>
+              <Text>{"Tuesday"}</Text>
+              <Text>{"Holiday"}</Text>
+            </View>
+            <View style={styles.lineBottomStyle} />
+            <Text style={styles.boldTextStyle}>{strings["Amenities"]}</Text>
+            <FlatList
+              numColumns={4}
+              data={amenitiesData}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item, index }) => {
+                return (
+                  <View key={index} style={styles.itemContainer}>
+                    <View style={styles.circleContainer}>{item.icon}</View>
+                    <Text style={styles.itemTextStyle}>{item.title}</Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+        </LinearGradient>
       </ScrollView>
       <View style={styles.elevationStyle}>
         <Text style={styles.priceTextStyle}>{"₹200"}</Text>
@@ -279,6 +332,7 @@ export default YourStylist;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.background_grey,
   },
   rowStyle: {
     flexDirection: "row",
@@ -404,5 +458,49 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 24, colors.black_2),
     flex: 1,
     textAlign: "center",
+  },
+  gradinetViewStyle: {
+    borderWidth: 1,
+    borderColor: colors.review_caed_border,
+    margin: wp(20),
+    borderRadius: 10,
+    paddingBottom: hp(30),
+    paddingTop: hp(10),
+  },
+  boldTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
+    marginTop: hp(20),
+    marginHorizontal: wp(20),
+  },
+  rowSpaceBottomViewStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginHorizontal: wp(20),
+    marginVertical: hp(10),
+  },
+  lineBottomStyle: {
+    borderTopWidth: 1,
+    borderColor: colors.review_caed_border,
+    marginVertical: hp(15),
+  },
+  itemContainer: {
+    width: wp(79),
+    marginTop: hp(20),
+    marginHorizontal: wp(2),
+  },
+  circleContainer: {
+    width: wp(50),
+    height: wp(50),
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: wp(50 / 2),
+    backgroundColor: colors.primary_light_blue_3,
+  },
+  itemTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 10, colors.black),
+    textAlign: "center",
+    marginTop: hp(5),
   },
 });

@@ -471,3 +471,26 @@ export const Make_Up = [
     image: images.wom_4,
   },
 ];
+
+export const offer_filter = [
+  {
+    id: 1,
+    title: "Female",
+  },
+  {
+    id: 2,
+    title: "Male",
+  },
+  {
+    id: 3,
+    title: "Nearest",
+  },
+  {
+    id: 4,
+    title: "Waxing",
+  },
+  {
+    id: 5,
+    title: "Skin Care",
+  },
+];

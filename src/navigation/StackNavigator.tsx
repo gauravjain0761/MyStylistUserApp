@@ -12,6 +12,7 @@ import YourStylist from "../screen/Details/YourStylist";
 import Cart from "../screen/Cart";
 import Service from "../screen/Service/Service";
 import DrawerNavigator from "./DrawerNavigator";
+import NewYearOffer from "../screen/Offer/NewYearOffer";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -39,6 +40,7 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.YourStylist} component={YourStylist} />
       <Stack.Screen name={screenName.Cart} component={Cart} />
       <Stack.Screen name={screenName.Service} component={Service} />
+      <Stack.Screen name={screenName.NewYearOffer} component={NewYearOffer} />
     </Stack.Navigator>
   );
 };

@@ -14,6 +14,7 @@ import HomeHeader from "./Home/HomeHeader";
 import ReviewModal from "./Details/ReviewModal";
 import CostModal from "./common/CostModal";
 import CongratulationModal from "./Details/CongratulationModal";
+import SelectDateModal from "./common/SelectDateModal";
 
 export {
   LocationModal,
@@ -32,4 +33,5 @@ export {
   ReviewModal,
   CostModal,
   CongratulationModal,
+  SelectDateModal,
 };

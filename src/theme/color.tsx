@@ -23,6 +23,7 @@ export const colors = {
   gery_7: "#DEDEDE",
   gery_8: "#989898",
   grey_9: "#707070",
+  gery_9: "#6F6F6F",
 
   black_2: "#444444",
   green_1: "#1BA041",
@@ -38,4 +39,7 @@ export const colors = {
   dashed_boredr: "#B0B0B0",
 
   primary_light_blue_2: "#BCF4F1",
+  primary_light_blue_3: "#61C0B9",
+
+  background_grey: "#F8F8F8",
 };

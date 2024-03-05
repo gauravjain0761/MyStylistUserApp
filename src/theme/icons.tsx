@@ -50,6 +50,7 @@ export const images = {
   barber4: require("../assets/image/barber4.png"),
   barber5: require("../assets/image/barber5.png"),
   barber6: require("../assets/image/barber6.png"),
+  new_year_offers: require("../assets/image/new_year_offers.png"),
 };
 
 export const icons = {

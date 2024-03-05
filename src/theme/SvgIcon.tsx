@@ -11,7 +11,7 @@ import {
   Svg,
 } from "react-native-svg";
 
-export const Dropdown_Down_Arrow = () => {
+export const Dropdown_Down_Arrow = ({ color = "#444444" }) => {
   return (
     <Svg
       width="9"
@@ -22,7 +22,7 @@ export const Dropdown_Down_Arrow = () => {
     >
       <Path
         d="M4.46559 6L0.00148444 -7.80528e-07L8.92969 0L4.46559 6Z"
-        fill="#444444"
+        fill={color}
       />
     </Svg>
   );

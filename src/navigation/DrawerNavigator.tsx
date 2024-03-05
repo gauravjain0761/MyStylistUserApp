@@ -15,7 +15,7 @@ const DrawerNavigator = () => {
       screenOptions={{ headerShown: false, drawerType: "front" }}
       drawerContent={(props) => <CustomDrawer {...props} />}
     >
-      <Drawer.Screen name={screenName.BttomTabBar} component={MyTabs} />
+      <Drawer.Screen name={screenName.BottomTabBar} component={MyTabs} />
     </Drawer.Navigator>
   );
 };

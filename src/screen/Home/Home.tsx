@@ -12,11 +12,9 @@ import {
 import React, { FC, useState } from "react";
 import { colors } from "../../theme/color";
 import {
-  dispatchNavigation,
   generateTimes,
   generateWeekDates,
   hp,
-  screen_height,
   screen_width,
   wp,
 } from "../../helper/globalFunction";
@@ -45,16 +43,12 @@ import {
   WeekDateSelector,
 } from "../../components";
 import babelConfig from "../../../babel.config";
-import {
-  CommonActions,
-  DrawerActions,
-  NavigationProp,
-  useNavigation,
-} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { navigationRef } from "../../navigation/MainNavigator";
+import CityModal from "../../components/common/CityModal";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
@@ -122,6 +116,7 @@ const Home = () => {
 
   return (
     <View style={styles?.container}>
+      <CityModal />
       <LocationModal />
       <HomeHeader
         onPressBack={() => navigation.openDrawer()}

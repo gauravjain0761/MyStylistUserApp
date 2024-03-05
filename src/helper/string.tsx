@@ -66,4 +66,10 @@ export const strings = {
   "Your cart is empty": "Your cart is empty",
   "Looks like you have not added anything to you cart.Go ahead & explore top categories.":
     "Looks like you have not added anything to you cart. Go ahead & explore top categories.",
+  Your_Appointments: "Your Appointments",
+  Select_your_City: "Select your City",
+  "Our service is available for Chandigarh, Mohali,Kharar, Panchkula and Zirakpur only.":
+    "Our service is available for Chandigarh, Mohali,\nKharar, Panchkula and Zirakpur only.",
+  Select_City: "Select City",
+  Submit: "Submit",
 };

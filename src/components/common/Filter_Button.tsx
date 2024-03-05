@@ -31,7 +31,6 @@ const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
               style={styles.oval_bg}
               resizeMode="stretch"
             >
-              {/* <View style={styles.top}></View> */}
               <Text style={styles.title}>{title}</Text>
               <Dropdown_Down_Arrow />
             </ImageBackground>

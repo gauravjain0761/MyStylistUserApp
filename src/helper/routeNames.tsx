@@ -7,7 +7,7 @@ export const screenName = {
   Service: "Service",
   DrawerNavigator: "DrawerNavigator",
   StackNavigator: "StackNavigator",
-  BttomTabBar: "BttomTabBar",
+  BottomTabBar: "BottomTabBar",
   tab_bar_name: {
     Home: "Home",
     Offer: "Offers",

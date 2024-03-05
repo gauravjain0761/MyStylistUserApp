@@ -1,10 +1,19 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, FlatList } from "react-native";
+import DrawerHeader from "../../components/common/DrawerHeader";
+import { strings } from "../../helper/string";
+import { Barber_Card } from "../../components";
+import { barbers } from "../../helper/constunts";
+import BarberAppointmentCard from "../../components/common/BarberAppointmentCard";
 
-const Appointments = () => {
+const Appointments = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text>{"Appointments"}</Text>
+      <DrawerHeader
+        onPressManu={() => navigation.openDrawer()}
+        title={strings.Your_Appointments}
+      />
+      <BarberAppointmentCard />
     </View>
   );
 };
@@ -12,8 +21,8 @@ const Appointments = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
   },
 });
 

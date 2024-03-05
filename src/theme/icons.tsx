@@ -45,6 +45,11 @@ export const images = {
   man_hair_cut: require("../assets/image/man_hair_cut.png"),
   new_offres: require("../assets/image/new_offres.png"),
   woman_hair_cut: require("../assets/image/woman_hair_cut.png"),
+  barber2: require("../assets/image/barber2.png"),
+  barber3: require("../assets/image/barber3.png"),
+  barber4: require("../assets/image/barber4.png"),
+  barber5: require("../assets/image/barber5.png"),
+  barber6: require("../assets/image/barber6.png"),
 };
 
 export const icons = {

@@ -34,6 +34,7 @@ const TimeSelector = ({
         return (
           <TouchableOpacity
             onPress={() => onPressTime(index)}
+            key={index}
             style={[
               {
                 ...styles.itemContainer,

@@ -11,6 +11,7 @@ import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import Modal from "react-native-modal";
 import { ModalCloseIcon } from "../../theme/SvgIcon";
+import { strings } from "../../helper/string";
 
 type props = {
   visible: boolean;
@@ -36,13 +37,7 @@ const Modals = ({
       isVisible={visible}
       animationIn="slideInUp"
       onBackdropPress={() => close(false)}
-      style={{
-        width: "100%",
-        alignItems: "center",
-        padding: 0,
-        margin: 0,
-        justifyContent: "flex-end",
-      }}
+      style={[styles.container_style, containerStyle]}
       backdropColor="rgba(0, 0, 0, 0.8)"
     >
       <>
@@ -70,5 +65,13 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: wp(20),
     borderTopRightRadius: wp(20),
     marginTop: hp(10),
+    marginBottom: 0,
+  },
+  container_style: {
+    width: "100%",
+    alignItems: "center",
+    padding: 0,
+    margin: 0,
+    justifyContent: "flex-end",
   },
 });

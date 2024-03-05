@@ -24,12 +24,17 @@ export const colors = {
   gery_8: "#989898",
   grey_9: "#707070",
   gery_9: "#6F6F6F",
+  grey_10: "#2E2E2E",
+  grey_11: "#6B6B6B",
+  grey_12: "#F9F8FE",
+  grey_13: "#C7C6CB",
 
   black_2: "#444444",
   green_1: "#1BA041",
   green_2: "#39938C",
   theme_1: "#28A599",
   green_opacity: "#E2F3F2",
+  green_3: "#2F7973",
 
   info_grey: "#8D8D8D",
   info_grey_2: "#373737",
@@ -40,6 +45,7 @@ export const colors = {
 
   primary_light_blue_2: "#BCF4F1",
   primary_light_blue_3: "#61C0B9",
+  primary_light_blue_4: "#CCF0EE",
 
   background_grey: "#F8F8F8",
 };

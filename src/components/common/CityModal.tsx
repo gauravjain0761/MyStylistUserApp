@@ -35,16 +35,19 @@ const CityModal = () => {
         close={setIsModal}
         containerStyle={styles.conatiner}
         containStyle={styles.containStyle}
+        IsBackdropPress={false}
         contain={
           <View style={styles.modal_container}>
             <Text style={styles.title}>{strings.Select_your_City}</Text>
             <View style={styles.details_container}>
               <Text style={styles.details}>
-                {
-                  strings[
-                    "Our service is available for Chandigarh, Mohali,Kharar, Panchkula and Zirakpur only."
-                  ]
-                }
+                {strings["Our service is available for"]}
+                <Text style={styles.details_dark}>
+                  {strings["Chandigarh, Mohali,Kharar, Panchkula"]}
+                </Text>
+                and
+                <Text style={styles.details_dark}>{strings["Zirakpur"]}</Text>
+                only.
               </Text>
             </View>
             <Text style={styles.select_title}>{strings.Select_City}</Text>
@@ -58,7 +61,7 @@ const CityModal = () => {
               valueField="value"
               placeholder="Please select"
               value={value}
-              onChange={({ item }: any) => {
+              onChange={(item: any) => {
                 setValue(item.value);
               }}
               renderRightIcon={() => <Dropdown_Down_Arrow color="#9D9D9D" />}
@@ -67,7 +70,7 @@ const CityModal = () => {
               style={styles.submit_btn}
               onPress={() => setIsModal(!IsModal)}
             >
-              <ImageBackground source={images.book_home} resizeMode="stretch">
+              <ImageBackground source={images.book_button} resizeMode="contain">
                 <Text style={styles.btn_title}>{strings.Submit}</Text>
               </ImageBackground>
             </TouchableOpacity>
@@ -83,8 +86,8 @@ export default CityModal;
 const styles = StyleSheet.create({
   conatiner: {
     justifyContent: "center",
-    marginHorizontal: wp(16),
-    width: "90%",
+    marginHorizontal: wp(15),
+    width: "auto",
     alignItems: "center",
   },
   modal_container: {
@@ -102,16 +105,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
   },
   details: {
-    ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_9),
+    ...commonFontStyle(fontFamily.semi_bold, 15, colors.grey_9),
     textAlign: "center",
     marginTop: hp(28),
+    alignSelf: "flex-start",
+    lineHeight: hp(26),
   },
   select_title: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
     marginTop: hp(45),
   },
   details_dark: {
-    ...commonFontStyle(fontFamily.semi_bold, 15, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 15.5, colors.black),
   },
   details_container: {
     alignItems: "center",

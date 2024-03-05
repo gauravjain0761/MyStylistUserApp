@@ -43,14 +43,14 @@ const Barber_Card = ({
   jobs,
   location,
   offers,
-  onPress,
+  onPress = () => "",
   price,
   rating,
   service,
   images,
   carouselitemHeight = wp(144),
   carouselitemWidth = wp(132),
-  onPressRating,
+  onPressRating = () => "",
   isNewYearOffer,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);

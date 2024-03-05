@@ -16,4 +16,5 @@ export const screenName = {
     Chat: "Chats",
   },
   NewYearOffer: "NewYearOffer",
+  appointmentDetails: "AppointmentDetails",
 };

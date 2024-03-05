@@ -12,6 +12,8 @@ import YourStylist from "../screen/Details/YourStylist";
 import Cart from "../screen/Cart";
 import Service from "../screen/Service/Service";
 import DrawerNavigator from "./DrawerNavigator";
+import { Appointment } from "../theme/SvgIcon";
+import AppointmentDetails from "../screen/Appointment/AppointmentDetails";
 import NewYearOffer from "../screen/Offer/NewYearOffer";
 
 const options: NativeStackNavigationOptions = {
@@ -41,6 +43,10 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.Cart} component={Cart} />
       <Stack.Screen name={screenName.Service} component={Service} />
       <Stack.Screen name={screenName.NewYearOffer} component={NewYearOffer} />
+      <Stack.Screen
+        name={screenName.appointmentDetails}
+        component={AppointmentDetails}
+      />
     </Stack.Navigator>
   );
 };

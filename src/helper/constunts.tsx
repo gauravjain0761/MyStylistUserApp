@@ -494,3 +494,39 @@ export const offer_filter = [
     title: "Skin Care",
   },
 ];
+
+export const PastServices = [
+  {
+    id: 1,
+    name: "Majid Khan",
+    image: images.barber5,
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+    price: "500.00",
+    type: "Total Price",
+  },
+  {
+    id: 2,
+    name: "Majid Khan",
+    image: images.barber4,
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+    price: "154.00",
+    type: "Rating",
+  },
+  {
+    id: 3,
+    name: "Majid Khan",
+    image: images.barber,
+    jobs_done: 323,
+    address: "Sector 67, Mohali",
+    rating: "4.6",
+    offers: 50,
+    price: "200.00",
+    type: "Give Feedback",
+  },
+];

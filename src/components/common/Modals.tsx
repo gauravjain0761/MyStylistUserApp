@@ -21,6 +21,7 @@ type props = {
   containStyle?: ViewStyle;
   containerStyle?: ViewStyle;
   isIcon?: boolean;
+  IsBackdropPress?: boolean;
 };
 
 const Modals = ({
@@ -30,13 +31,14 @@ const Modals = ({
   close,
   containStyle,
   containerStyle,
+  IsBackdropPress = true,
   isIcon,
 }: props) => {
   return (
     <Modal
       isVisible={visible}
       animationIn="slideInUp"
-      onBackdropPress={() => close(false)}
+      onBackdropPress={() => (IsBackdropPress ? close(false) : close(true))}
       style={[styles.container_style, containerStyle]}
       backdropColor="rgba(0, 0, 0, 0.8)"
     >

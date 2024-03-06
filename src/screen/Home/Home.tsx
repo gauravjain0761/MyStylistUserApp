@@ -78,7 +78,11 @@ const Home = () => {
   };
 
   const onPresstoNavigate = () => {
-    navigate(screenName.Service);
+    setServicesModal(false);
+    setTimeout(() => {
+      // @ts-ignore
+      navigate(screenName.Service);
+    }, 500);
   };
 
   const ModalHendler = (item: any) => {

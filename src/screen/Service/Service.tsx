@@ -15,13 +15,15 @@ import { hp, wp } from "../../helper/globalFunction";
 import { barbers, stylists_filter } from "../../helper/constunts";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
-import { useNavigation } from "@react-navigation/native";
 
 const Service = () => {
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <BackHeader isSearch title={strings.Party_Makeup} />
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        stickyHeaderIndices={[1]}
+        showsVerticalScrollIndicator={false}
+      >
         <Image source={images.banner2} style={styles.banner} />
         <View style={styles?.service_filter_conatiner}>
           <FlatList
@@ -76,7 +78,7 @@ const Service = () => {
           />
         </ScrollView>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -84,8 +86,8 @@ export default Service;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
-    height: "100%",
+    flex: 1,
+    backgroundColor: colors.background_grey,
   },
   banner: {
     width: "100%",
@@ -93,8 +95,8 @@ const styles = StyleSheet.create({
   },
   service_filter_conatiner: {
     paddingLeft: wp(20),
-    marginBottom: hp(31),
-    marginTop: hp(25),
+    paddingVertical: hp(15),
+    backgroundColor: colors.background_grey,
   },
   filter_item_separator: {
     width: wp(7),

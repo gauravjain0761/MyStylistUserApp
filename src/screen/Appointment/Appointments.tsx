@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import DrawerHeader from "../../components/common/DrawerHeader";
 import { strings } from "../../helper/string";
-import { Barber_Card } from "../../components";
 import { PastServices, barbers } from "../../helper/constunts";
 import BarberAppointmentCard from "../../components/common/BarberAppointmentCard";
 import { hp, wp } from "../../helper/globalFunction";
@@ -18,6 +17,7 @@ import { fontFamily, commonFontStyle } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { BackHeader } from "../../components";
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
@@ -26,10 +26,11 @@ const Appointments = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <DrawerHeader
-        onPressManu={() => navigation.openDrawer()}
+    <View style={styles.container}>
+      <BackHeader
+        isMenu
         title={strings.Your_Appointments}
+        onPressMenu={() => navigation.openDrawer()}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.appointment_card}>
@@ -77,7 +78,7 @@ const Appointments = ({ navigation }) => {
           />
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

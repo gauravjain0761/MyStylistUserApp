@@ -20,4 +20,6 @@ export const screenName = {
   SearchItem: "SearchItem",
   ImageDetails: "ImageDetails",
   Notifications: "Notifications",
+  appointmentReschedule: "AppointmentReschedule",
+  appointmentCancellation: "appointmentCancellation",
 };

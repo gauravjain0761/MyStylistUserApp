@@ -34,13 +34,11 @@ type props = {
   service?: string;
   price?: string;
   jobs?: number | string;
-  offers?: number | string;
   images?: any;
-  carouselitemWidth?: ViewStyle | TextStyle | any;
-  carouselitemHeight?: ViewStyle | TextStyle | any;
   onPressRating?: any;
   date?: any;
   time?: any;
+  previousBooking?: boolean;
 };
 
 const AppointmentDetailCard = ({
@@ -55,6 +53,7 @@ const AppointmentDetailCard = ({
   onPressRating,
   rating,
   jobs,
+  previousBooking = false,
 }: props) => {
   return (
     <View style={styles.conatiner}>
@@ -111,20 +110,33 @@ const AppointmentDetailCard = ({
       </View>
       <View style={styles.card_down}>
         <View style={styles.down_contain}>
-          <View style={styles.time_conatiner}>
-            <View style={styles.time_img}>
-              <ClockIcon />
-              <Text style={styles.time_lable}>{strings.Time}</Text>
+          {previousBooking ? (
+            <View style={styles.previous_container}>
+              <Text style={styles.booking_title}>
+                {strings.Previous_Booking}
+              </Text>
+              <Text style={styles.booking_time}>
+                {time}, {date}
+              </Text>
             </View>
-            <Text style={styles.time}>{time}</Text>
-          </View>
-          <View style={styles.date_conatiner}>
-            <View style={styles.date_img}>
-              <CalenderIcon />
-              <Text style={styles.time_lable}>{strings.Date}</Text>
-            </View>
-            <Text style={styles.time}>{date}</Text>
-          </View>
+          ) : (
+            <>
+              <View style={styles.time_conatiner}>
+                <View style={styles.time_img}>
+                  <ClockIcon />
+                  <Text style={styles.time_lable}>{strings.Time}</Text>
+                </View>
+                <Text style={styles.time}>{time}</Text>
+              </View>
+              <View style={styles.date_conatiner}>
+                <View style={styles.date_img}>
+                  <CalenderIcon />
+                  <Text style={styles.time_lable}>{strings.Date}</Text>
+                </View>
+                <Text style={styles.time}>{date}</Text>
+              </View>
+            </>
+          )}
         </View>
       </View>
     </View>
@@ -197,7 +209,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderRadius: wp(50),
     position: "absolute",
-    left: -25,
+    left: -24,
     bottom: -8,
   },
   card_down: {
@@ -216,7 +228,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f2f2f2",
     borderRadius: wp(50),
     position: "absolute",
-    right: -25,
+    right: -24,
     bottom: -8,
   },
   start_conatiner: {
@@ -305,5 +317,16 @@ const styles = StyleSheet.create({
   information_container: {
     gap: wp(17),
     flexDirection: "row",
+  },
+  previous_container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  booking_title: {
+    ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),
+  },
+  booking_time: {
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
   },
 });

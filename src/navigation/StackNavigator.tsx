@@ -18,6 +18,8 @@ import NewYearOffer from "../screen/Offer/NewYearOffer";
 import SearchItem from "../screen/Search/SearchItem";
 import ImageDetails from "../screen/Search/ImageDetails";
 import Notifications from "../screen/Notification/Notifications";
+import AppointmentReschedule from "../screen/Appointment/AppointmentReschedule";
+import AppointmentCancellation from "../screen/Appointment/AppointmentCancellation";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -53,6 +55,14 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.SearchItem} component={SearchItem} />
       <Stack.Screen name={screenName.ImageDetails} component={ImageDetails} />
       <Stack.Screen name={screenName.Notifications} component={Notifications} />
+      <Stack.Screen
+        name={screenName.appointmentReschedule}
+        component={AppointmentReschedule}
+      />
+      <Stack.Screen
+        name={screenName.appointmentCancellation}
+        component={AppointmentCancellation}
+      />
     </Stack.Navigator>
   );
 };

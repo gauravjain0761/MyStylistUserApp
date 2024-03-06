@@ -14,6 +14,8 @@ import { images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type RowItemValueProps = {
   title: string;
@@ -30,6 +32,16 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 };
 
 const AppointmentDetails = () => {
+  const { navigate } = useNavigation();
+
+  const onPressCancel = () => {
+    navigate(screenName.appointmentCancellation);
+  };
+
+  const onPressReschedule = () => {
+    navigate(screenName.appointmentReschedule);
+  };
+
   return (
     <View style={styles.conatiner}>
       <BackHeader title={strings.Appointment_Detail} />
@@ -71,18 +83,18 @@ const AppointmentDetails = () => {
         </View>
       </ScrollView>
       <View style={styles.elevationStyle}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onPressCancel()}>
           <ImageBackground
-            resizeMode="contain"
+            resizeMode="stretch"
             style={styles.cartBtnStyle}
-            source={images.grey_border_button}
+            source={images.gery_button}
           >
             <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
           </ImageBackground>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => onPressReschedule()}>
           <ImageBackground
-            resizeMode="contain"
+            resizeMode="stretch"
             style={styles.cartBtnStyle}
             source={images.blue_button}
           >
@@ -107,15 +119,15 @@ const styles = StyleSheet.create({
     marginVertical: hp(19),
     backgroundColor: colors.primary_light_blue_4,
     paddingVertical: hp(18),
-    paddingHorizontal: wp(23),
+    paddingHorizontal: wp(20),
     marginHorizontal: hp(20),
     borderRadius: wp(8),
   },
   otp_title: {
-    ...commonFontStyle(fontFamily.medium, 18, colors.green_3),
+    ...commonFontStyle(fontFamily.medium, 16, colors.green_3),
   },
   otp_number: {
-    ...commonFontStyle(fontFamily.medium, 22, colors.green_3),
+    ...commonFontStyle(fontFamily.medium, 20, colors.green_3),
   },
   otp_detail_container: {
     flexDirection: "row",
@@ -163,6 +175,7 @@ const styles = StyleSheet.create({
     padding: wp(20),
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   priceTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 24, colors.black_2),
@@ -171,7 +184,7 @@ const styles = StyleSheet.create({
   },
   cartBtnStyle: {
     height: hp(60),
-    width: wp(170),
+    width: wp(160),
     alignItems: "center",
     justifyContent: "center",
   },

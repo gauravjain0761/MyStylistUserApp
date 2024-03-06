@@ -96,8 +96,14 @@ export const strings = {
   "Chandigarh, Mohali,Kharar, Panchkula":
     "Chandigarh, Mohali,\nKharar, Panchkula ",
   Zirakpur: " Zirakpur ",
-  "View More": "View More",
-  Notifications: "Notifications",
-  "All Notifications": "All Notifications",
-  "Mark all as read": "Mark all as read",
+  Previous_Booking: "Previous Booking",
+  "You have 1 Service Left": "You have 1 Service Left",
+  Hair_color: "Hair color",
+  "Book Again Your Appointment": "Book Again Your Appointment",
+  Appointment_Cancellation: "Appointment Cancellation",
+  "Are you sure?": "Are you sure?",
+  "you want to cancel your appointment with Majid Khan?":
+    "you want to cancel your appointment\nwith Majid Khan?",
+  "What is the reason of cancellation?": "What is the reason of cancellation?",
+  "Confirm Cancellation": "Confirm Cancellation",
 };

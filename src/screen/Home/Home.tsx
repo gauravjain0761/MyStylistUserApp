@@ -147,6 +147,11 @@ const Home = () => {
               {strings?.Search_by_Stylist_Name}
             </Text>
           </View>
+          <TextInput
+            style={styles?.input}
+            placeholder={strings?.Search_by_Stylist_Name}
+            placeholderTextColor={colors.grey_14}
+          />
         </View>
       </TouchableOpacity>
       <ScrollView

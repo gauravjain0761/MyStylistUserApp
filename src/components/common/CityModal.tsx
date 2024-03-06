@@ -60,6 +60,8 @@ const CityModal = () => {
               labelField="label"
               valueField="value"
               placeholder="Please select"
+              selectedTextStyle={styles.selectedTextStyle}
+              itemTextStyle={styles.item_style}
               value={value}
               onChange={(item: any) => {
                 setValue(item.value);
@@ -86,7 +88,7 @@ export default CityModal;
 const styles = StyleSheet.create({
   conatiner: {
     justifyContent: "center",
-    marginHorizontal: wp(15),
+    marginHorizontal: wp(14),
     width: "auto",
     alignItems: "center",
   },
@@ -103,12 +105,14 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: wp(20),
     paddingHorizontal: wp(20),
     backgroundColor: colors.white,
+    justifyContent: "center",
+    alignSelf: "center",
   },
   details: {
-    ...commonFontStyle(fontFamily.semi_bold, 15, colors.grey_9),
+    ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_9),
     textAlign: "center",
     marginTop: hp(28),
-    alignSelf: "flex-start",
+    alignSelf: "center",
     lineHeight: hp(26),
   },
   select_title: {
@@ -116,14 +120,15 @@ const styles = StyleSheet.create({
     marginTop: hp(45),
   },
   details_dark: {
-    ...commonFontStyle(fontFamily.semi_bold, 15.5, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 14.5, colors.black),
   },
   details_container: {
     alignItems: "center",
+    justifyContent: "center",
   },
   dropdown: {
     height: 50,
-    borderBottomColor: colors.review_card_bg,
+    backgroundColor: colors.review_card_bg,
     borderWidth: wp(1),
     borderColor: colors.review_caed_border,
     borderRadius: wp(6),
@@ -137,7 +142,7 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 16, colors.fc_light_gray_2),
   },
   selectedTextStyle: {
-    fontSize: 16,
+    ...commonFontStyle(fontFamily.regular, 16, colors.black),
   },
   iconStyle: {
     width: 20,
@@ -152,5 +157,8 @@ const styles = StyleSheet.create({
     marginTop: hp(30),
     width: "100%",
     marginBottom: hp(20),
+  },
+  item_style: {
+    ...commonFontStyle(fontFamily.regular, 16, colors.black),
   },
 });

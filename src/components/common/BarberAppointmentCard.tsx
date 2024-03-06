@@ -52,7 +52,7 @@ const BarberAppointmentCard = ({
       <View style={styles.card_upper}>
         <View style={styles.img_container}>
           <View style={styles.img_con}>
-            <Image resizeMode="stretch" source={image} style={styles.img} />
+            <Image resizeMode="cover" source={image} style={styles.img} />
           </View>
         </View>
         <View style={styles.name_container}>
@@ -62,29 +62,25 @@ const BarberAppointmentCard = ({
             </TouchableOpacity>
             <VerifyIcon width={14} height={14} />
           </View>
-          <View>
-            {isCompleted ? (
-              <View style={styles.date_container}>
-                <Text style={styles.time}>
-                  {date}
-                  {time}
-                </Text>
-                <ImageBackground
-                  resizeMode="contain"
-                  source={images.completebadge}
-                  style={styles.complete_badge}
-                >
-                  <Text style={styles.completed_title}>
-                    {strings.Completed}
-                  </Text>
-                </ImageBackground>
-              </View>
-            ) : (
+          {isCompleted ? (
+            <View style={styles.date_container}>
               <Text style={styles.time}>
-                {time} {date}
+                {date}
+                {time}
               </Text>
-            )}
-          </View>
+              <ImageBackground
+                resizeMode="contain"
+                source={images.completebadge}
+                style={styles.complete_badge}
+              >
+                <Text style={styles.completed_title}>{strings.Completed}</Text>
+              </ImageBackground>
+            </View>
+          ) : (
+            <Text style={styles.time}>
+              {time} {date}
+            </Text>
+          )}
           <View style={styles.location_container}>
             <CarIcon color={colors.grey_10} />
             <Text style={styles.location_title}>{location}</Text>
@@ -144,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.bold, 28, colors.black),
+    ...commonFontStyle(fontFamily.bold, 26, colors.black),
   },
   info_container: {
     flexDirection: "row",
@@ -153,7 +149,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 15, colors.grey_10),
+    ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_10),
     marginTop: hp(5),
   },
   location_container: {
@@ -164,10 +160,10 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   location_title: {
-    ...commonFontStyle(fontFamily.medium, 15, colors.grey_10),
+    ...commonFontStyle(fontFamily.medium, 14, colors.grey_10),
   },
   service_title: {
-    ...commonFontStyle(fontFamily.medium, 15, colors.grey_11),
+    ...commonFontStyle(fontFamily.medium, 14, colors.grey_11),
     marginTop: hp(8),
     alignSelf: "flex-start",
   },
@@ -214,7 +210,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: wp(10),
-    alignItems: "center",
+    alignItems: "flex-end",
+    width: "auto",
+    alignSelf: "flex-start",
   },
   complete_badge: {
     paddingHorizontal: wp(7),

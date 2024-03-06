@@ -106,4 +106,5 @@ export const strings = {
     "you want to cancel your appointment\nwith Majid Khan?",
   "What is the reason of cancellation?": "What is the reason of cancellation?",
   "Confirm Cancellation": "Confirm Cancellation",
+  Notifications: "Notifications",
 };

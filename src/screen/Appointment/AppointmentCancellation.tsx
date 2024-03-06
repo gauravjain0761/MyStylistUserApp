@@ -14,9 +14,12 @@ import { images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 const AppointmentCancellation = () => {
   const [select, SetSelect] = useState(0);
+  const { navigate } = useNavigation();
   const reason = [
     {
       id: 1,
@@ -44,7 +47,16 @@ const AppointmentCancellation = () => {
     },
   ];
 
-  const onPressConfirm = () => {};
+  const onPressCancel = () => {
+    navigate(screenName.Home);
+  };
+
+  const onPressNo = () => {
+    navigate(screenName.Home);
+  };
+  const onPressYes = () => {
+    navigate(screenName.Home);
+  };
 
   return (
     <View style={styles.conatiner}>
@@ -55,6 +67,8 @@ const AppointmentCancellation = () => {
           image={images.barber5}
           date="26 May, 2024"
           time="08:30PM"
+          onPressNo={onPressNo}
+          onPressYes={onPressYes}
         />
       </View>
 
@@ -86,7 +100,7 @@ const AppointmentCancellation = () => {
         />
       </View>
       <View style={styles.bottomStyle}>
-        <TouchableOpacity onPress={onPressConfirm}>
+        <TouchableOpacity onPress={onPressCancel}>
           <ImageBackground
             resizeMode="contain"
             style={styles.confirmImgStyle}

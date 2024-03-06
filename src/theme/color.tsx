@@ -50,6 +50,7 @@ export const colors = {
   primary_light_blue_2: "#BCF4F1",
   primary_light_blue_3: "#61C0B9",
   primary_light_blue_4: "#CCF0EE",
+  primary_light_blue_5: "#EFFBFA",
 
   background_grey: "#F8F8F8",
   blue: "#40BAFF",

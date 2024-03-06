@@ -53,6 +53,8 @@ export const images = {
   barber6: require("../assets/image/barber6.png"),
   new_year_offers: require("../assets/image/new_year_offers.png"),
   completebadge: require("../assets/image/completebadge.png"),
+  feedback: require("../assets/image/feedback.png"),
+  profile: require("../assets/image/profile.png"),
 };
 
 export const icons = {

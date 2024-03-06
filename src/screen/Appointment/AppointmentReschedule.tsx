@@ -21,6 +21,7 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { BackHeader, TimeSelector, WeekDateSelector } from "../../components";
 import { screenName } from "../../helper/routeNames";
 import { colors } from "../../theme/color";
+import { useNavigation } from "@react-navigation/native";
 
 type RowItemValueProps = {
   title: string;
@@ -39,6 +40,8 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 const AppointmentReschedule = () => {
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
+
+  const { navigate } = useNavigation();
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
@@ -65,7 +68,9 @@ const AppointmentReschedule = () => {
     setTimes(data);
   };
 
-  const onPressBook = () => {};
+  const onPressBook = () => {
+    navigate(screenName.AppointmentConfirm);
+  };
 
   return (
     <View style={styles.conatiner}>

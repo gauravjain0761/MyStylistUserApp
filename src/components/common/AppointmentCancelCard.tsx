@@ -20,9 +20,18 @@ type props = {
   date?: string;
   time?: string;
   image?: any;
+  onPressNo?: () => void;
+  onPressYes?: () => void;
 };
 
-const AppointmentCancelCard = ({ name, date, time, image }: props) => {
+const AppointmentCancelCard = ({
+  name,
+  date,
+  time,
+  image,
+  onPressNo,
+  onPressYes,
+}: props) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.card_upper}>
@@ -67,13 +76,13 @@ const AppointmentCancelCard = ({ name, date, time, image }: props) => {
             {strings["you want to cancel your appointment with Majid Khan?"]}
           </Text>
           <View style={styles.btn_conatiner}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPressNo}>
               <ImageBackground resizeMode="stretch" source={images.gery_button}>
                 <Text style={styles.btn_title}>No</Text>
               </ImageBackground>
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPressYes}>
               <ImageBackground resizeMode="stretch" source={images.blue_button}>
                 <Text style={styles.btn_title}>Yes</Text>
               </ImageBackground>

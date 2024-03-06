@@ -20,6 +20,10 @@ import ImageDetails from "../screen/Search/ImageDetails";
 import Notifications from "../screen/Notification/Notifications";
 import AppointmentReschedule from "../screen/Appointment/AppointmentReschedule";
 import AppointmentCancellation from "../screen/Appointment/AppointmentCancellation";
+import AppointmentBookAgain from "../screen/Appointment/AppointmentConfirm";
+import Feedback from "../components/common/Feedback";
+import Profile from "../screen/Profiles/Profile";
+import FaQ from "../screen/Faq/FaQ";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -49,20 +53,27 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.Service} component={Service} />
       <Stack.Screen name={screenName.NewYearOffer} component={NewYearOffer} />
       <Stack.Screen
-        name={screenName.appointmentDetails}
+        name={screenName.AppointmentDetails}
         component={AppointmentDetails}
       />
       <Stack.Screen name={screenName.SearchItem} component={SearchItem} />
       <Stack.Screen name={screenName.ImageDetails} component={ImageDetails} />
       <Stack.Screen name={screenName.Notifications} component={Notifications} />
       <Stack.Screen
-        name={screenName.appointmentReschedule}
+        name={screenName.AppointmentReschedule}
         component={AppointmentReschedule}
       />
       <Stack.Screen
-        name={screenName.appointmentCancellation}
+        name={screenName.AppointmentCancellation}
         component={AppointmentCancellation}
       />
+      <Stack.Screen
+        name={screenName.AppointmentConfirm}
+        component={AppointmentBookAgain}
+      />
+      <Stack.Screen name={screenName.Feedback} component={Feedback} />
+      <Stack.Screen name={screenName.Profile} component={Profile} />
+      <Stack.Screen name={screenName.FaQ} component={FaQ} />
     </Stack.Navigator>
   );
 };

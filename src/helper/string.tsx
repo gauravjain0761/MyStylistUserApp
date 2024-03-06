@@ -107,4 +107,17 @@ export const strings = {
   "What is the reason of cancellation?": "What is the reason of cancellation?",
   "Confirm Cancellation": "Confirm Cancellation",
   Notifications: "Notifications",
+  Book_Again: "Book Again",
+  Feedback: "Feedback",
+  "Add a detailed review": "Add a detailed review",
+  "Submit Feedback": "Submit Feedback",
+  "Thank you for your valuable feedback!":
+    "Thank you for your valuable\nfeedback!",
+  Personal_Information: "Personal Information",
+  Full_Name: "Full Name",
+  Email_Address: "Email Address",
+  Phone_Number: "Phone Number",
+  Gender: "Gender",
+  Dat_of_Birth: "Date of Birth",
+  FAQ: "FAQ’S",
 };

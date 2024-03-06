@@ -6,14 +6,16 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
-import AppointmentDetailCard from "../../components/common/AppointmentDetailCard";
+import AppointmentConfirmCard from "../../components/common/AppointmentConfirmCard";
 import { images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
-import { commonFontStyle, fontFamily } from "../../theme/fonts";
+import { fontFamily } from "../../theme/fonts";
+import { commonFontStyle } from "../../theme/fonts";
+import FeedbackModal from "../../components/common/FeedbackModal";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 
@@ -31,43 +33,39 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
   );
 };
 
-const AppointmentDetails = () => {
+const AppointmentConfirm = () => {
+  const [IsModal, setIsModal] = useState(false);
+
   const { navigate } = useNavigation();
 
-  const onPressCancel = () => {
-    navigate(screenName.AppointmentCancellation);
+  const onPressFeedback = () => {
+    setIsModal(!IsModal);
   };
 
-  const onPressReschedule = () => {
-    navigate(screenName.AppointmentReschedule);
+  const onPressSubmit = () => {
+    navigate(screenName.Feedback);
   };
 
+  const onPressBookagain = () => {
+    navigate(screenName.Cart);
+  };
   return (
-    <View style={styles.conatiner}>
+    <View style={styles.container}>
       <BackHeader title={strings.Appointment_Detail} />
-      <ScrollView>
-        <View style={styles.card_container}>
-          <AppointmentDetailCard
-            images={images.barber5}
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.card}>
+          <AppointmentConfirmCard
             name={strings.Majid_Khan}
-            rating={"4.6"}
+            image={images.barber5}
             jobs={343}
+            rating={4.6}
             location={strings.Sector_Mohali}
-            date={"26 May,2024"}
             time={"08:30PM"}
+            date={"26 May, 2024"}
           />
         </View>
 
-        <View style={styles.otp_conatiner}>
-          <View style={styles.otp_detail_container}>
-            <Text style={styles.otp_title}>
-              {strings["OTP to start the service"]}
-            </Text>
-            <Text style={styles.otp_number}>4 4 2 5 2 5</Text>
-          </View>
-        </View>
-
-        <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
+        <View style={{ ...styles.whiteContainer, marginTop: hp(19) }}>
           <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
           <RowItemValue title="Hair Cut" value="₹200" />
           <RowItemValue title="Beard Trim" value="₹100" />
@@ -82,57 +80,44 @@ const AppointmentDetails = () => {
           </View>
         </View>
       </ScrollView>
+
       <View style={styles.elevationStyle}>
-        <TouchableOpacity onPress={() => onPressCancel()}>
+        <TouchableOpacity onPress={() => onPressFeedback()}>
           <ImageBackground
             resizeMode="stretch"
             style={styles.cartBtnStyle}
             source={images.gery_button}
           >
-            <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
+            <Text style={styles.goTextStyle}>{strings.Give_Feedback}</Text>
           </ImageBackground>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressReschedule()}>
+        <TouchableOpacity onPress={() => onPressBookagain()}>
           <ImageBackground
             resizeMode="stretch"
             style={styles.cartBtnStyle}
             source={images.blue_button}
           >
-            <Text style={styles.goTextStyle}>{strings.Reschedule}</Text>
+            <Text style={styles.goTextStyle}>{strings.Book_Again}</Text>
           </ImageBackground>
         </TouchableOpacity>
       </View>
+      <FeedbackModal
+        close={setIsModal}
+        visible={IsModal}
+        onPresssubmit={() => onPressSubmit()}
+      />
     </View>
   );
 };
 
-export default AppointmentDetails;
+export default AppointmentConfirm;
 
 const styles = StyleSheet.create({
-  conatiner: {
+  container: {
     flex: 1,
   },
-  card_container: {
+  card: {
     marginTop: hp(25),
-  },
-  otp_conatiner: {
-    marginVertical: hp(19),
-    backgroundColor: colors.primary_light_blue_4,
-    paddingVertical: hp(18),
-    paddingHorizontal: wp(20),
-    marginHorizontal: hp(20),
-    borderRadius: wp(8),
-  },
-  otp_title: {
-    ...commonFontStyle(fontFamily.medium, 16, colors.green_3),
-  },
-  otp_number: {
-    ...commonFontStyle(fontFamily.medium, 20, colors.green_3),
-  },
-  otp_detail_container: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
   },
   whiteContainer: {
     margin: 20,

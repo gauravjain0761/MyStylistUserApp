@@ -3,49 +3,51 @@ import {
   ImageBackground,
   StyleSheet,
   Text,
-  TextStyle,
   TouchableOpacity,
   View,
-  ViewStyle,
 } from "react-native";
 import React from "react";
-import { colors } from "../../theme/color";
-import { hp, wp } from "../../helper/globalFunction";
-import { images } from "../../theme/icons";
 import {
+  CalenderIcon,
   CarIcon,
+  ClockIcon,
   RatingStars,
   StarIcon,
   VerifyIcon,
 } from "../../theme/SvgIcon";
-import { commonFontStyle, fontFamily } from "../../theme/fonts";
+import { colors } from "../../theme/color";
+import { hp, wp } from "../../helper/globalFunction";
+import { fontFamily } from "../../theme/fonts";
+import { commonFontStyle } from "../../theme/fonts";
+import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 
 type props = {
-  type?: "Give Feedback" | "Rating" | "Total Price" | string;
   name?: string;
   rating?: string | number;
   onPress?: () => void;
-  location?: string;
-  service?: string;
-  price?: string;
   image?: any;
   date?: any;
   time?: any;
   isCompleted?: boolean;
+  location?: string;
+  service?: string;
+  price?: string;
+  jobs?: number | string;
 };
 
-const BarberAppointmentCard = ({
+const AppointmentConfirmCard = ({
   name,
   date,
   time,
   location,
   service,
-  type,
   price,
   image,
   isCompleted,
   onPress,
+  jobs,
+  rating,
 }: props) => {
   return (
     <View style={styles.conatiner}>
@@ -62,57 +64,52 @@ const BarberAppointmentCard = ({
             </TouchableOpacity>
             <VerifyIcon width={14} height={14} />
           </View>
-          {isCompleted ? (
-            <View style={styles.date_container}>
-              <Text style={styles.time}>
-                {date}
-                {time}
-              </Text>
-              <ImageBackground
-                resizeMode="contain"
-                source={images.completebadge}
-                style={styles.complete_badge}
-              >
-                <Text style={styles.completed_title}>{strings.Completed}</Text>
-              </ImageBackground>
-            </View>
-          ) : (
-            <Text style={styles.time}>
-              {time} {date}
+
+          <View style={styles.barber_job_coantiner}>
+            <TouchableOpacity
+              //   onPress={() => onPressRating(true)}
+              style={styles.rating_badge}
+            >
+              <Text style={styles.rating_title}>{rating}</Text>
+              <StarIcon />
+            </TouchableOpacity>
+            <View style={styles.seprator}></View>
+            <Text style={styles.jobs_title}>
+              {jobs} {strings.Jobs_Done}
             </Text>
-          )}
+          </View>
+
           <View style={styles.location_container}>
-            <CarIcon color={colors.grey_10} />
+            <CarIcon />
             <Text style={styles.location_title}>{location}</Text>
           </View>
-          <Text style={styles.service_title}>{service}</Text>
         </View>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>
       </View>
       <View style={styles.card_down}>
         <View style={styles.down_contain}>
-          {type === "Total Price" ? (
-            <Text style={styles.price}>{strings["Total (INR)"]}</Text>
-          ) : type === "Rating" ? (
-            <View style={styles.start_conatiner}>
-              <RatingStars />
-              <RatingStars />
-              <RatingStars />
-              <RatingStars />
-              <RatingStars color={colors.active_dot} />
+          <View style={styles.time_conatiner}>
+            <View style={styles.time_img}>
+              <ClockIcon />
+              <Text style={styles.time_lable}>{strings.Time}</Text>
             </View>
-          ) : type === "Give Feedback" ? (
-            <Text style={styles.price}>{strings.Give_Feedback}</Text>
-          ) : null}
-          <Text style={styles.price}> ₹ {price}</Text>
+            <Text style={styles.time}>{time}</Text>
+          </View>
+          <View style={styles.time_conatiner}>
+            <View style={styles.time_img}>
+              <CalenderIcon />
+              <Text style={styles.time_lable}>{strings.Date}</Text>
+            </View>
+            <Text style={styles.time}>{date}</Text>
+          </View>
         </View>
       </View>
     </View>
   );
 };
 
-export default BarberAppointmentCard;
+export default AppointmentConfirmCard;
 
 const styles = StyleSheet.create({
   conatiner: {
@@ -149,18 +146,18 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_10),
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
     marginTop: hp(5),
   },
   location_container: {
     flexDirection: "row",
     gap: wp(5),
-    marginTop: hp(3),
+    marginTop: hp(8),
     alignItems: "center",
     alignSelf: "flex-start",
   },
   location_title: {
-    ...commonFontStyle(fontFamily.medium, 14, colors.grey_10),
+    ...commonFontStyle(fontFamily.medium, 14, colors.gery_9),
   },
   service_title: {
     ...commonFontStyle(fontFamily.medium, 14, colors.grey_11),
@@ -187,11 +184,7 @@ const styles = StyleSheet.create({
     marginTop: wp(15),
   },
   down_contain: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  price: {
-    ...commonFontStyle(fontFamily.medium, 16, colors.black),
+    gap: hp(16),
   },
   subtract_right: {
     width: wp(16),
@@ -202,25 +195,46 @@ const styles = StyleSheet.create({
     right: -25,
     bottom: -8,
   },
-  start_conatiner: {
+  barber_job_coantiner: {
     flexDirection: "row",
-    gap: wp(7),
-  },
-  date_container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: wp(10),
-    alignItems: "flex-end",
-    width: "auto",
+    alignItems: "center",
+    marginTop: hp(12),
     alignSelf: "flex-start",
   },
-  complete_badge: {
-    paddingHorizontal: wp(7),
-    justifyContent: "center",
+  rating_badge: {
+    backgroundColor: colors.light_green,
+    borderRadius: wp(6),
+    padding: hp(3),
+    alignSelf: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: wp(4),
+    gap: wp(3),
+  },
+  rating_title: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.white),
+  },
+  seprator: {
+    width: wp(4),
+    height: wp(4),
+    backgroundColor: colors.dark_grey,
+    borderRadius: wp(50),
+    marginHorizontal: wp(7),
+  },
+  jobs_title: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
+  },
+  time_conatiner: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
-  completed_title: {
-    ...commonFontStyle(fontFamily.semi_bold, 11, colors.black_2),
-    lineHeight: hp(20),
+  time_img: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(6),
+  },
+  time_lable: {
+    ...commonFontStyle(fontFamily.medium, 18, colors.gery_6),
   },
 });

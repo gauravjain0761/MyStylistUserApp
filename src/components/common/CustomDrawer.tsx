@@ -16,8 +16,17 @@ import {
   Termsandconditions,
 } from "../../theme/SvgIcon";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 const CustomDrawer = () => {
+  const { navigate } = useNavigation();
+  const onPressName = () => {
+    navigate(screenName.Profile);
+  };
+  const OnPressFaq = () => {
+    return navigate(screenName.FaQ);
+  };
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <View>
@@ -29,7 +38,9 @@ const CustomDrawer = () => {
               style={styles.img}
             />
           </View>
-          <Text style={styles.user_title}>{strings.Nickson_John}</Text>
+          <TouchableOpacity onPress={onPressName}>
+            <Text style={styles.user_title}>{strings.Nickson_John}</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.account_container}>
           <Text style={styles.account_title}>{strings.Account_Setting}</Text>
@@ -81,7 +92,10 @@ const CustomDrawer = () => {
             </View>
 
             <View style={styles.drawer_border}>
-              <TouchableOpacity style={styles.Tab_container}>
+              <TouchableOpacity
+                onPress={() => OnPressFaq()}
+                style={styles.Tab_container}
+              >
                 <View style={styles.tab_img_constiner}>
                   <Image
                     source={icons.faq}

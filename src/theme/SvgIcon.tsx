@@ -11,6 +11,12 @@ import {
   Svg,
 } from "react-native-svg";
 
+type RatingStarsProps = {
+  color: string;
+  width: number | string;
+  height: number | string;
+};
+
 export const Dropdown_Down_Arrow = ({ color = "#444444" }) => {
   return (
     <Svg
@@ -444,11 +450,15 @@ export const Hamburger = () => {
   );
 };
 
-export const RatingStars = ({ color = "#FF8A00" }) => {
+export const RatingStars = ({
+  color = "#FF8A00",
+  height = "16",
+  width = "17",
+}: RatingStarsProps) => {
   return (
     <Svg
-      width="17"
-      height="16"
+      width={width}
+      height={height}
       viewBox="0 0 17 16"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1413,6 +1423,106 @@ export const MarkReadIcon = () => {
       <Defs>
         <ClipPath id="clip0_4862_67875">
           <Rect width="19" height="19" fill="white" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const CrossIcon = () => {
+  return (
+    <Svg
+      width="28"
+      height="28"
+      viewBox="0 0 28 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M21 7L7 21M7.00001 7L21 21"
+        stroke="black"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const PlusIcon = () => {
+  return (
+    <Svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <G clip-path="url(#clip0_4862_62922)">
+        <Path
+          d="M10 4.1665V15.8332"
+          stroke="#B0B0B0"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M4.16699 10H15.8337"
+          stroke="#B0B0B0"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_4862_62922">
+          <Rect width="20" height="20" fill="white" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const EditIcon = () => {
+  return (
+    <Svg
+      width="19"
+      height="18"
+      viewBox="0 0 19 18"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <G clip-path="url(#clip0_4862_63036)">
+        <Path
+          d="M5.75 5.25H5C4.60218 5.25 4.22064 5.40804 3.93934 5.68934C3.65804 5.97064 3.5 6.35218 3.5 6.75V13.5C3.5 13.8978 3.65804 14.2794 3.93934 14.5607C4.22064 14.842 4.60218 15 5 15H11.75C12.1478 15 12.5294 14.842 12.8107 14.5607C13.092 14.2794 13.25 13.8978 13.25 13.5V12.75"
+          stroke="#666666"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M15.7888 4.93883C16.0841 4.64345 16.2501 4.24282 16.2501 3.82508C16.2501 3.40734 16.0841 3.00672 15.7888 2.71133C15.4934 2.41595 15.0927 2.25 14.675 2.25C14.2573 2.25 13.8566 2.41595 13.5613 2.71133L7.25 9.00008V11.2501H9.5L15.7888 4.93883Z"
+          stroke="#666666"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M12.5 3.75L14.75 6"
+          stroke="#666666"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_4862_63036">
+          <Rect
+            width="18"
+            height="18"
+            fill="white"
+            transform="translate(0.5)"
+          />
         </ClipPath>
       </Defs>
     </Svg>

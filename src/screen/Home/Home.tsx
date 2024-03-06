@@ -119,6 +119,11 @@ const Home = () => {
     setTimes(data);
   };
 
+  const onPressSearch = () => {
+    // @ts-ignore
+    navigate(screenName.SearchItem);
+  };
+
   return (
     <View style={styles?.container}>
       <CityModal />
@@ -127,19 +132,23 @@ const Home = () => {
         onPressBack={() => navigation.openDrawer()}
         onPressCart={() => navigate(screenName.Cart)}
       />
-      <View style={styles?.search_container}>
+      <TouchableOpacity
+        onPress={onPressSearch}
+        style={styles?.search_container}
+      >
         <View style={styles?.search_box}>
           <Image
             source={icons?.search_placehonder}
             style={styles?.search_icon}
             resizeMode="contain"
           />
-          <TextInput
-            style={styles?.input}
-            placeholder={strings?.Search_by_Stylist_Name}
-          />
+          <View style={styles?.input}>
+            <Text style={styles.searchTextStyle}>
+              {strings?.Search_by_Stylist_Name}
+            </Text>
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
       <ScrollView
         stickyHeaderIndices={[5]}
         showsVerticalScrollIndicator={false}
@@ -628,5 +637,8 @@ const styles = StyleSheet.create({
     gap: wp(17),
     justifyContent: "flex-start",
     marginTop: hp(11),
+  },
+  searchTextStyle: {
+    ...commonFontStyle(fontFamily.medium, 12, "#949495"),
   },
 });

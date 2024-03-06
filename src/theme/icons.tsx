@@ -41,6 +41,7 @@ export const images = {
   contectus: require("../assets/icon/contactus.png"),
   oval_grey_button: require("../assets/image/oval_grey_button.png"),
   offers_view: require("../assets/image/offers_view.png"),
+  oval_black: require("../assets/image/oval_black.png"),
 
   man_hair_cut: require("../assets/image/man_hair_cut.png"),
   new_offres: require("../assets/image/new_offres.png"),

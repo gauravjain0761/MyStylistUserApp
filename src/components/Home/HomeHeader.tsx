@@ -5,6 +5,8 @@ import { icons, images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FillBell, FillCart, FillLike, Hamburger } from "../../theme/SvgIcon";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type HomeProps = {
   onPressBack?: () => void;
@@ -12,6 +14,12 @@ type HomeProps = {
 };
 
 const HomeHeader = ({ onPressBack, onPressCart }: HomeProps) => {
+  const { navigate } = useNavigation();
+
+  const onPressBell = () => {
+    // @ts-ignore
+    navigate(screenName.Notifications);
+  };
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <TouchableOpacity onPress={onPressBack} style={styles?.drawer_btn}>
@@ -25,7 +33,7 @@ const HomeHeader = ({ onPressBack, onPressCart }: HomeProps) => {
         <TouchableOpacity onPress={onPressCart}>
           <FillCart />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={onPressBell}>
           <FillBell />
         </TouchableOpacity>
       </View>

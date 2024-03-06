@@ -15,6 +15,11 @@ import ReviewModal from "./Details/ReviewModal";
 import CostModal from "./common/CostModal";
 import CongratulationModal from "./Details/CongratulationModal";
 import SelectDateModal from "./common/SelectDateModal";
+import SearchBar from "./common/SearchBar";
+import SearchImageItem from "./Search/SearchImageItem";
+import RecentItem from "./Search/RecentItem";
+import OvalShapView from "./common/OvalShapView";
+import NotificationItem from "./common/NotificationItem";
 
 export {
   LocationModal,
@@ -34,4 +39,9 @@ export {
   CostModal,
   CongratulationModal,
   SelectDateModal,
+  SearchBar,
+  SearchImageItem,
+  RecentItem,
+  OvalShapView,
+  NotificationItem,
 };

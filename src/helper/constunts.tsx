@@ -530,3 +530,22 @@ export const PastServices = [
     type: "Give Feedback",
   },
 ];
+
+export const notificationFilter = [
+  {
+    id: 1,
+    title: "All",
+  },
+  {
+    id: 2,
+    title: "Offer",
+  },
+  {
+    id: 3,
+    title: "Promotion",
+  },
+  {
+    id: 4,
+    title: "Appointment",
+  },
+];

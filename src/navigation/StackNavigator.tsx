@@ -15,6 +15,9 @@ import DrawerNavigator from "./DrawerNavigator";
 import { Appointment } from "../theme/SvgIcon";
 import AppointmentDetails from "../screen/Appointment/AppointmentDetails";
 import NewYearOffer from "../screen/Offer/NewYearOffer";
+import SearchItem from "../screen/Search/SearchItem";
+import ImageDetails from "../screen/Search/ImageDetails";
+import Notifications from "../screen/Notification/Notifications";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -47,6 +50,9 @@ const StackNavigator: FC = () => {
         name={screenName.appointmentDetails}
         component={AppointmentDetails}
       />
+      <Stack.Screen name={screenName.SearchItem} component={SearchItem} />
+      <Stack.Screen name={screenName.ImageDetails} component={ImageDetails} />
+      <Stack.Screen name={screenName.Notifications} component={Notifications} />
     </Stack.Navigator>
   );
 };

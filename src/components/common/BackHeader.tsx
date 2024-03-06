@@ -6,6 +6,7 @@ import { hp, wp } from "../../helper/globalFunction";
 import { BackIcon, Hamburger, SearchIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type Props = {
   title: string;
@@ -15,10 +16,14 @@ type Props = {
 };
 
 const BackHeader = ({ title, isSearch, isMenu, onPressMenu }: Props) => {
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
 
   const onPressBack = () => goBack();
-  const onPressSearch = () => {};
+
+  const onPressSearch = () => {
+    // @ts-ignore
+    navigate(screenName.SearchItem);
+  };
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       {isMenu ? (

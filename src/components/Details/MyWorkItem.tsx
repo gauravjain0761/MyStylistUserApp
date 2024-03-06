@@ -8,7 +8,7 @@ import {
   FlatList,
   Image,
 } from "react-native";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, screen_width, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
@@ -73,8 +73,8 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginHorizontal: wp(3),
-    height: hp(117),
-    width: hp(117),
+    height: screen_width - wp(267),
+    width: screen_width - wp(267),
     marginBottom: hp(6),
     borderRadius: 4,
   },
@@ -82,9 +82,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(17),
   },
   imgStyle: {
-    height: hp(115),
+    height: screen_width - wp(267),
+    width: screen_width - wp(267),
     borderRadius: 4,
-    width: hp(117),
   },
 });
 

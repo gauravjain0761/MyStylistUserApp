@@ -17,4 +17,7 @@ export const screenName = {
   },
   NewYearOffer: "NewYearOffer",
   appointmentDetails: "AppointmentDetails",
+  SearchItem: "SearchItem",
+  ImageDetails: "ImageDetails",
+  Notifications: "Notifications",
 };

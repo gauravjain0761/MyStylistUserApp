@@ -96,4 +96,8 @@ export const strings = {
   "Chandigarh, Mohali,Kharar, Panchkula":
     "Chandigarh, Mohali,\nKharar, Panchkula ",
   Zirakpur: " Zirakpur ",
+  "View More": "View More",
+  Notifications: "Notifications",
+  "All Notifications": "All Notifications",
+  "Mark all as read": "Mark all as read",
 };

@@ -28,6 +28,7 @@ export const colors = {
   grey_11: "#6B6B6B",
   grey_12: "#F9F8FE",
   grey_13: "#C7C6CB",
+  grey_14: "#F5F5F5",
 
   black_2: "#444444",
   green_1: "#1BA041",
@@ -48,4 +49,5 @@ export const colors = {
   primary_light_blue_4: "#CCF0EE",
 
   background_grey: "#F8F8F8",
+  blue: "#40BAFF",
 };

@@ -20,7 +20,11 @@ import SearchImageItem from "./Search/SearchImageItem";
 import RecentItem from "./Search/RecentItem";
 import OvalShapView from "./common/OvalShapView";
 import NotificationItem from "./common/NotificationItem";
-
+import MessageItem from "./common/MessageItem";
+import ChatHeader from "./Chat/ChatHeader";
+import ReciverItem from "./Chat/ReciverItem";
+import SenderItem from "./Chat/SenderItem";
+import ChatInput from "./Chat/ChatInput";
 export {
   LocationModal,
   BackHeader,
@@ -44,4 +48,9 @@ export {
   RecentItem,
   OvalShapView,
   NotificationItem,
+  MessageItem,
+  ChatHeader,
+  SenderItem,
+  ReciverItem,
+  ChatInput,
 };

@@ -13,7 +13,7 @@ const Notifications = () => {
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Notifications"]} />
-      {/* <View>
+      <View>
         <FlatList
           style={styles.horizontalListStyle}
           horizontal
@@ -46,13 +46,15 @@ const Notifications = () => {
         </View>
       </View>
       <FlatList
-        data={[1, 2, 3, 4]}
+        style={styles.flatListStyle}
+        data={[1, 2, 3, 4, 5, , 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => {
           return <NotificationItem />;
         }}
-        ItemSeparatorComponent={<View style={styles.lineStyle} />}
-      /> */}
+        ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
+        ListFooterComponent={<View style={{ marginTop: hp(30) }} />}
+      />
     </View>
   );
 };
@@ -88,7 +90,14 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 15, colors.blue),
     marginLeft: wp(4),
   },
-  lineStyle: {},
+  lineStyle: {
+    borderTopWidth: 1,
+    marginVertical: hp(20),
+    borderTopColor: colors.review_caed_border,
+  },
+  flatListStyle: {
+    marginTop: hp(15),
+  },
 });
 
 export default Notifications;

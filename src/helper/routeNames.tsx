@@ -26,4 +26,5 @@ export const screenName = {
   Feedback: "Feedback",
   Profile: "Profile",
   FaQ: "FaQ",
+  ChatDetails: "ChatDetails",
 };

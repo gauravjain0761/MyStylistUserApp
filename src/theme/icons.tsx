@@ -55,6 +55,8 @@ export const images = {
   completebadge: require("../assets/image/completebadge.png"),
   feedback: require("../assets/image/feedback.png"),
   profile: require("../assets/image/profile.png"),
+  select_black: require("../assets/image/select_black.png"),
+  unselect_grey: require("../assets/image/unselect_grey.png"),
 };
 
 export const icons = {

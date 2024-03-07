@@ -1395,7 +1395,7 @@ export const NotificationIcon = () => {
   );
 };
 
-export const MarkReadIcon = () => {
+export const MarkReadIcon = ({ color = "#40BAFF" }: { color?: string }) => {
   return (
     <Svg
       width="19"
@@ -1407,14 +1407,14 @@ export const MarkReadIcon = () => {
       <G clip-path="url(#clip0_4862_67875)">
         <Path
           d="M5.54199 9.49984L9.50033 13.4582L17.417 5.5415"
-          stroke="#40BAFF"
+          stroke={color}
           stroke-width="1.58333"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <Path
           d="M1.58301 9.49984L5.54134 13.4582M9.49967 9.49984L13.458 5.5415"
-          stroke="#40BAFF"
+          stroke={color}
           stroke-width="1.58333"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -1525,6 +1525,123 @@ export const EditIcon = () => {
           />
         </ClipPath>
       </Defs>
+    </Svg>
+  );
+};
+
+export const ThreeDotIcon = () => {
+  return (
+    <Svg
+      width="28"
+      height="28"
+      viewBox="0 0 28 28"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <G clip-path="url(#clip0_4862_67960)">
+        <Path
+          d="M12.833 14.0002C12.833 14.3096 12.9559 14.6063 13.1747 14.8251C13.3935 15.0439 13.6903 15.1668 13.9997 15.1668C14.3091 15.1668 14.6058 15.0439 14.8246 14.8251C15.0434 14.6063 15.1663 14.3096 15.1663 14.0002C15.1663 13.6907 15.0434 13.394 14.8246 13.1752C14.6058 12.9564 14.3091 12.8335 13.9997 12.8335C13.6903 12.8335 13.3935 12.9564 13.1747 13.1752C12.9559 13.394 12.833 13.6907 12.833 14.0002Z"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M12.833 22.1667C12.833 22.4761 12.9559 22.7728 13.1747 22.9916C13.3935 23.2104 13.6903 23.3333 13.9997 23.3333C14.3091 23.3333 14.6058 23.2104 14.8246 22.9916C15.0434 22.7728 15.1663 22.4761 15.1663 22.1667C15.1663 21.8572 15.0434 21.5605 14.8246 21.3417C14.6058 21.1229 14.3091 21 13.9997 21C13.6903 21 13.3935 21.1229 13.1747 21.3417C12.9559 21.5605 12.833 21.8572 12.833 22.1667Z"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M12.833 5.83317C12.833 6.14259 12.9559 6.43934 13.1747 6.65813C13.3935 6.87692 13.6903 6.99984 13.9997 6.99984C14.3091 6.99984 14.6058 6.87692 14.8246 6.65813C15.0434 6.43934 15.1663 6.14259 15.1663 5.83317C15.1663 5.52375 15.0434 5.22701 14.8246 5.00821C14.6058 4.78942 14.3091 4.6665 13.9997 4.6665C13.6903 4.6665 13.3935 4.78942 13.1747 5.00821C12.9559 5.22701 12.833 5.52375 12.833 5.83317Z"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_4862_67960">
+          <Rect width="28" height="28" fill="white" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const EmjoyIcon = () => {
+  return (
+    <Svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <G clip-path="url(#clip0_4862_67987)">
+        <Path
+          d="M3 12C3 13.1819 3.23279 14.3522 3.68508 15.4442C4.13738 16.5361 4.80031 17.5282 5.63604 18.364C6.47177 19.1997 7.46392 19.8626 8.55585 20.3149C9.64778 20.7672 10.8181 21 12 21C13.1819 21 14.3522 20.7672 15.4442 20.3149C16.5361 19.8626 17.5282 19.1997 18.364 18.364C19.1997 17.5282 19.8626 16.5361 20.3149 15.4442C20.7672 14.3522 21 13.1819 21 12C21 10.8181 20.7672 9.64778 20.3149 8.55585C19.8626 7.46392 19.1997 6.47177 18.364 5.63604C17.5282 4.80031 16.5361 4.13738 15.4442 3.68508C14.3522 3.23279 13.1819 3 12 3C10.8181 3 9.64778 3.23279 8.55585 3.68508C7.46392 4.13738 6.47177 4.80031 5.63604 5.63604C4.80031 6.47177 4.13738 7.46392 3.68508 8.55585C3.23279 9.64778 3 10.8181 3 12Z"
+          stroke="#666666"
+          stroke-width="1.45973"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M9 9H9.01"
+          stroke="#666666"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M15 9H15.01"
+          stroke="#666666"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M8 13C8 14.0609 8.42143 15.0783 9.17157 15.8284C9.92172 16.5786 10.9391 17 12 17C13.0609 17 14.0783 16.5786 14.8284 15.8284C15.5786 15.0783 16 14.0609 16 13H8Z"
+          stroke="#666666"
+          stroke-width="1.46"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_4862_67987">
+          <Rect width="24" height="24" fill="white" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const SendButtonIcon = () => {
+  return (
+    <Svg
+      width="45"
+      height="41"
+      viewBox="0 0 45 41"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Rect x="0.669922" width="44" height="41" rx="10" fill="#89E3DC" />
+      <Path
+        d="M18.0696 15.3202L26.5596 12.4902C30.3696 11.2202 32.4396 13.3002 31.1796 17.1102L28.3496 25.6002C26.4496 31.3102 23.3296 31.3102 21.4296 25.6002L20.5896 23.0802L18.0696 22.2402C12.3596 20.3402 12.3596 17.2302 18.0696 15.3202Z"
+        stroke="black"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <Path
+        d="M20.7793 22.6501L24.3593 19.0601"
+        stroke="black"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
     </Svg>
   );
 };

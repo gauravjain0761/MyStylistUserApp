@@ -24,6 +24,7 @@ import AppointmentBookAgain from "../screen/Appointment/AppointmentConfirm";
 import Feedback from "../components/common/Feedback";
 import Profile from "../screen/Profiles/Profile";
 import FaQ from "../screen/Faq/FaQ";
+import ChatDetails from "../screen/Chat/ChatDetails";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -74,6 +75,7 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.Feedback} component={Feedback} />
       <Stack.Screen name={screenName.Profile} component={Profile} />
       <Stack.Screen name={screenName.FaQ} component={FaQ} />
+      <Stack.Screen name={screenName.ChatDetails} component={ChatDetails} />
     </Stack.Navigator>
   );
 };

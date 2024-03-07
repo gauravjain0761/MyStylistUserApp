@@ -120,4 +120,9 @@ export const strings = {
   Gender: "Gender",
   Dat_of_Birth: "Date of Birth",
   FAQ: "FAQ’S",
+  "All Notifications": "All Notifications",
+  "Mark all as read": "Mark all as read",
+  Messages: "Messages",
+  All: "All",
+  Unread: "Unread",
 };

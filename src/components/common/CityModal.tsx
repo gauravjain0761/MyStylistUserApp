@@ -15,18 +15,17 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import { images } from "../../theme/icons";
 
-const CityModal = () => {
+const CityModal = ({ LocationAllow }) => {
   const [IsModal, setIsModal] = useState(true);
   const [value, setValue] = useState(null);
   const data = [
-    { label: "Item 1", value: "1" },
-    { label: "Item 2", value: "2" },
-    { label: "Item 3", value: "3" },
-    { label: "Item 4", value: "4" },
-    { label: "Item 5", value: "5" },
-    { label: "Item 6", value: "6" },
-    { label: "Item 7", value: "7" },
-    { label: "Item 8", value: "8" },
+    { label: "Chandigarh", value: "1" },
+    { label: "Panchkula", value: "2" },
+    { label: "Zirakpur", value: "3" },
+    { label: "Patiala", value: "4" },
+    { label: "Mohali", value: "5" },
+    { label: "Rupnagar", value: "6" },
+    { label: "Kharar", value: "7" },
   ];
   return (
     <View style={styles.conatiner}>
@@ -58,19 +57,22 @@ const CityModal = () => {
               data={data}
               maxHeight={300}
               labelField="label"
-              valueField="value"
+              valueField="label"
               placeholder="Please select"
               selectedTextStyle={styles.selectedTextStyle}
               itemTextStyle={styles.item_style}
               value={value}
               onChange={(item: any) => {
-                setValue(item.value);
+                setValue(item.label);
               }}
               renderRightIcon={() => <Dropdown_Down_Arrow color="#9D9D9D" />}
             />
             <TouchableOpacity
               style={styles.submit_btn}
-              onPress={() => setIsModal(!IsModal)}
+              onPress={() => {
+                setIsModal(!IsModal);
+                LocationAllow(value);
+              }}
             >
               <ImageBackground source={images.book_button} resizeMode="contain">
                 <Text style={styles.btn_title}>{strings.Submit}</Text>
@@ -127,7 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   dropdown: {
-    height: 50,
+    height: hp(60),
     backgroundColor: colors.review_card_bg,
     borderWidth: wp(1),
     borderColor: colors.review_caed_border,

@@ -25,6 +25,7 @@ import {
 } from "../../theme/SvgIcon";
 import DatePicker from "react-native-date-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import moment from "moment";
 
 const Profile = () => {
   const [value, setValue] = useState("Male");
@@ -33,6 +34,8 @@ const Profile = () => {
   const [email, setEmail] = useState("elishaatif8974@gmail.com");
   const [phone, setPhone] = useState("+1 435 9877 9856");
   const [date, setDate] = useState("Nov 23, 2023");
+  const [dates, setDates] = useState(new Date());
+  const [open, setOpen] = useState(false);
 
   const data = [
     { label: "Male", value: "1" },
@@ -41,10 +44,20 @@ const Profile = () => {
 
   const onPressNo = () => {
     setIsEditable(!isEditable);
+    setName("Elisha Atif");
+    setEmail("elishaatif8974@gmail.com");
+    setPhone("+1 435 9877 9856");
+    setDate("Nov 23, 2023");
   };
 
   const onPressYes = () => {
     setIsEditable(!isEditable);
+  };
+
+  const onPressDate = (item) => {
+    const originalDate = item;
+    const formattedDate = moment(originalDate).format("MMM DD, YYYY");
+    setDate(formattedDate);
   };
 
   return (
@@ -52,9 +65,8 @@ const Profile = () => {
       <BackHeader title={strings.Personal_Information} />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1 }}
-        enableOnAndroid
         enableAutomaticScroll
-        extraScrollHeight={isIos ? 20 : 360}
+        extraScrollHeight={isIos ? 20 : 200}
         keyboardShouldPersistTaps={"handled"}
         style={{ flex: 1 }}
       >
@@ -128,8 +140,26 @@ const Profile = () => {
                 value={date}
                 onChangeText={(e) => setDate(e)}
               />
-              <CalenderIcon />
+              <TouchableOpacity
+                disabled={!isEditable}
+                onPress={() => setOpen(true)}
+              >
+                <CalenderIcon />
+              </TouchableOpacity>
             </Pressable>
+            <DatePicker
+              modal
+              mode="date"
+              open={open}
+              date={dates}
+              onConfirm={(datess: any) => {
+                setOpen(false);
+                onPressDate(datess);
+              }}
+              onCancel={() => {
+                setOpen(false);
+              }}
+            />
           </View>
         </View>
       </KeyboardAwareScrollView>
@@ -140,7 +170,6 @@ const Profile = () => {
               <Text style={styles.btn_title}>Cancel</Text>
             </ImageBackground>
           </TouchableOpacity>
-
           <TouchableOpacity onPress={onPressYes}>
             <ImageBackground resizeMode="stretch" source={images.blue_button}>
               <Text style={styles.btn_title}>Save</Text>
@@ -166,7 +195,7 @@ const styles = StyleSheet.create({
   },
   inputs_conatiner: {
     marginHorizontal: wp(20),
-    marginTop: hp(26),
+    marginVertical: hp(26),
     gap: hp(20),
   },
   input_conatiner: {
@@ -210,6 +239,7 @@ const styles = StyleSheet.create({
   },
   value: {
     color: colors.black,
+    width: "90%",
   },
   Custom_input: {
     flexDirection: "row",
@@ -243,7 +273,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: wp(12),
-    marginTop: hp(23),
     backgroundColor: colors.white,
     paddingVertical: hp(27),
   },

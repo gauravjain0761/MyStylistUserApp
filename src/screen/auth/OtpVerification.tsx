@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -40,6 +41,7 @@ const OtpVerification = ({ route }: any) => {
 
   return (
     <View style={styles?.container}>
+      <StatusBar translucent backgroundColor={"transparent"} />
       <ImageBackground
         source={images?.gradient_bg}
         style={styles?.bg_container}
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   back_arrow: {
-    marginTop: hp(51),
+    marginTop: hp(61),
     marginLeft: wp(26),
     justifyContent: "center",
     alignSelf: "flex-start",

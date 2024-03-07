@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { colors } from "../../theme/color";
 import {
   generateTimes,
@@ -50,6 +50,8 @@ import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { navigationRef } from "../../navigation/MainNavigator";
 import CityModal from "../../components/common/CityModal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setEngine } from "crypto";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
@@ -64,9 +66,28 @@ const Home = () => {
   const [servicesModal, setServicesModal] = useState(false);
   const [modalTitle, setModalTitle] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
-
+  const [cityModal, setCityModal] = useState(false);
+  const [locationModal, setLocationModal] = useState({});
+  const [IsAllowed, setIsAllow] = useState(false);
   const { navigate } = useNavigation();
   const navigation = useNavigation();
+
+  const LocationAllow = async (
+    city = strings["Flat No. 14, Ansal Palm Grove, Mohali"]
+  ) => {
+    const location = {
+      permission: "true",
+      city: city,
+    };
+    try {
+      await AsyncStorage.setItem("location", JSON.stringify(location));
+      setIsAllow(true);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    GetStatus();
+  }, [IsAllowed]);
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
     setActiveIndex(index);
@@ -119,6 +140,11 @@ const Home = () => {
     setTimes(data);
   };
 
+  const GetStatus = async () => {
+    const Status = await AsyncStorage.getItem("location");
+    setLocationModal(Status != null ? JSON.parse(Status) : null);
+  };
+
   const onPressSearch = () => {
     // @ts-ignore
     navigate(screenName.SearchItem);
@@ -126,11 +152,18 @@ const Home = () => {
 
   return (
     <View style={styles?.container}>
-      <CityModal />
-      <LocationModal />
+      {locationModal?.permission == "true" ? null : (
+        <LocationModal
+          onPressAllow={setCityModal}
+          onPressDontAllow={setCityModal}
+          LocationAllow={LocationAllow}
+        />
+      )}
+      {!cityModal ? null : <CityModal LocationAllow={LocationAllow} />}
       <HomeHeader
-        onPressBack={() => navigation.openDrawer()}
+        onPressProfile={() => navigation.openDrawer()}
         onPressCart={() => navigate(screenName.Cart)}
+        location={locationModal}
       />
       <TouchableOpacity
         onPress={onPressSearch}
@@ -324,6 +357,11 @@ const Home = () => {
                   onPress={() => {
                     ModalHendler(item.id);
                   }}
+                  containerStyle={
+                    stylists_filter.length - 1 == index
+                      ? { marginRight: wp(10) }
+                      : null
+                  }
                   title={item?.title}
                   type={item?.isIcon == true ? "icon" : "simple"}
                 />
@@ -488,6 +526,7 @@ const styles = StyleSheet.create({
     height: hp(170),
     borderRadius: wp(8),
     justifyContent: "space-between",
+    marginRight: wp(10),
   },
   card_title: {
     ...commonFontStyle(fontFamily.medium, 12, colors?.black),
@@ -500,7 +539,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   item_separator: {
-    width: wp(12),
+    width: wp(2),
   },
   men_services_container: {
     paddingLeft: wp(20),

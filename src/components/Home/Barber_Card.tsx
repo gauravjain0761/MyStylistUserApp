@@ -276,7 +276,7 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(7),
   },
   jobs_title: {
-    ...commonFontStyle(fontFamily.medium, 13, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
   },
   location_container: {
     flexDirection: "row",
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   location_title: {
-    ...commonFontStyle(fontFamily.medium, 13, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
   },
   pagination_container: {
     justifyContent: "center",
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     borderStyle: "dashed",
   },
   price_title: {
-    ...commonFontStyle(fontFamily.medium, 15, colors.dark_grey_1),
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.dark_grey_1),
   },
   dashlineStyle: {
     borderWidth: 1,

@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btn_title: {
-    ...commonFontStyle(fontFamily.medium, 15, colors.black),
+    ...commonFontStyle(fontFamily.medium, 14, colors.black),
   },
   time_conatiner: {
     flexDirection: "row",

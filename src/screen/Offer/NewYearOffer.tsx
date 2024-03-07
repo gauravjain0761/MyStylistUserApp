@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   your_stylists_title: {
-    ...commonFontStyle(fontFamily.medium, 17, colors.stylists_title_gray),
+    ...commonFontStyle(fontFamily.regular, 17, colors.stylists_title_gray),
     paddingHorizontal: wp(16),
   },
   title_border: {

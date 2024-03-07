@@ -125,4 +125,6 @@ export const strings = {
   Messages: "Messages",
   All: "All",
   Unread: "Unread",
+  "Flat No. 14, Ansal Palm Grove, Mohali":
+    "Flat No. 14, Ansal Palm Grove, Mohali",
 };

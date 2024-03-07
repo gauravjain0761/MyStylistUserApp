@@ -12,11 +12,13 @@ import Modals from "./Modals";
 import { strings } from "../../helper/string";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
-import { images } from "../../theme/icons";
+import { icons, images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { RatingStars } from "../../theme/SvgIcon";
 
 const FeedbackModal = ({ visible, close, onPresssubmit }) => {
+  const [maxrating, setmaxRating] = useState([1, 2, 3, 4, 5]);
+  const [defaultrating, setdefaultrating] = useState(0);
   return (
     <View style={styles.conatiner}>
       <Modals
@@ -31,11 +33,25 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
               <Text style={styles.name}>Rate {strings.Majid_Khan}</Text>
             </View>
             <View style={styles.star_container}>
-              <RatingStars color="#E9E9E9" height={wp(34)} width={wp(34)} />
-              <RatingStars color="#E9E9E9" height={wp(34)} width={wp(34)} />
-              <RatingStars color="#E9E9E9" height={wp(34)} width={wp(34)} />
-              <RatingStars color="#E9E9E9" height={wp(34)} width={wp(34)} />
-              <RatingStars color="#E9E9E9" height={wp(34)} width={wp(34)} />
+              {maxrating.map((item, index) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => setdefaultrating(item)}
+                    activeOpacity={0.7}
+                    key={item}
+                  >
+                    {item <= defaultrating ? (
+                      <RatingStars width={wp(36)} height={wp(36)} />
+                    ) : (
+                      <RatingStars
+                        width={wp(36)}
+                        height={wp(36)}
+                        color="#E9E9E9"
+                      />
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
             </View>
 
             <View style={styles.review_container}>

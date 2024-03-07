@@ -17,7 +17,7 @@ type props = {
   title: string;
   type: "icon" | "simple";
   onPress?: (arg?: any) => any;
-  containerStyle?: ViewStyle;
+  containerStyle?: ViewStyle | any;
 };
 
 const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
@@ -25,7 +25,10 @@ const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
     <>
       {type === "icon" ? (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.btn_conatiner} onPress={onPress}>
+          <TouchableOpacity
+            style={[styles.btn_conatiner, containerStyle]}
+            onPress={onPress}
+          >
             <ImageBackground
               source={images.oval_grey_button}
               style={styles.oval_bg}
@@ -38,7 +41,10 @@ const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
         </View>
       ) : (
         <View style={styles.container}>
-          <TouchableOpacity style={styles.btn_conatiner} onPress={onPress}>
+          <TouchableOpacity
+            style={[styles.btn_conatiner, containerStyle]}
+            onPress={onPress}
+          >
             <ImageBackground
               source={images.oval_grey_button}
               style={styles.oval_bg}

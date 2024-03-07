@@ -12,9 +12,9 @@ import {
 } from "react-native-svg";
 
 type RatingStarsProps = {
-  color: string;
-  width: number | string;
-  height: number | string;
+  color?: string;
+  width?: number | string;
+  height?: number | string;
 };
 
 export const Dropdown_Down_Arrow = ({ color = "#444444" }) => {
@@ -450,11 +450,11 @@ export const Hamburger = () => {
   );
 };
 
-export const RatingStars = ({
+export const RatingStars: FC<RatingStarsProps> = ({
   color = "#FF8A00",
   height = "16",
   width = "17",
-}: RatingStarsProps) => {
+}) => {
   return (
     <Svg
       width={width}

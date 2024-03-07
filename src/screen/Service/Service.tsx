@@ -35,6 +35,11 @@ const Service = () => {
                 <Filter_Button
                   onPress={() => {}}
                   title={item?.title}
+                  containerStyle={
+                    stylists_filter.length - 1 == index
+                      ? { marginRight: wp(10) }
+                      : null
+                  }
                   type={item?.isIcon == true ? "icon" : "simple"}
                 />
               );

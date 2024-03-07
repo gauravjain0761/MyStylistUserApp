@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   confirmTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
-    paddingHorizontal: wp(80),
+    paddingHorizontal: wp(70),
     paddingVertical: hp(20),
   },
 });

@@ -42,6 +42,7 @@ import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import ReviewModel from "../../components/Details/ReviewModal";
 import LinearGradient from "react-native-linear-gradient";
+import { is } from "@babel/types";
 
 type TagViewProps = {
   Icon?: any;
@@ -111,6 +112,7 @@ const YourStylist = () => {
   const [isPackages, setIsPackages] = useState(false);
   const [isMyWork, setIsMyWork] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [isHeaderSticky, setIsHeaderSticky] = useState(false);
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -147,10 +149,23 @@ const YourStylist = () => {
     navigate(screenName.Cart);
   };
 
+  const handleStickyHeaderEvent = (event) => {
+    const scrollPosition = event.nativeEvent.contentOffset.y;
+    if (Math.floor(scrollPosition) == 241) {
+      setIsHeaderSticky(true);
+    } else if (Math.floor(scrollPosition) < 240) {
+      setIsHeaderSticky(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader isSearch title={"Your Stylist"} />
-      <ScrollView stickyHeaderIndices={[1]} style={{ flex: 1 }}>
+      <ScrollView
+        onScroll={handleStickyHeaderEvent}
+        stickyHeaderIndices={[2]}
+        style={{ flex: 1 }}
+      >
         <View style={styles.rowStyle}>
           <Image style={styles.personStyle} source={images.barber} />
           <View style={styles.columStyle}>
@@ -177,18 +192,29 @@ const YourStylist = () => {
             </View>
           </View>
         </View>
-        <ImageBackground
-          style={styles.gradinetStyle}
-          source={images.gradinet_details}
+        <View style={styles.gradinetStyle}>
+          <LinearGradient
+            style={{ borderRadius: wp(50), flex: 1 }}
+            colors={["#D1F8F5", "#D9D9D900"]}
+          >
+            <Image style={styles.lineStyle} source={images.gradient_line} />
+            <View style={styles.offerContainer}>
+              <OfferIcon />
+            </View>
+            <Text style={styles.offerTextStyle}>{"Flat 50% off"}</Text>
+            <Text style={styles.greyOfferTextStyle}>
+              {"NO CODE REQUIRED | ABOVE 999"}
+            </Text>
+          </LinearGradient>
+        </View>
+
+        <View
+          style={[
+            isHeaderSticky
+              ? { position: "absolute", top: -130, backgroundColor: "#FAFAFA" }
+              : { position: "absolute", top: -130 },
+          ]}
         >
-          <Image style={styles.lineStyle} source={images.gradient_line} />
-          <View style={styles.offerContainer}>
-            <OfferIcon />
-          </View>
-          <Text style={styles.offerTextStyle}>{"Flat 50% off"}</Text>
-          <Text style={styles.greyOfferTextStyle}>
-            {"NO CODE REQUIRED | ABOVE 999"}
-          </Text>
           <View style={styles.rowSpaceStyle}>
             <TagView
               isSelected={isOffers}
@@ -210,9 +236,9 @@ const YourStylist = () => {
               onPressClose={onPressCloseFilter}
             />
           </View>
-        </ImageBackground>
+        </View>
 
-        <View style={{ marginTop: -hp(80) }}>
+        <View style={{ flex: 1, marginTop: hp(-130) }}>
           {!isOffers && !isPackages && !isMyWork ? (
             <View>
               <FlatList

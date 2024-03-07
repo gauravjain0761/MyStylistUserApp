@@ -7,7 +7,7 @@ import {
   ReciverItem,
   SenderItem,
 } from "../../components";
-import { wp } from "../../helper/globalFunction";
+import { isIos, wp } from "../../helper/globalFunction";
 
 const ChatDetails = () => {
   return (
@@ -25,7 +25,9 @@ const ChatDetails = () => {
           }
         }}
       />
-      <ChatInput />
+      <KeyboardAvoidingView behavior={isIos ? "padding" : null}>
+        <ChatInput />
+      </KeyboardAvoidingView>
     </View>
   );
 };

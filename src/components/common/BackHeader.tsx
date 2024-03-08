@@ -36,7 +36,9 @@ const BackHeader = ({ title, isSearch, isMenu, onPressMenu }: Props) => {
         </TouchableOpacity>
       )}
 
-      <Text style={styles.titleTextStyle}>{title}</Text>
+      <Text numberOfLines={1} style={styles.titleTextStyle}>
+        {title}
+      </Text>
       {isSearch ? (
         <TouchableOpacity onPress={onPressSearch}>
           <SearchIcon />

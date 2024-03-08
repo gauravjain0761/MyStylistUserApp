@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
+  Animated,
   FlatList,
   Image,
   ImageBackground,
+  InteractionManager,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   UIManager,
   View,
@@ -35,6 +38,9 @@ import {
   CardIcon,
   PetIcon,
   ElectricityIcon,
+  BackIcon,
+  SearchIcon,
+  CloseIcon,
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import MyWorkItem from "../../components/Details/MyWorkItem";
@@ -43,6 +49,12 @@ import { screenName } from "../../helper/routeNames";
 import ReviewModel from "../../components/Details/ReviewModal";
 import LinearGradient from "react-native-linear-gradient";
 import { is } from "@babel/types";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Animation, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 type TagViewProps = {
   Icon?: any;
@@ -107,12 +119,22 @@ const amenitiesData = [
 ];
 
 const YourStylist = () => {
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const [isOffers, setIsOffers] = useState(false);
   const [isPackages, setIsPackages] = useState(false);
   const [isMyWork, setIsMyWork] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
+  const animated = useSharedValue(0);
+  const [animatedValue, setAnimatedValue] = useState(0);
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      width:
+        animated.value === 1
+          ? withTiming(275, { duration: 500 })
+          : withTiming(0, { duration: 500 }),
+    };
+  });
 
   useEffect(() => {
     if (Platform.OS === "android") {
@@ -158,13 +180,60 @@ const YourStylist = () => {
     }
   };
 
+  const onPressBack = () => {
+    goBack();
+  };
+
+  const onPressSearch = () => {
+    if (animated.value === 1) {
+      animated.value = 0;
+      setAnimatedValue(0);
+    } else {
+      animated.value = 1;
+      setAnimatedValue(1);
+    }
+  };
+
+  const handleScroll = (event) => {
+    console.log(event.nativeEvent.contentOffset.y);
+    if (event.nativeEvent.contentOffset.y > 250) {
+      animated.value = 1;
+      setAnimatedValue(1);
+    } else {
+      animated.value = 0;
+      setAnimatedValue(0);
+    }
+  };
+
   return (
     <View style={styles.container}>
-      <BackHeader isSearch title={"Your Stylist"} />
-      <ScrollView
-        onScroll={handleStickyHeaderEvent}
+      <SafeAreaView style={styles.headerContainer} edges={["top"]}>
+        <TouchableOpacity onPress={onPressBack}>
+          <BackIcon />
+        </TouchableOpacity>
+        {animatedValue === 0 ? (
+          <Text numberOfLines={1} style={styles.headerTextStyle}>
+            {"Your Stylist"}
+          </Text>
+        ) : null}
+        <Animation.View style={[styles.searchContainer, animatedStyle]}>
+          <TextInput
+            style={styles.inputStyle}
+            placeholder="Search Here..."
+            placeholderTextColor={colors.gery_2}
+          />
+        </Animation.View>
+
+        <TouchableOpacity onPress={onPressSearch}>
+          {animatedValue === 0 ? <SearchIcon /> : <CloseIcon />}
+        </TouchableOpacity>
+      </SafeAreaView>
+      <Animation.ScrollView
+        // onScroll={handleStickyHeaderEvent}
         stickyHeaderIndices={[2]}
         style={{ flex: 1 }}
+        scrollEventThrottle={16}
+        onScroll={handleScroll}
       >
         <View style={styles.rowStyle}>
           <Image style={styles.personStyle} source={images.barber} />
@@ -329,7 +398,7 @@ const YourStylist = () => {
             />
           </View>
         </LinearGradient>
-      </ScrollView>
+      </Animation.ScrollView>
       <View style={styles.elevationStyle}>
         <Text style={styles.priceTextStyle}>{"₹200"}</Text>
         <TouchableOpacity onPress={onPressGoCart}>
@@ -528,5 +597,31 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 10, colors.black),
     textAlign: "center",
     marginTop: hp(5),
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: hp(17),
+    paddingHorizontal: wp(20),
+    backgroundColor: colors?.white,
+    justifyContent: "space-between",
+  },
+  headerTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors?.black),
+    marginHorizontal: wp(10),
+    flex: 1,
+  },
+  searchContainer: {
+    height: hp(45),
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: wp(10),
+    backgroundColor: colors.background_grey,
+  },
+  inputStyle: {
+    flex: 1,
+    marginHorizontal: wp(10),
+    ...commonFontStyle(fontFamily.regular, 15, colors.black),
   },
 });

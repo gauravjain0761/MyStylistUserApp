@@ -292,7 +292,7 @@ const YourStylist = () => {
           style={[
             isHeaderSticky
               ? { position: "absolute", top: -130, backgroundColor: "#FAFAFA" }
-              : { position: "absolute", top: -130 },
+              : { position: "absolute", top: -120 },
           ]}
         >
           <View style={styles.rowSpaceStyle}>
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginHorizontal: wp(20),
-    marginVertical: hp(20),
+    marginVertical: hp(0),
   },
   buttonStyle: {
     height: hp(40),

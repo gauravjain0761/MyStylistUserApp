@@ -36,6 +36,7 @@ const MyFavorites = () => {
           ItemSeparatorComponent={() => (
             <View style={styles.card_separator}></View>
           )}
+          ListFooterComponent={<View style={{ height: hp(50) }} />}
         />
       </View>
     </View>

@@ -4,8 +4,15 @@ import { BackHeader, Barber_Card } from "../../components";
 import { strings } from "../../helper/string";
 import { hp, screen_height, wp } from "../../helper/globalFunction";
 import { barbers } from "../../helper/constunts";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 const MyFavorites = () => {
+  const { navigate } = useNavigation();
+
+  const onPressCard = () => {
+    navigate(screenName.YourStylist);
+  };
   return (
     <View style={styles.container}>
       <BackHeader title={strings.My_Favorites} />
@@ -24,6 +31,8 @@ const MyFavorites = () => {
                 jobs={item?.jobs_done}
                 location={item.address}
                 offers={item?.offers}
+                barberdetailscontinerStyle={styles.barberdetailscontinerStyle}
+                onPress={onPressCard}
                 // onPress={onPressItem}
                 // onPressRating={setReviewModal}
               />
@@ -55,5 +64,8 @@ const styles = StyleSheet.create({
   },
   card_separator: {
     height: hp(24),
+  },
+  barberdetailscontinerStyle: {
+    marginTop: hp(20),
   },
 });

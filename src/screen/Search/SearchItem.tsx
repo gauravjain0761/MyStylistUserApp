@@ -14,7 +14,7 @@ const SearchItem = () => {
         value={searchText}
         onChangeText={setSearchText}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={() => setIsFocused(true)}
       />
       {!isFocused ? (
         <FlatList

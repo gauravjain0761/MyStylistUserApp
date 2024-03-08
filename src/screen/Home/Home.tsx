@@ -386,6 +386,7 @@ const Home = () => {
                   offers={item?.offers}
                   onPress={onPressItem}
                   onPressRating={setReviewModal}
+                  barberdetailscontinerStyle={styles.barberdetailscontinerStyle}
                 />
               );
             }}
@@ -677,5 +678,8 @@ const styles = StyleSheet.create({
   },
   searchTextStyle: {
     ...commonFontStyle(fontFamily.medium, 12, "#949495"),
+  },
+  barberdetailscontinerStyle: {
+    marginTop: hp(20),
   },
 });

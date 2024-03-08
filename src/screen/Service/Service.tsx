@@ -15,8 +15,15 @@ import { hp, wp } from "../../helper/globalFunction";
 import { barbers, stylists_filter } from "../../helper/constunts";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 const Service = () => {
+  const { navigate } = useNavigation();
+
+  const onPressCard = () => {
+    navigate(screenName.YourStylist);
+  };
   return (
     <View style={styles.container}>
       <BackHeader isSearch title={strings.Party_Makeup} />
@@ -74,6 +81,7 @@ const Service = () => {
                   price="₹500"
                   carouselitemHeight={hp(157)}
                   carouselitemWidth={wp(132)}
+                  onPress={onPressCard}
                 />
               );
             }}

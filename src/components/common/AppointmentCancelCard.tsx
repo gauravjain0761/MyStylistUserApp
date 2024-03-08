@@ -14,6 +14,8 @@ import { commonFontStyle } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { CalenderIcon, ClockIcon, VerifyIcon } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type props = {
   name?: string;
@@ -32,6 +34,12 @@ const AppointmentCancelCard = ({
   onPressNo,
   onPressYes,
 }: props) => {
+  const { navigate } = useNavigation();
+
+  const onPressCard = () => {
+    navigate(screenName.YourStylist);
+  };
+
   return (
     <View style={styles.conatiner}>
       <View style={styles.card_upper}>
@@ -41,11 +49,11 @@ const AppointmentCancelCard = ({
               <Image resizeMode="stretch" source={image} style={styles.img} />
             </View>
           </View>
-          <View style={styles.name_container}>
+          <TouchableOpacity onPress={onPressCard} style={styles.name_container}>
             <View style={styles.info_container}>
-              <TouchableOpacity>
+              <View>
                 <Text style={styles.barber_name}>{name}</Text>
-              </TouchableOpacity>
+              </View>
               <VerifyIcon width={14} height={14} />
             </View>
             <View style={styles.timing_conatiner}>
@@ -64,7 +72,7 @@ const AppointmentCancelCard = ({
                 <Text style={styles.time}>{date}</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>

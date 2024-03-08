@@ -21,6 +21,8 @@ import { fontFamily } from "../../theme/fonts";
 import { commonFontStyle } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type props = {
   name?: string;
@@ -49,6 +51,11 @@ const AppointmentConfirmCard = ({
   jobs,
   rating,
 }: props) => {
+  const { navigate } = useNavigation();
+
+  const onPressCard = () => {
+    navigate(screenName.YourStylist);
+  };
   return (
     <View style={styles.conatiner}>
       <View style={styles.card_upper}>
@@ -57,22 +64,19 @@ const AppointmentConfirmCard = ({
             <Image resizeMode="cover" source={image} style={styles.img} />
           </View>
         </View>
-        <View style={styles.name_container}>
+        <TouchableOpacity onPress={onPressCard} style={styles.name_container}>
           <View style={styles.info_container}>
-            <TouchableOpacity onPress={onPress}>
+            <View>
               <Text style={styles.barber_name}>{name}</Text>
-            </TouchableOpacity>
+            </View>
             <VerifyIcon width={14} height={14} />
           </View>
 
           <View style={styles.barber_job_coantiner}>
-            <TouchableOpacity
-              //   onPress={() => onPressRating(true)}
-              style={styles.rating_badge}
-            >
+            <View style={styles.rating_badge}>
               <Text style={styles.rating_title}>{rating}</Text>
               <StarIcon />
-            </TouchableOpacity>
+            </View>
             <View style={styles.seprator}></View>
             <Text style={styles.jobs_title}>
               {jobs} {strings.Jobs_Done}
@@ -83,7 +87,7 @@ const AppointmentConfirmCard = ({
             <CarIcon />
             <Text style={styles.location_title}>{location}</Text>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>
       </View>

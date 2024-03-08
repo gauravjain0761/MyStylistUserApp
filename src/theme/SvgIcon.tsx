@@ -1645,3 +1645,69 @@ export const SendButtonIcon = () => {
     </Svg>
   );
 };
+
+export const ShareIcon = () => {
+  return (
+    <Svg
+      width="26"
+      height="26"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <G opacity="0.99" clip-path="url(#clip0_5095_37725)">
+        <Path
+          d="M8.60568 9.87158H7.60744C7.07794 9.87158 6.57013 10.0819 6.19572 10.4563C5.8213 10.8307 5.61096 11.3386 5.61096 11.8681V19.854C5.61096 20.3835 5.8213 20.8913 6.19572 21.2657C6.57013 21.6401 7.07794 21.8505 7.60744 21.8505H17.5898C18.1193 21.8505 18.6271 21.6401 19.0016 21.2657C19.376 20.8913 19.5863 20.3835 19.5863 19.854V11.8681C19.5863 11.3386 19.376 10.8307 19.0016 10.4563C18.6271 10.0819 18.1193 9.87158 17.5898 9.87158H16.5916"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M12.5986 14.8625V3.88184"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <Path
+          d="M9.60388 6.87655L12.5986 3.88184L15.5933 6.87655"
+          stroke="black"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </G>
+      <Defs>
+        <ClipPath id="clip0_5095_37725">
+          <Rect
+            width="23.9577"
+            height="23.9577"
+            fill="white"
+            transform="translate(0.619751 0.887207)"
+          />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};
+
+export const DashIcon = () => {
+  return (
+    <Svg
+      width="14"
+      height="2"
+      viewBox="0 0 14 2"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M1.16699 1H12.8337"
+        stroke="#B0B0B0"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};

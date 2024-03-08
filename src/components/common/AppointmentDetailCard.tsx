@@ -23,6 +23,8 @@ import { fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { commonFontStyle } from "../../theme/fonts";
 import { strings } from "../../helper/string";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 type props = {
   type?: "Give Feedback" | "Rating" | "Total Price";
@@ -55,6 +57,12 @@ const AppointmentDetailCard = ({
   jobs,
   previousBooking = false,
 }: props) => {
+  const { navigate } = useNavigation();
+
+  const onPressCard = () => {
+    navigate(screenName.YourStylist);
+  };
+
   return (
     <View style={styles.conatiner}>
       <View style={styles.card_upper}>
@@ -64,7 +72,7 @@ const AppointmentDetailCard = ({
               <Image resizeMode="stretch" source={images} style={styles.img} />
             </View>
           </View>
-          <View style={styles.name_container}>
+          <TouchableOpacity onPress={onPressCard} style={styles.name_container}>
             <View style={styles.info_container}>
               <TouchableOpacity>
                 <Text style={styles.barber_name}>{name}</Text>
@@ -72,13 +80,10 @@ const AppointmentDetailCard = ({
               <VerifyIcon width={14} height={14} />
             </View>
             <View style={styles.barber_job_coantiner}>
-              <TouchableOpacity
-                onPress={() => onPressRating(true)}
-                style={styles.rating_badge}
-              >
+              <View style={styles.rating_badge}>
                 <Text style={styles.rating_title}>{rating}</Text>
                 <StarIcon />
-              </TouchableOpacity>
+              </View>
               <View style={styles.seprator}></View>
               <Text style={styles.jobs_title}>
                 {jobs} {strings.Jobs_Done}
@@ -89,7 +94,7 @@ const AppointmentDetailCard = ({
               <Text style={styles.location_title}>{location}</Text>
             </View>
             <Text style={styles.service_title}>{service}</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.facility_conatiner}>
           <TouchableOpacity style={styles.service_btn}>

@@ -9,6 +9,7 @@ import { navigationRef } from "../navigation/MainNavigator";
 import { CommonActions } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import moment from "moment";
+import ImagePicker from "react-native-image-crop-picker";
 
 export const screen_width: number = Dimensions.get("window").width;
 export const screen_height: number = Dimensions.get("window").height;
@@ -87,3 +88,34 @@ export const generateTimes = () => {
 };
 
 export const hitSlop = { top: 10, left: 10, bottom: 10, right: 10 };
+
+export type ImagePickerProps = {
+  params?: object;
+  onSucess: (params: object) => void;
+  onFail?: (params: { message: string }) => void | undefined;
+};
+export const openImagePicker = ({
+  params,
+  onSucess,
+  onFail,
+}: ImagePickerProps) => {
+  try {
+    ImagePicker.openPicker({
+      multiple: false,
+      cropping: true,
+      mediaType: "photo",
+      ...params,
+    })
+      .then((image) => {
+        let obj = {
+          ...image,
+          uri: image.path,
+          name: "image_" + moment().unix() + "_" + image.path.split("/").pop(),
+        };
+        onSucess(obj);
+      })
+      .catch((err) => {
+        onFail?.(err);
+      });
+  } catch (error) {}
+};

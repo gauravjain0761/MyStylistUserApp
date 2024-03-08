@@ -51,7 +51,7 @@ const CustomDrawer = () => {
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <View>
-        <View style={styles.image_container}>
+        <TouchableOpacity onPress={onPressName} style={styles.image_container}>
           <View style={styles.img_conatiner}>
             <Image
               resizeMode="contain"
@@ -59,10 +59,10 @@ const CustomDrawer = () => {
               style={styles.img}
             />
           </View>
-          <TouchableOpacity onPress={onPressName}>
+          <View>
             <Text style={styles.user_title}>{strings.Nickson_John}</Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </TouchableOpacity>
         <View style={styles.account_container}>
           <Text style={styles.account_title}>{strings.Account_Setting}</Text>
           <View style={styles.drawerTab_conatiner}>
@@ -239,7 +239,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginTop: hp(20),
+    // marginTop: hp(20),
+    paddingVertical: hp(20),
   },
   tab_img_constiner: {
     flexDirection: "row",
@@ -252,7 +253,6 @@ const styles = StyleSheet.create({
   drawer_border: {
     borderBottomWidth: 1,
     borderColor: colors.review_caed_border,
-    paddingBottom: hp(20),
   },
   connect_us: {
     width: wp(127),

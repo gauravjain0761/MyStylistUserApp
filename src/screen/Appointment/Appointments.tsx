@@ -21,8 +21,8 @@ import { BackHeader } from "../../components";
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
-  const onPresstoNaviate = () => {
-    navigate(screenName.tab_bar_name.Appointment);
+  const onPresstoNavigate = () => {
+    navigate(screenName.AppointmentDetails);
   };
 
   return (
@@ -43,7 +43,7 @@ const Appointments = ({ navigation }) => {
             type="Total Price"
             price="500.00"
             image={images.barber}
-            onPress={() => onPresstoNaviate()}
+            onPress={() => onPresstoNavigate()}
           />
         </View>
 
@@ -71,6 +71,7 @@ const Appointments = ({ navigation }) => {
                     isCompleted
                     price={item.price}
                     image={item.image}
+                    onPress={() => onPresstoNavigate()}
                   />
                 </View>
               );

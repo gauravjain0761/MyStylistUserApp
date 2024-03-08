@@ -75,4 +75,5 @@ export const icons = {
   privacypolicy: require("../assets/icon/privacy.png"),
   terms: require("../assets/icon/terms.png"),
   logout: require("../assets/icon/logout.png"),
+  edit_icon: require("../assets/icon/edit_icon.png"),
 };

@@ -55,11 +55,11 @@ const BarberAppointmentCard = ({
             <Image resizeMode="cover" source={image} style={styles.img} />
           </View>
         </View>
-        <View style={styles.name_container}>
+        <TouchableOpacity onPress={onPress} style={styles.name_container}>
           <View style={styles.info_container}>
-            <TouchableOpacity onPress={onPress}>
+            <View>
               <Text style={styles.barber_name}>{name}</Text>
-            </TouchableOpacity>
+            </View>
             <VerifyIcon width={14} height={14} />
           </View>
           {isCompleted ? (
@@ -86,7 +86,7 @@ const BarberAppointmentCard = ({
             <Text style={styles.location_title}>{location}</Text>
           </View>
           <Text style={styles.service_title}>{service}</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>
       </View>

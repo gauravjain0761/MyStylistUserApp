@@ -36,6 +36,7 @@ type props = {
   carouselitemHeight?: ViewStyle | TextStyle | any;
   onPressRating?: any;
   isNewYearOffer?: boolean;
+  barberdetailscontinerStyle?: ViewStyle | TextStyle;
 };
 const Barber_Card = ({
   type,
@@ -52,6 +53,7 @@ const Barber_Card = ({
   carouselitemWidth = wp(132),
   onPressRating = () => "",
   isNewYearOffer,
+  barberdetailscontinerStyle,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -104,11 +106,17 @@ const Barber_Card = ({
                 dotContainerStyle={styles?.dotContainerStyle}
               />
             </View>
-            <View style={styles.barber_details_continer}>
+            <TouchableOpacity
+              onPress={onPress}
+              style={[
+                styles.barber_details_continer,
+                barberdetailscontinerStyle,
+              ]}
+            >
               <View style={styles.name_container}>
-                <TouchableOpacity onPress={onPress}>
+                <View>
                   <Text style={styles.barber_name}>{name}</Text>
-                </TouchableOpacity>
+                </View>
                 <VerifyIcon width={14} height={14} />
               </View>
               <View style={styles.barber_job_coantiner}>
@@ -132,7 +140,7 @@ const Barber_Card = ({
                 <Text style={styles.price_title}>{service}</Text>
                 <Text style={styles.price_title}>{price}</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       ) : (
@@ -178,11 +186,17 @@ const Barber_Card = ({
                 dotContainerStyle={styles?.dotContainerStyle}
               />
             </View>
-            <View style={styles.barber_details_continer}>
+            <TouchableOpacity
+              onPress={onPress}
+              style={[
+                styles.barber_details_continer,
+                barberdetailscontinerStyle,
+              ]}
+            >
               <View style={styles.name_container}>
-                <TouchableOpacity onPress={onPress}>
+                <View>
                   <Text style={styles.barber_name}>{name}</Text>
-                </TouchableOpacity>
+                </View>
                 <VerifyIcon width={14} height={14} />
               </View>
               <View style={styles.barber_job_coantiner}>
@@ -213,7 +227,7 @@ const Barber_Card = ({
                   </View>
                 </>
               ) : null}
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       )}
@@ -224,11 +238,16 @@ const Barber_Card = ({
 export default Barber_Card;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    paddingBottom: hp(20),
+    borderBottomWidth: wp(1),
+    borderBottomColor: colors.active_dot,
+  },
   barber_card_container: {
     flexDirection: "row",
-    borderBottomColor: colors.active_dot,
-    borderBottomWidth: wp(1),
+    // borderBottomColor: colors.active_dot,
+    // borderBottomWidth: wp(1),
+    // backgroundColor: "green",
   },
   image_conatiner: {},
   carousel_img_container: {
@@ -240,7 +259,7 @@ const styles = StyleSheet.create({
   },
   barber_details_continer: {
     marginLeft: wp(28),
-    // marginTop: hp(21),
+    alignSelf: "flex-start",
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 26, colors.black),
@@ -292,8 +311,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingTop: 0,
     paddingBottom: 0,
-    marginTop: hp(10),
-    marginBottom: hp(20),
+    marginTop: hp(13),
+    // marginBottom: hp(20),
   },
   dotContainerStyle: {
     margin: 0,

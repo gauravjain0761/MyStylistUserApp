@@ -41,6 +41,8 @@ import {
   BackIcon,
   SearchIcon,
   CloseIcon,
+  FillLike,
+  ShareIcon,
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import MyWorkItem from "../../components/Details/MyWorkItem";
@@ -249,9 +251,22 @@ const YourStylist = () => {
         <View style={styles.rowStyle}>
           <Image style={styles.personStyle} source={images.barber} />
           <View style={styles.columStyle}>
-            <View style={styles.rowNameStyle}>
+            <View
+              style={{
+                ...styles.rowNameStyle,
+                justifyContent: "space-between",
+              }}
+            >
               <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
               <VerifyIcon />
+              <View style={styles.iconContainer}>
+                <TouchableOpacity>
+                  <FillLike />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ marginBottom: hp(4) }}>
+                  <ShareIcon />
+                </TouchableOpacity>
+              </View>
             </View>
             <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
               <TouchableOpacity
@@ -450,7 +465,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(10),
   },
   nameTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 30, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 26, colors.black),
     marginRight: wp(5),
   },
   columStyle: {
@@ -637,5 +652,11 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: wp(10),
     ...commonFontStyle(fontFamily.regular, 15, colors.black),
+  },
+  iconContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: wp(10),
+    gap: wp(5),
   },
 });

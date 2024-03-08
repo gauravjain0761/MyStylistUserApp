@@ -28,6 +28,7 @@ import { CarIcon, StarIcon, VerifyIcon } from "../theme/SvgIcon";
 import { images } from "../theme/icons";
 import moment from "moment";
 import { screenName } from "../helper/routeNames";
+import { useNavigation } from "@react-navigation/native";
 
 type RowItemValueProps = {
   title: string;
@@ -47,6 +48,7 @@ const Cart = () => {
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
   const [isShowCongrestModal, setIsShowCongrestModal] = useState(false);
+  const { navigate } = useNavigation();
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
@@ -79,6 +81,10 @@ const Cart = () => {
     setIsShowCongrestModal(true);
   };
 
+  const onPressCard = () => {
+    navigate(screenName.YourStylist);
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Cart"]} />
@@ -106,7 +112,10 @@ const Cart = () => {
             <View style={styles.whiteContainer}>
               <View style={styles.rowStyle}>
                 <Image style={styles.personStyle} source={images.barber} />
-                <View style={styles.columStyle}>
+                <TouchableOpacity
+                  onPress={onPressCard}
+                  style={styles.columStyle}
+                >
                   <View style={styles.rowNameStyle}>
                     <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
                     <VerifyIcon />
@@ -127,7 +136,7 @@ const Cart = () => {
                       {"Sector 67, Mohali"}
                     </Text>
                   </View>
-                </View>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>

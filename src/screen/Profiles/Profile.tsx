@@ -13,8 +13,8 @@ import {
 import React, { useRef, useState } from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
-import { images } from "../../theme/icons";
-import { hp, isIos, wp } from "../../helper/globalFunction";
+import { icons, images } from "../../theme/icons";
+import { hp, isIos, openImagePicker, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { Dropdown } from "react-native-element-dropdown";
@@ -36,6 +36,9 @@ const Profile = () => {
   const [date, setDate] = useState("Nov 23, 2023");
   const [dates, setDates] = useState(new Date());
   const [open, setOpen] = useState(false);
+  const [imageData, setImageData] = useState<any>({
+    uri: "",
+  });
 
   const data = [
     { label: "Male", value: "1" },
@@ -60,6 +63,15 @@ const Profile = () => {
     setDate(formattedDate);
   };
 
+  const onPressProfilePic = () => {
+    openImagePicker({
+      onSucess: (res) => {
+        setImageData(res);
+        // setIsPictureEdit(true);
+      },
+    });
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings.Personal_Information} />
@@ -70,14 +82,28 @@ const Profile = () => {
         keyboardShouldPersistTaps={"handled"}
         style={{ flex: 1 }}
       >
-        <TouchableOpacity
-          onPress={() => setIsEditable(true)}
-          style={styles.edit_btn}
-        >
-          <EditIcon />
-          <Text style={styles.edit_title}>Edit</Text>
-        </TouchableOpacity>
-        <Image source={images.profile} style={styles.profile_pic} />
+        {!isEditable ? (
+          <TouchableOpacity
+            onPress={() => setIsEditable(true)}
+            style={styles.edit_btn}
+          >
+            <EditIcon />
+            <Text style={styles.edit_title}>Edit</Text>
+          </TouchableOpacity>
+        ) : null}
+        <View style={{ ...styles.profile_pic, marginTop: 0 }}>
+          <Image source={images.profile} style={styles.profile_pic} />
+          <TouchableOpacity
+            onPress={onPressProfilePic}
+            style={styles.EditImgIcon}
+          >
+            <Image
+              source={icons.edit_icon}
+              resizeMode="contain"
+              style={{ width: wp(16), height: wp(18) }}
+            />
+          </TouchableOpacity>
+        </View>
         <View style={styles.inputs_conatiner}>
           <View style={styles.input_conatiner}>
             <Text style={styles.lable}>{strings.Full_Name}</Text>
@@ -133,10 +159,14 @@ const Profile = () => {
 
           <View style={styles.input_conatiner}>
             <Text style={styles.lable}>{strings.Dat_of_Birth}</Text>
-            <Pressable style={[styles.input, styles.Custom_input]}>
+            <Pressable
+              onPress={() => setOpen(true)}
+              disabled={!isEditable}
+              style={[styles.input, styles.Custom_input]}
+            >
               <TextInput
                 style={styles.value}
-                editable={isEditable}
+                editable={false}
                 value={date}
                 onChangeText={(e) => setDate(e)}
               />
@@ -275,5 +305,16 @@ const styles = StyleSheet.create({
     gap: wp(12),
     backgroundColor: colors.white,
     paddingVertical: hp(27),
+  },
+  EditImgIcon: {
+    width: wp(26),
+    height: wp(26),
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: wp(50),
+    backgroundColor: colors.white,
+    position: "absolute",
+    right: -hp(10),
+    bottom: -hp(30),
   },
 });

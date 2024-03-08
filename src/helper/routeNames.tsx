@@ -28,4 +28,6 @@ export const screenName = {
   FaQ: "FaQ",
   ChatDetails: "ChatDetails",
   MyFavorites: "MyFavorites",
+  PrivacyPolicy: "PrivacyPolicy",
+  TermsCondition: "TermsCondition",
 };

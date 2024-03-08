@@ -22,7 +22,7 @@ import { BackHeader } from "../../components";
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
   const onPresstoNaviate = () => {
-    navigate(screenName.AppointmentDetails);
+    navigate(screenName.tab_bar_name.Appointment);
   };
 
   return (

@@ -26,6 +26,10 @@ import Profile from "../screen/Profiles/Profile";
 import FaQ from "../screen/Faq/FaQ";
 import ChatDetails from "../screen/Chat/ChatDetails";
 import MyFavorites from "../screen/Favorite/MyFavorites";
+import PrivacyPolicy from "../screen/PrivacyandPolicy/PrivacyPolicy";
+import { template } from "lodash";
+import TermsCondition from "../screen/Terms/TermsCondition";
+import Appointments from "../screen/Appointment/Appointments";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -78,6 +82,11 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.FaQ} component={FaQ} />
       <Stack.Screen name={screenName.ChatDetails} component={ChatDetails} />
       <Stack.Screen name={screenName.MyFavorites} component={MyFavorites} />
+      <Stack.Screen name={screenName.PrivacyPolicy} component={PrivacyPolicy} />
+      <Stack.Screen
+        name={screenName.TermsCondition}
+        component={TermsCondition}
+      />
     </Stack.Navigator>
   );
 };

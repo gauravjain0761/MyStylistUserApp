@@ -36,6 +36,18 @@ const CustomDrawer = () => {
     navigate(screenName.MyFavorites);
   };
 
+  const onPressPrivacy = () => {
+    navigate(screenName.PrivacyPolicy);
+  };
+
+  const onPressTerms = () => {
+    navigate(screenName.TermsCondition);
+  };
+
+  const onPressMyAppointment = () => {
+    navigate(screenName.tab_bar_name.Appointment);
+  };
+
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <View>
@@ -72,7 +84,10 @@ const CustomDrawer = () => {
             </View>
 
             <View style={styles.drawer_border}>
-              <TouchableOpacity style={styles.Tab_container}>
+              <TouchableOpacity
+                onPress={onPressMyAppointment}
+                style={styles.Tab_container}
+              >
                 <View style={styles.tab_img_constiner}>
                   <Image
                     source={icons.appointment}
@@ -121,7 +136,10 @@ const CustomDrawer = () => {
             </View>
 
             <View style={styles.drawer_border}>
-              <TouchableOpacity style={styles.Tab_container}>
+              <TouchableOpacity
+                onPress={onPressPrivacy}
+                style={styles.Tab_container}
+              >
                 <View style={styles.tab_img_constiner}>
                   <Image
                     source={icons.privacypolicy}
@@ -135,7 +153,10 @@ const CustomDrawer = () => {
             </View>
 
             <View style={styles.drawer_border}>
-              <TouchableOpacity style={styles.Tab_container}>
+              <TouchableOpacity
+                onPress={onPressTerms}
+                style={styles.Tab_container}
+              >
                 <View style={styles.tab_img_constiner}>
                   <Image
                     source={icons.terms}

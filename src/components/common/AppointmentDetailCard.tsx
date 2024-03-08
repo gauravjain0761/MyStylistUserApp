@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
     height: hp(110),
     borderRadius: wp(10),
   },
-  barber_info_conatiner: {},
   name_container: {
     alignItems: "center",
   },
@@ -219,9 +218,6 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: hp(16),
   },
-  price: {
-    ...commonFontStyle(fontFamily.medium, 16, colors.black),
-  },
   subtract_right: {
     width: wp(16),
     height: hp(17),
@@ -230,24 +226,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: -24,
     bottom: -8,
-  },
-  start_conatiner: {
-    flexDirection: "row",
-    gap: wp(7),
-  },
-  date_container: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: wp(10),
-  },
-  complete_badge: {
-    paddingHorizontal: wp(7),
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  completed_title: {
-    ...commonFontStyle(fontFamily.semi_bold, 11, colors.black_2),
-    lineHeight: hp(20),
   },
   barber_job_coantiner: {
     flexDirection: "row",

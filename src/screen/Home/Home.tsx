@@ -40,18 +40,14 @@ import {
   Modals,
   ReviewModal,
   SelectDateModal,
-  TimeSelector,
-  WeekDateSelector,
 } from "../../components";
 import babelConfig from "../../../babel.config";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
-import { navigationRef } from "../../navigation/MainNavigator";
 import CityModal from "../../components/common/CityModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { setEngine } from "crypto";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
@@ -77,7 +73,8 @@ const Home = () => {
   ) => {
     const location = {
       permission: "true",
-      city: city,
+      city:
+        city == null ? strings["Flat No. 14, Ansal Palm Grove, Mohali"] : city,
     };
     try {
       await AsyncStorage.setItem("location", JSON.stringify(location));
@@ -376,6 +373,7 @@ const Home = () => {
         <View style={styles?.barber_card_container}>
           <FlatList
             data={barbers}
+            showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
                 <Barber_Card

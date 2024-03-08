@@ -38,8 +38,6 @@ const HomeHeader = ({
     navigate(screenName.Notifications);
   };
 
-  console.log(location);
-
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <View style={styles?.drawer_btn}>

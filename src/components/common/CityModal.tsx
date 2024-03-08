@@ -70,8 +70,9 @@ const CityModal = ({ LocationAllow }) => {
             <TouchableOpacity
               style={styles.submit_btn}
               onPress={() => {
-                setIsModal(!IsModal);
-                LocationAllow(value);
+                value != null
+                  ? (setIsModal(!IsModal), LocationAllow(value))
+                  : null;
               }}
             >
               <ImageBackground source={images.book_button} resizeMode="contain">

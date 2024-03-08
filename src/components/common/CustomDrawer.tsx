@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { icons, images } from "../../theme/icons";
-import { hp, wp } from "../../helper/globalFunction";
+import { dispatchNavigation, hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { strings } from "../../helper/string";
@@ -27,6 +27,15 @@ const CustomDrawer = () => {
   const OnPressFaq = () => {
     return navigate(screenName.FaQ);
   };
+
+  const onPressLogOut = () => {
+    return dispatchNavigation(screenName.Login);
+  };
+
+  const onPressFavorite = () => {
+    navigate(screenName.MyFavorites);
+  };
+
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <View>
@@ -46,7 +55,10 @@ const CustomDrawer = () => {
           <Text style={styles.account_title}>{strings.Account_Setting}</Text>
           <View style={styles.drawerTab_conatiner}>
             <View style={styles.drawer_border}>
-              <TouchableOpacity style={styles.Tab_container}>
+              <TouchableOpacity
+                onPress={onPressFavorite}
+                style={styles.Tab_container}
+              >
                 <View style={styles.tab_img_constiner}>
                   <Image
                     source={icons.favorites}
@@ -138,7 +150,10 @@ const CustomDrawer = () => {
               </TouchableOpacity>
             </View>
             <View style={[styles.drawer_border, { borderBottomWidth: 0 }]}>
-              <TouchableOpacity style={[styles.Tab_container]}>
+              <TouchableOpacity
+                onPress={onPressLogOut}
+                style={[styles.Tab_container]}
+              >
                 <View style={styles.tab_img_constiner}>
                   <Image
                     source={icons.logout}

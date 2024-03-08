@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
   FlatList,
@@ -194,8 +194,19 @@ const YourStylist = () => {
     }
   };
 
+  // const Header_Max_Height = 600;
+  // const Header_Min_Height = 50;
+  // const Scroll_Distance = Header_Max_Height - Header_Min_Height;
+
+  // const scrollOffsetY = useRef(new Animated.Value(0)).current;
+
+  // const animatedHeaderColor = scrollOffsetY.interpolate({
+  //   inputRange: [0, Scroll_Distance / 1, Scroll_Distance],
+  //   outputRange: ["rgba(255,255,255,0.0)", "#FAFAFA", "#FAFAFA"],
+  //   extrapolate: "identity",
+  // });
+
   const handleScroll = (event) => {
-    console.log(event.nativeEvent.contentOffset.y);
     if (event.nativeEvent.contentOffset.y > 250) {
       animated.value = 1;
       setAnimatedValue(1);
@@ -262,14 +273,14 @@ const YourStylist = () => {
           </View>
         </View>
         <View style={styles.gradinetStyle}>
+          <View style={styles.offerContainer}>
+            <OfferIcon />
+          </View>
           <LinearGradient
             style={{ borderRadius: wp(50), flex: 1 }}
             colors={["#D1F8F5", "#D9D9D900"]}
           >
             <Image style={styles.lineStyle} source={images.gradient_line} />
-            <View style={styles.offerContainer}>
-              <OfferIcon />
-            </View>
             <Text style={styles.offerTextStyle}>{"Flat 50% off"}</Text>
             <Text style={styles.greyOfferTextStyle}>
               {"NO CODE REQUIRED | ABOVE 999"}
@@ -482,8 +493,10 @@ const styles = StyleSheet.create({
     marginTop: hp(15),
   },
   offerContainer: {
-    marginTop: -hp(20),
     alignSelf: "center",
+    position: "absolute",
+    zIndex: 1,
+    top: -hp(15),
   },
   lineStyle: {
     alignSelf: "center",
@@ -492,6 +505,7 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.bold, 17, colors.black),
     textAlign: "center",
     marginVertical: hp(10),
+    marginTop: hp(15),
   },
   greyOfferTextStyle: {
     ...commonFontStyle(fontFamily.regular, 12, colors.gery_3),

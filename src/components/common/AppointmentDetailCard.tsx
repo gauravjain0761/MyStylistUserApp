@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
     marginTop: hp(5),
   },
   location_container: {
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     gap: wp(6),
   },
   time_lable: {
-    ...commonFontStyle(fontFamily.medium, 18, colors.gery_6),
+    ...commonFontStyle(fontFamily.medium, 16, colors.gery_6),
   },
   information_container: {
     gap: wp(17),
@@ -307,9 +307,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   booking_title: {
-    ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),
+    ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),
   },
   booking_time: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),
   },
 });

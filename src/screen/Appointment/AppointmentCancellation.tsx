@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   reason_title: {
-    ...commonFontStyle(fontFamily.bold, 15, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 15, colors.black),
     lineHeight: hp(26),
   },
   item_separator: {

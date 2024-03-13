@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_10),
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.grey_10),
     marginTop: hp(5),
   },
   location_container: {
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   completed_title: {
-    ...commonFontStyle(fontFamily.semi_bold, 11, colors.black_2),
+    ...commonFontStyle(fontFamily.semi_bold, 10, colors.black_2),
     lineHeight: hp(20),
   },
 });

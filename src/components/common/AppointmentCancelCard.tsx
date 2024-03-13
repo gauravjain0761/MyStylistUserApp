@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   date_conatiner: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
   time_img: {
     flexDirection: "row",
@@ -188,10 +188,10 @@ const styles = StyleSheet.create({
     gap: wp(5),
   },
   time_lable: {
-    ...commonFontStyle(fontFamily.medium, 16, colors.gery_6),
+    ...commonFontStyle(fontFamily.medium, 15, colors.gery_6),
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),
     marginTop: hp(5),
   },
   timing_conatiner: {

@@ -17,6 +17,7 @@ import {
   errorToast,
   fontSize,
   hp,
+  infoToast,
   isIos,
   validPhonenumber,
   wp,
@@ -26,20 +27,37 @@ import Login_Input from "../../components/common/Login_Input";
 import { commonFontStyle } from "../../theme/fonts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { screenName } from "../../helper/routeNames";
+import { useAppDispatch } from "../../redux/hooks";
+import {
+  NavigationProp,
+  NavigationState,
+  useNavigation,
+} from "@react-navigation/native";
+import { sendVerifyCode } from "../../actions/authAction";
 
 const Login: FC = () => {
-  const [numbers, setNumbers] = useState<string>("");
+  const [phoneNum, setphoneNum] = useState<string>("");
 
-  const validate = () => {
-    dispatchNavigation(screenName.OptVerification, numbers);
-    // if (validPhonenumber(numbers)) {
-    //   dispatchNavigation(screenName.OptVerification, numbers);
-    // } else {
-    //   if (numbers.trim() == " ") {
-    //     errorToast("Enter Valid Number");
-    //   }
-    //   errorToast("Enter Valid Number");
-    // }
+  const dispatch = useAppDispatch();
+  const navigation = useNavigation<any>();
+
+  const onPressGetotp = async () => {
+    if (phoneNum.trim().length === 0) {
+      infoToast("Please enter your phone number");
+    } else if (phoneNum.trim().length !== 10) {
+      infoToast("Please enter valid phone number");
+    } else {
+      const obj = {
+        data: {
+          phone: phoneNum,
+        },
+        onSuccess: (res: any) => {
+          navigation.navigate(screenName.OptVerification, { phone: phoneNum });
+        },
+        onFailure: () => {},
+      };
+      dispatch(sendVerifyCode(obj));
+    }
   };
 
   return (
@@ -86,11 +104,11 @@ const Login: FC = () => {
               <Login_Input
                 placeholder=""
                 input_style={styles?.input_style}
-                onTextChange={setNumbers}
+                onTextChange={setphoneNum}
               />
               <TouchableOpacity
                 style={styles?.otp_btn}
-                onPress={() => validate()}
+                onPress={() => onPressGetotp()}
               >
                 <Text style={styles?.otp_btn_title}>{strings?.Get_OTP}</Text>
               </TouchableOpacity>

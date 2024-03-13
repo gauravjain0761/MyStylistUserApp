@@ -104,6 +104,7 @@ export const openImagePicker = ({
       multiple: false,
       cropping: true,
       mediaType: "photo",
+      freeStyleCropEnabled: true,
       ...params,
     })
       .then((image) => {

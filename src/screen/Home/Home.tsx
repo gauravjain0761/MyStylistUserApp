@@ -48,6 +48,9 @@ import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import CityModal from "../../components/common/CityModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { requestLocationPermission } from "../../helper/locationHandler";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getAllServices } from "../../actions/homeAction";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
@@ -60,6 +63,7 @@ const Home = () => {
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
   const [servicesModal, setServicesModal] = useState(false);
+  const [menservicesModal, setmenservicesModal] = useState(false);
   const [modalTitle, setModalTitle] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
   const [cityModal, setCityModal] = useState(false);
@@ -67,6 +71,15 @@ const Home = () => {
   const [IsAllowed, setIsAllow] = useState(false);
   const { navigate } = useNavigation();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+  const { getallservices } = useAppSelector((state) => state.home);
+  useEffect(() => {
+    GetStatus();
+  }, [IsAllowed]);
+
+  useEffect(() => {
+    dispatch(getAllServices());
+  }, []);
 
   const LocationAllow = async (
     city = strings["Flat No. 14, Ansal Palm Grove, Mohali"]
@@ -80,11 +93,19 @@ const Home = () => {
       await AsyncStorage.setItem("location", JSON.stringify(location));
       setIsAllow(true);
     } catch (error) {}
+    getCurrentLocation();
   };
 
-  useEffect(() => {
-    GetStatus();
-  }, [IsAllowed]);
+  const getCurrentLocation = async () => {
+    await requestLocationPermission(
+      (response) => {
+        console.log("response location", response);
+      },
+      (err) => {
+        console.log("err", err);
+      }
+    );
+  };
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
     setActiveIndex(index);
@@ -222,13 +243,13 @@ const Home = () => {
           <View style={styles?.services_conatiner}>
             <FlatList
               horizontal
-              data={Women_Services}
+              data={getallservices}
               showsHorizontalScrollIndicator={false}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
-                return (
+                return item?.service_for == "Female" ? (
                   <TouchableOpacity
                     onPress={() => {
                       setServicesModal(!servicesModal),
@@ -236,27 +257,27 @@ const Home = () => {
                     }}
                     style={styles?.service_card_container}
                   >
-                    <Text style={styles?.card_title}>{item?.services}</Text>
+                    <Text style={styles?.card_title}>{item?.service_name}</Text>
                     <Image
                       style={styles?.images}
-                      source={item?.images}
+                      source={images.wom_1}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                );
+                ) : null;
               }}
             />
 
             <FlatList
               horizontal
-              data={Women_Services}
+              data={getallservices}
               showsHorizontalScrollIndicator={false}
               style={{ marginTop: hp(20) }}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
-                return (
+                return item?.service_for == "Female" ? (
                   <TouchableOpacity
                     onPress={() => {
                       setServicesModal(!servicesModal),
@@ -264,14 +285,14 @@ const Home = () => {
                     }}
                     style={styles?.service_card_container}
                   >
-                    <Text style={styles?.card_title}>{item?.services}</Text>
+                    <Text style={styles?.card_title}>{item?.service_name}</Text>
                     <Image
                       style={styles?.images}
-                      source={item?.images}
+                      source={images?.wom_2}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                );
+                ) : null;
               }}
             />
           </View>
@@ -290,44 +311,50 @@ const Home = () => {
           <View style={styles?.services_conatiner}>
             <FlatList
               horizontal
-              data={men_Services}
+              data={getallservices}
               showsHorizontalScrollIndicator={false}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
-                return (
-                  <TouchableOpacity style={styles?.service_card_container}>
-                    <Text style={styles?.card_title}>{item?.services}</Text>
+                return item?.service_for == "Male" ? (
+                  <TouchableOpacity
+                    onPress={() => setmenservicesModal(!menservicesModal)}
+                    style={styles?.service_card_container}
+                  >
+                    <Text style={styles?.card_title}>{item?.service_name}</Text>
                     <Image
                       style={styles?.images}
-                      source={item?.images}
+                      source={images.men_2}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                );
+                ) : null;
               }}
             />
 
             <FlatList
               horizontal
-              data={men_Services}
+              data={getallservices}
               showsHorizontalScrollIndicator={false}
               style={{ marginTop: hp(20) }}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
-                return (
-                  <TouchableOpacity style={styles?.service_card_container}>
-                    <Text style={styles?.card_title}>{item?.services}</Text>
+                return item?.service_for == "Male" ? (
+                  <TouchableOpacity
+                    onPress={() => setmenservicesModal(!menservicesModal)}
+                    style={styles?.service_card_container}
+                  >
+                    <Text style={styles?.card_title}>{item?.service_name}</Text>
                     <Image
                       style={styles?.images}
-                      source={item?.images}
+                      source={images.men_1}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                );
+                ) : null;
               }}
             />
           </View>
@@ -419,15 +446,59 @@ const Home = () => {
             <View style={styles.makeup_modal_container}>
               <Text style={styles.modal_title}>{modalTitle}</Text>
               <View style={styles.card_conatiner}>
-                {Make_Up.map((item, index) => (
-                  <TouchableOpacity
-                    onPress={() => onPresstoNavigate()}
-                    style={styles?.makeup_card_container}
-                  >
-                    <Text style={styles?.makeup_title}>{item?.service}</Text>
-                    <Image style={styles?.makeup_images} source={item?.image} />
-                  </TouchableOpacity>
-                ))}
+                {getallservices?.map((item, index) =>
+                  item.service_for == "Female"
+                    ? item?.subServices?.map((subServices, indes) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => onPresstoNavigate()}
+                            style={styles?.makeup_card_container}
+                          >
+                            <Text style={styles?.makeup_title}>
+                              {subServices?.sub_service_name}
+                            </Text>
+                            <Image
+                              style={styles?.makeup_images}
+                              source={images?.wom_1}
+                            />
+                          </TouchableOpacity>
+                        );
+                      })
+                    : null
+                )}
+              </View>
+            </View>
+          }
+        />
+
+        <Modals
+          visible={menservicesModal}
+          close={setmenservicesModal}
+          isIcon
+          contain={
+            <View style={styles.makeup_modal_container}>
+              <Text style={styles.modal_title}>{modalTitle}</Text>
+              <View style={styles.card_conatiner}>
+                {getallservices?.map((item, index) =>
+                  item.service_for == "Male"
+                    ? item?.subServices?.map((subServices, indes) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => onPresstoNavigate()}
+                            style={styles?.makeup_card_container}
+                          >
+                            <Text style={styles?.makeup_title}>
+                              {subServices?.sub_service_name}
+                            </Text>
+                            <Image
+                              style={styles?.makeup_images}
+                              source={images?.men_1}
+                            />
+                          </TouchableOpacity>
+                        );
+                      })
+                    : null
+                )}
               </View>
             </View>
           }

@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import {
   NativeStackNavigationOptions,
@@ -30,6 +30,10 @@ import PrivacyPolicy from "../screen/PrivacyandPolicy/PrivacyPolicy";
 import { template } from "lodash";
 import TermsCondition from "../screen/Terms/TermsCondition";
 import Appointments from "../screen/Appointment/Appointments";
+import { getAsyncToken } from "../helper/asyncStorage";
+import { dispatchNavigation } from "../helper/globalFunction";
+import { trackForMutations } from "@reduxjs/toolkit/dist/immutableStateInvariantMiddleware";
+import Loading from "../screen/auth/Loading";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -46,8 +50,9 @@ const StackNavigator: FC = () => {
   return (
     <Stack.Navigator
       screenOptions={options}
-      initialRouteName={screenName.Login}
+      initialRouteName={screenName.Loading}
     >
+      <Stack.Screen name={screenName.Loading} component={Loading} />
       <Stack.Screen name={screenName.Login} component={Login} />
       <Stack.Screen
         name={screenName.OptVerification}

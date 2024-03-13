@@ -34,9 +34,7 @@ const Profile = () => {
   const [date, setDate] = useState("Nov 23, 2023");
   const [dates, setDates] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [imageData, setImageData] = useState<any>({
-    uri: "",
-  });
+  const [imageData, setImageData] = useState<any>(images.profile);
 
   const data = [
     { label: "Male", value: "1" },
@@ -49,6 +47,7 @@ const Profile = () => {
     setEmail("elishaatif8974@gmail.com");
     setPhone("+1 435 9877 9856");
     setDate("Nov 23, 2023");
+    setImageData(images.profile);
   };
 
   const onPressYes = () => {

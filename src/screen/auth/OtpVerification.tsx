@@ -14,6 +14,9 @@ import {
   dispatchNavigation,
   fontSize,
   hp,
+  infoToast,
+  otpToast,
+  successToast,
   wp,
 } from "../../helper/globalFunction";
 import { strings } from "../../helper/string";
@@ -27,6 +30,8 @@ import {
 } from "react-native-confirmation-code-field";
 import { useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { verifyOTP } from "../../actions/authAction";
+import { useAppDispatch } from "../../redux/hooks";
 
 const CELL_COUNT = 6;
 
@@ -38,6 +43,26 @@ const OtpVerification = ({ route }: any) => {
     setValue,
   });
   const data = route?.params;
+  const dispatch = useAppDispatch();
+
+  const onPressSubmit = () => {
+    if (value.length === 0) {
+      infoToast("Please enter your OTP");
+    } else {
+      const obj = {
+        data: {
+          phone: data.phone,
+          otp: value,
+        },
+        onSuccess: (res: any) => {
+          successToast("OTP verification successful");
+          dispatchNavigation(screenName?.Home);
+        },
+        onFailure: () => {},
+      };
+      dispatch(verifyOTP(obj));
+    }
+  };
 
   return (
     <View style={styles?.container}>
@@ -60,7 +85,7 @@ const OtpVerification = ({ route }: any) => {
         <View style={styles.otp_title_conatiner}>
           <Text style={styles.otp_title}>{strings?.Verify_OTP}</Text>
           <Text style={styles.otp_info}>{strings?.Enter_the_6_digit}</Text>
-          <Text style={styles.otp_info}>{data}</Text>
+          <Text style={styles.otp_info}>{data.phone}</Text>
         </View>
 
         <View style={styles?.input_container}>
@@ -102,7 +127,7 @@ const OtpVerification = ({ route }: any) => {
 
         <TouchableOpacity
           style={styles?.otp_btn}
-          onPress={() => dispatchNavigation(screenName?.Home)}
+          onPress={() => onPressSubmit()}
         >
           <Text style={styles?.otp_btn_title}>{strings.Login}</Text>
         </TouchableOpacity>

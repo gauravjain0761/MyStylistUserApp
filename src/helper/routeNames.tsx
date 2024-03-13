@@ -30,4 +30,5 @@ export const screenName = {
   MyFavorites: "MyFavorites",
   PrivacyPolicy: "PrivacyPolicy",
   TermsCondition: "TermsCondition",
+  Loading: "Loading",
 };

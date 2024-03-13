@@ -1,9 +1,7 @@
 import {
   Image,
   ImageBackground,
-  KeyboardAvoidingView,
   Pressable,
-  ScrollViewComponent,
   StyleSheet,
   Text,
   TextInput,
@@ -92,7 +90,12 @@ const Profile = () => {
           </TouchableOpacity>
         ) : null}
         <View style={{ ...styles.profile_pic, marginTop: 0 }}>
-          <Image source={images.profile} style={styles.profile_pic} />
+          {imageData?.uri?.length ? (
+            <Image source={{ uri: imageData.uri }} style={styles.profile_pic} />
+          ) : (
+            <Image source={images.profile} style={styles.profile_pic} />
+          )}
+
           <TouchableOpacity
             onPress={onPressProfilePic}
             style={styles.EditImgIcon}
@@ -108,9 +111,9 @@ const Profile = () => {
           <View style={styles.input_conatiner}>
             <Text style={styles.lable}>{strings.Full_Name}</Text>
             <TextInput
-              editable={isEditable}
-              style={styles.input}
               value={name}
+              style={styles.input}
+              editable={isEditable}
               onChangeText={(e) => setName(e)}
             />
           </View>
@@ -178,6 +181,7 @@ const Profile = () => {
               </TouchableOpacity>
             </Pressable>
             <DatePicker
+              maximumDate={new Date()}
               modal
               mode="date"
               open={open}
@@ -220,8 +224,9 @@ const styles = StyleSheet.create({
   profile_pic: {
     width: wp(128),
     height: wp(128),
-    alignSelf: "center",
     marginTop: hp(23),
+    alignSelf: "center",
+    borderRadius: wp(20),
   },
   inputs_conatiner: {
     marginHorizontal: wp(20),
@@ -242,6 +247,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.review_card_bg,
     paddingHorizontal: wp(18),
     ...commonFontStyle(fontFamily.medium, 16, colors.black),
+    height: hp(55),
   },
   dropdown: {
     height: 50,

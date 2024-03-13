@@ -42,7 +42,7 @@ import {
   SelectDateModal,
 } from "../../components";
 import babelConfig from "../../../babel.config";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -172,6 +172,11 @@ const Home = () => {
     navigate(screenName.SearchItem);
   };
 
+  const onPressLocation = () => {
+    // @ts-ignore
+    navigate(screenName.Map_Location);
+  };
+
   return (
     <View style={styles?.container}>
       {locationModal?.permission == "true" ? null : (
@@ -186,6 +191,7 @@ const Home = () => {
         onPressProfile={() => navigation.openDrawer()}
         onPressCart={() => navigate(screenName.Cart)}
         location={locationModal}
+        onPresslocation={onPressLocation}
       />
       <TouchableOpacity
         onPress={onPressSearch}

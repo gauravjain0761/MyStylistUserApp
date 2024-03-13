@@ -34,6 +34,7 @@ import { getAsyncToken } from "../helper/asyncStorage";
 import { dispatchNavigation } from "../helper/globalFunction";
 import { trackForMutations } from "@reduxjs/toolkit/dist/immutableStateInvariantMiddleware";
 import Loading from "../screen/auth/Loading";
+import MapLocation from "../screen/map/MapLocation";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -92,6 +93,7 @@ const StackNavigator: FC = () => {
         name={screenName.TermsCondition}
         component={TermsCondition}
       />
+      <Stack.Screen name={screenName.Map_Location} component={MapLocation} />
     </Stack.Navigator>
   );
 };

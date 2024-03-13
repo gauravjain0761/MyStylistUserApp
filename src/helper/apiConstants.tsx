@@ -11,7 +11,8 @@ export const api = {
   allServices: "service/getAllServices",
 
   //Profile
-  FAQ: "FAQ",
+  FAQ: "faq/getAllFAQ",
+  termsandconditions: "cms/getCMSPageForMobile/64fc1e863f161dd8548acb1e",
 };
 
 export const POST = "POST";

@@ -134,4 +134,5 @@ export const strings = {
   "What are your hours of operation?": "What are your hours of operation?",
   "Our barbershop operates from 10 AM to 9 PM, Monday through Saturday. We're closed on Sundays. You can book appointments online or give us a call during our operating hours. Walk-ins are also welcome, but appointments are recommended to ensure availability. Please note that our hours may vary during holidays or special occasions.":
     "Our barbershop operates from 10 AM to 9 PM, Monday through Saturday. We're closed on Sundays. You can book appointments online or give us a call during our operating hours. Walk-ins are also welcome, but appointments are recommended to ensure availability. Please note that our hours may vary during holidays or special occasions.",
+  Confirm_location: "Confirm location",
 };

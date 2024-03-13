@@ -98,7 +98,6 @@ const AppointmentReschedule = () => {
               <Text style={styles.servive_title}>{strings.Hair_color}</Text>
               <Text style={styles.service_rate}>₹500</Text>
             </View>
-
             <View style={styles.subtract_left}></View>
             <View style={styles.subtract_right}></View>
           </View>

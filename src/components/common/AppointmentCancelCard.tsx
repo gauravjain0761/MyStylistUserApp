@@ -37,6 +37,7 @@ const AppointmentCancelCard = ({
   const { navigate } = useNavigation();
 
   const onPressCard = () => {
+    //@ts-ignore
     navigate(screenName.YourStylist);
   };
 

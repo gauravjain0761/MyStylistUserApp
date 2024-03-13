@@ -31,4 +31,5 @@ export const screenName = {
   PrivacyPolicy: "PrivacyPolicy",
   TermsCondition: "TermsCondition",
   Loading: "Loading",
+  Map_Location: "Map_Location",
 };

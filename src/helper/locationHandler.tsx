@@ -84,8 +84,6 @@ export const loactionEnabler = async (
   onFail?: (err: any) => void
 ) => {
   if (Platform.OS === "android") {
-    console.log("ok");
-
     await promptForEnableLocationIfNeeded()
       .then((res: any) => {
         if (onSucess) onSucess(true);

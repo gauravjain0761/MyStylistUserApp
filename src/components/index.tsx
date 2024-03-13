@@ -25,6 +25,7 @@ import ChatHeader from "./Chat/ChatHeader";
 import ReciverItem from "./Chat/ReciverItem";
 import SenderItem from "./Chat/SenderItem";
 import ChatInput from "./Chat/ChatInput";
+import Loader from "./common/Loader";
 export {
   LocationModal,
   BackHeader,
@@ -53,4 +54,5 @@ export {
   SenderItem,
   ReciverItem,
   ChatInput,
+  Loader,
 };

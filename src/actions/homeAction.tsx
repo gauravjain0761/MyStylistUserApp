@@ -30,10 +30,11 @@ export const getAllServices =
           } else {
             errorToast(response.data.message);
           }
+          if (request.onSuccess) request.onSuccess(response.data);
         }
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });
-        // if (request.onFailure) request.onFailure(error.response);
+        if (request.onFailure) request.onFailure(error.response);
       });
   };

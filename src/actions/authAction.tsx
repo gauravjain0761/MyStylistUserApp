@@ -9,7 +9,6 @@ import {
   setAsyncToken,
   setAsyncUserInfo,
 } from "../helper/asyncStorage";
-import { Alert } from "react-native";
 import { errorToast, otpToast, successToast } from "../helper/globalFunction";
 
 export const sendVerifyCode =

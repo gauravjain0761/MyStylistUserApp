@@ -78,7 +78,11 @@ const Home = () => {
   }, [IsAllowed]);
 
   useEffect(() => {
-    dispatch(getAllServices());
+    let obj = {
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAllServices(obj));
   }, []);
 
   const LocationAllow = async (

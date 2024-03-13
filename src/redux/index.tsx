@@ -4,11 +4,13 @@ import { USER_LOGOUT } from "../actions/dispatchTypes";
 import { configureStore } from "@reduxjs/toolkit";
 import authReducers from "./authReducers";
 import homeReducers from "./homeReducers";
+import commonReducers from "./commonReducers";
 
 const middleware = [thunk];
 const reducers = combineReducers({
   auth: authReducers,
   home: homeReducers,
+  common: commonReducers,
 });
 
 const RootReducer = (state: any, action: any) => {

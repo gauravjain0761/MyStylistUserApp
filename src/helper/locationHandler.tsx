@@ -133,3 +133,28 @@ export const _openAppSetting = () => {
     ]
   );
 };
+
+export const getAddress = async (
+  region: any,
+  onSucess?: any,
+  onFailure?: any
+) => {
+  const headersList = {};
+
+  fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${region.latitude},${region.longitude}&key=AIzaSyAtgC47qVsVhvtu_GgKNQfSIEtq1a9hPAU`,
+    {
+      method: "GET",
+      headers: headersList,
+    }
+  )
+    .then(function (response) {
+      return response.json();
+    })
+    .then(async (data) => {
+      onSucess(data);
+    })
+    .catch((error) => {
+      onFailure(error);
+    });
+};

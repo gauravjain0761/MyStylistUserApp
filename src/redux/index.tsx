@@ -6,6 +6,7 @@ import authReducers from "./authReducers";
 import homeReducers from "./homeReducers";
 import commonReducers from "./commonReducers";
 import profileReducers from "./profileReducers";
+import locationReducer from "./locationReducer";
 
 const middleware = [thunk];
 const reducers = combineReducers({
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   home: homeReducers,
   common: commonReducers,
   profile: profileReducers,
+  location: locationReducer,
 });
 
 const RootReducer = (state: any, action: any) => {

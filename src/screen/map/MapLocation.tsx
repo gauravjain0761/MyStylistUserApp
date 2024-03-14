@@ -1,5 +1,6 @@
 import {
   Image,
+  LogBox,
   Platform,
   Pressable,
   ScrollView,
@@ -11,7 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { commonFontStyle } from "../../theme/fonts";
@@ -21,28 +22,35 @@ import {
   screen_height,
   wp,
 } from "../../helper/globalFunction";
-import { DirectionIcon } from "../../theme/SvgIcon";
-import { requestLocationPermission } from "../../helper/locationHandler";
+import { CloseIcon, DirectionIcon } from "../../theme/SvgIcon";
+import {
+  getAddress,
+  requestLocationPermission,
+} from "../../helper/locationHandler";
 import {
   GooglePlacesAutocomplete,
   GooglePlacesAutocompleteRef,
 } from "react-native-google-places-autocomplete";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/core";
 import { screenName } from "../../helper/routeNames";
-import { values } from "lodash";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { updateLocation } from "../../actions/locationAction";
 
 const MapLocation = () => {
+  const coords = useAppSelector((state) => state?.location?.coord);
+  const userinfo = useAppSelector((state) => state?.common?.userInfo);
+  const dispatch = useAppDispatch();
   const [coord, setcoord] = useState("");
+  const [responses, setResponses] = useState({});
   const [value, setValue] = useState("");
-  const { navigate } = useNavigation();
-  const location = {
+
+  const locations = {
     latitude: Number(coord.split("|")[0] || 37.4220936),
     latitudeDelta: 0.0922,
     longitude: Number(coord.split("|")[1] || -122.083922),
     longitudeDelta: 0.0421,
   };
-  const [position, setPostion] = useState(location);
+  const [position, setPostion] = useState(locations);
   useEffect(() => {
     onPressCurruntLocation();
   }, []);
@@ -51,65 +59,92 @@ const MapLocation = () => {
 
   const onPressCurruntLocation = async () => {
     await requestLocationPermission(
-      (response) => {
+      async (response) => {
         setcoord(`${response?.latitude}|${response?.longitude}`);
-        // console.log("response location", response);
       },
       (err) => {
         console.log("err", err);
       }
-    ).then(() => {
-      getAddress(location);
+    ).then(async () => {
+      await getAddress(
+        locations,
+        (response: any) => {
+          setPostion(locations);
+          setValue(response?.results[0]?.formatted_address);
+          setResponses(response);
+        },
+        (err) => {
+          console.log("map", err);
+        }
+      );
     });
   };
 
-  const getAddress = async (region: any) => {
-    const headersList = {};
-    fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${region.latitude},${region.longitude}&key=AIzaSyAtgC47qVsVhvtu_GgKNQfSIEtq1a9hPAU`,
-      {
-        method: "GET",
-        headers: headersList,
-      }
-    )
-      .then(function (response) {
-        return response.json();
-      })
-      .then((data) => {
-        setPostion(region);
-        // mapRef?.current?.animateToRegion(region, 2000);
-        setValue(data?.results[0]?.formatted_address);
-      })
-      .catch((error) => {
-        console.log("Map error", error);
-      })
-      .then(() => {});
-  };
-
-  const onRegionChangeComplete = (region, gesture) => {
+  const onRegionChangeComplete = async (region, gesture) => {
     if (Platform.OS === "android") {
       if (gesture.isGesture) {
-        getAddress(region);
+        await getAddress(
+          region,
+          (response) => {
+            setValue(response?.results[0]?.formatted_address);
+            setPostion(region);
+            setResponses(response);
+          },
+          (erro) => {
+            console.log(erro);
+          }
+        );
       }
     } else {
-      getAddress(region);
+      await getAddress(region);
     }
   };
 
-  const handleMapPress = (event) => {
-    setcoord(
-      `${event.nativeEvent.coordinate?.latitude}|${event.nativeEvent.coordinate?.longitude}`
-    );
+  const onPressConfirm = async () => {
+    const updatedLocaton = {
+      userId: userinfo?._id,
+      pinCode:
+        responses?.results[0]?.address_components[
+          responses?.results[0]?.address_components?.length - 1
+        ]?.long_name,
+      landmark: "Nearby landmark",
+      location: {
+        type: responses?.results[0]?.geometry?.location_type,
+        coordinates: [
+          responses?.results[0]?.geometry?.location?.lat,
+          responses?.results[0]?.geometry?.location?.lng,
+        ],
+      },
+    };
+    dispatch(updateLocation(updatedLocaton));
   };
 
-  const onPressConfirm = () => {
-    navigate(screenName.Home, { locations: value });
+  const handleSelectPlace = async (details: any) => {
+    const { location } = await details.geometry;
+    const newlocations = {
+      latitude: Number(location.lat || 37.4220936),
+      latitudeDelta: 0.0922,
+      longitude: Number(location.lng || -122.083922),
+      longitudeDelta: 0.0421,
+    };
+    await getAddress(
+      newlocations,
+      (response) => {
+        setValue(response?.results[0]?.formatted_address);
+        setResponses(response);
+        setPostion(newlocations);
+        setcoord(`${newlocations?.latitude}|${newlocations?.longitude}`);
+      },
+      (erro) => {
+        console.log(erro);
+      }
+    );
   };
 
   return (
     <View style={styles.conatiner}>
       <BackHeader title={strings?.Confirm_location} />
-      <ScrollView contentContainerStyle={styles.map_conatiner}>
+      <View style={styles.map_conatiner}>
         <MapView
           initialRegion={position}
           region={position}
@@ -123,24 +158,40 @@ const MapLocation = () => {
         </MapView>
         <View style={styles.positionContainer}>
           <GooglePlacesAutocomplete
+            ref={ref}
             placeholder="Search"
+            fetchDetails={true}
             onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
+              handleSelectPlace(details);
+              setValue(data?.description);
+            }}
+            renderRightButton={() => {
+              return (
+                <TouchableOpacity
+                  onPress={() => ref?.current?.clear()}
+                  style={styles?.closeIconStyle}
+                >
+                  <CloseIcon />
+                </TouchableOpacity>
+              );
             }}
             query={{
               key: "AIzaSyAtgC47qVsVhvtu_GgKNQfSIEtq1a9hPAU",
               language: "en",
               type: "establishment",
               components: "country:in",
+              radius: 50000,
             }}
-            enablePoweredByContainer={false}
+            textInputProps={{
+              style: styles.inputStyle,
+              placeholderTextColor: "#000",
+            }}
             styles={{
               container: {
-                height: "auto",
-                maxHeight: screen_height / 3,
+                maxHeight: "90%",
               },
             }}
+            enablePoweredByContainer={false}
           />
         </View>
 
@@ -154,7 +205,7 @@ const MapLocation = () => {
             </Text>
           </View>
         </Pressable>
-      </ScrollView>
+      </View>
       <View style={{ backgroundColor: colors.white }}>
         <View style={styles.addressRowStyle}>
           <DirectionIcon />
@@ -176,8 +227,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    width: "100%",
-    height: "100%",
+    flex: 1,
   },
   positionContainer: {
     position: "absolute",
@@ -232,7 +282,7 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.medium, 16, colors.black_2),
   },
   map_conatiner: {
-    height: "100%",
+    flex: 1,
   },
   btn_title: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
@@ -260,5 +310,32 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: "center",
     zIndex: 1,
+  },
+  closeIconStyle: {
+    marginTop: hp(12),
+    position: "absolute",
+    right: 0,
+    top: hp(2),
+    marginRight: wp(10),
+    backgroundColor: colors?.white,
+  },
+  inputStyle: {
+    margin: 0,
+    flex: 1,
+    backgroundColor: "white",
+    paddingHorizontal: 15,
+    borderRadius: 10,
+    flexDirection: "row",
+    paddingLeft: wp(10),
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 15,
+    height: 50,
+    ...commonFontStyle(fontFamily.regular, 16, colors.black),
   },
 });

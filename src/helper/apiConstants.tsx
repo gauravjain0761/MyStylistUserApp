@@ -13,6 +13,10 @@ export const api = {
   //Profile
   FAQ: "faq/getAllFAQ",
   termsandconditions: "cms/getCMSPageForMobile/64fc1e863f161dd8548acb1e",
+
+  //Map
+  location: "user/getUsersByLocation",
+  updatelocation: "user/updateUserLocation",
 };
 
 export const POST = "POST";

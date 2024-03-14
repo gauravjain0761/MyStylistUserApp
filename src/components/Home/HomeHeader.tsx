@@ -29,7 +29,7 @@ const HomeHeader = ({
   onPresslocation,
   onPressCart,
   onPressProfile,
-  location,
+  location = null,
 }: HomeProps) => {
   const { navigate } = useNavigation();
 
@@ -49,7 +49,7 @@ const HomeHeader = ({
               <RightArrow />
             </View>
           </TouchableOpacity>
-          <Text style={styles.addrs}>{location?.city}</Text>
+          {location ? <Text style={styles.addrs}>{location}</Text> : null}
         </View>
       </View>
       {/* <Image source={images?.header_logo} style={styles?.header_logo} /> */}
@@ -117,6 +117,8 @@ const styles = StyleSheet.create({
   },
   addrs: {
     ...commonFontStyle(fontFamily.medium, 12, colors.gery_8),
+    maxWidth: wp(200),
+    textAlign: "left",
   },
   address_container: {},
   profile: {

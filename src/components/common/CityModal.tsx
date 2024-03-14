@@ -15,7 +15,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import { images } from "../../theme/icons";
 
-const CityModal = ({ LocationAllow }) => {
+const CityModal = ({ LocationAllow = null }: any) => {
   const [IsModal, setIsModal] = useState(true);
   const [value, setValue] = useState(null);
   const data = [

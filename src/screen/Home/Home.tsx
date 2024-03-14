@@ -48,9 +48,20 @@ import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import CityModal from "../../components/common/CityModal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { requestLocationPermission } from "../../helper/locationHandler";
+import {
+  getAddress,
+  requestLocationPermission,
+} from "../../helper/locationHandler";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAllServices } from "../../actions/homeAction";
+import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
+import {
+  getAsyncCoord,
+  getAsyncLocation,
+  setAsyncCoord,
+  setAsyncLocation,
+} from "../../helper/asyncStorage";
+import { setLocation } from "../../actions/locationAction";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
@@ -67,15 +78,12 @@ const Home = () => {
   const [modalTitle, setModalTitle] = useState(false);
   const [reviewModal, setReviewModal] = useState(false);
   const [cityModal, setCityModal] = useState(false);
-  const [locationModal, setLocationModal] = useState({});
-  const [IsAllowed, setIsAllow] = useState(false);
+  const [locationModal, setLocationModal] = useState(false);
+  const [value, setValue] = useState("");
   const { navigate } = useNavigation();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const { getallservices } = useAppSelector((state) => state.home);
-  useEffect(() => {
-    GetStatus();
-  }, [IsAllowed]);
 
   useEffect(() => {
     let obj = {
@@ -83,32 +91,55 @@ const Home = () => {
       onFailure: () => {},
     };
     dispatch(getAllServices(obj));
+    GetStatus();
   }, []);
 
-  const LocationAllow = async (
-    city = strings["Flat No. 14, Ansal Palm Grove, Mohali"]
-  ) => {
-    const location = {
-      permission: "true",
-      city:
-        city == null ? strings["Flat No. 14, Ansal Palm Grove, Mohali"] : city,
-    };
-    try {
-      await AsyncStorage.setItem("location", JSON.stringify(location));
-      setIsAllow(true);
-    } catch (error) {}
-    getCurrentLocation();
-  };
-
   const getCurrentLocation = async () => {
+    dispatch({ type: IS_LOADING, payload: true });
     await requestLocationPermission(
-      (response) => {
-        console.log("response location", response);
+      async (response) => {
+        await getAddress(
+          response,
+          async (result: any) => {
+            await setAsyncLocation(result?.results[0]?.formatted_address);
+            await GetStatus();
+          },
+          (err) => {
+            console.log("map", err);
+          }
+        ).then(async (res) => {
+          const coord = {
+            latitude: Number(response?.latitude),
+            longitude: Number(response?.longitude),
+            maxDistance: 50000,
+          };
+          await setAsyncCoord(coord);
+          dispatch({ type: COORD, payload: coord });
+          dispatch({ type: IS_LOADING, payload: false });
+          SetLocation();
+          setLocationModal(false);
+        });
       },
       (err) => {
         console.log("err", err);
       }
     );
+  };
+
+  const SetLocation = async () => {
+    const coord = await getAsyncCoord();
+    dispatch(setLocation(coord));
+  };
+
+  const LocationAllow = async (city: any) => {
+    city ? await setAsyncLocation(city) : await setAsyncLocation(null);
+    GetStatus();
+  };
+
+  const GetStatus = async () => {
+    const Status = await getAsyncLocation();
+    Status ? setLocationModal(false) : setLocationModal(true);
+    setValue(Status);
   };
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
@@ -162,11 +193,6 @@ const Home = () => {
     setTimes(data);
   };
 
-  const GetStatus = async () => {
-    const Status = await AsyncStorage.getItem("location");
-    setLocationModal(Status != null ? JSON.parse(Status) : null);
-  };
-
   const onPressSearch = () => {
     // @ts-ignore
     navigate(screenName.SearchItem);
@@ -179,18 +205,17 @@ const Home = () => {
 
   return (
     <View style={styles?.container}>
-      {locationModal?.permission == "true" ? null : (
-        <LocationModal
-          onPressAllow={setCityModal}
-          onPressDontAllow={setCityModal}
-          LocationAllow={LocationAllow}
-        />
-      )}
+      <LocationModal
+        onPressAllow={getCurrentLocation}
+        onPressDontAllow={setCityModal}
+        isVisible={locationModal}
+        close={setLocationModal}
+      />
       {!cityModal ? null : <CityModal LocationAllow={LocationAllow} />}
       <HomeHeader
         onPressProfile={() => navigation.openDrawer()}
         onPressCart={() => navigate(screenName.Cart)}
-        location={locationModal}
+        location={value}
         onPresslocation={onPressLocation}
       />
       <TouchableOpacity

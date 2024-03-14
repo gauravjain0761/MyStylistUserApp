@@ -15,17 +15,17 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 
 type props = {
-  LocationAllow?: any;
-  onPressDontAllow: () => void;
-  onPressAllow: () => void;
+  onPressDontAllow?: any;
+  onPressAllow?: any;
   isVisible: boolean;
+  close: any;
 };
 
 const LocationModal = ({
   onPressAllow,
   onPressDontAllow,
-  LocationAllow,
   isVisible,
+  close,
 }: props) => {
   return (
     <Modal style={styles.modalContainer} isVisible={isVisible}>
@@ -46,7 +46,11 @@ const LocationModal = ({
           }
         </Text>
         <View style={styles.rowStyle}>
-          <TouchableOpacity onPress={onPressDontAllow}>
+          <TouchableOpacity
+            onPress={() => {
+              close(false), onPressDontAllow(true);
+            }}
+          >
             <ImageBackground
               resizeMode="contain"
               style={styles.buttonStyle}

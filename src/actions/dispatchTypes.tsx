@@ -11,3 +11,8 @@ export const GETALLSERVICES = "GETALLSERVICES";
 //Profile
 export const GET_FAQ = "GET_FAQ";
 export const GET_TERMSANDCONDITIONS = "GET_TERMSANDCONDITIONS";
+
+//Map
+export const SETLOCATION = "SETLOCATION";
+export const UPDATELOCATION = "UPDATE_LOCATION";
+export const COORD = "COORD";

@@ -15,6 +15,7 @@ import { colors } from "../../theme/color";
 import { icons, images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { RatingStars } from "../../theme/SvgIcon";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const FeedbackModal = ({ visible, close, onPresssubmit }) => {
   const [maxrating, setmaxRating] = useState([1, 2, 3, 4, 5]);
@@ -26,58 +27,60 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
         close={close}
         isIcon
         contain={
-          <View style={styles.modal_conatiner}>
-            <Text style={styles.modal_title}>{strings.Feedback}</Text>
-            <View style={styles.details_container}>
-              <Image style={styles.img} source={images.barber5} />
-              <Text style={styles.name}>Rate {strings.Majid_Khan}</Text>
-            </View>
-            <View style={styles.star_container}>
-              {maxrating.map((item, index) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => setdefaultrating(item)}
-                    activeOpacity={0.7}
-                    key={item}
-                  >
-                    {item <= defaultrating ? (
-                      <RatingStars width={wp(36)} height={wp(36)} />
-                    ) : (
-                      <RatingStars
-                        width={wp(36)}
-                        height={wp(36)}
-                        color="#E9E9E9"
-                      />
-                    )}
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+          <KeyboardAwareScrollView style={styles.modal_conatiner}>
+            <View style={styles.modal_conatiner}>
+              <Text style={styles.modal_title}>{strings.Feedback}</Text>
+              <View style={styles.details_container}>
+                <Image style={styles.img} source={images.barber5} />
+                <Text style={styles.name}>Rate {strings.Majid_Khan}</Text>
+              </View>
+              <View style={styles.star_container}>
+                {maxrating.map((item, index) => {
+                  return (
+                    <TouchableOpacity
+                      onPress={() => setdefaultrating(item)}
+                      activeOpacity={0.7}
+                      key={item}
+                    >
+                      {item <= defaultrating ? (
+                        <RatingStars width={wp(36)} height={wp(36)} />
+                      ) : (
+                        <RatingStars
+                          width={wp(36)}
+                          height={wp(36)}
+                          color="#E9E9E9"
+                        />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
 
-            <View style={styles.review_container}>
-              <Text style={styles.title}>
-                {strings["Add a detailed review"]}
-              </Text>
-              <TextInput
-                editable
-                numberOfLines={4}
-                multiline
-                style={styles.input}
-                placeholder="Write here..."
-              />
-            </View>
-            <TouchableOpacity style={styles.btn} onPress={onPresssubmit}>
-              <ImageBackground
-                resizeMode="contain"
-                style={styles.submitImgStyle}
-                source={images.book_button}
-              >
-                <Text style={styles.submitTextStyle}>
-                  {strings["Submit Feedback"]}
+              <View style={styles.review_container}>
+                <Text style={styles.title}>
+                  {strings["Add a detailed review"]}
                 </Text>
-              </ImageBackground>
-            </TouchableOpacity>
-          </View>
+                <TextInput
+                  editable
+                  numberOfLines={4}
+                  multiline
+                  style={styles.input}
+                  placeholder="Write here..."
+                />
+              </View>
+              <TouchableOpacity style={styles.btn} onPress={onPresssubmit}>
+                <ImageBackground
+                  resizeMode="contain"
+                  style={styles.submitImgStyle}
+                  source={images.book_button}
+                >
+                  <Text style={styles.submitTextStyle}>
+                    {strings["Submit Feedback"]}
+                  </Text>
+                </ImageBackground>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAwareScrollView>
         }
       />
     </View>
@@ -134,6 +137,7 @@ const styles = StyleSheet.create({
     paddingTop: hp(20),
     paddingHorizontal: wp(20),
     marginTop: hp(12),
+    height: hp(117),
   },
   submitImgStyle: {
     justifyContent: "center",

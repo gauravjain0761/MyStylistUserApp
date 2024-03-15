@@ -51,12 +51,18 @@ const BackHeader = ({ title, isSearch, isMenu, onPressMenu }: Props) => {
 export default BackHeader;
 
 const styles = StyleSheet.create({
-  container: {
+  _container: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: hp(17),
+    paddingVertical: hp(10),
     paddingHorizontal: wp(20),
     backgroundColor: colors?.white,
+  },
+  get container() {
+    return this._container;
+  },
+  set container(value) {
+    this._container = value;
   },
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors?.black),

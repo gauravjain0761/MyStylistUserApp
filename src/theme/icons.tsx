@@ -57,6 +57,7 @@ export const images = {
   profile: require("../assets/image/profile.png"),
   select_black: require("../assets/image/select_black.png"),
   unselect_grey: require("../assets/image/unselect_grey.png"),
+  blue_border_button: require("../assets/image/blue_border_button.png"),
 };
 
 export const icons = {

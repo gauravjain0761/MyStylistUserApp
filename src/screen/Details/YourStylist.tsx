@@ -78,7 +78,7 @@ const TagView = ({
       {isSelected ? (
         <ImageBackground
           resizeMode="contain"
-          source={images.black_border_button}
+          source={images.blue_border_button}
           style={{ ...styles.buttonStyle, justifyContent: "space-between" }}
         >
           <Text style={styles.btnTextStyle}>{title}</Text>
@@ -292,7 +292,7 @@ const YourStylist = () => {
             <OfferIcon />
           </View>
           <LinearGradient
-            style={{ borderRadius: wp(50), flex: 1 }}
+            style={{ borderRadius: wp(50), height: hp(90) }}
             colors={["#D1F8F5", "#D9D9D900"]}
           >
             <Image style={styles.lineStyle} source={images.gradient_line} />
@@ -530,8 +530,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginHorizontal: wp(20),
+    paddingHorizontal: wp(15),
     marginVertical: hp(0),
+    backgroundColor: colors?.review_card_bg,
+    paddingVertical: hp(20),
   },
   buttonStyle: {
     height: hp(40),
@@ -630,7 +632,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: hp(17),
+    paddingVertical: hp(10),
     paddingHorizontal: wp(20),
     backgroundColor: colors?.white,
     justifyContent: "space-between",

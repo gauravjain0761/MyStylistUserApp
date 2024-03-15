@@ -14,6 +14,7 @@ import { errorToast, otpToast, successToast } from "../helper/globalFunction";
 export const sendVerifyCode =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
   async (dispatch) => {
+    console.log(request);
     let headers = {
       "Content-Type": "application/json",
     };
@@ -26,10 +27,11 @@ export const sendVerifyCode =
     })
       .then(async (response: any) => {
         if (response.data.status === 200) {
+          console.log("resss", response?.data);
+
           dispatch({ type: IS_LOADING, payload: false });
           if (response.data.success) {
             successToast(response?.data?.message);
-
             if (request.onSuccess) request.onSuccess(response.data);
           } else {
             errorToast(response.data.message);
@@ -38,7 +40,8 @@ export const sendVerifyCode =
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });
-        if (request.onFailure) request.onFailure(error.response);
+        if (request.onFailure)
+          request.onFailure("Login API Error", error.response);
       });
   };
 

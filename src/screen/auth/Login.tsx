@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { colors } from "../../theme/color";
 import { images } from "../../theme/icons";
 import {
@@ -31,15 +31,47 @@ import { useAppDispatch } from "../../redux/hooks";
 import {
   NavigationProp,
   NavigationState,
+  useIsFocused,
   useNavigation,
 } from "@react-navigation/native";
 import { sendVerifyCode } from "../../actions/authAction";
+import {
+  getAddress,
+  requestLocationPermission,
+} from "../../helper/locationHandler";
 
 const Login: FC = () => {
   const [phoneNum, setphoneNum] = useState<string>("");
-
+  const [location, setlocation] = useState<any>({});
+  const [ispermission, setpermission] = useState(false);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    locationHandler();
+  }, []);
+
+  const locationHandler = async () => {
+    await requestLocationPermission(
+      async (response) => {
+        await getAddress(
+          response,
+          (result) => {
+            setlocation(result);
+            setpermission(true);
+          },
+          (error) => {
+            console.log("error", error);
+            setpermission(false);
+          }
+        );
+      },
+      (err) => {
+        console.log("errr", err);
+        setpermission(false);
+      }
+    );
+  };
 
   const onPressGetotp = async () => {
     if (phoneNum.trim().length === 0) {
@@ -47,16 +79,66 @@ const Login: FC = () => {
     } else if (phoneNum.trim().length !== 10) {
       infoToast("Please enter valid phone number");
     } else {
-      const obj = {
-        data: {
-          phone: phoneNum,
-        },
-        onSuccess: (res: any) => {
-          navigation.navigate(screenName.OptVerification, { phone: phoneNum });
-        },
-        onFailure: () => {},
-      };
-      dispatch(sendVerifyCode(obj));
+      let obj;
+      let locationObj;
+      {
+        ispermission
+          ? ((locationObj = {
+              data: {
+                phone: phoneNum,
+                name: "",
+                state: {
+                  state_id: "",
+                  state_name: "",
+                },
+                district: {
+                  district_id: "",
+                  district_name: "",
+                },
+                city: {
+                  city_id: "",
+                  city_name: "",
+                },
+              },
+              onSuccess: (res: any) => {
+                navigation.navigate(screenName.OptVerification, {
+                  phone: phoneNum,
+                });
+              },
+              onFailure: () => {},
+            }),
+            location?.results[0]?.address_components?.map((item) => {
+              if (item?.types.includes("locality")) {
+                locationObj["data"]["city"]["city_id"] =
+                  location?.results[location?.results.length - 4]?.place_id;
+                locationObj["data"]["city"]["city_name"] = item?.long_name;
+              }
+              if (item?.types.includes("administrative_area_level_1")) {
+                locationObj["data"]["state"]["state_id"] =
+                  location?.results[location?.results.length - 2]?.place_id;
+                locationObj["data"]["state"]["state_name"] = item?.long_name;
+              }
+              if (item?.types.includes("administrative_area_level_3")) {
+                locationObj["data"]["district"]["district_id"] =
+                  location?.results[location?.results.length - 3]?.place_id;
+                locationObj["data"]["district"]["district_name"] =
+                  item?.long_name;
+              }
+            }),
+            dispatch(sendVerifyCode(locationObj)))
+          : ((obj = {
+              data: {
+                phone: phoneNum,
+              },
+              onSuccess: (res: any) => {
+                navigation.navigate(screenName.OptVerification, {
+                  phone: phoneNum,
+                });
+              },
+              onFailure: () => {},
+            }),
+            dispatch(sendVerifyCode(obj)));
+      }
     }
   };
 

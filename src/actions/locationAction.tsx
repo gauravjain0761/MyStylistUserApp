@@ -30,7 +30,7 @@ export const setLocation =
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });
-        if (request.onFailure) request.onFailure(error.response);
+        if (request.onFailure) request.onFailure("eeeee", error.response);
       });
   };
 

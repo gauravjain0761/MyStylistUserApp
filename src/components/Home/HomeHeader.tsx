@@ -73,7 +73,7 @@ export default HomeHeader;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors?.white,
-    paddingVertical: hp(17),
+    paddingVertical: hp(10),
     paddingHorizontal: wp(20),
     flexDirection: "row",
     alignItems: "center",

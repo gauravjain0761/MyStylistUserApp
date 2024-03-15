@@ -18,9 +18,16 @@ type props = {
   type: "icon" | "simple";
   onPress?: (arg?: any) => any;
   containerStyle?: ViewStyle | any;
+  btn_bg?: ViewStyle;
 };
 
-const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
+const Filter_Button = ({
+  title,
+  type,
+  onPress,
+  containerStyle,
+  btn_bg,
+}: props) => {
   return (
     <>
       {type === "icon" ? (
@@ -47,7 +54,7 @@ const Filter_Button = ({ title, type, onPress, containerStyle }: props) => {
           >
             <ImageBackground
               source={images.oval_grey_button}
-              style={styles.oval_bg}
+              style={[styles.oval_bg, btn_bg]}
               resizeMode="stretch"
               resizeMethod="scale"
             >
@@ -79,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingTop: hp(9),
     paddingBottom: hp(10),
-    paddingHorizontal: wp(8),
+    paddingHorizontal: wp(10),
     gap: wp(5),
   },
 });

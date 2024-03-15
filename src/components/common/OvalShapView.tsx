@@ -27,7 +27,9 @@ const OvalShapView = ({ data, onPress, selectIndex, index }: props) => {
       >
         <ImageBackground
           source={
-            selectIndex === index ? images.oval_black : images.oval_grey_button
+            selectIndex === index
+              ? images.blue_border_button
+              : images.oval_grey_button
           }
           style={styles.oval_bg}
           resizeMode="stretch"

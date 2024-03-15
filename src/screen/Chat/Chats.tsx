@@ -34,7 +34,9 @@ const Chats = ({ navigation }) => {
           style={{ marginHorizontal: wp(5) }}
         >
           <ImageBackground
-            source={type === "All" ? images.select_black : images.unselect_grey}
+            source={
+              type === "All" ? images.blue_border_button : images.unselect_grey
+            }
             resizeMode="stretch"
             resizeMethod="scale"
             style={styles.oval_bg}
@@ -47,7 +49,9 @@ const Chats = ({ navigation }) => {
           style={{ marginHorizontal: wp(5) }}
         >
           <ImageBackground
-            source={type !== "All" ? images.select_black : images.unselect_grey}
+            source={
+              type !== "All" ? images.blue_border_button : images.unselect_grey
+            }
             resizeMode="stretch"
             resizeMethod="scale"
             style={styles.oval_bg}

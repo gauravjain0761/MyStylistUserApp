@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { strings } from "../../helper/string";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
@@ -17,8 +17,12 @@ import { hp, wp } from "../../helper/globalFunction";
 import { RatingStars, StarIcon } from "../../theme/SvgIcon";
 import { images } from "../../theme/icons";
 import { useNavigation } from "@react-navigation/native";
+import OvalShapView from "../common/OvalShapView";
+import Filter_Button from "../common/Filter_Button";
+import { ReviewFilter } from "../../helper/constunts";
 
 const ReviewModal = () => {
+  const [selectIndex, SetselectIndex] = useState(0);
   return (
     <View style={styles.container}>
       <View style={styles.title_container}>
@@ -33,35 +37,23 @@ const ReviewModal = () => {
       </View>
 
       <View style={styles.btn_container}>
-        <TouchableOpacity>
-          <ImageBackground
-            style={styles.btn_style}
-            source={images.grey_border_filter_button}
-            resizeMode="contain"
-          >
-            <Text style={styles.btn_title}>{strings.Newest}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <ImageBackground
-            style={styles.btn_style}
-            source={images.grey_border_filter_button}
-            resizeMode="contain"
-          >
-            <Text style={styles.btn_title}>{strings.Highest}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <ImageBackground
-            style={styles.btn_style}
-            source={images.grey_border_filter_button}
-            resizeMode="contain"
-          >
-            <Text style={styles.btn_title}>{strings.Lowest}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
+        <FlatList
+          data={ReviewFilter}
+          keyExtractor={(item, index) => index.toString()}
+          horizontal
+          renderItem={({ item, index }) => {
+            return (
+              <TouchableOpacity>
+                <OvalShapView
+                  data={item}
+                  selectIndex={selectIndex}
+                  onPress={SetselectIndex}
+                  index={index}
+                />
+              </TouchableOpacity>
+            );
+          }}
+        />
       </View>
 
       <ScrollView

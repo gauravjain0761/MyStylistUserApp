@@ -44,26 +44,30 @@ const Packages = ({ navigation }) => {
             uri: "https://img.freepik.com/premium-photo/portrait-young-gorgeous-woman-dressed-jewelry-set-necklace-ring-bracelet-earrings-pretty-blue-eyed-model-is-demonstrating-attractive-makeup-manicure_353119-75.jpg",
           }}
         />
-        <View>
-          <FlatList
-            style={styles.filterStyle}
-            data={offer_filter}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item, index }: any) => {
-              return (
-                <Filter_Button
-                  type={"simple"}
-                  onPress={() => {}}
-                  title={item?.title}
-                />
-              );
-            }}
-            ItemSeparatorComponent={() => (
-              <View style={styles.filter_item_separator}></View>
-            )}
-          />
-        </View>
+        <FlatList
+          style={styles.filterStyle}
+          data={offer_filter}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item, index }: any) => {
+            return (
+              <Filter_Button
+                type={"simple"}
+                onPress={() => {}}
+                containerStyle={
+                  offer_filter.length - 1 == index
+                    ? { marginRight: wp(10) }
+                    : null
+                }
+                title={item?.title}
+                btn_bg={{ paddingHorizontal: wp(15) }}
+              />
+            );
+          }}
+          ItemSeparatorComponent={() => (
+            <View style={styles.filter_item_separator}></View>
+          )}
+        />
         <View>
           <FlatList
             style={styles.flatListStyle}
@@ -238,7 +242,7 @@ const styles = StyleSheet.create({
     width: wp(7),
   },
   filterStyle: {
-    paddingHorizontal: wp(20),
+    paddingLeft: wp(20),
     paddingVertical: hp(10),
     backgroundColor: colors.background_grey,
   },

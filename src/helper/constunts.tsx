@@ -549,3 +549,18 @@ export const notificationFilter = [
     title: "Appointment",
   },
 ];
+
+export const ReviewFilter = [
+  {
+    id: 1,
+    title: "Newest",
+  },
+  {
+    id: 2,
+    title: "Highest",
+  },
+  {
+    id: 3,
+    title: "Lowest",
+  },
+];

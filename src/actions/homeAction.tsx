@@ -38,3 +38,28 @@ export const getAllServices =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const getAllBanner =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: GET,
+      url: api.allbanners,
+      headers: headers,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+          request?.onSuccess(response?.data);
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

@@ -1,5 +1,6 @@
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TextStyle,
@@ -65,14 +66,14 @@ const AppointmentDetailCard = ({
 
   return (
     <View style={styles.conatiner}>
-      <View style={styles.card_upper}>
+      <Pressable onPress={onPressCard} style={styles.card_upper}>
         <View style={styles.information_container}>
           <View style={styles.img_container}>
             <View style={styles.img_con}>
               <Image resizeMode="stretch" source={images} style={styles.img} />
             </View>
           </View>
-          <TouchableOpacity onPress={onPressCard} style={styles.name_container}>
+          <View style={styles.name_container}>
             <View style={styles.info_container}>
               <TouchableOpacity>
                 <Text style={styles.barber_name}>{name}</Text>
@@ -94,7 +95,7 @@ const AppointmentDetailCard = ({
               <Text style={styles.location_title}>{location}</Text>
             </View>
             <Text style={styles.service_title}>{service}</Text>
-          </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.facility_conatiner}>
           <TouchableOpacity style={styles.service_btn}>
@@ -112,7 +113,7 @@ const AppointmentDetailCard = ({
         </View>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>
-      </View>
+      </Pressable>
       <View style={styles.card_down}>
         <View style={styles.down_contain}>
           {previousBooking ? (
@@ -206,6 +207,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dashed_boredr,
     borderBottomWidth: 1,
     borderStyle: "dashed",
+    width: "100%",
   },
   subtract_left: {
     width: wp(16),
@@ -300,6 +302,7 @@ const styles = StyleSheet.create({
   information_container: {
     gap: wp(17),
     flexDirection: "row",
+    width: "100%",
   },
   previous_container: {
     flexDirection: "row",

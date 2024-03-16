@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  Pressable,
   StyleSheet,
   Text,
   TextStyle,
@@ -48,14 +49,14 @@ const BarberAppointmentCard = ({
   onPress,
 }: props) => {
   return (
-    <View style={styles.conatiner}>
+    <Pressable style={styles.conatiner} onPress={onPress}>
       <View style={styles.card_upper}>
         <View style={styles.img_container}>
           <View style={styles.img_con}>
             <Image resizeMode="cover" source={image} style={styles.img} />
           </View>
         </View>
-        <TouchableOpacity onPress={onPress} style={styles.name_container}>
+        <View style={styles.name_container}>
           <View style={styles.info_container}>
             <View>
               <Text style={styles.barber_name}>{name}</Text>
@@ -86,7 +87,7 @@ const BarberAppointmentCard = ({
             <Text style={styles.location_title}>{location}</Text>
           </View>
           <Text style={styles.service_title}>{service}</Text>
-        </TouchableOpacity>
+        </View>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>
       </View>
@@ -108,7 +109,7 @@ const BarberAppointmentCard = ({
           <Text style={styles.price}> ₹ {price}</Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
   barber_info_conatiner: {},
   name_container: {
     alignItems: "center",
+    // paddingRight: wp(20),
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 26, colors.black),
@@ -151,6 +153,7 @@ const styles = StyleSheet.create({
   time: {
     ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_10),
     marginTop: hp(5),
+    alignSelf: "flex-start",
   },
   location_container: {
     flexDirection: "row",
@@ -173,6 +176,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dashed_boredr,
     borderBottomWidth: 1,
     borderStyle: "dashed",
+    width: "100%",
   },
   subtract_left: {
     width: wp(16),

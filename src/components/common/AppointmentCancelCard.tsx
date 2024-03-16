@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -43,14 +44,14 @@ const AppointmentCancelCard = ({
 
   return (
     <View style={styles.conatiner}>
-      <View style={styles.card_upper}>
+      <Pressable onPress={onPressCard} style={styles.card_upper}>
         <View style={styles.information_container}>
           <View style={styles.img_container}>
             <View style={styles.img_con}>
               <Image resizeMode="stretch" source={image} style={styles.img} />
             </View>
           </View>
-          <TouchableOpacity onPress={onPressCard} style={styles.name_container}>
+          <View style={styles.name_container}>
             <View style={styles.info_container}>
               <View>
                 <Text style={styles.barber_name}>{name}</Text>
@@ -73,11 +74,11 @@ const AppointmentCancelCard = ({
                 <Text style={styles.time}>{date}</Text>
               </View>
             </View>
-          </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.subtract_left}></View>
         <View style={styles.subtract_right}></View>
-      </View>
+      </Pressable>
       <View style={styles.card_down}>
         <View style={styles.down_contain}>
           <Text style={styles.info_title}>{strings["Are you sure?"]}</Text>

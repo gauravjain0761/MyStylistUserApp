@@ -80,3 +80,29 @@ export const verifyOTP =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const Citylist =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.city,
+      headers: headers,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+          if (request.onSuccess) request.onSuccess(response.data);
+        } else {
+          errorToast(response.data?.status);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

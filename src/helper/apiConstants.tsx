@@ -6,9 +6,11 @@ export const api = {
   logout: "logout",
   send_verify_code: "user/user-login",
   verify_OTP: "user/verify-otp",
+  city: "city/getAllCityNameForMobile",
 
   // Home
   allServices: "service/getAllServices",
+  allbanners: "banner/getAllBannerForUsers/Top",
 
   //Profile
   FAQ: "faq/getAllFAQ",
@@ -17,6 +19,12 @@ export const api = {
   //Map
   location: "user/getUsersByLocation",
   updatelocation: "user/updateUserLocation",
+
+  //Offers
+  getAllOffersByUser: "generateOffer/getAllOffersByUser/",
+
+  //Pakages
+  getAllPackageByUser: "generatePackage/getAllPackageByUser/",
 };
 
 export const POST = "POST";

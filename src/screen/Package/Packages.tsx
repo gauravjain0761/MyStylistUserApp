@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -18,8 +18,26 @@ import { images } from "../../theme/icons";
 import { VerifyIcon } from "../../theme/SvgIcon";
 import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
+import moment from "moment";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getAllPackageByUser } from "../../actions";
 
 const Packages = ({ navigation }) => {
+  const dispatch = useAppDispatch();
+  const getAllpackages = useAppSelector(
+    (state) => state.package?.getallpackages
+  );
+  useEffect(() => {
+    getAllpackage();
+  }, []);
+
+  const getAllpackage = async () => {
+    const obj = {
+      data: "65eed0259e6593d24b2a5210",
+    };
+    dispatch(getAllPackageByUser(obj));
+  };
+
   const onPressMenu = () => {
     navigation.openDrawer();
   };
@@ -98,65 +116,45 @@ const Packages = ({ navigation }) => {
               resizeMode="cover"
             />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.offerContainer}>
-            <ImageBackground
-              borderTopLeftRadius={10}
-              borderTopRightRadius={10}
-              source={images.man_hair_cut}
-              style={styles.manImgStyle}
-            />
-            <View style={styles.infoContainer}>
-              <Image
-                resizeMode="cover"
-                source={images.barber}
-                style={styles.barberImgStyle}
-              />
-              <View style={{ marginLeft: wp(10), flex: 1 }}>
-                <View style={styles.rowStyle}>
-                  <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
-                  <VerifyIcon width={15} height={15} />
-                </View>
-                <Text style={styles.addressTextStyle}>
-                  {"Sector 67, Mohali"}
-                </Text>
-              </View>
-              <Text style={styles.dateTextStyle}>
-                {"Offer Till: 26 May, 2024"}
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{ ...styles.offerContainer, marginTop: hp(15) }}
-          >
-            <ImageBackground
-              borderTopLeftRadius={10}
-              borderTopRightRadius={10}
-              source={{
-                uri: "https://media.istockphoto.com/id/1136547713/photo/woman-with-a-long-straight-hair.jpg?s=170667a&w=is&k=20&c=z4rsTi8CnBGVHWJqE5G4blH2-oFDCTbHP6uiCD3yZkM=",
-              }}
-              style={styles.womaImgStyle}
-              resizeMode="cover"
-            />
-            <View style={styles.infoContainer}>
-              <Image
-                resizeMode="cover"
-                source={images.barber}
-                style={styles.barberImgStyle}
-              />
-              <View style={{ marginLeft: wp(10), flex: 1 }}>
-                <View style={styles.rowStyle}>
-                  <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
-                  <VerifyIcon width={15} height={15} />
-                </View>
-                <Text style={styles.addressTextStyle}>
-                  {"Sector 67, Mohali"}
-                </Text>
-              </View>
-              <Text style={styles.dateTextStyle}>
-                {"Offer Till: 26 May, 2024"}
-              </Text>
-            </View>
-          </TouchableOpacity>
+
+          <FlatList
+            data={getAllpackages?.offers}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity style={styles.offerContainer}>
+                  <ImageBackground
+                    borderTopLeftRadius={10}
+                    borderTopRightRadius={10}
+                    source={images.man_hair_cut}
+                    style={styles.manImgStyle}
+                  />
+                  <View style={styles.infoContainer}>
+                    <Image
+                      resizeMode="cover"
+                      source={images.barber}
+                      style={styles.barberImgStyle}
+                    />
+                    <View style={{ marginLeft: wp(10), flex: 1 }}>
+                      <View style={styles.rowStyle}>
+                        <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+                        <VerifyIcon width={15} height={15} />
+                      </View>
+                      <Text style={styles.addressTextStyle}>
+                        {item?.city[0]?.city_name},
+                        {item?.district[0]?.district_name},{" "}
+                        {item?.state[0]?.state_name}
+                      </Text>
+                    </View>
+                    <Text style={styles.dateTextStyle}>
+                      Offer Till:{" "}
+                      {moment(item?.end_date).format("DD MMM, YYYY")}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
         </View>
       </ScrollView>
     </View>

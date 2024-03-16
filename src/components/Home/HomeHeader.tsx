@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     transform: [{ rotate: "90deg" }],
   },
   home_title: {
-    ...commonFontStyle(fontFamily.medium, 16, colors.black),
+    ...commonFontStyle(fontFamily.medium, 18, colors.black),
   },
   addrs: {
     ...commonFontStyle(fontFamily.medium, 12, colors.gery_8),

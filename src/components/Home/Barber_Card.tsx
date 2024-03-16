@@ -258,8 +258,9 @@ const styles = StyleSheet.create({
     height: hp(144),
   },
   barber_details_continer: {
-    marginLeft: wp(28),
-    alignSelf: "flex-start",
+    paddingLeft: wp(28),
+    justifyContent: "center",
+    width: "100%",
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 26, colors.black),

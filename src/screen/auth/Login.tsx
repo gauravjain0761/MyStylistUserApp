@@ -24,7 +24,7 @@ import {
 } from "../../helper/globalFunction";
 import { strings } from "../../helper/string";
 import Login_Input from "../../components/common/Login_Input";
-import { commonFontStyle } from "../../theme/fonts";
+import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch } from "../../redux/hooks";
@@ -34,111 +34,92 @@ import {
   useIsFocused,
   useNavigation,
 } from "@react-navigation/native";
-import { sendVerifyCode } from "../../actions/authAction";
+import { Citylist, sendVerifyCode } from "../../actions/authAction";
 import {
   getAddress,
   requestLocationPermission,
 } from "../../helper/locationHandler";
+import { Dropdown } from "react-native-element-dropdown";
+import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 
 const Login: FC = () => {
   const [phoneNum, setphoneNum] = useState<string>("");
-  const [location, setlocation] = useState<any>({});
-  const [ispermission, setpermission] = useState(false);
+  const [name, setname] = useState("");
+  const [value, setValue] = useState(null);
+  const [city, setcity] = useState<any>([]);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<any>();
 
   useEffect(() => {
-    locationHandler();
+    let obj = {
+      onSuccess: (res) => {
+        setcity(res);
+      },
+      onFailure: (err) => {
+        console.log("errrr", err);
+      },
+    };
+    dispatch(Citylist(obj));
   }, []);
 
-  const locationHandler = async () => {
-    await requestLocationPermission(
-      async (response) => {
-        await getAddress(
-          response,
-          (result) => {
-            setlocation(result);
-            setpermission(true);
-          },
-          (error) => {
-            console.log("error", error);
-            setpermission(false);
-          }
-        );
-      },
-      (err) => {
-        console.log("errr", err);
-        setpermission(false);
-      }
-    );
-  };
+  console.log("sss", value);
+  // const locationHandler = async () => {
+  //   await requestLocationPermission(
+  //     async (response) => {
+  //       await getAddress(
+  //         response,
+  //         (result) => {
+  //           setlocation(result);
+  //           setpermission(true);
+  //         },
+  //         (error) => {
+  //           console.log("error", error);
+  //           setpermission(false);
+  //         }
+  //       );
+  //     },
+  //     (err) => {
+  //       console.log("errr", err);
+  //       setpermission(false);
+  //     }
+  //   );
+  // };
 
   const onPressGetotp = async () => {
     if (phoneNum.trim().length === 0) {
       infoToast("Please enter your phone number");
     } else if (phoneNum.trim().length !== 10) {
       infoToast("Please enter valid phone number");
+    } else if (name.trim().length === 0) {
+      infoToast("Please enter your Name");
+    } else if (value == null) {
+      infoToast("Please enter your city");
     } else {
-      let obj;
-      let locationObj;
-      {
-        ispermission
-          ? ((locationObj = {
-              data: {
-                phone: phoneNum,
-                name: "",
-                state: {
-                  state_id: "",
-                  state_name: "",
-                },
-                district: {
-                  district_id: "",
-                  district_name: "",
-                },
-                city: {
-                  city_id: "",
-                  city_name: "",
-                },
-              },
-              onSuccess: (res: any) => {
-                navigation.navigate(screenName.OptVerification, {
-                  phone: phoneNum,
-                });
-              },
-              onFailure: () => {},
-            }),
-            location?.results[0]?.address_components?.map((item) => {
-              if (item?.types.includes("locality")) {
-                locationObj["data"]["city"]["city_id"] =
-                  location?.results[location?.results.length - 4]?.place_id;
-                locationObj["data"]["city"]["city_name"] = item?.long_name;
-              }
-              if (item?.types.includes("administrative_area_level_1")) {
-                locationObj["data"]["state"]["state_id"] =
-                  location?.results[location?.results.length - 2]?.place_id;
-                locationObj["data"]["state"]["state_name"] = item?.long_name;
-              }
-              if (item?.types.includes("administrative_area_level_3")) {
-                locationObj["data"]["district"]["district_id"] =
-                  location?.results[location?.results.length - 3]?.place_id;
-                locationObj["data"]["district"]["district_name"] =
-                  item?.long_name;
-              }
-            }),
-            dispatch(sendVerifyCode(locationObj)))
-          : ((obj = {
-              data: {
-                phone: phoneNum,
-              },
-              onSuccess: (res: any) => {
-                navigation.navigate(screenName.OptVerification, {
-                  phone: phoneNum,
-                });
-              },
-              onFailure: () => {},
-            }),
-            dispatch(sendVerifyCode(obj)));
-      }
+      let obj = {
+        data: {
+          phone: phoneNum,
+          name: name,
+          state: {
+            state_id: city[0]?.state_id,
+            state_name: city[0]?.state_name,
+          },
+          district: {
+            district_id: city[0]?.district_id,
+            district_name: city[0]?.district_name,
+          },
+          city: {
+            city_id: city[0]?.city_id,
+            city_name: value,
+          },
+        },
+        onSuccess: (res: any) => {
+          navigation.navigate(screenName.OptVerification, {
+            phone: phoneNum,
+          });
+        },
+        onFailure: () => {},
+      };
+      dispatch(sendVerifyCode(obj));
     }
   };
 
@@ -148,7 +129,7 @@ const Login: FC = () => {
         contentContainerStyle={{ flexGrow: 1 }}
         enableOnAndroid
         enableAutomaticScroll
-        extraScrollHeight={isIos ? 20 : 360}
+        extraScrollHeight={isIos ? 20 : 300}
         keyboardShouldPersistTaps={"handled"}
         style={{ flex: 1 }}
       >
@@ -169,12 +150,17 @@ const Login: FC = () => {
           style={styles?.gradient_modal}
           resizeMode="cover"
         >
-          <View style={styles?.modal_container}>
+          <View style={{ paddingBottom: hp(20) }}>
             <Image
               source={images?.logo}
               style={styles?.logo}
               resizeMode="contain"
             />
+          </View>
+          <ScrollView
+            contentContainerStyle={styles?.modal_container}
+            showsVerticalScrollIndicator={false}
+          >
             <View style={styles?.welcome_container}>
               <Text style={styles?.welcome_title}>{strings?.Welcome}</Text>
               <Text style={styles?.welcome_contain}>
@@ -182,12 +168,47 @@ const Login: FC = () => {
               </Text>
             </View>
             <View style={styles?.input_container}>
+              <Text style={styles?.mobile_title}>{strings?.Full_Name}</Text>
+              <Login_Input
+                placeholder={strings?.Enter_here}
+                input_style={styles?.input_style}
+                onTextChange={setname}
+                keyboardType="default"
+              />
               <Text style={styles?.mobile_title}>{strings?.Mobile_Number}</Text>
               <Login_Input
                 placeholder=""
                 input_style={styles?.input_style}
                 onTextChange={setphoneNum}
               />
+
+              <Text style={styles?.mobile_title}>{strings?.Select_City}</Text>
+              <Login_Input
+                placeholder=""
+                input_style={styles?.input_style}
+                custom_component={
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    iconStyle={styles.iconStyle}
+                    data={city}
+                    maxHeight={300}
+                    labelField="city_name"
+                    valueField="city_name"
+                    placeholder="Please select"
+                    selectedTextStyle={styles.selectedTextStyle}
+                    itemTextStyle={styles.item_style}
+                    value={value}
+                    onChange={(item: any) => {
+                      setValue(item.city_name);
+                    }}
+                    renderRightIcon={() => (
+                      <Dropdown_Down_Arrow color="#9D9D9D" />
+                    )}
+                  />
+                }
+              />
+
               <TouchableOpacity
                 style={styles?.otp_btn}
                 onPress={() => onPressGetotp()}
@@ -195,7 +216,7 @@ const Login: FC = () => {
                 <Text style={styles?.otp_btn_title}>{strings?.Get_OTP}</Text>
               </TouchableOpacity>
             </View>
-          </View>
+          </ScrollView>
         </ImageBackground>
       </KeyboardAwareScrollView>
     </View>
@@ -245,14 +266,14 @@ const styles = StyleSheet.create({
   },
   welcome_container: {
     alignItems: "flex-start",
-    marginTop: hp(72.57),
+    marginTop: hp(40),
   },
   welcome_contain: {
     ...commonFontStyle("Inter-Regular", 14.33, colors.fc_light_gray),
     marginTop: hp(7),
   },
   input_container: {
-    marginTop: hp(58),
+    marginTop: hp(20),
     alignItems: "flex-start",
     // marginHorizontal: wp(51),
   },
@@ -260,6 +281,7 @@ const styles = StyleSheet.create({
     color: colors?.fc_light_gray,
     fontSize: fontSize(16),
     marginBottom: hp(14),
+    marginTop: hp(24),
   },
   otp_btn: {
     width: wp(280),
@@ -278,9 +300,36 @@ const styles = StyleSheet.create({
   modal_container: {
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: hp(60),
   },
   input_style: {
     paddingLeft: wp(22),
     color: colors?.fc_light_gray,
+  },
+  dropdown: {
+    height: hp(55),
+    borderRadius: wp(6),
+    paddingHorizontal: wp(16),
+    width: wp(280),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  placeholderStyle: {
+    ...commonFontStyle(fontFamily.regular, 16, colors.fc_light_gray_2),
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  submit_btn: {
+    marginTop: hp(30),
+    width: "100%",
+    marginBottom: hp(20),
+  },
+  item_style: {
+    ...commonFontStyle(fontFamily.regular, 16, colors.black),
+  },
+  selectedTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 16, colors.fc_light_gray_2),
   },
 });

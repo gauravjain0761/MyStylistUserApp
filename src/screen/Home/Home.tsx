@@ -53,7 +53,7 @@ import {
   requestLocationPermission,
 } from "../../helper/locationHandler";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllServices } from "../../actions/homeAction";
+import { getAllBanner, getAllServices } from "../../actions/homeAction";
 import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
@@ -79,6 +79,7 @@ const Home = () => {
   const [reviewModal, setReviewModal] = useState(false);
   const [cityModal, setCityModal] = useState(false);
   const [locationModal, setLocationModal] = useState(false);
+  const [banner, setbanner] = useState([]);
   const [value, setValue] = useState("");
   const { navigate } = useNavigation();
   const navigation = useNavigation();
@@ -90,9 +91,18 @@ const Home = () => {
       onSuccess: () => {},
       onFailure: () => {},
     };
+    let banner = {
+      onSuccess: (res) => {
+        setbanner(res?.banners);
+      },
+      onFailure: () => {},
+    };
     dispatch(getAllServices(obj));
+    dispatch(getAllBanner(banner));
     GetStatus();
   }, []);
+
+  console.log(banner);
 
   const getCurrentLocation = async () => {
     dispatch({ type: IS_LOADING, payload: true });
@@ -121,7 +131,7 @@ const Home = () => {
         });
       },
       (err) => {
-        console.log("err", err);
+        console.log("Home Location API", err);
       }
     );
   };
@@ -242,14 +252,18 @@ const Home = () => {
         <View style={styles.carousel_container}>
           <Carousel
             layout={"default"}
-            data={carouselItems}
+            data={banner}
             sliderWidth={screen_width}
             itemWidth={screen_width}
             inactiveSlideScale={2}
             renderItem={({ item }: any) => {
               return (
                 <View style={styles?.carousel_img_container}>
-                  <Image source={item?.image} style={styles?.carousel_img} />
+                  <Image
+                    source={{ uri: item?.imageUrl }}
+                    defaultSource={item?.image}
+                    style={styles?.carousel_img}
+                  />
                 </View>
               );
             }}
@@ -257,7 +271,7 @@ const Home = () => {
           />
         </View>
         <Pagination
-          dotsLength={carouselItems.length}
+          dotsLength={banner}
           activeDotIndex={activeIndex}
           containerStyle={styles?.pagination_container}
           dotStyle={styles?.dotStyle}
@@ -786,6 +800,6 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.medium, 12, "#949495"),
   },
   barberdetailscontinerStyle: {
-    marginTop: hp(20),
+    // marginTop: hp(20),
   },
 });

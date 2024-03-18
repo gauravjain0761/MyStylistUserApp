@@ -15,6 +15,7 @@ export const api = {
   //Profile
   FAQ: "faq/getAllFAQ",
   termsandconditions: "cms/getCMSPageForMobile/64fc1e863f161dd8548acb1e",
+  userDetails: "user/getUserDetails",
 
   //Map
   location: "user/getUsersByLocation",
@@ -22,9 +23,14 @@ export const api = {
 
   //Offers
   getAllOffersByUser: "generateOffer/getAllOffersByUser/",
+  getAllOffers: "generateOffer/getAllOffers",
 
   //Pakages
   getAllPackageByUser: "generatePackage/getAllPackageByUser/",
+  getAllPackages: "generatePackage/getAllPackages",
+
+  // favourite
+  getUsersFavList: "favourite/getUsersFavList",
 };
 
 export const POST = "POST";

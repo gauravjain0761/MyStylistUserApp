@@ -18,9 +18,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { useAppSelector } from "../../redux/hooks";
 
 const CustomDrawer = () => {
   const { navigate } = useNavigation();
+  const { profileData } = useAppSelector((state) => state.profile);
+
   const onPressName = () => {
     navigate(screenName.Profile);
   };
@@ -54,13 +57,17 @@ const CustomDrawer = () => {
         <TouchableOpacity onPress={onPressName} style={styles.image_container}>
           <View style={styles.img_conatiner}>
             <Image
-              resizeMode="contain"
-              source={images.drawerImg}
+              resizeMode="cover"
+              source={{
+                uri:
+                  profileData?.user_profile_images_url +
+                  profileData.user.user_profile_images?.[0]?.image,
+              }}
               style={styles.img}
             />
           </View>
           <View>
-            <Text style={styles.user_title}>{strings.Nickson_John}</Text>
+            <Text style={styles.user_title}>{profileData?.user.name}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.account_container}>
@@ -212,6 +219,7 @@ const styles = StyleSheet.create({
   img: {
     width: wp(74),
     height: wp(74),
+    borderRadius: 10,
   },
   img_conatiner: {
     borderWidth: 2,

@@ -19,24 +19,17 @@ import { VerifyIcon } from "../../theme/SvgIcon";
 import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllOffersByUser } from "../../actions/offerAction";
+import { getAllOffers, getAllOffersByUser } from "../../actions/offerAction";
 import moment from "moment";
 
 const Offers = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const getAllOffer = useAppSelector((state) => state.offers.getalloffers);
+  const { userInfo } = useAppSelector((state) => state.common);
+  const { getalloffers } = useAppSelector((state) => state.offers);
+
   useEffect(() => {
-    getAllOffers();
+    dispatch(getAllOffers());
   }, []);
-
-  const getAllOffers = async () => {
-    const obj = {
-      data: "65eed0259e6593d24b2a5210",
-    };
-    dispatch(getAllOffersByUser(obj));
-  };
-
-  // console.log(getAllOffer);
 
   const onPressMenu = () => {
     navigation.openDrawer();
@@ -120,7 +113,7 @@ const Offers = ({ navigation }) => {
             />
           </TouchableOpacity>
           <FlatList
-            data={getAllOffer?.offers}
+            data={getalloffers?.offers || []}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
@@ -128,7 +121,12 @@ const Offers = ({ navigation }) => {
                   <ImageBackground
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}
-                    source={images.man_hair_cut}
+                    source={{
+                      uri:
+                        getalloffers?.featured_image_url +
+                        "/" +
+                        item?.featured_image,
+                    }}
                     style={styles.manImgStyle}
                   />
                   <View style={styles.infoContainer}>

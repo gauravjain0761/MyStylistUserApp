@@ -3,7 +3,8 @@ import { RootState } from "../helper/Types";
 import { AnyAction } from "redux";
 import {
   GETALLOFFERSBYUSER,
-  GETALLSERVICES,
+  GET_ALL_OFFERS,
+  GET_ALL_PACKAGES,
   IS_LOADING,
 } from "./dispatchTypes";
 import { GET, POST, api } from "../helper/apiConstants";
@@ -34,6 +35,31 @@ export const getAllOffersByUser =
             errorToast(result.data);
           }
           if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
+        console.log("error", error);
+      });
+  };
+
+export const getAllOffers =
+  (): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: GET,
+      url: api.getAllOffers,
+      headers: header,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+          dispatch({
+            type: GET_ALL_OFFERS,
+            payload: result?.data,
+          });
         }
       })
       .catch((error: any) => {

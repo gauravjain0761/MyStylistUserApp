@@ -37,8 +37,11 @@ type props = {
   onPressRating?: any;
   isNewYearOffer?: boolean;
   barberdetailscontinerStyle?: ViewStyle | TextStyle;
+  data?: any;
+  img_url?: string;
 };
 const Barber_Card = ({
+  data,
   type,
   name,
   jobs,
@@ -54,6 +57,7 @@ const Barber_Card = ({
   onPressRating = () => "",
   isNewYearOffer,
   barberdetailscontinerStyle,
+  img_url,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -70,7 +74,7 @@ const Barber_Card = ({
               <View style={styles.carousel_view}>
                 <Carousel
                   layout={"default"}
-                  data={images}
+                  data={data?.user_profile_images}
                   sliderWidth={carouselitemWidth}
                   itemWidth={carouselitemWidth}
                   itemHeight={carouselitemHeight}
@@ -80,7 +84,9 @@ const Barber_Card = ({
                     return (
                       <View style={styles?.carousel_img_container}>
                         <Image
-                          source={item.image}
+                          source={{
+                            uri: data?.user_profile_images_url + data?.image,
+                          }}
                           style={styles?.carousel_img}
                           resizeMode="stretch"
                         />
@@ -97,7 +103,7 @@ const Barber_Card = ({
                 </View>
               </View>
               <Pagination
-                dotsLength={images.length}
+                dotsLength={data?.user_profile_images?.length}
                 activeDotIndex={activeIndex}
                 containerStyle={styles?.pagination_container}
                 dotStyle={styles?.dotStyle}
@@ -150,7 +156,7 @@ const Barber_Card = ({
               <View style={styles.carousel_view}>
                 <Carousel
                   layout={"default"}
-                  data={images}
+                  data={data?.user_profile_images}
                   sliderWidth={carouselitemWidth}
                   itemWidth={carouselitemWidth}
                   itemHeight={carouselitemHeight}
@@ -160,7 +166,9 @@ const Barber_Card = ({
                     return (
                       <View style={styles?.carousel_img_container}>
                         <Image
-                          source={item.image}
+                          source={{
+                            uri: img_url + item?.image,
+                          }}
                           style={[styles?.carousel_img, carouselitemHeight]}
                           resizeMode="stretch"
                         />
@@ -177,7 +185,7 @@ const Barber_Card = ({
                 </View>
               </View>
               <Pagination
-                dotsLength={images.length}
+                dotsLength={images?.length}
                 activeDotIndex={activeIndex}
                 containerStyle={styles?.pagination_container}
                 dotStyle={styles?.dotStyle}
@@ -195,7 +203,7 @@ const Barber_Card = ({
             >
               <View style={styles.name_container}>
                 <View>
-                  <Text style={styles.barber_name}>{name}</Text>
+                  <Text style={styles.barber_name}>{data?.name}</Text>
                 </View>
                 <VerifyIcon width={14} height={14} />
               </View>
@@ -214,7 +222,13 @@ const Barber_Card = ({
               </View>
               <View style={styles.location_container}>
                 <CarIcon />
-                <Text style={styles.location_title}>{location}</Text>
+                <Text style={styles.location_title}>
+                  {data?.city?.[0]?.city_name}
+                  {","}
+                  {data?.district?.[0]?.district_name}
+                  {","}
+                  {data?.state?.[0]?.state_name}
+                </Text>
               </View>
               {isNewYearOffer ? (
                 <>
@@ -305,7 +319,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   location_title: {
-    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 13, colors.dark_grey),
   },
   pagination_container: {
     justifyContent: "center",
@@ -313,7 +327,6 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     paddingBottom: 0,
     marginTop: hp(13),
-    // marginBottom: hp(20),
   },
   dotContainerStyle: {
     margin: 0,

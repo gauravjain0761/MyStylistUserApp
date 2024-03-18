@@ -20,23 +20,16 @@ import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllPackageByUser } from "../../actions";
+import { getAllPackageByUser, getAllPackages } from "../../actions";
 
 const Packages = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const getAllpackages = useAppSelector(
-    (state) => state.package?.getallpackages
-  );
+  const { getallpackages } = useAppSelector((state) => state.package);
   useEffect(() => {
-    getAllpackage();
+    dispatch(getAllPackages());
   }, []);
 
-  const getAllpackage = async () => {
-    const obj = {
-      data: "65eed0259e6593d24b2a5210",
-    };
-    dispatch(getAllPackageByUser(obj));
-  };
+  console.log("getallpackages", getallpackages);
 
   const onPressMenu = () => {
     navigation.openDrawer();
@@ -118,7 +111,7 @@ const Packages = ({ navigation }) => {
           </TouchableOpacity>
 
           <FlatList
-            data={getAllpackages?.offers}
+            data={getallpackages?.packages}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
@@ -126,7 +119,12 @@ const Packages = ({ navigation }) => {
                   <ImageBackground
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}
-                    source={images.man_hair_cut}
+                    source={{
+                      uri:
+                        getallpackages?.featured_image_url +
+                        "/" +
+                        item?.featured_image,
+                    }}
                     style={styles.manImgStyle}
                   />
                   <View style={styles.infoContainer}>

@@ -1,8 +1,13 @@
-import { GET_FAQ, GET_TERMSANDCONDITIONS } from "../actions/dispatchTypes";
+import {
+  GET_FAQ,
+  GET_PROFILE_DATA,
+  GET_TERMSANDCONDITIONS,
+} from "../actions/dispatchTypes";
 
 const initialState = {
   getallfaqs: [],
   getalltermsandconditions: [],
+  profileData: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -12,6 +17,9 @@ export default function (state = initialState, action: any) {
     }
     case GET_TERMSANDCONDITIONS: {
       return { ...state, getalltermsandconditions: action.payload };
+    }
+    case GET_PROFILE_DATA: {
+      return { ...state, profileData: action.payload };
     }
     default:
       return state;

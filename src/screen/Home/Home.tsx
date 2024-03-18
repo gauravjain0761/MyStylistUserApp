@@ -62,6 +62,7 @@ import {
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
+import { getUserDetails } from "../../actions";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
@@ -85,6 +86,7 @@ const Home = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const { getallservices } = useAppSelector((state) => state.home);
+  const { userInfo } = useAppSelector((state) => state.common);
 
   useEffect(() => {
     let obj = {
@@ -102,7 +104,21 @@ const Home = () => {
     GetStatus();
   }, []);
 
-  console.log(banner);
+  useEffect(() => {
+    getProfileData();
+  }, [userInfo]);
+
+  const getProfileData = () => {
+    let obj = {
+      isLoading: false,
+      data: {
+        userid: "65eed0259e6593d24b2a5210",
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getUserDetails(obj));
+  };
 
   const getCurrentLocation = async () => {
     dispatch({ type: IS_LOADING, payload: true });

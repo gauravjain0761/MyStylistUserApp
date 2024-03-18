@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
 import { icons, images } from "../../theme/icons";
@@ -24,6 +24,7 @@ import {
 import DatePicker from "react-native-date-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import moment from "moment";
+import { useAppSelector } from "../../redux/hooks";
 
 const Profile = () => {
   const [value, setValue] = useState("Male");
@@ -36,10 +37,24 @@ const Profile = () => {
   const [open, setOpen] = useState(false);
   const [imageData, setImageData] = useState<any>(images.profile);
 
+  const { profileData } = useAppSelector((state) => state.profile);
+
   const data = [
     { label: "Male", value: "1" },
     { label: "Female", value: "2" },
   ];
+
+  useEffect(() => {
+    setName(profileData?.user?.name);
+    setEmail(profileData?.user?.email);
+    setPhone(profileData?.user?.phone);
+    setDate("");
+    setImageData({
+      uri:
+        profileData?.user_profile_images_url +
+        profileData?.user?.user_profile_images?.[0].image,
+    });
+  }, [profileData]);
 
   const onPressNo = () => {
     setIsEditable(!isEditable);

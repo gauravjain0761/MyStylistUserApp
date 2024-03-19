@@ -7,7 +7,11 @@ import { MenuHorizontalIcon, TabHome } from "../../theme/SvgIcon";
 import { Menu, MenuDivider, MenuItem } from "react-native-material-menu";
 import { strings } from "../../helper/string";
 
-const AddressItem = () => {
+type props = {
+  onPressEdit: () => void;
+};
+
+const AddressItem = ({ onPressEdit }: props) => {
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
@@ -31,6 +35,9 @@ const AddressItem = () => {
             textStyle={styles.menuTextStyle}
             onPress={() => {
               hideMenu();
+              setTimeout(() => {
+                onPressEdit();
+              }, 1000);
             }}
           >
             {strings["Edit"]}

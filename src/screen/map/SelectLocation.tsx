@@ -44,6 +44,10 @@ const SelectLocation = ({}) => {
     setIsAddModal(false);
   };
 
+  const onPressEdit = () => {
+    setIsAddModal(true);
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Select a location"]} />
@@ -81,7 +85,7 @@ const SelectLocation = ({}) => {
       <FlatList
         data={[1, 2, 3]}
         renderItem={({ item, index }) => {
-          return <AddressItem />;
+          return <AddressItem onPressEdit={() => onPressEdit()} />;
         }}
         keyExtractor={(item, index) => index.toString()}
       />

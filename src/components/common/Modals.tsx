@@ -12,6 +12,7 @@ import { colors } from "../../theme/color";
 import Modal from "react-native-modal";
 import { ModalCloseIcon } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type props = {
   visible: boolean;
@@ -48,7 +49,11 @@ const Modals = ({
             <ModalCloseIcon />
           </TouchableOpacity>
         )}
-        <View style={[styles.contain, containStyle]}>{contain}</View>
+        <View style={[styles.contain, containStyle]}>
+          <KeyboardAwareScrollView style={{ width: "100%" }}>
+            {contain}
+          </KeyboardAwareScrollView>
+        </View>
       </>
     </Modal>
   );

@@ -1449,11 +1449,11 @@ export const CrossIcon = () => {
   );
 };
 
-export const PlusIcon = () => {
+export const PlusIcon = ({ size = 20, color = "#B0B0B0" }) => {
   return (
     <Svg
-      width="20"
-      height="20"
+      width={size}
+      height={size}
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1461,14 +1461,14 @@ export const PlusIcon = () => {
       <G clip-path="url(#clip0_4862_62922)">
         <Path
           d="M10 4.1665V15.8332"
-          stroke="#B0B0B0"
+          stroke={color}
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
         />
         <Path
           d="M4.16699 10H15.8337"
-          stroke="#B0B0B0"
+          stroke={color}
           stroke-width="1.5"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -1705,6 +1705,100 @@ export const DashIcon = () => {
         d="M1.16699 1H12.8337"
         stroke="#B0B0B0"
         stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const SearchIcon2 = () => {
+  return (
+    <Svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M20 20L15.8033 15.8033M18 10.5C18 6.35786 14.6421 3 10.5 3C6.35786 3 3 6.35786 3 10.5C3 14.6421 6.35786 18 10.5 18C14.6421 18 18 14.6421 18 10.5Z"
+        stroke="#949495"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const GpsLocationIcon = () => {
+  return (
+    <Svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path opacity="0.15" d="M20 4L3 11L10 14L13 21L20 4Z" fill="#33BBB1" />
+      <Path
+        d="M20 4L3 11L10 14L13 21L20 4Z"
+        stroke="#33BBB1"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const RightArrowIcon = () => {
+  return (
+    <Svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M8.25 18.3332L15.5833 10.9998L8.25 3.6665"
+        stroke="#313131"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </Svg>
+  );
+};
+
+export const MenuHorizontalIcon = () => {
+  return (
+    <Svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M19 13C19.5523 13 20 12.5523 20 12C20 11.4477 19.5523 11 19 11C18.4477 11 18 11.4477 18 12C18 12.5523 18.4477 13 19 13Z"
+        stroke="#40C9BF"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <Path
+        d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z"
+        stroke="#40C9BF"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <Path
+        d="M5 13C5.55228 13 6 12.5523 6 12C6 11.4477 5.55228 11 5 11C4.44772 11 4 11.4477 4 12C4 12.5523 4.44772 13 5 13Z"
+        stroke="#40C9BF"
+        stroke-width="2"
         stroke-linecap="round"
         stroke-linejoin="round"
       />

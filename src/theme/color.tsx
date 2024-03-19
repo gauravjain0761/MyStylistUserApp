@@ -57,4 +57,5 @@ export const colors = {
 
   background_grey: "#F8F8F8",
   blue: "#40BAFF",
+  red: "#E94E4E",
 };

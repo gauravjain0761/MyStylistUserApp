@@ -58,6 +58,8 @@ export const images = {
   select_black: require("../assets/image/select_black.png"),
   unselect_grey: require("../assets/image/unselect_grey.png"),
   blue_border_button: require("../assets/image/blue_border_button.png"),
+  label_grey: require("../assets/image/label_grey.png"),
+  label_black: require("../assets/image/label_black.png"),
 };
 
 export const icons = {
@@ -77,4 +79,5 @@ export const icons = {
   terms: require("../assets/icon/terms.png"),
   logout: require("../assets/icon/logout.png"),
   edit_icon: require("../assets/icon/edit_icon.png"),
+  marker_red: require("../assets/icon/marker_red.png"),
 };

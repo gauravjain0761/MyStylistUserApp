@@ -32,4 +32,6 @@ export const screenName = {
   TermsCondition: "TermsCondition",
   Loading: "Loading",
   Map_Location: "Map_Location",
+  SelectLocation: "SelectLocation",
+  ConfirmAddress: "ConfirmAddress",
 };

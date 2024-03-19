@@ -226,7 +226,8 @@ const Home = () => {
 
   const onPressLocation = () => {
     // @ts-ignore
-    navigate(screenName.Map_Location);
+    // navigate(screenName.Map_Location);
+    navigate(screenName.SelectLocation);
   };
 
   return (

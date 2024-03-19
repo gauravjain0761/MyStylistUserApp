@@ -35,6 +35,8 @@ import { dispatchNavigation } from "../helper/globalFunction";
 import { trackForMutations } from "@reduxjs/toolkit/dist/immutableStateInvariantMiddleware";
 import Loading from "../screen/auth/Loading";
 import MapLocation from "../screen/map/MapLocation";
+import SelectLocation from "../screen/map/SelectLocation";
+import ConfirmAddress from "../screen/map/ConfirmAddress";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -94,6 +96,14 @@ const StackNavigator: FC = () => {
         component={TermsCondition}
       />
       <Stack.Screen name={screenName.Map_Location} component={MapLocation} />
+      <Stack.Screen
+        name={screenName.SelectLocation}
+        component={SelectLocation}
+      />
+      <Stack.Screen
+        name={screenName.ConfirmAddress}
+        component={ConfirmAddress}
+      />
     </Stack.Navigator>
   );
 };

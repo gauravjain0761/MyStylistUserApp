@@ -88,7 +88,14 @@ const BarberAppointmentCard = ({
           </View>
           <Text style={styles.service_title}>{service}</Text>
         </View>
+      </View>
+      <View style={{ flexDirection: "row" }}>
         <View style={styles.subtract_left}></View>
+        <Image
+          resizeMode="contain"
+          style={styles.lineStyle}
+          source={images.dashline}
+        />
         <View style={styles.subtract_right}></View>
       </View>
       <View style={styles.card_down}>
@@ -104,7 +111,9 @@ const BarberAppointmentCard = ({
               <RatingStars color={colors.active_dot} />
             </View>
           ) : type === "Give Feedback" ? (
-            <Text style={styles.price}>{strings.Give_Feedback}</Text>
+            <Text style={styles.feedbackTextStyle}>
+              {strings.Give_Feedback}
+            </Text>
           ) : null}
           <Text style={styles.price}> ₹ {price}</Text>
         </View>
@@ -118,7 +127,7 @@ export default BarberAppointmentCard;
 const styles = StyleSheet.create({
   conatiner: {
     backgroundColor: colors.white,
-    paddingHorizontal: wp(15),
+    paddingHorizontal: wp(12),
     marginHorizontal: wp(20),
     borderRadius: wp(8),
     paddingVertical: hp(17),
@@ -151,7 +160,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 14, colors.grey_10),
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.grey_10),
     marginTop: hp(5),
     alignSelf: "flex-start",
   },
@@ -173,9 +182,6 @@ const styles = StyleSheet.create({
   card_upper: {
     flexDirection: "row",
     gap: wp(15),
-    borderBottomColor: colors.dashed_boredr,
-    borderBottomWidth: 1,
-    borderStyle: "dashed",
     width: "100%",
   },
   subtract_left: {
@@ -226,5 +232,11 @@ const styles = StyleSheet.create({
   completed_title: {
     ...commonFontStyle(fontFamily.semi_bold, 11, colors.black_2),
     lineHeight: hp(20),
+  },
+  feedbackTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black_2),
+  },
+  lineStyle: {
+    width: "100%",
   },
 });

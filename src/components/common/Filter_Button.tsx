@@ -84,9 +84,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    paddingTop: hp(9),
-    paddingBottom: hp(10),
+    paddingVertical: hp(13),
     paddingHorizontal: wp(10),
-    gap: wp(5),
+    gap: wp(6),
   },
 });

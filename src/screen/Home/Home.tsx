@@ -63,12 +63,17 @@ import {
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
 import { getUserDetails } from "../../actions";
+import { SearchIcon } from "../../theme/SvgIcon";
 
 type DrawerNavigationParams = {
   navigation: DrawerNavigationProp<{}>;
 };
 
 const Home = () => {
+  const { navigate } = useNavigation();
+  const navigation = useNavigation();
+  const dispatch = useAppDispatch();
+
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [costmodal, setCostmodal] = useState(false);
@@ -82,9 +87,9 @@ const Home = () => {
   const [locationModal, setLocationModal] = useState(false);
   const [banner, setbanner] = useState([]);
   const [value, setValue] = useState("");
-  const { navigate } = useNavigation();
-  const navigation = useNavigation();
-  const dispatch = useAppDispatch();
+
+  const [isSticky, setIsSticky] = useState(false);
+
   const { getallservices } = useAppSelector((state) => state.home);
   const { userInfo } = useAppSelector((state) => state.common);
 
@@ -112,7 +117,7 @@ const Home = () => {
     let obj = {
       isLoading: false,
       data: {
-        userid: "65eed0259e6593d24b2a5210",
+        userid: userInfo._id,
       },
       onSuccess: () => {},
       onFailure: () => {},
@@ -230,6 +235,13 @@ const Home = () => {
     navigate(screenName.SelectLocation);
   };
 
+  const handleScroll = (event) => {
+    const { contentOffset } = event.nativeEvent;
+
+    // Check if the scroll offset is greater than or equal to the height of the sticky header
+    setIsSticky(contentOffset.y >= 1100); // Adjust this value according to your header's height
+  };
+
   return (
     <View style={styles?.container}>
       <LocationModal
@@ -244,17 +256,14 @@ const Home = () => {
         onPressCart={() => navigate(screenName.Cart)}
         location={value}
         onPresslocation={onPressLocation}
+        onPressLike={() => navigate(screenName.MyFavorites)}
       />
       <TouchableOpacity
         onPress={onPressSearch}
         style={styles?.search_container}
       >
         <View style={styles?.search_box}>
-          <Image
-            source={icons?.search_placehonder}
-            style={styles?.search_icon}
-            resizeMode="contain"
-          />
+          <SearchIcon />
           <View style={styles?.input}>
             <Text style={styles.searchTextStyle}>
               {strings?.Search_by_Stylist_Name}
@@ -265,6 +274,7 @@ const Home = () => {
       <ScrollView
         stickyHeaderIndices={[5]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
       >
         <View style={styles.carousel_container}>
           <Carousel
@@ -333,34 +343,6 @@ const Home = () => {
                 ) : null;
               }}
             />
-
-            <FlatList
-              horizontal
-              data={getallservices}
-              showsHorizontalScrollIndicator={false}
-              style={{ marginTop: hp(20) }}
-              ItemSeparatorComponent={() => (
-                <View style={styles?.item_separator}></View>
-              )}
-              renderItem={({ item, index }: any) => {
-                return item?.service_for == "Female" ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setServicesModal(!servicesModal),
-                        setModalTitle(item.services);
-                    }}
-                    style={styles?.service_card_container}
-                  >
-                    <Text style={styles?.card_title}>{item?.service_name}</Text>
-                    <Image
-                      style={styles?.images}
-                      source={images?.wom_2}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                ) : null;
-              }}
-            />
           </View>
         </View>
 
@@ -398,31 +380,6 @@ const Home = () => {
                 ) : null;
               }}
             />
-
-            <FlatList
-              horizontal
-              data={getallservices}
-              showsHorizontalScrollIndicator={false}
-              style={{ marginTop: hp(20) }}
-              ItemSeparatorComponent={() => (
-                <View style={styles?.item_separator}></View>
-              )}
-              renderItem={({ item, index }: any) => {
-                return item?.service_for == "Male" ? (
-                  <TouchableOpacity
-                    onPress={() => setmenservicesModal(!menservicesModal)}
-                    style={styles?.service_card_container}
-                  >
-                    <Text style={styles?.card_title}>{item?.service_name}</Text>
-                    <Image
-                      style={styles?.images}
-                      source={images.men_1}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
-                ) : null;
-              }}
-            />
           </View>
         </View>
 
@@ -436,7 +393,13 @@ const Home = () => {
           </View>
         </View>
 
-        <View style={styles?.service_filter_conatiner}>
+        <View
+          style={
+            isSticky
+              ? styles.stickyHeaderStyle
+              : styles?.service_filter_conatiner
+          }
+        >
           <FlatList
             data={stylists_filter}
             horizontal
@@ -599,6 +562,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "flex-start",
+    paddingHorizontal: wp(10),
   },
   search_container: {
     marginHorizontal: wp(20),
@@ -705,6 +669,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(16),
   },
   service_filter_conatiner: {
+    paddingLeft: wp(20),
+    paddingBottom: hp(10),
+    backgroundColor: colors.background_grey,
+  },
+  stickyHeaderStyle: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    zIndex: 10,
     paddingLeft: wp(20),
     paddingBottom: hp(10),
     backgroundColor: colors.background_grey,

@@ -58,14 +58,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   nameTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
     marginTop: hp(5),
   },
   timeTextStyle: {
-    ...commonFontStyle(fontFamily.regular, 12, colors.grey_18),
+    ...commonFontStyle(fontFamily.regular, 13, colors.grey_18),
   },
   greyTxtStyle: {
-    ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),
+    ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),
     marginBottom: hp(5),
   },
   circleStyle: {

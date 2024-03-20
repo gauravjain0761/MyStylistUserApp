@@ -22,6 +22,7 @@ type HomeProps = {
   onPresslocation?: () => void;
   onPressCart?: () => void;
   onPressProfile?: () => void;
+  onPressLike?: () => void;
   location?: any;
 };
 
@@ -30,6 +31,7 @@ const HomeHeader = ({
   onPressCart,
   onPressProfile,
   location = null,
+  onPressLike,
 }: HomeProps) => {
   const { navigate } = useNavigation();
 
@@ -41,27 +43,39 @@ const HomeHeader = ({
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <View style={styles?.drawer_btn}>
-        <DirectionIcon />
-        <View style={styles.address_container}>
-          <TouchableOpacity onPress={onPresslocation} style={styles.location}>
-            <Text style={styles.home_title}>Home</Text>
-            <View style={styles.location_icon}>
-              <RightArrow />
-            </View>
-          </TouchableOpacity>
-          {location ? <Text style={styles.addrs}>{location}</Text> : null}
+        <TouchableOpacity onPress={onPressProfile} style={styles.profile}>
+          <Text style={styles.profile_text}>K</Text>
+        </TouchableOpacity>
+        <View style={styles.rowStyle}>
+          <Image
+            resizeMode="contain"
+            source={icons.location}
+            style={styles.locationIconStyle}
+          />
+          <View style={styles.address_container}>
+            <TouchableOpacity onPress={onPresslocation} style={styles.location}>
+              <Text style={styles.home_title}>Home</Text>
+              <View style={styles.location_icon}>
+                <RightArrow />
+              </View>
+            </TouchableOpacity>
+            {location ? (
+              <Text numberOfLines={1} style={styles.addrs}>
+                {location}
+              </Text>
+            ) : null}
+          </View>
         </View>
       </View>
-      {/* <Image source={images?.header_logo} style={styles?.header_logo} /> */}
       <View style={styles?.header_service_container}>
+        <TouchableOpacity onPress={onPressLike}>
+          <FillLike />
+        </TouchableOpacity>
         <TouchableOpacity onPress={onPressCart}>
           <FillCart />
         </TouchableOpacity>
         <TouchableOpacity onPress={onPressBell}>
           <FillBell />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={onPressProfile} style={styles.profile}>
-          <Text style={styles.profile_text}>K</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -89,6 +103,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: wp(6),
     alignItems: "center",
+    flex: 1,
   },
   header_logo: {
     width: wp(100),
@@ -120,7 +135,9 @@ const styles = StyleSheet.create({
     maxWidth: wp(200),
     textAlign: "left",
   },
-  address_container: {},
+  address_container: {
+    flex: 1,
+  },
   profile: {
     width: wp(26),
     height: wp(26),
@@ -130,6 +147,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   profile_text: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    ...commonFontStyle(fontFamily.medium, 16, colors.black),
+  },
+  rowStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: wp(5),
+    flex: 1,
+  },
+  locationIconStyle: {
+    height: wp(25),
+    width: wp(25),
+    marginRight: wp(5),
   },
 });

@@ -71,7 +71,7 @@ const Packages = ({ navigation }) => {
                     : null
                 }
                 title={item?.title}
-                btn_bg={{ paddingHorizontal: wp(15) }}
+                btn_bg={{ paddingHorizontal: wp(17) }}
               />
             );
           }}

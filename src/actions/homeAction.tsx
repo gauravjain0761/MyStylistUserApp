@@ -1,7 +1,6 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../helper/Types";
 import { AnyAction } from "redux";
-import { getAsyncToken } from "../helper/asyncStorage";
 import { GETALLSERVICES, IS_LOADING } from "./dispatchTypes";
 import { GET, api } from "../helper/apiConstants";
 import { makeAPIRequest } from "../helper/apiGlobal";

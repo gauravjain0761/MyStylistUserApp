@@ -60,6 +60,7 @@ export const images = {
   blue_border_button: require("../assets/image/blue_border_button.png"),
   label_grey: require("../assets/image/label_grey.png"),
   label_black: require("../assets/image/label_black.png"),
+  dashline: require("../assets/image/dashline.png"),
 };
 
 export const icons = {
@@ -80,4 +81,5 @@ export const icons = {
   logout: require("../assets/icon/logout.png"),
   edit_icon: require("../assets/icon/edit_icon.png"),
   marker_red: require("../assets/icon/marker_red.png"),
+  location: require("../assets/icon/location.png"),
 };

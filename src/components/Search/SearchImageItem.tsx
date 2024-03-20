@@ -36,7 +36,12 @@ const SearchImageItem = ({ data }: Props) => {
   return (
     <View>
       <View style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Hair Cut"}</Text>
+        <View style={styles.rowStyle}>
+          <Text style={styles.titleTextStyle}>{"Hair Cut"}</Text>
+          <TouchableOpacity>
+            <Text style={styles.viewmoreTextStyle}>{"View More"}</Text>
+          </TouchableOpacity>
+        </View>
         {count === 8 ? null : (
           <TouchableOpacity onPress={onPressMore}>
             <Text style={styles.moreTextStyle}>{strings["View More"]}</Text>
@@ -80,12 +85,13 @@ const styles = StyleSheet.create({
   },
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    flex: 1,
   },
   itemContainer: {
     marginHorizontal: wp(3),
     height: screen_width - wp(267),
     width: screen_width - wp(267),
-    marginBottom: hp(6),
+    marginBottom: hp(10),
     borderRadius: 4,
   },
   listContainerStyle: {
@@ -97,6 +103,13 @@ const styles = StyleSheet.create({
     width: screen_width - wp(267),
   },
   moreTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),
+  },
+  rowStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  viewmoreTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),
   },
 });

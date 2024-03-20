@@ -28,19 +28,21 @@ const Tab = createBottomTabNavigator();
 const getIcons = (key: number, isFocused: boolean) => {
   switch (key) {
     case 0:
-      return <TabHome color={isFocused ? colors.white : colors.gery_6} />;
+      return <TabHome color={isFocused ? colors.theme_1 : colors.gery_6} />;
     case 1:
-      return <TabOffer color={isFocused ? colors.white : colors.gery_6} />;
+      return <TabOffer color={isFocused ? colors.theme_1 : colors.gery_6} />;
     case 2:
       return (
-        <AppointmentTabIcon color={isFocused ? colors.white : colors.gery_6} />
+        <AppointmentTabIcon
+          color={isFocused ? colors.theme_1 : colors.gery_6}
+        />
       );
     case 3:
       return (
-        <PackagesTabIcon color={isFocused ? colors.white : colors.gery_6} />
+        <PackagesTabIcon color={isFocused ? colors.theme_1 : colors.gery_6} />
       );
     case 4:
-      return <ChatTabIcon color={isFocused ? colors.white : colors.gery_6} />;
+      return <ChatTabIcon color={isFocused ? colors.theme_1 : colors.gery_6} />;
     default:
       break;
   }
@@ -67,17 +69,14 @@ const TabBarItem = ({ state, navigation }: BottomTabBarProps) => {
           <Pressable
             key={route.key}
             onPress={onPress}
-            style={[
-              styles.itemViewContainer,
-              isFocused && styles.itemFocusContainer,
-            ]}
+            style={[styles.itemViewContainer]}
           >
             {getIcons(index, isFocused)}
             <Text
               numberOfLines={1}
               style={{
                 ...styles.itemLabelTextStyle,
-                color: isFocused ? colors.white : colors.gery_6,
+                color: isFocused ? colors.theme_1 : colors.gery_6,
               }}
             >
               {route.name}
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     marginTop: hp(5),
   },
   itemContainer: {
-    height: hp(70),
+    height: hp(65),
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.white,
@@ -133,14 +132,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    paddingHorizontal: wp(15),
+    paddingHorizontal: wp(25),
   },
   itemViewContainer: {
-    height: isIos ? hp(80) : hp(70),
+    height: hp(65),
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "center",
-    marginBottom: isIos ? hp(10) : -hp(15),
+    marginBottom: isIos ? hp(10) : -hp(10),
   },
   itemFocusContainer: {
     backgroundColor: colors.theme_1,

@@ -92,8 +92,6 @@ const TagView = ({
           source={images.grey_border_button}
           style={styles.buttonStyle}
         >
-          {Icon}
-          {Icon ? <View style={{ width: wp(10) }} /> : null}
           <Text
             style={{
               ...styles.btnTextStyle,
@@ -103,6 +101,7 @@ const TagView = ({
           >
             {title}
           </Text>
+          {Icon}
         </ImageBackground>
       )}
     </TouchableOpacity>
@@ -173,15 +172,6 @@ const YourStylist = () => {
     navigate(screenName.Cart);
   };
 
-  const handleStickyHeaderEvent = (event) => {
-    const scrollPosition = event.nativeEvent.contentOffset.y;
-    if (Math.floor(scrollPosition) == 241) {
-      setIsHeaderSticky(true);
-    } else if (Math.floor(scrollPosition) < 240) {
-      setIsHeaderSticky(false);
-    }
-  };
-
   const onPressBack = () => {
     goBack();
   };
@@ -196,19 +186,7 @@ const YourStylist = () => {
     }
   };
 
-  // const Header_Max_Height = 600;
-  // const Header_Min_Height = 50;
-  // const Scroll_Distance = Header_Max_Height - Header_Min_Height;
-
-  // const scrollOffsetY = useRef(new Animated.Value(0)).current;
-
-  // const animatedHeaderColor = scrollOffsetY.interpolate({
-  //   inputRange: [0, Scroll_Distance / 1, Scroll_Distance],
-  //   outputRange: ["rgba(255,255,255,0.0)", "#FAFAFA", "#FAFAFA"],
-  //   extrapolate: "identity",
-  // });
-
-  const handleScroll = (event) => {
+  const handleScroll = (event: any) => {
     if (event.nativeEvent.contentOffset.y > 250) {
       animated.value = 1;
       setAnimatedValue(1);
@@ -236,13 +214,21 @@ const YourStylist = () => {
             placeholderTextColor={colors.gery_2}
           />
         </Animation.View>
-
+        {animatedValue === 0 ? (
+          <TouchableOpacity>
+            <FillLike />
+          </TouchableOpacity>
+        ) : null}
+        {animatedValue === 0 ? (
+          <TouchableOpacity style={styles.shareContainer}>
+            <ShareIcon />
+          </TouchableOpacity>
+        ) : null}
         <TouchableOpacity onPress={onPressSearch}>
           {animatedValue === 0 ? <SearchIcon /> : <CloseIcon />}
         </TouchableOpacity>
       </SafeAreaView>
       <Animation.ScrollView
-        // onScroll={handleStickyHeaderEvent}
         stickyHeaderIndices={[2]}
         style={{ flex: 1 }}
         scrollEventThrottle={16}
@@ -259,14 +245,6 @@ const YourStylist = () => {
             >
               <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
               <VerifyIcon />
-              <View style={styles.iconContainer}>
-                <TouchableOpacity>
-                  <FillLike />
-                </TouchableOpacity>
-                <TouchableOpacity style={{ marginBottom: hp(4) }}>
-                  <ShareIcon />
-                </TouchableOpacity>
-              </View>
             </View>
             <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
               <TouchableOpacity
@@ -544,7 +522,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(13),
   },
   btnTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 14, colors.black_2),
+    ...commonFontStyle(fontFamily.semi_bold, 15, colors.black_2),
   },
   headerRowStyle: {
     flexDirection: "row",
@@ -660,5 +638,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginLeft: wp(10),
     gap: wp(5),
+  },
+  shareContainer: {
+    marginHorizontal: wp(5),
   },
 });

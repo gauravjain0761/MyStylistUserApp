@@ -10,7 +10,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { hp, wp } from "../../helper/globalFunction";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { BackIcon } from "../../theme/SvgIcon";
+import { BackIcon, SearchIcon, SearchIcon2 } from "../../theme/SvgIcon";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../theme/color";
 import { strings } from "../../helper/string";
@@ -34,11 +34,7 @@ const SearchBar = ({ onChangeText, value, onFocus, onBlur }: props) => {
         <BackIcon />
       </TouchableOpacity>
       <View style={styles.search_container}>
-        <Image
-          source={icons.search_placehonder}
-          style={styles?.search_icon}
-          resizeMode="contain"
-        />
+        <SearchIcon />
         <TextInput
           style={styles?.input}
           placeholderTextColor={colors.gery_6}
@@ -71,6 +67,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     margin: 0,
+    paddingHorizontal: wp(10),
   },
   search_icon: {
     width: wp(24),

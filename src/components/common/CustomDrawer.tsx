@@ -56,15 +56,19 @@ const CustomDrawer = () => {
       <View>
         <TouchableOpacity onPress={onPressName} style={styles.image_container}>
           <View style={styles.img_conatiner}>
-            {/* <Image
+            <Image
               resizeMode="cover"
-              source={{
-                uri:
-                  profileData?.user_profile_images_url +
-                  profileData?.user?.user_profile_images?.[0]?.image,
-              }}
+              source={
+                profileData?.user?.user_profile_images?.[0]?.image
+                  ? {
+                      uri:
+                        profileData?.user_profile_images_url +
+                        profileData?.user?.user_profile_images?.[0]?.image,
+                    }
+                  : images.profile
+              }
               style={styles.img}
-            /> */}
+            />
           </View>
           <View>
             <Text style={styles.user_title}>{profileData?.user?.name}</Text>

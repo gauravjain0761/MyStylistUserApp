@@ -50,7 +50,7 @@ export const makeAPIRequest = ({
             routes: [{ name: screenName.Login }],
           });
         } else {
-          Alert.alert("Something went wrong, please try again.");
+          errorToast(error?.response?.data?.message);
         }
         reject(error);
       });

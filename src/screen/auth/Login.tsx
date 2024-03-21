@@ -95,26 +95,28 @@ const Login: FC = () => {
     } else if (value == null) {
       infoToast("Please enter your city");
     } else {
-      let obj = {
-        data: {
-          phone: phoneNum,
-          name: name,
-          state: {
-            state_id: city[0]?.state_id,
-            state_name: city[0]?.state_name,
-          },
-          district: {
-            district_id: city[0]?.district_id,
-            district_name: city[0]?.district_name,
-          },
-          city: {
-            city_id: city[0]?.city_id,
-            city_name: value,
-          },
+      let data = {
+        phone: phoneNum,
+        name: name,
+        state: {
+          state_id: city[0]?.state_id,
+          state_name: city[0]?.state_name,
         },
+        district: {
+          district_id: city[0]?.district_id,
+          district_name: city[0]?.district_name,
+        },
+        city: {
+          city_id: city[0]?.city_id,
+          city_name: value,
+        },
+      };
+      let obj = {
+        data: data,
         onSuccess: (res: any) => {
           navigation.navigate(screenName.OptVerification, {
             phone: phoneNum,
+            data: data,
           });
         },
         onFailure: () => {},

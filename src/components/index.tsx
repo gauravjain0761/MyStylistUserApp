@@ -27,6 +27,8 @@ import SenderItem from "./Chat/SenderItem";
 import ChatInput from "./Chat/ChatInput";
 import Loader from "./common/Loader";
 import AddressItem from "./common/AddressItem";
+import FavouriteCard from "./Home/FavouriteCard";
+
 export {
   LocationModal,
   BackHeader,
@@ -57,4 +59,5 @@ export {
   ChatInput,
   Loader,
   AddressItem,
+  FavouriteCard,
 };

@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect } from "react";
-import { BackHeader, Barber_Card } from "../../components";
+import { BackHeader, Barber_Card, FavouriteCard } from "../../components";
 import { strings } from "../../helper/string";
 import { hp, screen_height, wp } from "../../helper/globalFunction";
 import { barbers } from "../../helper/constunts";
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUsersFavList } from "../../actions";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const MyFavorites = () => {
   const { navigate } = useNavigation();
@@ -18,14 +19,19 @@ const MyFavorites = () => {
   const { favoriteList } = useAppSelector((state) => state.favourite);
 
   useEffect(() => {
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-      },
-      onSuccess: () => {},
-      onFailure: () => {},
-    };
-    dispatch(getUsersFavList(obj));
+    async function getData() {
+      let userInfo = await getAsyncUserInfo();
+
+      let obj = {
+        data: {
+          userId: userInfo?._id,
+        },
+        onSuccess: () => {},
+        onFailure: () => {},
+      };
+      dispatch(getUsersFavList(obj));
+    }
+    getData();
   }, []);
 
   const onPressCard = () => {
@@ -41,7 +47,7 @@ const MyFavorites = () => {
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
-                <Barber_Card
+                <FavouriteCard
                   img_url={favoriteList?.user_profile_images_url}
                   data={item}
                   name={item.name}

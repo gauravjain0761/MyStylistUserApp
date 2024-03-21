@@ -30,19 +30,19 @@ import {
 } from "react-native-confirmation-code-field";
 import { useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { verifyOTP } from "../../actions/authAction";
+import { sendVerifyCode, verifyOTP } from "../../actions/authAction";
 import { useAppDispatch } from "../../redux/hooks";
 
 const CELL_COUNT = 6;
 
 const OtpVerification = ({ route }: any) => {
+  const { params }: any = useRoute();
   const [value, setValue] = useState<string>("");
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
-  const data = route?.params;
   const dispatch = useAppDispatch();
 
   const onPressSubmit = () => {
@@ -51,7 +51,7 @@ const OtpVerification = ({ route }: any) => {
     } else {
       const obj = {
         data: {
-          phone: data.phone,
+          phone: params?.phone,
           otp: value,
         },
         onSuccess: (res: any) => {
@@ -62,6 +62,15 @@ const OtpVerification = ({ route }: any) => {
       };
       dispatch(verifyOTP(obj));
     }
+  };
+
+  const onPressResendOTP = () => {
+    let obj = {
+      data: params?.data,
+      onSuccess: (res: any) => {},
+      onFailure: () => {},
+    };
+    dispatch(sendVerifyCode(obj));
   };
 
   return (
@@ -85,7 +94,7 @@ const OtpVerification = ({ route }: any) => {
         <View style={styles.otp_title_conatiner}>
           <Text style={styles.otp_title}>{strings?.Verify_OTP}</Text>
           <Text style={styles.otp_info}>{strings?.Enter_the_6_digit}</Text>
-          <Text style={styles.otp_info}>{data.phone}</Text>
+          <Text style={styles.otp_info}>{params.phone}</Text>
         </View>
 
         <View style={styles?.input_container}>
@@ -120,7 +129,7 @@ const OtpVerification = ({ route }: any) => {
           <Text style={styles?.didnt_otp_title}>
             {strings?.Didnt_receive_OTP}
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPressResendOTP}>
             <Text style={styles?.resend_otp_title}>{strings?.Resend_OTP}</Text>
           </TouchableOpacity>
         </View>

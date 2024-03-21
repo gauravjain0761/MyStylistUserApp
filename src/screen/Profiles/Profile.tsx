@@ -52,7 +52,7 @@ const Profile = () => {
     setImageData({
       uri:
         profileData?.user_profile_images_url +
-        profileData?.user?.user_profile_images?.[0].image,
+        profileData?.user?.user_profile_images?.[0]?.image,
     });
   }, [profileData]);
 

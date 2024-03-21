@@ -58,6 +58,7 @@ import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
   getAsyncLocation,
+  getAsyncUserInfo,
   setAsyncCoord,
   setAsyncLocation,
 } from "../../helper/asyncStorage";
@@ -91,7 +92,6 @@ const Home = () => {
   const [isSticky, setIsSticky] = useState(false);
 
   const { getallservices } = useAppSelector((state) => state.home);
-  const { userInfo } = useAppSelector((state) => state.common);
 
   useEffect(() => {
     let obj = {
@@ -111,9 +111,10 @@ const Home = () => {
 
   useEffect(() => {
     getProfileData();
-  }, [userInfo]);
+  }, []);
 
-  const getProfileData = () => {
+  const getProfileData = async () => {
+    let userInfo = await getAsyncUserInfo();
     let obj = {
       isLoading: false,
       data: {

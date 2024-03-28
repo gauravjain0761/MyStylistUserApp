@@ -47,13 +47,17 @@ import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import CityModal from "../../components/common/CityModal";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   getAddress,
   requestLocationPermission,
 } from "../../helper/locationHandler";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllBanner, getAllServices } from "../../actions/homeAction";
+import {
+  getAllBanner,
+  getAllServicesForMaleAndFemale,
+  getAllSubServicesForMobile,
+  getUsersByLocation,
+} from "../../actions/homeAction";
 import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
@@ -88,23 +92,36 @@ const Home = () => {
   const [locationModal, setLocationModal] = useState(false);
   const [banner, setbanner] = useState([]);
   const [value, setValue] = useState("");
-
+  const [maleData, setMaleData] = useState<any>([]);
+  const [femaleData, setFemaleData] = useState<any>({});
+  const [subServicesModalData, setSubServicesModalData] = useState<any>({});
   const [isSticky, setIsSticky] = useState(false);
-
-  const { getallservices } = useAppSelector((state) => state.home);
+  const { getallservices, userList } = useAppSelector((state) => state.home);
 
   useEffect(() => {
-    let obj = {
-      onSuccess: () => {},
-      onFailure: () => {},
-    };
     let banner = {
-      onSuccess: (res) => {
+      onSuccess: (res: any) => {
         setbanner(res?.banners);
+        let obj_female = {
+          type: "Female",
+          onSuccess: (response: any) => {
+            setFemaleData(response);
+          },
+          onFailure: () => {},
+        };
+        dispatch(getAllServicesForMaleAndFemale(obj_female));
+        let obj_male = {
+          type: "Male",
+          onSuccess: (response: any) => {
+            setMaleData(response);
+            getLocation();
+          },
+          onFailure: () => {},
+        };
+        dispatch(getAllServicesForMaleAndFemale(obj_male));
       },
       onFailure: () => {},
     };
-    dispatch(getAllServices(obj));
     dispatch(getAllBanner(banner));
     GetStatus();
   }, []);
@@ -115,6 +132,7 @@ const Home = () => {
 
   const getProfileData = async () => {
     let userInfo = await getAsyncUserInfo();
+
     let obj = {
       isLoading: false,
       data: {
@@ -124,6 +142,26 @@ const Home = () => {
       onFailure: () => {},
     };
     dispatch(getUserDetails(obj));
+  };
+
+  const getLocation = async () => {
+    await requestLocationPermission(
+      async (response) => {
+        let obj = {
+          data: {
+            latitude: response?.latitude,
+            longitude: response?.longitude,
+            maxDistance: 50000,
+            page: 1,
+            limit: 10,
+          },
+        };
+        dispatch(getUsersByLocation(obj));
+      },
+      (err) => {
+        console.log("Home Location API", err);
+      }
+    );
   };
 
   const getCurrentLocation = async () => {
@@ -238,9 +276,26 @@ const Home = () => {
 
   const handleScroll = (event) => {
     const { contentOffset } = event.nativeEvent;
-
     // Check if the scroll offset is greater than or equal to the height of the sticky header
     setIsSticky(contentOffset.y >= 1100); // Adjust this value according to your header's height
+  };
+
+  const onPressServicesItem = (item: any) => {
+    let data = {
+      serviceIds: item?._id,
+    };
+    let obj = {
+      data: data,
+      onSuccess: (response: any) => {
+        setSubServicesModalData(response);
+        setModalTitle(item.service_name);
+        setTimeout(() => {
+          setServicesModal(!servicesModal);
+        }, 500);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getAllSubServicesForMobile(obj));
   };
 
   return (
@@ -288,7 +343,7 @@ const Home = () => {
               return (
                 <View style={styles?.carousel_img_container}>
                   <Image
-                    source={{ uri: item?.imageUrl }}
+                    source={{ uri: item?.imageUrl + "/" + item?.fileName }}
                     defaultSource={item?.image}
                     style={styles?.carousel_img}
                   />
@@ -299,6 +354,7 @@ const Home = () => {
           />
         </View>
         <Pagination
+          // @ts-ignore
           dotsLength={banner}
           activeDotIndex={activeIndex}
           containerStyle={styles?.pagination_container}
@@ -320,28 +376,30 @@ const Home = () => {
           <View style={styles?.services_conatiner}>
             <FlatList
               horizontal
-              data={getallservices}
+              data={femaleData?.services}
               showsHorizontalScrollIndicator={false}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
-                return item?.service_for == "Female" ? (
+                return (
                   <TouchableOpacity
                     onPress={() => {
-                      setServicesModal(!servicesModal),
-                        setModalTitle(item.services);
+                      onPressServicesItem(item);
                     }}
                     style={styles?.service_card_container}
                   >
                     <Text style={styles?.card_title}>{item?.service_name}</Text>
                     <Image
                       style={styles?.images}
-                      source={images.wom_1}
+                      source={{
+                        uri:
+                          femaleData?.featured_image_url + "/" + item?.fileName,
+                      }}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                ) : null;
+                );
               }}
             />
           </View>
@@ -360,25 +418,30 @@ const Home = () => {
           <View style={styles?.services_conatiner}>
             <FlatList
               horizontal
-              data={getallservices}
+              data={maleData?.services}
               showsHorizontalScrollIndicator={false}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
-                return item?.service_for == "Male" ? (
+                return (
                   <TouchableOpacity
-                    onPress={() => setmenservicesModal(!menservicesModal)}
+                    onPress={() => {
+                      onPressServicesItem(item);
+                    }}
                     style={styles?.service_card_container}
                   >
                     <Text style={styles?.card_title}>{item?.service_name}</Text>
                     <Image
                       style={styles?.images}
-                      source={images.men_2}
+                      source={{
+                        uri:
+                          maleData?.featured_image_url + "/" + item?.fileName,
+                      }}
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                ) : null;
+                );
               }}
             />
           </View>
@@ -429,16 +492,18 @@ const Home = () => {
 
         <View style={styles?.barber_card_container}>
           <FlatList
-            data={barbers}
+            data={userList?.users || []}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
                 <Barber_Card
+                  data={item}
+                  featured_image_url={userList?.featured_image_url}
                   name={item.name}
                   type="Without Service"
-                  images={item?.image}
-                  rating={item.rating}
-                  jobs={item?.jobs_done}
+                  images={item?.user_profile_images}
+                  rating={item.averageRating}
+                  jobs={item?.jobDone}
                   location={item.address}
                   offers={item?.offers}
                   onPress={onPressItem}
@@ -476,25 +541,29 @@ const Home = () => {
             <View style={styles.makeup_modal_container}>
               <Text style={styles.modal_title}>{modalTitle}</Text>
               <View style={styles.card_conatiner}>
-                {getallservices?.map((item, index) =>
-                  item.service_for == "Female"
-                    ? item?.subServices?.map((subServices, indes) => {
-                        return (
-                          <TouchableOpacity
-                            onPress={() => onPresstoNavigate()}
-                            style={styles?.makeup_card_container}
-                          >
-                            <Text style={styles?.makeup_title}>
-                              {subServices?.sub_service_name}
-                            </Text>
-                            <Image
-                              style={styles?.makeup_images}
-                              source={images?.wom_1}
-                            />
-                          </TouchableOpacity>
-                        );
-                      })
-                    : null
+                {subServicesModalData?.subServices?.map(
+                  (subServices: any, index: number) => {
+                    return (
+                      <TouchableOpacity
+                        onPress={() => onPresstoNavigate()}
+                        style={styles?.makeup_card_container}
+                      >
+                        <Text style={styles?.makeup_title}>
+                          {subServices?.sub_service_name}
+                        </Text>
+                        <Image
+                          resizeMode="contain"
+                          source={{
+                            uri:
+                              subServicesModalData?.imageUrl +
+                              "/" +
+                              subServices?.fileName,
+                          }}
+                          style={styles?.makeup_images}
+                        />
+                      </TouchableOpacity>
+                    );
+                  }
                 )}
               </View>
             </View>

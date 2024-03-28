@@ -7,6 +7,7 @@ export const USER_LOGOUT = "USER_LOGOUT";
 //Home
 
 export const GETALLSERVICES = "GETALLSERVICES";
+export const USER_LIST = "USER_LIST";
 
 //Profile
 export const GET_FAQ = "GET_FAQ";
@@ -28,3 +29,7 @@ export const GET_ALL_PACKAGES = "GET_ALL_PACKAGES";
 
 // favourite
 export const GET_USER_FAV_LIST = "GET_USER_FAV_LIST";
+
+// appointment
+export const GET_APPOINTMENTS_LIST = "GET_APPOINTMENTS_LIST";
+export const APPOINTMENTS_DETAILS = "APPOINTMENTS_DETAILS";

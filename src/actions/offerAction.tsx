@@ -42,16 +42,18 @@ export const getAllOffersByUser =
       });
   };
 
-export const getAllOffers =
-  (): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+export const getAllOffersByLocation =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
     let header = {
       "Content-Type": "application/json",
     };
     dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
-      method: GET,
-      url: api.getAllOffers,
+      method: POST,
+      url: api.allOffersByLocation,
       headers: header,
+      data: request.data,
     })
       .then((result: any) => {
         if (result.status === 200) {
@@ -64,5 +66,6 @@ export const getAllOffers =
       })
       .catch((error: any) => {
         console.log("error", error);
+        dispatch({ type: IS_LOADING, payload: false });
       });
   };

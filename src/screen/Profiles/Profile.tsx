@@ -12,7 +12,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
 import { icons, images } from "../../theme/icons";
-import { hp, isIos, openImagePicker, wp } from "../../helper/globalFunction";
+import {
+  hp,
+  isIos,
+  openImagePicker,
+  successToast,
+  wp,
+} from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { Dropdown } from "react-native-element-dropdown";
@@ -24,18 +30,21 @@ import {
 import DatePicker from "react-native-date-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import moment from "moment";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { editProfile, getUserDetails } from "../../actions";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const Profile = () => {
+  const dispatch = useAppDispatch();
   const [value, setValue] = useState("Male");
   const [isEditable, setIsEditable] = useState(false);
   const [name, setName] = useState("Elisha Atif");
   const [email, setEmail] = useState("elishaatif8974@gmail.com");
   const [phone, setPhone] = useState("+1 435 9877 9856");
-  const [date, setDate] = useState("Nov 23, 2023");
+  const [date, setDate] = useState("");
   const [dates, setDates] = useState(new Date());
   const [open, setOpen] = useState(false);
-  const [imageData, setImageData] = useState<any>(images.profile);
+  const [imageData, setImageData] = useState<any>({ uri: "" });
 
   const { profileData } = useAppSelector((state) => state.profile);
 
@@ -45,41 +54,82 @@ const Profile = () => {
   ];
 
   useEffect(() => {
-    setName(profileData?.user?.name);
-    setEmail(profileData?.user?.email);
-    setPhone(profileData?.user?.phone);
+    setName(profileData?.user?.name || "");
+    setEmail(profileData?.user?.email || "");
+    setPhone(profileData?.user?.phone || "");
     setDate("");
-    setImageData({
-      uri:
-        profileData?.user_profile_images_url +
-        profileData?.user?.user_profile_images?.[0]?.image,
-    });
+    if (profileData?.user?.user_profile_images?.length > 0) {
+      setImageData({
+        uri:
+          profileData?.user_profile_images_url +
+          profileData?.user?.user_profile_images?.[0]?.image,
+      });
+    }
   }, [profileData]);
+
+  const getProfileData = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      isLoading: false,
+      data: {
+        userid: userInfo._id,
+      },
+      onSuccess: () => {
+        setIsEditable(!isEditable);
+        successToast("Your profile has been successfully updated.");
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserDetails(obj));
+  };
 
   const onPressNo = () => {
     setIsEditable(!isEditable);
-    setName("Elisha Atif");
-    setEmail("elishaatif8974@gmail.com");
-    setPhone("+1 435 9877 9856");
-    setDate("Nov 23, 2023");
-    setImageData(images.profile);
+    // setName("Elisha Atif");
+    // setEmail("elishaatif8974@gmail.com");
+    // setPhone("+1 435 9877 9856");
+    // setDate("Nov 23, 2023");
+    // setImageData(images.profile);
   };
 
   const onPressYes = () => {
-    setIsEditable(!isEditable);
+    let formData = new FormData();
+    formData.append("id", profileData?.user?._id);
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("phone", phone);
+    formData.append("gender", value);
+    formData.append("city", JSON.stringify(profileData?.user?.city));
+    formData.append("state", JSON.stringify(profileData?.user?.state));
+    formData.append("district", JSON.stringify(profileData?.user?.district));
+    formData.append("dob", date);
+    formData.append("user_profile_images", {
+      uri: imageData?.uri,
+      type: imageData?.mime,
+      name: imageData?.name,
+    });
+
+    let obj = {
+      data: formData,
+      onSuccess: () => {
+        getProfileData();
+      },
+      onFailure: () => {},
+    };
+    dispatch(editProfile(obj));
   };
 
-  const onPressDate = (item) => {
+  const onPressDate = (item: any) => {
     const originalDate = item;
-    const formattedDate = moment(originalDate).format("MMM DD, YYYY");
+    const formattedDate = moment(item).format("MMM DD, YYYY");
     setDate(formattedDate);
+    setDates(originalDate);
   };
 
   const onPressProfilePic = () => {
     openImagePicker({
       onSucess: (res) => {
         setImageData(res);
-        // setIsPictureEdit(true);
       },
     });
   };
@@ -109,17 +159,18 @@ const Profile = () => {
           ) : (
             <Image source={images.profile} style={styles.profile_pic} />
           )}
-
-          <TouchableOpacity
-            onPress={onPressProfilePic}
-            style={styles.EditImgIcon}
-          >
-            <Image
-              source={icons.edit_icon}
-              resizeMode="contain"
-              style={{ width: wp(16), height: wp(18) }}
-            />
-          </TouchableOpacity>
+          {isEditable ? (
+            <TouchableOpacity
+              onPress={onPressProfilePic}
+              style={styles.EditImgIcon}
+            >
+              <Image
+                source={icons.edit_icon}
+                resizeMode="contain"
+                style={{ width: wp(16), height: wp(18) }}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
         <View style={styles.inputs_conatiner}>
           <View style={styles.input_conatiner}>
@@ -145,7 +196,7 @@ const Profile = () => {
           <View style={styles.input_conatiner}>
             <Text style={styles.lable}>{strings.Phone_Number}</Text>
             <TextInput
-              editable={isEditable}
+              editable={false}
               style={styles.input}
               value={phone}
               onChangeText={(e) => setPhone(e)}
@@ -168,7 +219,7 @@ const Profile = () => {
               value={value}
               disable={!isEditable}
               onChange={(item: any) => {
-                setValue(item.value);
+                setValue(item.label);
               }}
               renderRightIcon={() => <Dropdown_Down_Arrow color="#9D9D9D" />}
             />
@@ -215,12 +266,12 @@ const Profile = () => {
         <View style={styles.btn_conatiner}>
           <TouchableOpacity onPress={onPressNo}>
             <ImageBackground resizeMode="stretch" source={images.gery_button}>
-              <Text style={styles.btn_title}>Cancel</Text>
+              <Text style={styles.btn_title}>{strings.Cancel}</Text>
             </ImageBackground>
           </TouchableOpacity>
           <TouchableOpacity onPress={onPressYes}>
             <ImageBackground resizeMode="stretch" source={images.blue_button}>
-              <Text style={styles.btn_title}>Save</Text>
+              <Text style={styles.btn_title}>{strings.Save}</Text>
             </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -290,6 +341,7 @@ const styles = StyleSheet.create({
   value: {
     color: colors.black,
     width: "90%",
+    ...commonFontStyle(fontFamily.medium, 16, colors.black),
   },
   Custom_input: {
     flexDirection: "row",

@@ -53,6 +53,8 @@ const OtpVerification = ({ route }: any) => {
         data: {
           phone: params?.phone,
           otp: value,
+          device_token: "8427001887",
+          mobile_type: "IOS",
         },
         onSuccess: (res: any) => {
           successToast("OTP verification successful");

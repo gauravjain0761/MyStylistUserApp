@@ -39,6 +39,7 @@ type props = {
   barberdetailscontinerStyle?: ViewStyle | TextStyle;
   data?: any;
   img_url?: string;
+  featured_image_url?: string;
 };
 const Barber_Card = ({
   data,
@@ -58,6 +59,7 @@ const Barber_Card = ({
   isNewYearOffer,
   barberdetailscontinerStyle,
   img_url,
+  featured_image_url,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -84,7 +86,9 @@ const Barber_Card = ({
                     return (
                       <View style={styles?.carousel_img_container}>
                         <Image
-                          source={item?.image}
+                          source={{
+                            uri: featured_image_url + "/" + item?.image_medium,
+                          }}
                           style={styles?.carousel_img}
                           resizeMode="stretch"
                         />
@@ -164,10 +168,9 @@ const Barber_Card = ({
                     return (
                       <View style={styles?.carousel_img_container}>
                         <Image
-                          // source={{
-                          //   uri: img_url + item?.image,
-                          // }}
-                          source={item.image}
+                          source={{
+                            uri: featured_image_url + "/" + item?.image_medium,
+                          }}
                           style={[styles?.carousel_img, carouselitemHeight]}
                           resizeMode="stretch"
                         />
@@ -222,12 +225,11 @@ const Barber_Card = ({
               <View style={styles.location_container}>
                 <CarIcon />
                 <Text style={styles.location_title}>
-                  {"Sector 67, Mohali"}
-                  {/* {data?.city?.[0]?.city_name}
+                  {data?.city?.[0]?.city_name}
                   {","}
                   {data?.district?.[0]?.district_name}
                   {","}
-                  {data?.state?.[0]?.state_name} */}
+                  {data?.state?.[0]?.state_name}
                 </Text>
               </View>
               {isNewYearOffer ? (
@@ -270,6 +272,7 @@ const styles = StyleSheet.create({
   carousel_img: {
     width: "100%",
     height: hp(144),
+    backgroundColor: colors.grey_19,
   },
   barber_details_continer: {
     paddingLeft: wp(28),

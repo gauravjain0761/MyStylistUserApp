@@ -16,6 +16,8 @@ import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { useAppSelector } from "../../redux/hooks";
+import moment from "moment";
 
 type RowItemValueProps = {
   title: string;
@@ -33,6 +35,9 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 
 const AppointmentDetails = () => {
   const { navigate } = useNavigation();
+  const { appointmentDetails } = useAppSelector((state) => state.appointment);
+  const { Appointment } = appointmentDetails;
+  const { userId } = Appointment;
 
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
@@ -48,13 +53,15 @@ const AppointmentDetails = () => {
       <ScrollView>
         <View style={styles.card_container}>
           <AppointmentDetailCard
-            images={images.barber5}
-            name={strings.Majid_Khan}
+            userImg={userId?.user_profile_images?.[0]?.image_medium}
+            name={userId?.name}
             rating={"4.6"}
             jobs={343}
             location={strings.Sector_Mohali}
-            date={"26 May,2024"}
-            time={"08:30PM"}
+            date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
+              "DD MMM,YYYY"
+            )}
+            time={Appointment?.timeSlot?.[0]?.availableTime}
           />
         </View>
 
@@ -69,16 +76,29 @@ const AppointmentDetails = () => {
 
         <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
           <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-          <RowItemValue title="Hair Cut" value="₹200" />
-          <RowItemValue title="Beard Trim" value="₹100" />
-          <RowItemValue title="Hair color" value="₹500" />
-          <RowItemValue title="Discount Applied" value="-₹300" />
-          <RowItemValue title="Tax" value="₹50" />
-          <RowItemValue title="Payment Method" value="Cash" />
+          {Appointment?.services?.map((item: any) => {
+            return (
+              <RowItemValue
+                title={item?.service_name}
+                value={`₹ ${item?.price}`}
+              />
+            );
+          })}
+          <RowItemValue
+            title="Discount Applied"
+            value={`-₹ ${Appointment?.discount}`}
+          />
+          <RowItemValue title="Tax" value={`₹ ${Appointment?.tax}`} />
+          <RowItemValue
+            title="Payment Method"
+            value={Appointment?.paymentType}
+          />
           <View style={styles.lineStyle} />
           <View style={styles.rowSpaceStyle}>
             <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-            <Text style={styles.valueTextStyle}>{"₹550.00"}</Text>
+            <Text
+              style={styles.valueTextStyle}
+            >{`₹ ${Appointment?.totalAmount}`}</Text>
           </View>
         </View>
       </ScrollView>

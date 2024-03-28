@@ -1,28 +1,53 @@
-import React from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  FlatList,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
-import DrawerHeader from "../../components/common/DrawerHeader";
+import React, { useEffect } from "react";
+import { StyleSheet, View, Text, FlatList, ScrollView } from "react-native";
 import { strings } from "../../helper/string";
 import { PastServices, barbers } from "../../helper/constunts";
 import BarberAppointmentCard from "../../components/common/BarberAppointmentCard";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
-import { images } from "../../theme/icons";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { BackHeader } from "../../components";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getAppointmentDetails, getUserAppointments } from "../../actions";
+import moment from "moment";
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
-  const onPresstoNavigate = () => {
-    navigate(screenName.AppointmentDetails);
+  const dispatch = useAppDispatch();
+  const { appointmentList } = useAppSelector((state) => state.appointment);
+
+  useEffect(() => {
+    async function getList() {
+      const userInfo = await getAsyncUserInfo();
+      console.log("userInfo?._id", userInfo?._id);
+      let data = {
+        userId: "65eed8e49e6593d24b2a52d2",
+        page: 1,
+        limit: 10,
+      };
+      let obj = {
+        data,
+        onSuccess: () => {},
+        onFailure: () => {},
+      };
+      dispatch(getUserAppointments(obj));
+    }
+    getList();
+  }, []);
+
+  const onPressItem = (item: any) => {
+    let obj = {
+      id: item?._id,
+      onSuccess: () => {
+        // @ts-ignore
+        navigate(screenName.AppointmentDetails);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getAppointmentDetails(obj));
   };
 
   return (
@@ -33,19 +58,44 @@ const Appointments = ({ navigation }) => {
         onPressMenu={() => navigation.openDrawer()}
       />
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.appointment_card}>
-          <BarberAppointmentCard
-            name={strings.Majid_Khan}
-            date={strings["26 May 2024"]}
-            time={strings["08:30 PM"]}
-            location={strings.Sector_Mohali}
-            service={strings.haircut_Classic_shaving}
-            type="Total Price"
-            price="500.00"
-            image={images.barber}
-            onPress={() => onPresstoNavigate()}
-          />
-        </View>
+        <FlatList
+          data={
+            appointmentList?.appointments?.filter(
+              (i: any) => i.appointmentType !== "past"
+            ) || []
+          }
+          renderItem={({ item, index }) => {
+            return (
+              <View style={styles.cards}>
+                <BarberAppointmentCard
+                  name={item.expertDetails?.name}
+                  date={moment(item?.timeSlot?.[0]?.availableDate).format(
+                    "DD MMM YYYY, "
+                  )}
+                  time={item?.timeSlot?.[0]?.availableTime}
+                  location={
+                    item.expertDetails?.city?.[0]?.city_name +
+                    ", " +
+                    item.expertDetails?.district?.[0]?.district_name +
+                    ", " +
+                    item.expertDetails?.state?.[0]?.state_name
+                  }
+                  service={item?.services
+                    ?.map((i: any) => i.service_name)
+                    .join(", ")}
+                  type={item.appointmentType}
+                  rating={item?.expertDetails?.averageRating}
+                  isCompleted={false}
+                  price={item.totalAmount}
+                  image={
+                    item.expertDetails.user_profile_images?.[0]?.image_small
+                  }
+                  onPress={() => onPressItem(item)}
+                />
+              </View>
+            );
+          }}
+        />
 
         <View style={styles?.stylists_title_container}>
           <View style={styles?.title_border}></View>
@@ -57,21 +107,38 @@ const Appointments = ({ navigation }) => {
 
         <View>
           <FlatList
-            data={PastServices}
+            data={
+              appointmentList?.appointments?.filter(
+                (i: any) => i.appointmentType === "past"
+              ) || []
+            }
             renderItem={({ item, index }) => {
               return (
                 <View style={styles.cards}>
                   <BarberAppointmentCard
-                    name={item.name}
-                    date={"28 May 2024,"}
-                    time={"08:30"}
-                    location={item.address}
-                    service={strings.haircut_Classic_shaving}
-                    type={item.type}
-                    isCompleted
-                    price={item.price}
-                    image={item.image}
-                    onPress={() => onPresstoNavigate()}
+                    name={item.expertDetails?.name}
+                    date={moment(item?.timeSlot?.[0]?.availableDate).format(
+                      "DD MMM YYYY, "
+                    )}
+                    time={item?.timeSlot?.[0]?.availableTime}
+                    location={
+                      item.expertDetails?.city?.[0]?.city_name +
+                      ", " +
+                      item.expertDetails?.district?.[0]?.district_name +
+                      ", " +
+                      item.expertDetails?.state?.[0]?.state_name
+                    }
+                    service={item?.services
+                      ?.map((i: any) => i.service_name)
+                      .join(", ")}
+                    type={item.appointmentType}
+                    rating={item?.expertDetails?.averageRating}
+                    isCompleted={true}
+                    price={item.totalAmount}
+                    image={
+                      item.expertDetails.user_profile_images?.[0]?.image_small
+                    }
+                    onPress={() => onPressItem(item)}
                   />
                 </View>
               );

@@ -21,11 +21,12 @@ import {
 } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { strings } from "../../helper/string";
+import { api } from "../../helper/apiConstants";
 
 type props = {
-  type?: "Give Feedback" | "Rating" | "Total Price" | string;
+  type?: string;
   name?: string;
-  rating?: string | number;
+  rating?: number;
   onPress?: () => void;
   location?: string;
   service?: string;
@@ -47,13 +48,18 @@ const BarberAppointmentCard = ({
   image,
   isCompleted,
   onPress,
+  rating = 0,
 }: props) => {
   return (
     <Pressable style={styles.conatiner} onPress={onPress}>
       <View style={styles.card_upper}>
         <View style={styles.img_container}>
           <View style={styles.img_con}>
-            <Image resizeMode="cover" source={image} style={styles.img} />
+            <Image
+              resizeMode="cover"
+              style={styles.img}
+              source={{ uri: api.BASE_URL + image }}
+            />
           </View>
         </View>
         <View style={styles.name_container}>
@@ -99,24 +105,36 @@ const BarberAppointmentCard = ({
         <View style={styles.subtract_right}></View>
       </View>
       <View style={styles.card_down}>
-        <View style={styles.down_contain}>
-          {type === "Total Price" ? (
+        {type === "past" ? (
+          <View style={styles.down_contain}>
+            {rating > 0 ? (
+              <View style={styles.start_conatiner}>
+                {Array.from(
+                  { length: rating },
+                  (_, index) => `Item ${index + 1}`
+                )?.map(() => {
+                  return <RatingStars />;
+                })}
+                {Array.from(
+                  { length: 5 - rating },
+                  (_, index) => `Item ${index + 1}`
+                )?.map(() => {
+                  return <RatingStars color={colors.active_dot} />;
+                })}
+              </View>
+            ) : (
+              <Text style={styles.feedbackTextStyle}>
+                {strings.Give_Feedback}
+              </Text>
+            )}
+            <Text style={styles.price}> ₹ {price}</Text>
+          </View>
+        ) : (
+          <View style={styles.down_contain}>
             <Text style={styles.price}>{strings["Total (INR)"]}</Text>
-          ) : type === "Rating" ? (
-            <View style={styles.start_conatiner}>
-              <RatingStars />
-              <RatingStars />
-              <RatingStars />
-              <RatingStars />
-              <RatingStars color={colors.active_dot} />
-            </View>
-          ) : type === "Give Feedback" ? (
-            <Text style={styles.feedbackTextStyle}>
-              {strings.Give_Feedback}
-            </Text>
-          ) : null}
-          <Text style={styles.price}> ₹ {price}</Text>
-        </View>
+            <Text style={styles.price}> ₹ {price}</Text>
+          </View>
+        )}
       </View>
     </Pressable>
   );
@@ -128,7 +146,7 @@ const styles = StyleSheet.create({
   conatiner: {
     backgroundColor: colors.white,
     paddingHorizontal: wp(12),
-    marginHorizontal: wp(20),
+    marginHorizontal: wp(15),
     borderRadius: wp(8),
     paddingVertical: hp(17),
     flexDirection: "column",
@@ -144,6 +162,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: hp(110),
     borderRadius: wp(10),
+    backgroundColor: colors.grey_19,
   },
   barber_info_conatiner: {},
   name_container: {
@@ -160,7 +179,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   time: {
-    ...commonFontStyle(fontFamily.semi_bold, 12, colors.grey_10),
+    ...commonFontStyle(fontFamily.semi_bold, 11, colors.grey_10),
     marginTop: hp(5),
     alignSelf: "flex-start",
   },

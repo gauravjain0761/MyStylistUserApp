@@ -17,6 +17,7 @@ import { screenName } from "../../helper/routeNames";
 import { strings } from "../../helper/string";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppSelector } from "../../redux/hooks";
 
 type HomeProps = {
   onPresslocation?: () => void;
@@ -34,6 +35,8 @@ const HomeHeader = ({
   onPressLike,
 }: HomeProps) => {
   const { navigate } = useNavigation();
+  const { profileData } = useAppSelector((state) => state.profile);
+  console.log("profileData", profileData);
 
   const onPressBell = () => {
     // @ts-ignore
@@ -44,7 +47,9 @@ const HomeHeader = ({
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <View style={styles?.drawer_btn}>
         <TouchableOpacity onPress={onPressProfile} style={styles.profile}>
-          <Text style={styles.profile_text}>K</Text>
+          <Text style={styles.profile_text}>
+            {profileData?.user?.name?.[0]}
+          </Text>
         </TouchableOpacity>
         <View style={styles.rowStyle}>
           <Image

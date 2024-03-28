@@ -7,7 +7,7 @@ import {
   IS_LOADING,
 } from "./dispatchTypes";
 import { makeAPIRequest } from "../helper/apiGlobal";
-import { GET, api } from "../helper/apiConstants";
+import { GET, POST, api } from "../helper/apiConstants";
 import { errorToast } from "../helper/globalFunction";
 
 export const getAllPackageByUser =
@@ -41,16 +41,18 @@ export const getAllPackageByUser =
       });
   };
 
-export const getAllPackages =
-  (): ThunkAction<void, RootState, unknown, AnyAction> => async (dispatch) => {
+export const getAllPackageByLocation =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
     let header = {
       "Content-Type": "application/json",
     };
     dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
-      method: GET,
-      url: api.getAllPackages,
+      method: POST,
+      url: api.allPackageByLocation,
       headers: header,
+      data: request.data,
     })
       .then((result: any) => {
         if (result.status === 200) {
@@ -63,5 +65,6 @@ export const getAllPackages =
       })
       .catch((error: any) => {
         console.log("error", error);
+        dispatch({ type: IS_LOADING, payload: false });
       });
   };

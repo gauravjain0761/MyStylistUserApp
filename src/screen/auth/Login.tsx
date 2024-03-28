@@ -49,6 +49,9 @@ const Login: FC = () => {
   const [city, setcity] = useState<any>([]);
   const dispatch = useAppDispatch();
   const navigation = useNavigation<any>();
+  const [selectedCity, setSelectedCity] = useState<any>({});
+
+  console.log("selectedCity", selectedCity);
 
   useEffect(() => {
     let obj = {
@@ -99,16 +102,16 @@ const Login: FC = () => {
         phone: phoneNum,
         name: name,
         state: {
-          state_id: city[0]?.state_id,
-          state_name: city[0]?.state_name,
+          state_id: selectedCity.state_id,
+          state_name: selectedCity.state_name,
         },
         district: {
-          district_id: city[0]?.district_id,
-          district_name: city[0]?.district_name,
+          district_id: selectedCity.district_id,
+          district_name: selectedCity.district_name,
         },
         city: {
-          city_id: city[0]?.city_id,
-          city_name: value,
+          city_id: selectedCity.city_id,
+          city_name: selectedCity.city_name,
         },
       };
       let obj = {
@@ -203,6 +206,7 @@ const Login: FC = () => {
                     value={value}
                     onChange={(item: any) => {
                       setValue(item.city_name);
+                      setSelectedCity(item);
                     }}
                     renderRightIcon={() => (
                       <Dropdown_Down_Arrow color="#9D9D9D" />

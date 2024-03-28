@@ -2,6 +2,7 @@ import { GETALLOFFERSBYUSER, GET_ALL_OFFERS } from "../actions/dispatchTypes";
 
 const initialState = {
   getalloffers: [],
+  allOffers: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -15,7 +16,7 @@ export default function (state = initialState, action: any) {
     case GET_ALL_OFFERS: {
       return {
         ...state,
-        getalloffers: action.payload,
+        allOffers: action.payload,
       };
     }
 

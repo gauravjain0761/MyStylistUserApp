@@ -9,6 +9,7 @@ import {
   GET_TERMSANDCONDITIONS,
   IS_LOADING,
 } from "./dispatchTypes";
+import { errorToast } from "../helper/globalFunction";
 
 export const getAllFAQ =
   (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -77,8 +78,6 @@ export const getUserDetails =
       .then(async (response: any) => {
         dispatch({ type: IS_LOADING, payload: false });
         if (response.status === 200) {
-          console.log("response", response);
-
           dispatch({
             type: GET_PROFILE_DATA,
             payload: response?.data,
@@ -87,6 +86,31 @@ export const getUserDetails =
         }
       })
       .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const editProfile =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "multipart/form-data",
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.editProfile,
+      headers: header,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        errorToast(error.response?.data?.errors?.[0]?.message);
         dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure) request.onFailure(error.response);
       });

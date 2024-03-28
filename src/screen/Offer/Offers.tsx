@@ -19,23 +19,38 @@ import { VerifyIcon } from "../../theme/SvgIcon";
 import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllOffers, getAllOffersByUser } from "../../actions/offerAction";
+import { getAllOffersByLocation } from "../../actions/offerAction";
 import moment from "moment";
+
+let offersOffList = [
+  { id: 1, off: "10%" },
+  { id: 2, off: "20%" },
+  { id: 3, off: "30%" },
+  { id: 4, off: "40%" },
+  { id: 5, off: "50%" },
+];
 
 const Offers = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const { userInfo } = useAppSelector((state) => state.common);
-  const { getalloffers } = useAppSelector((state) => state.offers);
+  const { profileData } = useAppSelector((state) => state.profile);
+  const { allOffers } = useAppSelector((state) => state.offers);
 
   useEffect(() => {
-    dispatch(getAllOffers());
+    let obj = {
+      data: {
+        city_id: profileData?.user.city?.[0]?.city_id,
+        limit: 10,
+        page: 1,
+      },
+    };
+    dispatch(getAllOffersByLocation(obj));
   }, []);
 
   const onPressMenu = () => {
     navigation.openDrawer();
   };
 
-  const onPressNewYearOffer = () => {
+  const onPressOfferItem = () => {
     navigation.navigate(screenName.NewYearOffer);
   };
 
@@ -52,10 +67,12 @@ const Offers = ({ navigation }) => {
           style={styles.bannerImgStyle}
           resizeMode="cover"
           source={{
-            uri: "https://img.freepik.com/premium-photo/portrait-young-gorgeous-woman-dressed-jewelry-set-necklace-ring-bracelet-earrings-pretty-blue-eyed-model-is-demonstrating-attractive-makeup-manicure_353119-75.jpg",
+            uri:
+              allOffers?.featured_image_url +
+              "/" +
+              allOffers?.offerBanner?.fileName,
           }}
         />
-        {/* <View> */}
         <FlatList
           style={styles.filterStyle}
           data={offer_filter}
@@ -86,7 +103,7 @@ const Offers = ({ navigation }) => {
             style={styles.flatListStyle}
             horizontal
             showsHorizontalScrollIndicator={false}
-            data={[1, 2, 3, 4]}
+            data={offersOffList}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
@@ -98,32 +115,52 @@ const Offers = ({ navigation }) => {
                     source={images.offers_view}
                   >
                     <Text style={styles.smallTextStyle}>{"Minimum"}</Text>
-                    <Text style={styles.boldTextStyle}>{"30% Off"}</Text>
+                    <Text style={styles.boldTextStyle}>
+                      {item?.off}
+                      {" Off"}
+                    </Text>
                   </ImageBackground>
                 </TouchableOpacity>
               );
             }}
           />
 
-          <TouchableOpacity onPress={onPressNewYearOffer}>
-            <ImageBackground
-              source={images.new_offres}
-              style={styles.imgStyle}
-              resizeMode="cover"
-            />
-          </TouchableOpacity>
           <FlatList
-            data={getalloffers?.offers || []}
+            data={allOffers.campaigns}
+            renderItem={({ item, index }) => {
+              return (
+                <View style={{}}>
+                  <ImageBackground
+                    resizeMode="cover"
+                    style={styles.imgStyle}
+                    source={{
+                      uri:
+                        allOffers?.featured_image_url +
+                        "/" +
+                        item?.campaign.fileName,
+                    }}
+                  />
+                </View>
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
+
+          <FlatList
+            data={allOffers?.offers || []}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity style={styles.offerContainer}>
+                <TouchableOpacity
+                  onPress={onPressOfferItem}
+                  style={styles.offerContainer}
+                >
                   <ImageBackground
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}
                     source={{
                       uri:
-                        getalloffers?.featured_image_url +
+                        allOffers?.featured_image_url +
                         "/" +
                         item?.featured_image,
                     }}
@@ -132,12 +169,20 @@ const Offers = ({ navigation }) => {
                   <View style={styles.infoContainer}>
                     <Image
                       resizeMode="cover"
-                      source={images.barber}
+                      source={{
+                        uri:
+                          allOffers?.featured_image_url +
+                          "/" +
+                          item?.expertDetails?.user_profile_images?.[0]
+                            .image_medium,
+                      }}
                       style={styles.barberImgStyle}
                     />
                     <View style={{ marginLeft: wp(10), flex: 1 }}>
                       <View style={styles.rowStyle}>
-                        <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+                        <Text style={styles.nameTextStyle}>
+                          {item?.expertDetails?.name}
+                        </Text>
                         <VerifyIcon width={15} height={15} />
                       </View>
                       <Text style={styles.addressTextStyle}>
@@ -192,8 +237,12 @@ const styles = StyleSheet.create({
   },
   imgStyle: {
     height: hp(290),
-    width: screen_width,
-    marginTop: hp(10),
+    width: screen_width - wp(30),
+    marginTop: hp(15),
+    backgroundColor: colors.grey_19,
+    alignSelf: "center",
+    borderRadius: wp(10),
+    marginBottom: hp(20),
   },
   offerContainer: {
     height: hp(366),
@@ -222,6 +271,7 @@ const styles = StyleSheet.create({
     height: wp(48),
     width: wp(48),
     borderRadius: 10,
+    backgroundColor: colors.grey_19,
   },
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),

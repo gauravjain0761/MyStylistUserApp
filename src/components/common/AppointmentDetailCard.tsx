@@ -26,6 +26,7 @@ import { commonFontStyle } from "../../theme/fonts";
 import { strings } from "../../helper/string";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { icons, images } from "../../theme/icons";
 
 type props = {
   type?: "Give Feedback" | "Rating" | "Total Price";
@@ -37,7 +38,7 @@ type props = {
   service?: string;
   price?: string;
   jobs?: number | string;
-  images?: any;
+  userImg?: any;
   onPressRating?: any;
   date?: any;
   time?: any;
@@ -52,7 +53,7 @@ const AppointmentDetailCard = ({
   service,
   type,
   price,
-  images,
+  userImg,
   onPressRating,
   rating,
   jobs,
@@ -70,7 +71,11 @@ const AppointmentDetailCard = ({
         <View style={styles.information_container}>
           <View style={styles.img_container}>
             <View style={styles.img_con}>
-              <Image resizeMode="stretch" source={images} style={styles.img} />
+              <Image
+                resizeMode="cover"
+                source={{ uri: userImg }}
+                style={styles.img}
+              />
             </View>
           </View>
           <View style={styles.name_container}>
@@ -111,8 +116,15 @@ const AppointmentDetailCard = ({
             <Text style={styles.btn_title}>{strings.Call_Stylist}</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.subtract_left}></View>
-        <View style={styles.subtract_right}></View>
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.subtract_left}></View>
+          <Image
+            resizeMode="contain"
+            style={{ width: "100%" }}
+            source={images.dashline}
+          />
+          <View style={styles.subtract_right}></View>
+        </View>
       </Pressable>
       <View style={styles.card_down}>
         <View style={styles.down_contain}>
@@ -171,6 +183,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: hp(110),
     borderRadius: wp(10),
+    backgroundColor: colors.grey_19,
   },
   name_container: {
     alignItems: "center",
@@ -204,9 +217,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   card_upper: {
-    borderBottomColor: colors.dashed_boredr,
-    borderBottomWidth: 1,
-    borderStyle: "dashed",
     width: "100%",
   },
   subtract_left: {

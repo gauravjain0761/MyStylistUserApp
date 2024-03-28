@@ -154,4 +154,5 @@ export const strings = {
   "Sector / Block": "Sector / Block",
   "Landmark (optional)": "Landmark (optional)",
   "Save address": "Save address",
+  Save: "Save",
 };

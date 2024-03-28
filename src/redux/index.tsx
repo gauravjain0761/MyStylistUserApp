@@ -10,6 +10,7 @@ import locationReducer from "./locationReducer";
 import offerReducers from "./offerReducers";
 import packagesReducers from "./packagesReducers";
 import favouriteReducers from "./favouriteReducers";
+import appointmentReducer from "./appointmentReducer";
 
 const middleware = [thunk];
 const reducers = combineReducers({
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   offers: offerReducers,
   package: packagesReducers,
   favourite: favouriteReducers,
+  appointment: appointmentReducer,
 });
 
 const RootReducer = (state: any, action: any) => {

@@ -10,6 +10,7 @@ import {
   IS_LOADING,
 } from "./dispatchTypes";
 import { errorToast } from "../helper/globalFunction";
+import { getAsyncToken } from "../helper/asyncStorage";
 
 export const getAllFAQ =
   (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -95,6 +96,7 @@ export const editProfile =
   (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
   async (dispatch) => {
     let header = {
+      Authorization: await getAsyncToken(),
       "Content-Type": "multipart/form-data",
     };
     dispatch({ type: IS_LOADING, payload: true });

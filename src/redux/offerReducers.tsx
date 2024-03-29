@@ -1,16 +1,16 @@
-import { GETALLOFFERSBYUSER, GET_ALL_OFFERS } from "../actions/dispatchTypes";
+import { GET_ALL_OFFER, GET_ALL_OFFERS } from "../actions/dispatchTypes";
 
 const initialState = {
-  getalloffers: [],
+  userOfferList: [],
   allOffers: {},
 };
 
 export default function (state = initialState, action: any) {
   switch (action.type) {
-    case GETALLOFFERSBYUSER: {
+    case GET_ALL_OFFER: {
       return {
         ...state,
-        getalloffers: action.payload,
+        userOfferList: action.payload,
       };
     }
     case GET_ALL_OFFERS: {

@@ -12,7 +12,7 @@ import { hp, screen_width, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { PackagesInnerItem } from "..";
+import { useAppSelector } from "../../redux/hooks";
 
 type Props = {
   data: any;
@@ -20,6 +20,7 @@ type Props = {
 
 const MyWorkItem = ({ data }: Props) => {
   const [expanded, setExpanded] = useState(true);
+  const { itemDetails } = useAppSelector((state) => state.home);
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
@@ -29,7 +30,7 @@ const MyWorkItem = ({ data }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Hair Cut"}</Text>
+        <Text style={styles.titleTextStyle}>{""}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
@@ -38,7 +39,7 @@ const MyWorkItem = ({ data }: Props) => {
         <FlatList
           style={styles.listContainerStyle}
           numColumns={3}
-          data={[1, 2, 3, 4, 5, 6, 7, 8]}
+          data={itemDetails?.user?.user_work_images}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
             return (
@@ -47,7 +48,10 @@ const MyWorkItem = ({ data }: Props) => {
                   resizeMode="cover"
                   style={styles.imgStyle}
                   source={{
-                    uri: "https://i.pinimg.com/736x/0a/21/70/0a217095d0a9aa63c28a6adca86c8a82.jpg",
+                    uri:
+                      itemDetails?.user_work_images_url +
+                      "/" +
+                      item.image_medium,
                   }}
                 />
               </View>

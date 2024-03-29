@@ -25,6 +25,7 @@ const Appointments = ({ navigation }) => {
       console.log("userInfo?._id", userInfo?._id);
       let data = {
         userId: "65eed8e49e6593d24b2a52d2",
+        // userId: userInfo?._id,
         page: 1,
         limit: 10,
       };
@@ -97,13 +98,17 @@ const Appointments = ({ navigation }) => {
           }}
         />
 
-        <View style={styles?.stylists_title_container}>
-          <View style={styles?.title_border}></View>
-          <Text style={styles?.your_stylists_title}>
-            {strings?.Past_Services}
-          </Text>
-          <View style={styles?.title_border}></View>
-        </View>
+        {appointmentList?.appointments?.filter(
+          (i: any) => i.appointmentType === "past"
+        )?.length > 0 ? (
+          <View style={styles?.stylists_title_container}>
+            <View style={styles?.title_border}></View>
+            <Text style={styles?.your_stylists_title}>
+              {strings?.Past_Services}
+            </Text>
+            <View style={styles?.title_border}></View>
+          </View>
+        ) : null}
 
         <View>
           <FlatList

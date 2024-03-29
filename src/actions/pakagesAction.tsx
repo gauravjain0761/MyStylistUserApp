@@ -2,7 +2,7 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../helper/Types";
 import { AnyAction } from "redux";
 import {
-  GETALLPACKAGEBYUSER,
+  GET_All_PACKAGE_LIST,
   GET_ALL_PACKAGES,
   IS_LOADING,
 } from "./dispatchTypes";
@@ -19,20 +19,17 @@ export const getAllPackageByUser =
     dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: GET,
-      url: api.getAllPackageByUser + `${request?.data}`,
+      url: api.getAllPackageByUser + `${request?.id}`,
       headers: header,
     })
       .then((result: any) => {
         if (result.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
-          if (result?.data) {
-            dispatch({
-              type: GETALLPACKAGEBYUSER,
-              payload: result?.data,
-            });
-          } else {
-            errorToast(result.data);
-          }
+          dispatch({
+            type: GET_All_PACKAGE_LIST,
+            payload: result?.data,
+          });
+
           if (request.onSuccess) request.onSuccess(result.data);
         }
       })

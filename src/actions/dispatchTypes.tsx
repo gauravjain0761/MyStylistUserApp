@@ -8,6 +8,7 @@ export const USER_LOGOUT = "USER_LOGOUT";
 
 export const GETALLSERVICES = "GETALLSERVICES";
 export const USER_LIST = "USER_LIST";
+export const ITEM_DETAILS = "ITEM_DETAILS";
 
 //Profile
 export const GET_FAQ = "GET_FAQ";
@@ -20,11 +21,11 @@ export const UPDATELOCATION = "UPDATE_LOCATION";
 export const COORD = "COORD";
 
 //offers
-export const GETALLOFFERSBYUSER = "GETALLOFFERSBYUSER";
+export const GET_ALL_OFFER = "GET_ALL_OFFER";
 export const GET_ALL_OFFERS = "GET_ALL_OFFERS";
 
 //pakages
-export const GETALLPACKAGEBYUSER = "GETALLPACKAGEBYUSER";
+export const GET_All_PACKAGE_LIST = "GET_All_PACKAGE_LIST";
 export const GET_ALL_PACKAGES = "GET_ALL_PACKAGES";
 
 // favourite

@@ -21,7 +21,14 @@ import {
   StylistItem,
 } from "../../components";
 import { images } from "../../theme/icons";
-import { hp, screen_width, wp } from "../../helper/globalFunction";
+import {
+  convertStringToTitle,
+  formatData,
+  formatWorkingHours,
+  hp,
+  screen_width,
+  wp,
+} from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import {
@@ -57,6 +64,13 @@ import Animation, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  getAllOffersByUser,
+  getAllPackageByUser,
+  saveAsfavourite,
+} from "../../actions";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 type TagViewProps = {
   Icon?: any;
@@ -108,20 +122,37 @@ const TagView = ({
   );
 };
 
-const amenitiesData = [
-  { id: 1, title: "Parking Space", icon: <TreeIcon /> },
-  { id: 2, title: "Music", icon: <MusicIcon /> },
-  { id: 2, title: "Wi-Fi", icon: <WiFiIcon /> },
-  { id: 2, title: "Selfie Station", icon: <CameraIcon /> },
-  { id: 2, title: "Child-Friendly", icon: <ProfileIcon /> },
-  { id: 2, title: "Credit Cards Accepted", icon: <CardIcon /> },
-  { id: 2, title: "Pets Friendly", icon: <PetIcon /> },
-  { id: 2, title: "Power Backup", icon: <ElectricityIcon /> },
-];
+const getAmenitiesIcon = (key: string) => {
+  switch (key) {
+    case "parking_space":
+      return <TreeIcon />;
+    case "music":
+      return <MusicIcon />;
+    case "credit_cards_accepted":
+      return <CardIcon />;
+    case "wi_fi":
+      return <WiFiIcon />;
+    case "pets_friendly":
+      return <PetIcon />;
+    case "selfie_station":
+      return <CameraIcon />;
+    case "child_friendly":
+      return <ProfileIcon />;
+    case "power_backup":
+      return <ElectricityIcon />;
+
+    default:
+      break;
+  }
+};
 
 const YourStylist = () => {
+  const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
-  const [isOffers, setIsOffers] = useState(false);
+  const { itemDetails } = useAppSelector((state) => state.home);
+  const { userOfferList } = useAppSelector((state) => state.offers);
+  const { userPackageList } = useAppSelector((state) => state.package);
+  const [isOffers, setIsOffers] = useState(true);
   const [isPackages, setIsPackages] = useState(false);
   const [isMyWork, setIsMyWork] = useState(false);
   const [isModal, setIsModal] = useState(false);
@@ -144,6 +175,14 @@ const YourStylist = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    let obj = {
+      id: itemDetails?.user._id,
+    };
+    dispatch(getAllOffersByUser(obj));
+    dispatch(getAllPackageByUser(obj));
+  }, [itemDetails]);
 
   const onPressOffers = () => {
     setIsOffers(true);
@@ -196,6 +235,20 @@ const YourStylist = () => {
     }
   };
 
+  const onPressLike = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let data = {
+      userId: userInfo._id,
+      expertId: itemDetails?.user?._id,
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(saveAsfavourite(obj));
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.headerContainer} edges={["top"]}>
@@ -215,7 +268,7 @@ const YourStylist = () => {
           />
         </Animation.View>
         {animatedValue === 0 ? (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPressLike}>
             <FillLike />
           </TouchableOpacity>
         ) : null}
@@ -235,7 +288,16 @@ const YourStylist = () => {
         onScroll={handleScroll}
       >
         <View style={styles.rowStyle}>
-          <Image style={styles.personStyle} source={images.barber} />
+          <Image
+            resizeMode="cover"
+            style={styles.personStyle}
+            source={{
+              uri:
+                itemDetails?.user_profile_images_url +
+                "/" +
+                itemDetails?.user_profile_images_url?.[0]?.image_medium,
+            }}
+          />
           <View style={styles.columStyle}>
             <View
               style={{
@@ -243,7 +305,9 @@ const YourStylist = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+              <Text style={styles.nameTextStyle}>
+                {itemDetails?.user?.name}
+              </Text>
               <VerifyIcon />
             </View>
             <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
@@ -251,7 +315,9 @@ const YourStylist = () => {
                 style={styles.startContainer}
                 onPress={() => setIsModal(!isModal)}
               >
-                <Text style={styles.startTextStyle}>{4.6}</Text>
+                <Text style={styles.startTextStyle}>
+                  {itemDetails?.user?.averageRating}
+                </Text>
                 <StarIcon />
               </TouchableOpacity>
               <View style={styles.dotStyle} />
@@ -260,7 +326,11 @@ const YourStylist = () => {
             <View style={styles.rowNameStyle}>
               <CarIcon />
               <Text style={styles.locationTextStyle}>
-                {"Sector 67, Mohali"}
+                {itemDetails?.user?.city?.[0].city_name}
+                {","}
+                {itemDetails?.user?.district?.[0].district_name}
+                {","}
+                {itemDetails?.user?.state?.[0].state_name}
               </Text>
             </View>
           </View>
@@ -330,7 +400,7 @@ const YourStylist = () => {
             <View>
               <FlatList
                 style={{ flex: 1 }}
-                data={[1]}
+                data={userOfferList?.offers}
                 scrollEnabled={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => {
@@ -357,7 +427,7 @@ const YourStylist = () => {
             <View>
               <FlatList
                 style={{ flex: 1 }}
-                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                data={[1]}
                 scrollEnabled={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => {
@@ -375,29 +445,47 @@ const YourStylist = () => {
         >
           <View>
             <Text style={styles.boldTextStyle}>{strings["Availability"]}</Text>
-            <View
-              style={{ ...styles.rowSpaceBottomViewStyle, marginTop: hp(20) }}
-            >
-              <Text>{strings["All Days"]}</Text>
-              <Text>{"10AM - 10PM"}</Text>
-            </View>
-            <View style={styles.rowSpaceBottomViewStyle}>
-              <Text>{"Tuesday"}</Text>
-              <Text>{"Holiday"}</Text>
-            </View>
+
+            {formatWorkingHours(itemDetails?.user?.working_hours)?.map(
+              (item: any, index) => {
+                return (
+                  <View
+                    style={{
+                      ...styles.rowSpaceBottomViewStyle,
+                      marginTop: index === 0 ? hp(20) : hp(10),
+                    }}
+                  >
+                    <Text style={styles.dayTextStyle}>{item.day}</Text>
+                    <Text style={styles.dayValueTextStyle}>
+                      {item?.open == "Yes"
+                        ? `${item.from} - ${item.to}`
+                        : "Holiday"}
+                    </Text>
+                  </View>
+                );
+              }
+            )}
             <View style={styles.lineBottomStyle} />
             <Text style={styles.boldTextStyle}>{strings["Amenities"]}</Text>
             <FlatList
               numColumns={4}
-              data={amenitiesData}
+              data={formatData(itemDetails?.user?.amenities?.[0])}
               keyExtractor={(item, index) => index.toString()}
               renderItem={({ item, index }) => {
-                return (
-                  <View key={index} style={styles.itemContainer}>
-                    <View style={styles.circleContainer}>{item.icon}</View>
-                    <Text style={styles.itemTextStyle}>{item.title}</Text>
-                  </View>
-                );
+                if (item?.value === "Yes") {
+                  return (
+                    <View key={index} style={styles.itemContainer}>
+                      <View style={styles.circleContainer}>
+                        {getAmenitiesIcon(item.title)}
+                      </View>
+                      <Text style={styles.itemTextStyle}>
+                        {convertStringToTitle(item.title)}
+                      </Text>
+                    </View>
+                  );
+                } else {
+                  return null;
+                }
               }}
             />
           </View>
@@ -441,6 +529,7 @@ const styles = StyleSheet.create({
     height: hp(111),
     width: wp(100),
     borderRadius: wp(10),
+    backgroundColor: colors.grey_19,
   },
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 26, colors.black),
@@ -641,5 +730,12 @@ const styles = StyleSheet.create({
   },
   shareContainer: {
     marginHorizontal: wp(5),
+  },
+  dayTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),
+    textTransform: "capitalize",
+  },
+  dayValueTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.black),
   },
 });

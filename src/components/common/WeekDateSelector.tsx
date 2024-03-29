@@ -23,6 +23,7 @@ type props = {
   containerStyle?: ViewStyle;
   itemSeparator?: ViewStyle;
   itemStyle?: ViewStyle;
+  selectIndex: any;
 };
 
 const WeekDateSelector = ({
@@ -31,6 +32,7 @@ const WeekDateSelector = ({
   containerStyle,
   itemSeparator,
   itemStyle,
+  selectIndex,
 }: props) => {
   return (
     <View style={[styles.container, containerStyle]}>
@@ -47,23 +49,23 @@ const WeekDateSelector = ({
               style={[
                 {
                   ...styles.itemStyle,
-                  borderWidth: item?.isSelected ? 1.5 : 1,
-                  backgroundColor: item?.isSelected
-                    ? colors.green_opacity
-                    : colors.white,
-                  borderColor: item?.isSelected
-                    ? colors.theme_1
-                    : colors.date_slot_border,
+                  borderWidth: selectIndex === index ? 1.5 : 1,
+                  backgroundColor:
+                    selectIndex === index ? colors.green_opacity : colors.white,
+                  borderColor:
+                    selectIndex === index
+                      ? colors.theme_1
+                      : colors.date_slot_border,
                 },
                 itemStyle,
               ]}
             >
               <Text style={styles.varTextStyle}>
-                {moment(item.date).format("ddd")}
+                {moment(item.title).format("ddd")}
               </Text>
               <View style={{ height: hp(5) }} />
               <Text style={styles.dayTextStyle}>
-                {moment(item.date).format("D")}
+                {moment(item.title).format("D")}
               </Text>
             </TouchableOpacity>
           );

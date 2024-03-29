@@ -56,6 +56,7 @@ import {
   getAllBanner,
   getAllServicesForMaleAndFemale,
   getAllSubServicesForMobile,
+  getUserItemDetails,
   getUsersByLocation,
 } from "../../actions/homeAction";
 import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
@@ -216,9 +217,20 @@ const Home = () => {
     setActiveIndex(index);
   };
 
-  const onPressItem = () => {
-    //@ts-ignore
-    navigate(screenName.YourStylist);
+  const onPressItem = (item: any) => {
+    let userid = item._id;
+    let obj = {
+      isLoading: true,
+      data: {
+        userid: userid,
+      },
+      onSuccess: () => {
+        //@ts-ignore
+        navigate(screenName.YourStylist);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
   };
 
   const onPresstoNavigate = () => {
@@ -506,7 +518,7 @@ const Home = () => {
                   jobs={item?.jobDone}
                   location={item.address}
                   offers={item?.offers}
-                  onPress={onPressItem}
+                  onPress={() => onPressItem(item)}
                   onPressRating={setReviewModal}
                   barberdetailscontinerStyle={styles.barberdetailscontinerStyle}
                 />

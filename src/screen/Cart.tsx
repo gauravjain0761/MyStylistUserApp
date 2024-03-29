@@ -16,6 +16,7 @@ import {
 } from "../components";
 import { strings } from "../helper/string";
 import {
+  convertToOutput,
   dispatchNavigation,
   generateTimes,
   generateWeekDates,
@@ -29,6 +30,9 @@ import { images } from "../theme/icons";
 import moment from "moment";
 import { screenName } from "../helper/routeNames";
 import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch } from "../redux/hooks";
+import { getExpertAvailability } from "../actions/commonActions";
+import { getAsyncUserInfo } from "../helper/asyncStorage";
 
 type RowItemValueProps = {
   title: string;
@@ -45,34 +49,44 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 };
 
 const Cart = () => {
-  const [dates, setDates] = useState(generateWeekDates());
-  const [times, setTimes] = useState(generateTimes());
+  const dispatch = useAppDispatch();
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
   const [isShowCongrestModal, setIsShowCongrestModal] = useState(false);
   const { navigate } = useNavigation();
+  const [selectedDateIndex, setSelectedDate] = useState(null);
+  const [selectedTimeIndex, setSelectedTime] = useState(null);
 
-  const onPressDateItem = (item: any) => {
-    let data = [...dates];
+  useEffect(() => {
+    async function getDatesList() {
+      let userInfo = await getAsyncUserInfo();
+      let data = generateWeekDates();
 
-    dates.map((eItem, index) => {
-      if (eItem.id === item.id) {
-        eItem.isSelected = true;
-      } else {
-        eItem.isSelected = false;
-      }
-    });
-    setDates(data);
+      let obj = {
+        data: {
+          startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
+          endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+          timeSlotDuration: 1,
+          expertId: userInfo._id,
+        },
+        onSuccess: (response: any) => {
+          setDates(convertToOutput(response));
+        },
+        onFailure: () => {},
+      };
+      dispatch(getExpertAvailability(obj));
+    }
+    getDatesList();
+  }, []);
+
+  const onPressDateItem = (index: any) => {
+    setSelectedDate(index);
+    setTimes(dates[index].value);
+    setSelectedTime(null);
   };
 
-  const onPressTimeItem = (item: any) => {
-    let data = [...times];
-    times.map((eItem, index) => {
-      if (eItem.id === item.id) {
-        eItem.isSelected = true;
-      } else {
-        eItem.isSelected = false;
-      }
-    });
-    setTimes(data);
+  const onPressTimeItem = (index: any) => {
+    setSelectedTime(index);
   };
 
   let data = ["1"];
@@ -157,14 +171,16 @@ const Cart = () => {
               <Text style={styles.titleStyle}>{strings["Select Date"]}</Text>
               <WeekDateSelector
                 list={dates}
-                onPressDate={(index) => onPressDateItem(dates[index])}
+                selectIndex={selectedDateIndex}
+                onPressDate={(index) => onPressDateItem(index)}
               />
             </View>
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
               <Text style={styles.titleStyle}>{strings["Select Time"]}</Text>
               <TimeSelector
                 data={times}
-                onPressTime={(index) => onPressTimeItem(times[index])}
+                onPressTime={(index) => onPressTimeItem(index)}
+                selectIndex={selectedTimeIndex}
               />
             </View>
             <CongratulationModal

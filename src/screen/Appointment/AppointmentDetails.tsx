@@ -37,7 +37,7 @@ const AppointmentDetails = () => {
   const { navigate } = useNavigation();
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
   const { Appointment } = appointmentDetails;
-  const { userId } = Appointment;
+  const { userId, expertId } = Appointment;
 
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
@@ -54,10 +54,16 @@ const AppointmentDetails = () => {
         <View style={styles.card_container}>
           <AppointmentDetailCard
             userImg={userId?.user_profile_images?.[0]?.image_medium}
-            name={userId?.name}
-            rating={"4.6"}
-            jobs={343}
-            location={strings.Sector_Mohali}
+            name={expertId?.name}
+            rating={expertId?.averageRating}
+            jobs={expertId?.jobDone}
+            location={
+              expertId?.addresses?.[0].address?.houseNumber +
+              "," +
+              expertId?.addresses?.[0].address?.sector +
+              "," +
+              expertId?.addresses?.[0].address?.landmark
+            }
             date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
               "DD MMM,YYYY"
             )}
@@ -140,7 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary_light_blue_4,
     paddingVertical: hp(18),
     paddingHorizontal: wp(20),
-    marginHorizontal: hp(20),
+    marginHorizontal: hp(15),
     borderRadius: wp(8),
   },
   otp_title: {
@@ -160,6 +166,7 @@ const styles = StyleSheet.create({
     padding: wp(13),
     backgroundColor: colors.white,
     marginBottom: hp(40),
+    marginHorizontal: hp(15),
   },
   titleStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),

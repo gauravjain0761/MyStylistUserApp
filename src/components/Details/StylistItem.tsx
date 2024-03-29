@@ -18,7 +18,7 @@ type Props = {
   data: any;
 };
 
-const StylistItem = ({ isOffer, data }: Props) => {
+const StylistItem = ({ isOffer, data, offerList }: Props) => {
   const [expanded, setExpanded] = useState(true);
 
   const onPressArrow = () => {
@@ -29,7 +29,7 @@ const StylistItem = ({ isOffer, data }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Offers"}</Text>
+        <Text style={styles.titleTextStyle}>{data?.offer_name}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>

@@ -37,10 +37,13 @@ export const api = {
 
   // favourite
   getUsersFavList: "favourite/getUsersFavList",
+  saveAsfavourite: "saveAsfavourite",
 
   // Appointments
   userAppointments: "appointment/getUserAppointments",
   appointmentDetails: "appointment/getAppointmentDetails/",
+
+  expertAvailability: "expertUnavailability/getExpertAvailability",
 };
 
 export const POST = "POST";

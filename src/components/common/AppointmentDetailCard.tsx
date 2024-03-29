@@ -97,7 +97,9 @@ const AppointmentDetailCard = ({
             </View>
             <View style={styles.location_container}>
               <CarIcon />
-              <Text style={styles.location_title}>{location}</Text>
+              <Text numberOfLines={1} style={styles.location_title}>
+                {location}
+              </Text>
             </View>
             <Text style={styles.service_title}>{service}</Text>
           </View>
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
   conatiner: {
     backgroundColor: colors.white,
     paddingHorizontal: wp(15),
-    marginHorizontal: wp(20),
+    marginHorizontal: wp(15),
     borderRadius: wp(8),
     paddingVertical: hp(17),
     flexDirection: "column",
@@ -210,6 +212,7 @@ const styles = StyleSheet.create({
   },
   location_title: {
     ...commonFontStyle(fontFamily.medium, 15, colors.grey_9),
+    flex: 1,
   },
   service_title: {
     ...commonFontStyle(fontFamily.medium, 15, colors.grey_11),

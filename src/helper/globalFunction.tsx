@@ -120,3 +120,58 @@ export const openImagePicker = ({
       });
   } catch (error) {}
 };
+
+export const formatWorkingHours = (workingHoursData: any) => {
+  const formattedHours: any = [];
+
+  // Loop through each day
+  for (const day in workingHoursData[0]) {
+    if (day !== "_id") {
+      formattedHours.push({
+        day,
+        open: workingHoursData[0][day].open,
+        from: workingHoursData[0][day].from,
+        to: workingHoursData[0][day].to,
+      });
+    }
+  }
+
+  return formattedHours;
+};
+
+export const formatData = (data: any) => {
+  const formattedOutput: any = [];
+
+  for (const key in data) {
+    if (key !== "_id") {
+      formattedOutput.push({
+        title: key,
+        value: data[key],
+      });
+    }
+  }
+
+  return formattedOutput;
+};
+
+export const convertStringToTitle = (str: string) => {
+  // Split the string by underscore and capitalize each word
+  const words = str
+    .split("_")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
+  // Join the words with space
+  return words.join(" ");
+};
+
+export function convertToOutput(input: any) {
+  const output: any = [];
+
+  for (const [date, values] of Object.entries(input)) {
+    output.push({
+      title: date,
+      value: values,
+    });
+  }
+
+  return output;
+}

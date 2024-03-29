@@ -53,10 +53,14 @@ const Profile = () => {
     { label: "Female", value: "2" },
   ];
 
+  console.log("profileData?.user", profileData?.user?.gender);
+
   useEffect(() => {
     setName(profileData?.user?.name || "");
     setEmail(profileData?.user?.email || "");
     setPhone(profileData?.user?.phone || "");
+    setValue(profileData?.user?.gender);
+    setDate(profileData?.user?.birthday);
     setDate("");
     if (profileData?.user?.user_profile_images?.length > 0) {
       setImageData({

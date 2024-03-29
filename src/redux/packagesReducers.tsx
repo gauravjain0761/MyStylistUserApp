@@ -1,10 +1,11 @@
 import {
-  GETALLPACKAGEBYUSER,
+  GET_All_PACKAGE_LIST,
   GET_ALL_PACKAGES,
 } from "../actions/dispatchTypes";
 
 const initialState = {
   allpackages: [],
+  userPackageList: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -13,6 +14,12 @@ export default function (state = initialState, action: any) {
       return {
         ...state,
         allpackages: action.payload,
+      };
+    }
+    case GET_All_PACKAGE_LIST: {
+      return {
+        ...state,
+        userPackageList: action.payload,
       };
     }
     default:

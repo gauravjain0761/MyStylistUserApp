@@ -20,6 +20,7 @@ type props = {
   onPressTime: (number: number) => void;
   containerStyle?: ViewStyle;
   itemStyle?: ViewStyle;
+  selectIndex: number;
 };
 
 const TimeSelector = ({
@@ -27,6 +28,7 @@ const TimeSelector = ({
   onPressTime,
   containerStyle,
   itemStyle,
+  selectIndex,
 }: props) => {
   return (
     <View style={[styles.container, containerStyle]}>
@@ -38,13 +40,13 @@ const TimeSelector = ({
             style={[
               {
                 ...styles.itemContainer,
-                borderWidth: item?.isSelected ? 1.5 : 1,
-                backgroundColor: item?.isSelected
-                  ? colors.green_opacity
-                  : colors.white,
-                borderColor: item?.isSelected
-                  ? colors.theme_1
-                  : colors.date_slot_border,
+                borderWidth: selectIndex === index ? 1.5 : 1,
+                backgroundColor:
+                  selectIndex === index ? colors.green_opacity : colors.white,
+                borderColor:
+                  selectIndex === index
+                    ? colors.theme_1
+                    : colors.date_slot_border,
               },
               itemStyle,
             ]}

@@ -15,9 +15,10 @@ import { PackagesInnerItem } from "..";
 
 type Props = {
   data: any;
+  packages: any;
 };
 
-const PackagesItem = ({ data }: Props) => {
+const PackagesItem = ({ packages }: Props) => {
   const [expanded, setExpanded] = useState(true);
 
   const onPressArrow = () => {
@@ -28,17 +29,17 @@ const PackagesItem = ({ data }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Hair Treatment"}</Text>
+        <Text style={styles.titleTextStyle}>{"Our Packages"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
       </TouchableOpacity>
       {expanded ? (
         <FlatList
-          data={[1, 2]}
+          data={packages?.packages || []}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            return <PackagesInnerItem data={item} />;
+            return <PackagesInnerItem data={item} key={index} />;
           }}
         />
       ) : null}

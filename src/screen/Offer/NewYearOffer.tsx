@@ -29,15 +29,21 @@ import { barbers, stylists_filter } from "../../helper/constunts";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { screenName } from "../../helper/routeNames";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getUserItemDetails } from "../../actions";
 
 const NewYearOffer = () => {
+  const dispatch = useAppDispatch();
+  const { params } = useRoute();
   const { navigate } = useNavigation();
   const [isModal, setIsModal] = useState(false);
   const [costmodal, setCostmodal] = useState(false);
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
   const [reviewModal, setReviewModal] = useState(false);
+
+  const { usersWithCampaignList } = useAppSelector((state) => state.offers);
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
@@ -72,9 +78,21 @@ const NewYearOffer = () => {
       setCostmodal(!costmodal);
     }
   };
-  const onPressItem = () => {
+  const onPressItem = (item: any) => {
     //@ts-ignore
-    navigate(screenName.YourStylist);
+    let userid = item._id;
+    let obj = {
+      isLoading: true,
+      data: {
+        userid: userid,
+      },
+      onSuccess: () => {
+        //@ts-ignore
+        navigate(screenName.YourStylist);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
   };
 
   const onPresstoNavigate = () => {
@@ -83,9 +101,12 @@ const NewYearOffer = () => {
 
   return (
     <View style={styles.conatiner}>
-      <BackHeader isSearch title={strings["New Year Offer"]} />
+      <BackHeader isSearch title={params?.item?.campaign?.title} />
       <ScrollView stickyHeaderIndices={[1]}>
-        <Image source={images.new_year_offers} style={styles.bannerImgStyle} />
+        <Image
+          style={styles.bannerImgStyle}
+          source={{ uri: params?.item?.bannerImg }}
+        />
         <View style={styles?.service_filter_conatiner}>
           <FlatList
             data={stylists_filter}
@@ -117,20 +138,22 @@ const NewYearOffer = () => {
         <View style={styles?.barber_card_container}>
           <FlatList
             scrollEnabled={false}
-            data={barbers}
+            data={usersWithCampaignList?.usersWithCampaign}
             renderItem={({ item, index }) => {
               return (
                 <Barber_Card
+                  data={item?.user}
                   isNewYearOffer
-                  name={item.name}
+                  name={item.user.name}
                   type="Without Service"
-                  images={item?.image}
-                  rating={item.rating}
-                  jobs={item?.jobs_done}
+                  images={item?.user?.user_profile_images}
+                  rating={item?.user?.averageRating}
+                  jobs={item?.user?.jobDone}
                   location={item.address}
                   offers={item?.offers}
-                  onPress={onPressItem}
+                  onPress={() => onPressItem(item?.user)}
                   onPressRating={setReviewModal}
+                  featured_image_url={usersWithCampaignList?.featured_image_url}
                 />
               );
             }}

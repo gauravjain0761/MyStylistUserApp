@@ -16,9 +16,10 @@ import { StylistInnerItem } from "..";
 type Props = {
   isOffer?: boolean;
   data: any;
+  offers: any;
 };
 
-const StylistItem = ({ isOffer, data, offerList }: Props) => {
+const StylistItem = ({ isOffer, data, offers }: Props) => {
   const [expanded, setExpanded] = useState(true);
 
   const onPressArrow = () => {
@@ -29,17 +30,24 @@ const StylistItem = ({ isOffer, data, offerList }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{data?.offer_name}</Text>
+        <Text style={styles.titleTextStyle}>{"Offers"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
       </TouchableOpacity>
       {expanded ? (
         <FlatList
-          data={[1, 2]}
+          data={offers?.offers}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            return <StylistInnerItem isOffer={isOffer} data={item} />;
+            return (
+              <StylistInnerItem
+                isOffer={isOffer}
+                data={item}
+                key={index}
+                baseUrl={offers?.featured_image_url}
+              />
+            );
           }}
         />
       ) : null}

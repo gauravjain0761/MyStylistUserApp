@@ -5,11 +5,11 @@ import {
   GET_ALL_OFFER,
   GET_ALL_OFFERS,
   GET_ALL_PACKAGES,
+  GET_USER_CAMPAIGN_LIST,
   IS_LOADING,
 } from "./dispatchTypes";
 import { GET, POST, api } from "../helper/apiConstants";
 import { makeAPIRequest } from "../helper/apiGlobal";
-import { errorToast } from "../helper/globalFunction";
 
 export const getAllOffersByUser =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -63,5 +63,35 @@ export const getAllOffersByLocation =
       .catch((error: any) => {
         console.log("error", error);
         dispatch({ type: IS_LOADING, payload: false });
+      });
+  };
+
+export const getCampaignExpert =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.campaignExpert,
+      headers: header,
+      data: request.data,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+          dispatch({
+            type: GET_USER_CAMPAIGN_LIST,
+            payload: result?.data,
+          });
+          if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
+        console.log("error", error);
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
       });
   };

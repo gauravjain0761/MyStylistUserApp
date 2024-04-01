@@ -7,31 +7,55 @@ import {
   Text,
   View,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { BackHeader, Barber_Card, Filter_Button } from "../../components";
 import { strings } from "../../helper/string";
 import { images } from "../../theme/icons";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, infoToast, wp } from "../../helper/globalFunction";
 import { barbers, stylists_filter } from "../../helper/constunts";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getAllExpertBySubService, getUserItemDetails } from "../../actions";
 
 const Service = () => {
   const { navigate } = useNavigation();
+  const { params }: any = useRoute();
+  const dispatch = useAppDispatch();
+  const { expertUserList } = useAppSelector((state) => state.home);
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
   };
+
+  console.log("params", params.item);
+
+  const onPressItem = (item: any) => {
+    let userid = item._id;
+    let obj = {
+      isLoading: true,
+      data: {
+        userid: userid,
+      },
+      onSuccess: () => {
+        //@ts-ignore
+        navigate(screenName.YourStylist);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
+  };
+
   return (
     <View style={styles.container}>
-      <BackHeader isSearch title={strings.Party_Makeup} />
+      <BackHeader isSearch title={params.item?.sub_service_name} />
       <ScrollView
         stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
       >
-        <Image source={images.banner2} style={styles.banner} />
+        <Image source={{ uri: params?.item?.imageUrl }} style={styles.banner} />
         <View style={styles?.service_filter_conatiner}>
           <FlatList
             data={stylists_filter}
@@ -65,23 +89,24 @@ const Service = () => {
         </View>
         <ScrollView style={styles.card_container}>
           <FlatList
-            data={barbers}
+            data={expertUserList?.users}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }: any) => {
               return (
                 <Barber_Card
                   name={item.name}
                   type="with Service"
-                  images={item?.image}
-                  rating={item.rating}
-                  jobs={item?.jobs_done}
+                  images={item?.user_profile_images}
+                  rating={item.averageRating}
+                  jobs={item?.jobDone}
                   location={item.address}
                   offers={item?.offers}
                   service="Party Makeup"
                   price="₹500"
                   carouselitemHeight={hp(157)}
                   carouselitemWidth={wp(132)}
-                  onPress={onPressCard}
+                  onPress={() => onPressItem(item)}
+                  data={item}
                 />
               );
             }}

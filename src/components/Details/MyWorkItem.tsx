@@ -30,7 +30,7 @@ const MyWorkItem = ({ data }: Props) => {
   return (
     <View>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{""}</Text>
+        <Text style={styles.titleTextStyle}>{"My Work"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
@@ -48,10 +48,7 @@ const MyWorkItem = ({ data }: Props) => {
                   resizeMode="cover"
                   style={styles.imgStyle}
                   source={{
-                    uri:
-                      itemDetails?.user_work_images_url +
-                      "/" +
-                      item.image_medium,
+                    uri: itemDetails?.featured_image_url + "/" + item.image,
                   }}
                 />
               </View>
@@ -89,6 +86,7 @@ const styles = StyleSheet.create({
     height: screen_width - wp(267),
     width: screen_width - wp(267),
     borderRadius: 4,
+    backgroundColor: colors.grey_19,
   },
 });
 

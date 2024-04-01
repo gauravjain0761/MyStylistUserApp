@@ -1,8 +1,13 @@
-import { GET_ALL_OFFER, GET_ALL_OFFERS } from "../actions/dispatchTypes";
+import {
+  GET_ALL_OFFER,
+  GET_ALL_OFFERS,
+  GET_USER_CAMPAIGN_LIST,
+} from "../actions/dispatchTypes";
 
 const initialState = {
   userOfferList: [],
   allOffers: {},
+  usersWithCampaignList: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -17,6 +22,12 @@ export default function (state = initialState, action: any) {
       return {
         ...state,
         allOffers: action.payload,
+      };
+    }
+    case GET_USER_CAMPAIGN_LIST: {
+      return {
+        ...state,
+        usersWithCampaignList: action.payload,
       };
     }
 

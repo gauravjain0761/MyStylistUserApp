@@ -19,7 +19,10 @@ import { VerifyIcon } from "../../theme/SvgIcon";
 import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllOffersByLocation } from "../../actions/offerAction";
+import {
+  getAllOffersByLocation,
+  getCampaignExpert,
+} from "../../actions/offerAction";
 import moment from "moment";
 
 let offersOffList = [
@@ -38,7 +41,7 @@ const Offers = ({ navigation }) => {
   useEffect(() => {
     let obj = {
       data: {
-        city_id: profileData?.user.city?.[0]?.city_id,
+        city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
         page: 1,
       },
@@ -50,8 +53,26 @@ const Offers = ({ navigation }) => {
     navigation.openDrawer();
   };
 
-  const onPressOfferItem = () => {
-    navigation.navigate(screenName.NewYearOffer);
+  const onPressCampaignItem = (item: any) => {
+    let obj = {
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: 1,
+      },
+      onSuccess: () => {
+        navigation.navigate(screenName.NewYearOffer, {
+          item: {
+            ...item,
+            bannerImg:
+              allOffers?.featured_image_url + "/" + item?.campaign?.fileName,
+          },
+        });
+        console.log("item", item);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getCampaignExpert(obj));
   };
 
   return (
@@ -129,7 +150,10 @@ const Offers = ({ navigation }) => {
             data={allOffers.campaigns}
             renderItem={({ item, index }) => {
               return (
-                <View style={{}}>
+                <TouchableOpacity
+                  onPress={() => onPressCampaignItem(item)}
+                  style={{}}
+                >
                   <ImageBackground
                     resizeMode="cover"
                     style={styles.imgStyle}
@@ -140,7 +164,7 @@ const Offers = ({ navigation }) => {
                         item?.campaign.fileName,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               );
             }}
             keyExtractor={(item, index) => index.toString()}
@@ -152,7 +176,7 @@ const Offers = ({ navigation }) => {
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
-                  onPress={onPressOfferItem}
+                  // onPress={onPressOfferItem}
                   style={styles.offerContainer}
                 >
                   <ImageBackground

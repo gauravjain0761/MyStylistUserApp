@@ -1,11 +1,9 @@
 import {
   FlatList,
   Image,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -15,6 +13,7 @@ import {
   generateTimes,
   generateWeekDates,
   hp,
+  infoToast,
   screen_width,
   wp,
 } from "../../helper/globalFunction";
@@ -54,6 +53,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   getAllBanner,
+  getAllExpertBySubService,
   getAllServicesForMaleAndFemale,
   getAllSubServicesForMobile,
   getUserItemDetails,
@@ -70,10 +70,6 @@ import {
 import { setLocation } from "../../actions/locationAction";
 import { getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
-
-type DrawerNavigationParams = {
-  navigation: DrawerNavigationProp<{}>;
-};
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -233,12 +229,30 @@ const Home = () => {
     dispatch(getUserItemDetails(obj));
   };
 
-  const onPresstoNavigate = () => {
+  const onPresstoNavigate = (item: any) => {
     setServicesModal(false);
     setTimeout(() => {
-      // @ts-ignore
-      navigate(screenName.Service);
-    }, 500);
+      let obj = {
+        data: {
+          sub_service_id: item?._id,
+          limit: 10,
+          page: 1,
+        },
+        onSuccess: () => {
+          // @ts-ignore
+          navigate(screenName.Service, {
+            item: {
+              ...item,
+              imageUrl: subServicesModalData?.imageUrl + "/" + item?.fileName,
+            },
+          });
+        },
+        onFailure: (err: any) => {
+          infoToast(err.data?.message);
+        },
+      };
+      dispatch(getAllExpertBySubService(obj));
+    }, 600);
   };
 
   const ModalHendler = (item: any) => {
@@ -557,7 +571,7 @@ const Home = () => {
                   (subServices: any, index: number) => {
                     return (
                       <TouchableOpacity
-                        onPress={() => onPresstoNavigate()}
+                        onPress={() => onPresstoNavigate(subServices)}
                         style={styles?.makeup_card_container}
                       >
                         <Text style={styles?.makeup_title}>

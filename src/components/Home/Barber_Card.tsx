@@ -46,7 +46,6 @@ const Barber_Card = ({
   type,
   name,
   jobs,
-  location,
   offers,
   onPress = () => "",
   price,
@@ -87,7 +86,7 @@ const Barber_Card = ({
                       <View style={styles?.carousel_img_container}>
                         <Image
                           source={{
-                            uri: featured_image_url + "/" + item?.image_medium,
+                            uri: featured_image_url + "/" + item?.image,
                           }}
                           style={styles?.carousel_img}
                           resizeMode="stretch"
@@ -105,7 +104,7 @@ const Barber_Card = ({
                 </View>
               </View>
               <Pagination
-                dotsLength={data?.user_profile_images?.length}
+                dotsLength={images?.length}
                 activeDotIndex={activeIndex}
                 containerStyle={styles?.pagination_container}
                 dotStyle={styles?.dotStyle}
@@ -123,7 +122,7 @@ const Barber_Card = ({
             >
               <View style={styles.name_container}>
                 <View>
-                  <Text style={styles.barber_name}>{"name"}</Text>
+                  <Text style={styles.barber_name}>{name}</Text>
                 </View>
                 <VerifyIcon width={14} height={14} />
               </View>
@@ -142,7 +141,13 @@ const Barber_Card = ({
               </View>
               <View style={styles.location_container}>
                 <CarIcon />
-                <Text style={styles.location_title}>{location}</Text>
+                <Text style={styles.location_title}>
+                  {data?.city?.[0]?.city_name}
+                  {","}
+                  {data?.district?.[0]?.district_name}
+                  {","}
+                  {data?.state?.[0]?.state_name}
+                </Text>
               </View>
               <View style={styles.price_container}>
                 <Text style={styles.price_title}>{service}</Text>
@@ -165,14 +170,16 @@ const Barber_Card = ({
                   sliderHeight={carouselitemHeight}
                   inactiveSlideScale={1}
                   renderItem={({ item }: any) => {
+                    console.log("dfg", featured_image_url + "/" + item?.image);
+
                     return (
                       <View style={styles?.carousel_img_container}>
                         <Image
                           source={{
-                            uri: featured_image_url + "/" + item?.image_medium,
+                            uri: featured_image_url + "/" + item?.image,
                           }}
                           style={[styles?.carousel_img, carouselitemHeight]}
-                          resizeMode="stretch"
+                          resizeMode="cover"
                         />
                       </View>
                     );

@@ -14,6 +14,7 @@ export const api = {
   allServicesForMaleAndFemale: "service/getAllServicesForMaleAndFemale/",
   allSubServicesForMobile: "service/getAllSubServicesForMobile",
   usersByLocation: "user/getUsersByLocation",
+  allExpertBySubService: "user/getAllExpertBySubService",
 
   //Profile
   FAQ: "faq/getAllFAQ",
@@ -44,6 +45,9 @@ export const api = {
   appointmentDetails: "appointment/getAppointmentDetails/",
 
   expertAvailability: "expertUnavailability/getExpertAvailability",
+
+  // campaign/getCampaignExpert
+  campaignExpert: "campaign/getCampaignExpert",
 };
 
 export const POST = "POST";

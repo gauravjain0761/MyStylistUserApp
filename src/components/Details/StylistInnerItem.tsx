@@ -17,8 +17,9 @@ import { TrashIcon } from "../../theme/SvgIcon";
 type Props = {
   isOffer?: boolean;
   data: any;
+  baseUrl?: string;
 };
-const StylistInnerItem = ({ isOffer, data }: Props) => {
+const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
   const [count, setCount] = useState(0);
 
   const onPressDelete = useCallback(() => {
@@ -32,12 +33,15 @@ const StylistInnerItem = ({ isOffer, data }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.cloumStyle}>
-        <Text style={styles.labelTextStyle}>{"Beard Trim For Men"}</Text>
+        <Text style={styles.labelTextStyle}>{data?.offer_name}</Text>
         <View style={styles.rowStyle}>
-          <Text style={styles.priceStyle}>{"₹ 200"}</Text>
-          {isOffer ? (
+          <Text style={styles.priceStyle}>
+            {"₹ "}
+            {data?.sub_services?.price}
+          </Text>
+          {/* {isOffer ? (
             <Text style={styles.offerPriceStyle}>{"₹ 400"}</Text>
-          ) : null}
+          ) : null} */}
         </View>
         <View style={{ flex: 1 }} />
         {count === 0 ? (
@@ -71,7 +75,7 @@ const StylistInnerItem = ({ isOffer, data }: Props) => {
       <Image
         resizeMode="cover"
         style={styles.imgStyle}
-        source={require("../../assets/image/saving.png")}
+        source={{ uri: baseUrl + "/" + data?.sub_services?.fileName }}
       />
     </View>
   );
@@ -90,7 +94,7 @@ const styles = StyleSheet.create({
     marginRight: wp(5),
   },
   labelTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
   },
   priceStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),

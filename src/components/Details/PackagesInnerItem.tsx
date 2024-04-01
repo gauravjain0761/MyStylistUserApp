@@ -27,6 +27,7 @@ const PackagesInnerItem = ({ data }: Props) => {
   const onPressAdd = useCallback(() => {
     setCount(count + 1);
   }, [count]);
+
   return (
     <View style={styles.container}>
       <View style={styles.cloumStyle}>
@@ -35,25 +36,30 @@ const PackagesInnerItem = ({ data }: Props) => {
           <View style={{ width: wp(3) }} />
           <PackagesText />
         </View>
-        <Text style={styles.labelTextStyle}>{"Hair and waxing Pack"}</Text>
-        <Text style={styles.priceTextStyle}>{"₹ 200"}</Text>
+        <Text style={styles.labelTextStyle}>{data?.package_name}</Text>
+        <Text style={styles.priceTextStyle}>
+          {"₹ "}
+          {data?.rate}
+        </Text>
         <View style={{ height: hp(8) }} />
-        <View style={styles.rowStyle}>
-          <View style={styles.dotStyle} />
-          <Text style={styles.boldTextStyle}>
-            Waxing:{" "}
-            <Text style={styles.greyTextStyle}>
-              {"Full arm - Rica Roll on Hair"}
-            </Text>
-          </Text>
-        </View>
-        <View style={{ ...styles.rowStyle, marginVertical: hp(2) }}>
-          <View style={styles.dotStyle} />
-          <Text style={styles.boldTextStyle}>
-            Hair spa:{" "}
-            <Text style={styles.greyTextStyle}>{"Loreal Products"}</Text>
-          </Text>
-        </View>
+        {data?.service_name?.map((item, index) => {
+          return (
+            <View style={styles.rowStyle}>
+              <View style={styles.dotStyle} />
+              <Text style={styles.boldTextStyle}>
+                {item?.service_name}:{" "}
+                <Text style={styles.greyTextStyle}>
+                  {item?.sub_services
+                    ?.map(
+                      (sub_service_item: any, index: number) =>
+                        sub_service_item?.sub_service_name
+                    )
+                    .join(", ")}
+                </Text>
+              </Text>
+            </View>
+          );
+        })}
       </View>
       {count === 0 ? (
         <TouchableOpacity onPress={onPressAdd}>

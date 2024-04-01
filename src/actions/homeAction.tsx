@@ -2,6 +2,7 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../helper/Types";
 import { AnyAction } from "redux";
 import {
+  EXPERT_USER_LIST,
   GETALLSERVICES,
   IS_LOADING,
   ITEM_DETAILS,
@@ -163,6 +164,35 @@ export const getUserItemDetails =
         if (response.status === 200) {
           dispatch({
             type: ITEM_DETAILS,
+            payload: response?.data,
+          });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getAllExpertBySubService =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.allExpertBySubService,
+      headers: header,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (response.status === 200) {
+          dispatch({
+            type: EXPERT_USER_LIST,
             payload: response?.data,
           });
           if (request.onSuccess) request.onSuccess(response.data);

@@ -1,4 +1,5 @@
 import {
+  EXPERT_USER_LIST,
   GETALLSERVICES,
   ITEM_DETAILS,
   USER_LIST,
@@ -8,6 +9,7 @@ const initialState = {
   getallservices: [],
   userList: [],
   itemDetails: {},
+  expertUserList: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -20,6 +22,9 @@ export default function (state = initialState, action: any) {
     }
     case ITEM_DETAILS: {
       return { ...state, itemDetails: action.payload };
+    }
+    case EXPERT_USER_LIST: {
+      return { ...state, expertUserList: action.payload };
     }
     default:
       return state;

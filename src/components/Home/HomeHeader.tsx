@@ -36,7 +36,6 @@ const HomeHeader = ({
 }: HomeProps) => {
   const { navigate } = useNavigation();
   const { profileData } = useAppSelector((state) => state.profile);
-  console.log("profileData", profileData);
 
   const onPressBell = () => {
     // @ts-ignore

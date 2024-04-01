@@ -57,7 +57,6 @@ import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import ReviewModel from "../../components/Details/ReviewModal";
 import LinearGradient from "react-native-linear-gradient";
-import { is } from "@babel/types";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animation, {
   useAnimatedStyle,
@@ -140,7 +139,6 @@ const getAmenitiesIcon = (key: string) => {
       return <ProfileIcon />;
     case "power_backup":
       return <ElectricityIcon />;
-
     default:
       break;
   }
@@ -244,7 +242,7 @@ const YourStylist = () => {
     let obj = {
       data: data,
       onSuccess: () => {},
-      onFailure: () => {},
+      onFailure: (err: any) => {},
     };
     dispatch(saveAsfavourite(obj));
   };
@@ -293,9 +291,9 @@ const YourStylist = () => {
             style={styles.personStyle}
             source={{
               uri:
-                itemDetails?.user_profile_images_url +
+                itemDetails?.featured_image_url +
                 "/" +
-                itemDetails?.user_profile_images_url?.[0]?.image_medium,
+                itemDetails?.user?.user_profile_images?.[0]?.image,
             }}
           />
           <View style={styles.columStyle}>
@@ -382,7 +380,7 @@ const YourStylist = () => {
         </View>
 
         <View style={{ flex: 1, marginTop: hp(-130) }}>
-          {!isOffers && !isPackages && !isMyWork ? (
+          {/* {!isOffers && !isPackages && !isMyWork ? (
             <View>
               <FlatList
                 style={{ flex: 1 }}
@@ -394,17 +392,24 @@ const YourStylist = () => {
                 }}
               />
             </View>
-          ) : null}
+          ) : null} */}
 
           {isOffers ? (
             <View>
               <FlatList
                 style={{ flex: 1 }}
-                data={userOfferList?.offers}
+                data={[1]}
                 scrollEnabled={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => {
-                  return <StylistItem isOffer={true} data={item} />;
+                  return (
+                    <StylistItem
+                      key={index}
+                      isOffer={true}
+                      data={item}
+                      offers={userOfferList}
+                    />
+                  );
                 }}
               />
             </View>
@@ -414,11 +419,17 @@ const YourStylist = () => {
             <View>
               <FlatList
                 style={{ flex: 1 }}
-                data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                data={[1]}
                 scrollEnabled={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => {
-                  return <PackagesItem data={item} />;
+                  return (
+                    <PackagesItem
+                      key={index}
+                      data={item}
+                      packages={userPackageList}
+                    />
+                  );
                 }}
               />
             </View>

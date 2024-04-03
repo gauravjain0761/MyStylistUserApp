@@ -12,6 +12,9 @@ import { PackagesIcon, PackagesText, TrashIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
+import { useAppDispatch } from "../../redux/hooks";
+import { addToCart } from "../../actions";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 type Props = {
   data: any;
@@ -19,13 +22,37 @@ type Props = {
 
 const PackagesInnerItem = ({ data }: Props) => {
   const [count, setCount] = useState(0);
+  const dispatch = useAppDispatch();
 
   const onPressDelete = useCallback(() => {
     setCount(count - 1);
   }, [count]);
 
-  const onPressAdd = useCallback(() => {
-    setCount(count + 1);
+  const onPressAdd = useCallback(async () => {
+    // let userInfo = await getAsyncUserInfo();
+    // let items: any = [];
+    // data?.service_name.map((item: any) => {
+    //   let obj: any = {
+    //     serviceId: item?._id,
+    //     serviceName: item?.service_name,
+    //     serviceType: "Package",
+    //     price: data?.rate,
+    //     quantity: 1,
+    //   };
+    //   items.push(obj);
+    // });
+    // let passData = {
+    //   userId: userInfo._id,
+    //   items: items,
+    // };
+    // let obj = {
+    //   data: passData,
+    //   onSuccess: () => {
+    //     setCount(count + 1);
+    //   },
+    //   onFailure: () => {},
+    // };
+    // dispatch(addToCart(obj));
   }, [count]);
 
   return (

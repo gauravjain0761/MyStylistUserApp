@@ -112,7 +112,12 @@ export const editProfile =
         }
       })
       .catch((error) => {
-        errorToast(error.response?.data?.errors?.[0]?.message);
+        if (error.response?.data?.errors?.[0]?.message) {
+          errorToast(error.response?.data?.errors?.[0]?.message);
+        } else {
+          errorToast(error.response?.data?.message);
+        }
+
         dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure) request.onFailure(error.response);
       });

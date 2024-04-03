@@ -456,7 +456,6 @@ const YourStylist = () => {
         >
           <View>
             <Text style={styles.boldTextStyle}>{strings["Availability"]}</Text>
-
             {formatWorkingHours(itemDetails?.user?.working_hours)?.map(
               (item: any, index) => {
                 return (
@@ -515,11 +514,11 @@ const YourStylist = () => {
         </TouchableOpacity>
       </View>
       <Modals
-        containStyle={{ maxHeight: "80%" }}
+        isIcon
         visible={isModal}
         close={setIsModal}
-        isIcon
         contain={<ReviewModel />}
+        containStyle={{ maxHeight: "80%" }}
       />
     </View>
   );

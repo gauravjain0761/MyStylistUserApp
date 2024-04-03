@@ -59,6 +59,7 @@ const Offers = ({ navigation }) => {
         city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
         page: 1,
+        campaignId: item?.campaign?._id,
       },
       onSuccess: () => {
         navigation.navigate(screenName.NewYearOffer, {

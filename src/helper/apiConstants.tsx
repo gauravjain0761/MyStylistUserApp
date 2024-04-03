@@ -16,6 +16,9 @@ export const api = {
   usersByLocation: "user/getUsersByLocation",
   allExpertBySubService: "user/getAllExpertBySubService",
 
+  // cart
+  cart: "cart/addToCart",
+
   //Profile
   FAQ: "faq/getAllFAQ",
   termsandconditions: "cms/getCMSPageForMobile/64fc1e863f161dd8548acb1e",

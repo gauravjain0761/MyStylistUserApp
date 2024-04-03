@@ -53,7 +53,11 @@ const Profile = () => {
     { label: "Female", value: "2" },
   ];
 
-  console.log("profileData?.user", profileData?.user?.gender);
+  console.log(
+    profileData?.featured_image_url +
+      "/" +
+      profileData?.user?.user_profile_images?.[0]?.image
+  );
 
   useEffect(() => {
     setName(profileData?.user?.name || "");
@@ -65,7 +69,8 @@ const Profile = () => {
     if (profileData?.user?.user_profile_images?.length > 0) {
       setImageData({
         uri:
-          profileData?.user_profile_images_url +
+          profileData?.featured_image_url +
+          "/" +
           profileData?.user?.user_profile_images?.[0]?.image,
       });
     }
@@ -296,6 +301,7 @@ const styles = StyleSheet.create({
     marginTop: hp(23),
     alignSelf: "center",
     borderRadius: wp(20),
+    backgroundColor: colors.grey_19,
   },
   inputs_conatiner: {
     marginHorizontal: wp(20),

@@ -170,8 +170,6 @@ const Barber_Card = ({
                   sliderHeight={carouselitemHeight}
                   inactiveSlideScale={1}
                   renderItem={({ item }: any) => {
-                    console.log("dfg", featured_image_url + "/" + item?.image);
-
                     return (
                       <View style={styles?.carousel_img_container}>
                         <Image

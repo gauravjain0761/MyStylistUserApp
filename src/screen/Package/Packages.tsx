@@ -20,7 +20,7 @@ import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllPackageByLocation } from "../../actions";
+import { getAllPackageByLocation, getCampaignExpert } from "../../actions";
 
 let offersOffList = [
   { id: 1, off: "10%" },
@@ -52,6 +52,28 @@ const Packages = ({ navigation }) => {
 
   const onPressNewYearOffer = () => {
     navigation.navigate(screenName.NewYearOffer);
+  };
+
+  const onPressCampaignItem = (item: any) => {
+    let obj = {
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: 1,
+        campaignId: item?.campaign?._id,
+      },
+      onSuccess: () => {
+        navigation.navigate(screenName.NewYearOffer, {
+          item: {
+            ...item,
+            bannerImg:
+              allpackages?.featured_image_url + "/" + item?.campaign?.fileName,
+          },
+        });
+      },
+      onFailure: () => {},
+    };
+    dispatch(getCampaignExpert(obj));
   };
 
   return (
@@ -127,7 +149,10 @@ const Packages = ({ navigation }) => {
             data={allpackages.campaigns}
             renderItem={({ item, index }) => {
               return (
-                <View style={{}}>
+                <TouchableOpacity
+                  onPress={() => onPressCampaignItem(item)}
+                  style={{}}
+                >
                   <ImageBackground
                     resizeMode="cover"
                     style={styles.imgStyle}
@@ -138,7 +163,7 @@ const Packages = ({ navigation }) => {
                         item?.campaign.fileName,
                     }}
                   />
-                </View>
+                </TouchableOpacity>
               );
             }}
             keyExtractor={(item, index) => index.toString()}
@@ -149,10 +174,7 @@ const Packages = ({ navigation }) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity
-                  onPress={onPressNewYearOffer}
-                  style={styles.offerContainer}
-                >
+                <TouchableOpacity style={styles.offerContainer}>
                   <ImageBackground
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}

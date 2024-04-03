@@ -91,6 +91,8 @@ const Home = () => {
   const [value, setValue] = useState("");
   const [maleData, setMaleData] = useState<any>([]);
   const [femaleData, setFemaleData] = useState<any>({});
+  const [femaleBaseURL, setFemaleBaseURL] = useState<any>([]);
+  const [maleBaseURL, setMaleBaseURL] = useState<any>([]);
   const [subServicesModalData, setSubServicesModalData] = useState<any>({});
   const [isSticky, setIsSticky] = useState(false);
   const { getallservices, userList } = useAppSelector((state) => state.home);
@@ -102,7 +104,12 @@ const Home = () => {
         let obj_female = {
           type: "Female",
           onSuccess: (response: any) => {
-            setFemaleData(response);
+            setFemaleBaseURL(response?.featured_image_url);
+            let outputData = [];
+            for (let i = 0; i < response.services.length; i += 2) {
+              outputData.push(response.services.slice(i, i + 2));
+            }
+            setFemaleData(outputData);
           },
           onFailure: () => {},
         };
@@ -110,7 +117,12 @@ const Home = () => {
         let obj_male = {
           type: "Male",
           onSuccess: (response: any) => {
-            setMaleData(response);
+            setMaleBaseURL(response?.featured_image_url);
+            let outputData = [];
+            for (let i = 0; i < response.services.length; i += 2) {
+              outputData.push(response.services.slice(i, i + 2));
+            }
+            setMaleData(outputData);
             getLocation();
           },
           onFailure: () => {},
@@ -402,29 +414,40 @@ const Home = () => {
           <View style={styles?.services_conatiner}>
             <FlatList
               horizontal
-              data={femaleData?.services}
+              data={femaleData}
               showsHorizontalScrollIndicator={false}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      onPressServicesItem(item);
+                  <FlatList
+                    scrollEnabled={false}
+                    key={index}
+                    data={item}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            onPressServicesItem(item);
+                          }}
+                          style={styles?.service_card_container}
+                        >
+                          <Text style={styles?.card_title}>
+                            {item?.service_name}
+                          </Text>
+                          <Image
+                            style={styles?.images}
+                            source={{
+                              uri: femaleBaseURL + "/" + item?.fileName,
+                            }}
+                            resizeMode="contain"
+                          />
+                        </TouchableOpacity>
+                      );
                     }}
-                    style={styles?.service_card_container}
-                  >
-                    <Text style={styles?.card_title}>{item?.service_name}</Text>
-                    <Image
-                      style={styles?.images}
-                      source={{
-                        uri:
-                          femaleData?.featured_image_url + "/" + item?.fileName,
-                      }}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
+                  />
                 );
               }}
             />
@@ -444,29 +467,40 @@ const Home = () => {
           <View style={styles?.services_conatiner}>
             <FlatList
               horizontal
-              data={maleData?.services}
+              data={maleData}
               showsHorizontalScrollIndicator={false}
               ItemSeparatorComponent={() => (
                 <View style={styles?.item_separator}></View>
               )}
               renderItem={({ item, index }: any) => {
                 return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      onPressServicesItem(item);
+                  <FlatList
+                    scrollEnabled={false}
+                    key={index}
+                    data={item}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={() => {
+                            onPressServicesItem(item);
+                          }}
+                          style={styles?.service_card_container}
+                        >
+                          <Text style={styles?.card_title}>
+                            {item?.service_name}
+                          </Text>
+                          <Image
+                            style={styles?.images}
+                            source={{
+                              uri: maleBaseURL + "/" + item?.fileName,
+                            }}
+                            resizeMode="contain"
+                          />
+                        </TouchableOpacity>
+                      );
                     }}
-                    style={styles?.service_card_container}
-                  >
-                    <Text style={styles?.card_title}>{item?.service_name}</Text>
-                    <Image
-                      style={styles?.images}
-                      source={{
-                        uri:
-                          maleData?.featured_image_url + "/" + item?.fileName,
-                      }}
-                      resizeMode="contain"
-                    />
-                  </TouchableOpacity>
+                  />
                 );
               }}
             />
@@ -723,6 +757,8 @@ const styles = StyleSheet.create({
     borderRadius: wp(8),
     justifyContent: "space-between",
     marginRight: wp(10),
+    marginBottom: hp(10),
+    marginTop: hp(10),
   },
   card_title: {
     ...commonFontStyle(fontFamily.medium, 12, colors?.black),

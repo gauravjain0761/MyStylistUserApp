@@ -53,12 +53,6 @@ const Profile = () => {
     { label: "Female", value: "2" },
   ];
 
-  console.log(
-    profileData?.featured_image_url +
-      "/" +
-      profileData?.user?.user_profile_images?.[0]?.image
-  );
-
   useEffect(() => {
     setName(profileData?.user?.name || "");
     setEmail(profileData?.user?.email || "");

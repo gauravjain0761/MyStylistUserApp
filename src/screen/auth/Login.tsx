@@ -3,6 +3,8 @@ import {
   Image,
   ImageBackground,
   KeyboardAvoidingView,
+  PermissionsAndroid,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -41,6 +43,7 @@ import {
 } from "../../helper/locationHandler";
 import { Dropdown } from "react-native-element-dropdown";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
+import messaging from "@react-native-firebase/messaging";
 
 const Login: FC = () => {
   const [phoneNum, setphoneNum] = useState<string>("");
@@ -50,10 +53,65 @@ const Login: FC = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation<any>();
   const [selectedCity, setSelectedCity] = useState<any>({});
+  const [deviceToken, setDeviceToken] = useState<string>("");
 
   console.log("selectedCity", selectedCity);
 
+  async function requestNotificationUserPermission() {
+    if (Platform.OS === "android") {
+      PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+      );
+    }
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      if (authStatus === 1) {
+        if (Platform.OS === "ios") {
+          await messaging()
+            .registerDeviceForRemoteMessages()
+            .then(async () => {
+              getFirebaseToken();
+            })
+            .catch(() => {
+              getFirebaseToken();
+            });
+        } else {
+          getFirebaseToken();
+        }
+      } else {
+        await messaging().requestPermission();
+      }
+    } else {
+      await messaging().requestPermission();
+      infoToast("Please allow to notifications permission");
+    }
+  }
+
+  const getFirebaseToken = async () => {
+    await messaging()
+      .getToken()
+      .then((fcmToken: any) => {
+        if (fcmToken) {
+          console.log("---fcmToken---:", fcmToken);
+          // infoToast(fcmToken.toString());
+          setDeviceToken(fcmToken);
+        } else {
+          infoToast("[FCMService] User does not have a device token");
+        }
+      })
+      .catch((error: any) => {
+        let err = `FCm token get error${error}`;
+        // infoToast(error.toString());
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
+    requestNotificationUserPermission();
     let obj = {
       onSuccess: (res) => {
         setcity(res);

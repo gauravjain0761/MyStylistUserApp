@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "335595741639",
+    "project_id": "my-stylist-vendor",
+    "storage_bucket": "my-stylist-vendor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335595741639:android:eac49ef91422a6127139e2",
+        "android_client_info": {
+          "package_name": "com.mystylist.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335595741639-k2k0f1k2mg22c9b99jfsjhmfbb0mr82j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRm7NwiL0TJqlfj6ZcxlU7aDhYfC92tyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335595741639-k2k0f1k2mg22c9b99jfsjhmfbb0mr82j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335595741639:android:7948a7723d06c4847139e2",
+        "android_client_info": {
+          "package_name": "com.mystylist.vendor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335595741639-k2k0f1k2mg22c9b99jfsjhmfbb0mr82j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRm7NwiL0TJqlfj6ZcxlU7aDhYfC92tyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335595741639-k2k0f1k2mg22c9b99jfsjhmfbb0mr82j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

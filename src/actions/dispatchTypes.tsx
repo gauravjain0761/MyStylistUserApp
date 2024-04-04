@@ -36,3 +36,8 @@ export const GET_USER_FAV_LIST = "GET_USER_FAV_LIST";
 // appointment
 export const GET_APPOINTMENTS_LIST = "GET_APPOINTMENTS_LIST";
 export const APPOINTMENTS_DETAILS = "APPOINTMENTS_DETAILS";
+
+// cart
+
+export const ADD_TO_CART = "ADD_TO_CART";
+export const CART_DETAILS = "CAR_TDETAILS";

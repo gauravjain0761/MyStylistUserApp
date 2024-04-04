@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   FlatList,
@@ -67,9 +67,11 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import {
   getAllOffersByUser,
   getAllPackageByUser,
+  getCartlist,
   saveAsfavourite,
 } from "../../actions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { CART_DETAILS } from "../../actions/dispatchTypes";
 
 type TagViewProps = {
   Icon?: any;
@@ -145,6 +147,7 @@ const getAmenitiesIcon = (key: string) => {
 };
 
 const YourStylist = () => {
+  const { cartDetails } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
   const { itemDetails } = useAppSelector((state) => state.home);
@@ -154,6 +157,7 @@ const YourStylist = () => {
   const [isPackages, setIsPackages] = useState(false);
   const [isMyWork, setIsMyWork] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [total, setTotal] = useState(0);
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
   const animated = useSharedValue(0);
   const [animatedValue, setAnimatedValue] = useState(0);
@@ -173,6 +177,32 @@ const YourStylist = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    getCart();
+  }, [cartDetails]);
+
+  const getCart = useCallback(async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        // userId: userInfo._id,
+        userId: "66052db37e5822f655b581a6",
+      },
+      onSuccess: (response: any) => {
+        // dispatch({ type: CART_DETAILS, payload: response?.data });
+        let totals = 0;
+        response.data?.cart?.items.map((item) => {
+          totals += item?.price;
+        });
+        setTotal(totals);
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(getCartlist(obj));
+  }, [cartDetails]);
 
   useEffect(() => {
     let obj = {
@@ -502,7 +532,10 @@ const YourStylist = () => {
         </LinearGradient>
       </Animation.ScrollView>
       <View style={styles.elevationStyle}>
-        <Text style={styles.priceTextStyle}>{"₹200"}</Text>
+        <Text style={styles.priceTextStyle}>
+          {"₹"}
+          {total}
+        </Text>
         <TouchableOpacity onPress={onPressGoCart}>
           <ImageBackground
             resizeMode="cover"

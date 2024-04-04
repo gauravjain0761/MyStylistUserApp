@@ -12,47 +12,78 @@ import { PackagesIcon, PackagesText, TrashIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
-import { useAppDispatch } from "../../redux/hooks";
-import { addToCart } from "../../actions";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { addToCart, removeToCart } from "../../actions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { ADD_TO_CART } from "../../actions/dispatchTypes";
 
 type Props = {
   data: any;
 };
 
 const PackagesInnerItem = ({ data }: Props) => {
+  const { addtocart } = useAppSelector((state) => state.cart);
   const [count, setCount] = useState(0);
+
   const dispatch = useAppDispatch();
 
-  const onPressDelete = useCallback(() => {
-    setCount(count - 1);
+  const onPressDelete = useCallback(async () => {
+    let itemId = "";
+    addtocart?.items?.map((item) => {
+      data.service_name.map((items) => {
+        if (item.serviceId == items?._id) {
+          itemId = item._id;
+        }
+      });
+    });
+    let userInfo = await getAsyncUserInfo();
+    let passData = {
+      userId: userInfo?._id,
+      itemId: itemId,
+    };
+    let obj = {
+      data: passData,
+      onSuccess: (response: any) => {
+        setCount(count - 1);
+        console.log("ressponce", response);
+      },
+      onFailure: (Err: any) => {
+        console.log("Errrr", Err);
+      },
+    };
+
+    dispatch(removeToCart(obj));
   }, [count]);
 
   const onPressAdd = useCallback(async () => {
-    // let userInfo = await getAsyncUserInfo();
-    // let items: any = [];
-    // data?.service_name.map((item: any) => {
-    //   let obj: any = {
-    //     serviceId: item?._id,
-    //     serviceName: item?.service_name,
-    //     serviceType: "Package",
-    //     price: data?.rate,
-    //     quantity: 1,
-    //   };
-    //   items.push(obj);
-    // });
-    // let passData = {
-    //   userId: userInfo._id,
-    //   items: items,
-    // };
-    // let obj = {
-    //   data: passData,
-    //   onSuccess: () => {
-    //     setCount(count + 1);
-    //   },
-    //   onFailure: () => {},
-    // };
-    // dispatch(addToCart(obj));
+    let userInfo = await getAsyncUserInfo();
+    let items: any = [];
+    data?.service_name.map((item: any) => {
+      let obj: any = {
+        serviceId: item?._id,
+        serviceName: item?.service_name,
+        serviceType: "Package",
+        price: data?.rate,
+        quantity: 1,
+      };
+      items.push(obj);
+    });
+    let passData = {
+      userId: userInfo._id,
+      expertId: data?.expert_id,
+      items: items,
+    };
+    let obj = {
+      data: passData,
+      onSuccess: (response: any) => {
+        dispatch({ type: ADD_TO_CART, payload: response.data });
+        setCount(count + 1);
+      },
+      onFailure: (Err: any) => {
+        console.log("Errrr", Err);
+      },
+    };
+    dispatch(addToCart(obj));
   }, [count]);
 
   return (

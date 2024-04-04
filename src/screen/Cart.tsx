@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
+  FlatList,
 } from "react-native";
 import {
   BackHeader,
@@ -30,9 +31,11 @@ import { images } from "../theme/icons";
 import moment from "moment";
 import { screenName } from "../helper/routeNames";
 import { useNavigation } from "@react-navigation/native";
-import { useAppDispatch } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
 import { getAsyncUserInfo } from "../helper/asyncStorage";
+import { bookAppointment, getCartlist } from "../actions";
+import { CART_DETAILS } from "../actions/dispatchTypes";
 
 type RowItemValueProps = {
   title: string;
@@ -50,12 +53,15 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 
 const Cart = () => {
   const dispatch = useAppDispatch();
+  const { cartDetails } = useAppSelector((state) => state.cart);
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
   const [isShowCongrestModal, setIsShowCongrestModal] = useState(false);
   const { navigate } = useNavigation();
   const [selectedDateIndex, setSelectedDate] = useState(null);
   const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [total, setTotal] = useState("");
+  const [bookTime, setBookTime] = useState({});
 
   useEffect(() => {
     async function getDatesList() {
@@ -71,6 +77,7 @@ const Cart = () => {
         },
         onSuccess: (response: any) => {
           setDates(convertToOutput(response));
+          getCart();
         },
         onFailure: () => {},
       };
@@ -79,21 +86,75 @@ const Cart = () => {
     getDatesList();
   }, []);
 
+  const getCart = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: (response: any) => {
+        dispatch({ type: CART_DETAILS, payload: response?.data });
+        let totals = 0;
+        response.data?.cart?.items.map((item) => {
+          totals += item?.price;
+        });
+        setTotal(totals);
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(getCartlist(obj));
+  };
+
   const onPressDateItem = (index: any) => {
     setSelectedDate(index);
-    setTimes(dates[index].value);
+    setTimes([...dates][index].value);
     setSelectedTime(null);
   };
 
   const onPressTimeItem = (index: any) => {
     setSelectedTime(index);
+    let bookDates = times[index];
+    setBookTime(bookDates);
   };
 
   let data = ["1"];
 
-  const onPressBook = () => {
-    setIsShowCongrestModal(true);
-  };
+  const onPressBook = useCallback(async () => {
+    let newobj = cartDetails?.cart?.items.map((item, index) => {
+      return {
+        category_id: item?.serviceId,
+        category_name: item?.serviceName,
+        price: item?.price,
+      };
+    });
+
+    let userInfo = await getAsyncUserInfo();
+    console.log("time", bookTime);
+    let obj = {
+      data: {
+        bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
+        userId: userInfo?._id,
+        expertId: cartDetails?.cart?.expertId,
+        customerName: cartDetails?.user?.name,
+        services: newobj,
+        timeSlot: [
+          {
+            timeSlot_id: "60c67e5f3f78730015e0810e",
+            unavailableDate: "2024-01-15T12:00:00Z",
+            unavailableTimeSlot: "Morning",
+          },
+        ],
+        paymentType: "COD",
+        notes: "Special requests or notes for the appointment",
+      },
+      onSuccess: () => {
+        setIsShowCongrestModal(true);
+      },
+    };
+    // dispatch(bookAppointment(obj));
+  }, []);
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
@@ -125,29 +186,47 @@ const Cart = () => {
           <ScrollView style={{ flex: 1 }}>
             <View style={styles.whiteContainer}>
               <View style={styles.rowStyle}>
-                <Image style={styles.personStyle} source={images.barber} />
+                <Image
+                  style={styles.personStyle}
+                  source={{
+                    uri:
+                      cartDetails?.featured_image_url +
+                      "/" +
+                      cartDetails?.user?.user_profile_images[0]?.image,
+                  }}
+                />
                 <TouchableOpacity
                   onPress={onPressCard}
                   style={styles.columStyle}
                 >
                   <View style={styles.rowNameStyle}>
-                    <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+                    <Text style={styles.nameTextStyle}>
+                      {cartDetails?.user?.name}
+                    </Text>
                     <VerifyIcon />
                   </View>
                   <View
                     style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}
                   >
                     <View style={styles.startContainer}>
-                      <Text style={styles.startTextStyle}>{4.6}</Text>
+                      <Text style={styles.startTextStyle}>
+                        {cartDetails?.user?.averageRating}
+                      </Text>
                       <StarIcon />
                     </View>
                     <View style={styles.dotStyle} />
-                    <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
+                    <Text style={styles.greyTextStyle}>
+                      {cartDetails?.user?.jobDone}
+                      {" Jobs Done"}
+                    </Text>
                   </View>
                   <View style={styles.rowNameStyle}>
                     <CarIcon />
                     <Text style={styles.locationTextStyle}>
-                      {"Sector 67, Mohali"}
+                      {cartDetails?.user?.city[0]?.city_name}
+                      {", "}
+                      {cartDetails?.user?.district[0]?.district_name}
+                      {cartDetails?.user?.city[0]?.city_name}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -155,16 +234,25 @@ const Cart = () => {
             </View>
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
               <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-              <RowItemValue title="Hair Cut" value="₹200" />
-              <RowItemValue title="Beard Trim" value="₹100" />
-              <RowItemValue title="Hair color" value="₹500" />
-              <RowItemValue title="Discount Applied" value="-₹300" />
-              <RowItemValue title="Tax" value="₹50" />
+              <FlatList
+                data={cartDetails?.cart?.items}
+                renderItem={({ item }) => {
+                  return (
+                    <RowItemValue
+                      title={item?.serviceName}
+                      value={"₹" + item?.price}
+                    />
+                  );
+                }}
+              />
               <RowItemValue title="Payment Method" value="Cash" />
               <View style={styles.lineStyle} />
               <View style={styles.rowSpaceStyle}>
                 <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-                <Text style={styles.valueTextStyle}>{"₹550.00"}</Text>
+                <Text style={styles.valueTextStyle}>
+                  {"₹"}
+                  {total}
+                </Text>
               </View>
             </View>
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>

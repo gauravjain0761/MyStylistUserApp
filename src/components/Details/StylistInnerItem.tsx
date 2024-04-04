@@ -13,6 +13,10 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import { TrashIcon } from "../../theme/SvgIcon";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { addToCart, removeToCart } from "../../actions";
+import { ADD_TO_CART } from "../../actions/dispatchTypes";
 
 type Props = {
   isOffer?: boolean;
@@ -20,14 +24,61 @@ type Props = {
   baseUrl?: string;
 };
 const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
+  const { addtocart } = useAppSelector((state) => state.cart);
   const [count, setCount] = useState(0);
 
-  const onPressDelete = useCallback(() => {
-    setCount(count - 1);
+  const onPressDelete = useCallback(async () => {
+    let itemId = "";
+    addtocart?.items?.map((item) => {
+      if (item.serviceId == data.sub_services.sub_service_id) {
+        itemId = item._id;
+      }
+    });
+    let userInfo = await getAsyncUserInfo();
+    let passData = {
+      userId: userInfo?._id,
+      itemId: itemId,
+    };
+    let obj = {
+      data: passData,
+      onSuccess: (response: any) => {
+        setCount(count - 1);
+        console.log("ressponce", response);
+      },
+      onFailure: (Err: any) => {
+        console.log("Errrr", Err);
+      },
+    };
+    dispatch(removeToCart(obj));
   }, [count]);
 
-  const onPressAdd = useCallback(() => {
-    setCount(count + 1);
+  const dispatch = useAppDispatch();
+
+  const onPressAdd = useCallback(async () => {
+    let userInfo = await getAsyncUserInfo();
+    let objs: any = {
+      serviceId: data?.sub_services?.sub_service_id,
+      serviceName: data?.sub_services?.sub_service_name,
+      serviceType: "Offer",
+      price: data?.sub_services?.price,
+      quantity: 1,
+    };
+    let passData = {
+      userId: userInfo._id,
+      expertId: data?.expert_id,
+      items: [objs],
+    };
+    let obj = {
+      data: passData,
+      onSuccess: (response: any) => {
+        dispatch({ type: ADD_TO_CART, payload: response.data });
+        setCount(count + 1);
+      },
+      onFailure: (Err: any) => {
+        console.log("Errrr", Err);
+      },
+    };
+    dispatch(addToCart(obj));
   }, [count]);
 
   return (

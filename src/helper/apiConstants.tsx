@@ -18,6 +18,9 @@ export const api = {
 
   // cart
   cart: "cart/addToCart",
+  removeTocart: "cart/removeCartItem",
+  getCart: "cart/getCartList",
+  bookAppointments: "appointment/addAppointment?=&=",
 
   //Profile
   FAQ: "faq/getAllFAQ",

@@ -53,7 +53,7 @@ const OtpVerification = ({ route }: any) => {
         data: {
           phone: params?.phone,
           otp: value,
-          device_token: "8427001887",
+          device_token: params.deviceToken,
           mobile_type: "IOS",
         },
         onSuccess: (res: any) => {

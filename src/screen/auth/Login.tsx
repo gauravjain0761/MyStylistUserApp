@@ -178,6 +178,7 @@ const Login: FC = () => {
           navigation.navigate(screenName.OptVerification, {
             phone: phoneNum,
             data: data,
+            deviceToken: deviceToken,
           });
         },
         onFailure: () => {},

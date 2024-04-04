@@ -70,6 +70,7 @@ import {
 import { setLocation } from "../../actions/locationAction";
 import { getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
+import { call } from "ramda";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -165,6 +166,8 @@ const Home = () => {
             limit: 10,
           },
         };
+        console.log(obj);
+
         dispatch(getUsersByLocation(obj));
       },
       (err) => {

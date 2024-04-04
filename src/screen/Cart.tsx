@@ -22,6 +22,7 @@ import {
   generateTimes,
   generateWeekDates,
   hp,
+  infoToast,
   wp,
 } from "../helper/globalFunction";
 import { colors } from "../theme/color";
@@ -33,7 +34,7 @@ import { screenName } from "../helper/routeNames";
 import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
-import { getAsyncUserInfo } from "../helper/asyncStorage";
+import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
 import { bookAppointment, getCartlist } from "../actions";
 import { CART_DETAILS } from "../actions/dispatchTypes";
 
@@ -60,7 +61,6 @@ const Cart = () => {
   const { navigate } = useNavigation();
   const [selectedDateIndex, setSelectedDate] = useState(null);
   const [selectedTimeIndex, setSelectedTime] = useState(null);
-  const [total, setTotal] = useState("");
   const [bookTime, setBookTime] = useState({});
 
   useEffect(() => {
@@ -93,17 +93,21 @@ const Cart = () => {
         userId: userInfo._id,
       },
       onSuccess: (response: any) => {
-        dispatch({ type: CART_DETAILS, payload: response?.data });
         let totals = 0;
         response.data?.cart?.items.map((item) => {
           totals += item?.price;
         });
-        setTotal(totals);
+        dispatch({
+          type: CART_DETAILS,
+          payload: { ...response?.data, total: totals },
+        });
       },
       onFailure: (Errr: any) => {
         console.log("Errr", Errr);
       },
     };
+    console.log(await getAsyncToken());
+
     dispatch(getCartlist(obj));
   };
 
@@ -124,14 +128,13 @@ const Cart = () => {
   const onPressBook = useCallback(async () => {
     let newobj = cartDetails?.cart?.items.map((item, index) => {
       return {
-        category_id: item?.serviceId,
-        category_name: item?.serviceName,
+        service_id: item?.serviceId,
+        service_name: item?.serviceName,
         price: item?.price,
       };
     });
 
     let userInfo = await getAsyncUserInfo();
-    console.log("time", bookTime);
     let obj = {
       data: {
         bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
@@ -141,20 +144,26 @@ const Cart = () => {
         services: newobj,
         timeSlot: [
           {
-            timeSlot_id: "60c67e5f3f78730015e0810e",
-            unavailableDate: "2024-01-15T12:00:00Z",
-            unavailableTimeSlot: "Morning",
+            timeSlot_id: bookTime?._id,
+            availableDate: moment(bookTime?.createdAt).format("YYYY-MM-DD"),
+            availableTime: bookTime?.time,
           },
         ],
         paymentType: "COD",
         notes: "Special requests or notes for the appointment",
       },
-      onSuccess: () => {
+      onSuccess: (response: any) => {
+        console.log("responsessssss", response);
         setIsShowCongrestModal(true);
       },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr?.data?.error);
+        infoToast(Errr?.data?.error);
+      },
     };
-    // dispatch(bookAppointment(obj));
-  }, []);
+    console.log("data", obj.data);
+    dispatch(bookAppointment(obj));
+  }, [bookTime]);
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
@@ -224,8 +233,9 @@ const Cart = () => {
                     <CarIcon />
                     <Text style={styles.locationTextStyle}>
                       {cartDetails?.user?.city[0]?.city_name}
-                      {", "}
+                      {","}
                       {cartDetails?.user?.district[0]?.district_name}
+                      {","}
                       {cartDetails?.user?.city[0]?.city_name}
                     </Text>
                   </View>
@@ -251,7 +261,7 @@ const Cart = () => {
                 <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
                 <Text style={styles.valueTextStyle}>
                   {"₹"}
-                  {total}
+                  {cartDetails?.total}
                 </Text>
               </View>
             </View>

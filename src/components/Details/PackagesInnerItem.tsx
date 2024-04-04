@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -22,8 +22,8 @@ type Props = {
 };
 
 const PackagesInnerItem = ({ data }: Props) => {
-  const { addtocart } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(0);
+  const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
+  const [count, setCount] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -44,7 +44,7 @@ const PackagesInnerItem = ({ data }: Props) => {
     let obj = {
       data: passData,
       onSuccess: (response: any) => {
-        setCount(count - 1);
+        setCount(false);
         console.log("ressponce", response);
       },
       onFailure: (Err: any) => {
@@ -60,6 +60,7 @@ const PackagesInnerItem = ({ data }: Props) => {
     let items: any = [];
     data?.service_name.map((item: any) => {
       let obj: any = {
+        actionId: data._id,
         serviceId: item?._id,
         serviceName: item?.service_name,
         serviceType: "Package",
@@ -77,7 +78,7 @@ const PackagesInnerItem = ({ data }: Props) => {
       data: passData,
       onSuccess: (response: any) => {
         dispatch({ type: ADD_TO_CART, payload: response.data });
-        setCount(count + 1);
+        setCount(true);
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
@@ -119,7 +120,7 @@ const PackagesInnerItem = ({ data }: Props) => {
           );
         })}
       </View>
-      {count === 0 ? (
+      {count == false ? (
         <TouchableOpacity onPress={onPressAdd}>
           <ImageBackground
             resizeMode="contain"
@@ -136,12 +137,12 @@ const PackagesInnerItem = ({ data }: Props) => {
             style={styles.btnStyle}
             source={images.green_button}
           >
-            <TouchableOpacity onPress={onPressDelete}>
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center" }}
+              onPress={onPressDelete}
+            >
               <TrashIcon />
-            </TouchableOpacity>
-            <Text style={styles.countTextStyle}>{count}</Text>
-            <TouchableOpacity onPress={onPressAdd}>
-              <Text style={styles.plusTexStyke}>+</Text>
+              <Text style={styles.countTextStyle}>ADDED</Text>
             </TouchableOpacity>
           </ImageBackground>
         </View>
@@ -199,7 +200,7 @@ const styles = StyleSheet.create({
   },
   countTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.green_2),
-    marginHorizontal: wp(14),
+    marginHorizontal: wp(4),
   },
   plusTexStyke: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.green_2),

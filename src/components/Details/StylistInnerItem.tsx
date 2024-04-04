@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -24,8 +24,8 @@ type Props = {
   baseUrl?: string;
 };
 const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
-  const { addtocart } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(0);
+  const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
+  const [count, setCount] = useState(false);
 
   const onPressDelete = useCallback(async () => {
     let itemId = "";
@@ -42,7 +42,7 @@ const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
     let obj = {
       data: passData,
       onSuccess: (response: any) => {
-        setCount(count - 1);
+        setCount(false);
         console.log("ressponce", response);
       },
       onFailure: (Err: any) => {
@@ -57,6 +57,7 @@ const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
   const onPressAdd = useCallback(async () => {
     let userInfo = await getAsyncUserInfo();
     let objs: any = {
+      actionId: data?._id,
       serviceId: data?.sub_services?.sub_service_id,
       serviceName: data?.sub_services?.sub_service_name,
       serviceType: "Offer",
@@ -72,7 +73,7 @@ const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
       data: passData,
       onSuccess: (response: any) => {
         dispatch({ type: ADD_TO_CART, payload: response.data });
-        setCount(count + 1);
+        setCount(true);
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
@@ -95,7 +96,7 @@ const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
           ) : null} */}
         </View>
         <View style={{ flex: 1 }} />
-        {count === 0 ? (
+        {count == false ? (
           <TouchableOpacity onPress={onPressAdd}>
             <ImageBackground
               resizeMode="contain"
@@ -112,12 +113,12 @@ const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
               style={styles.btnStyle}
               source={images.green_button}
             >
-              <TouchableOpacity onPress={onPressDelete}>
+              <TouchableOpacity
+                style={{ flexDirection: "row", alignItems: "center" }}
+                onPress={onPressDelete}
+              >
                 <TrashIcon />
-              </TouchableOpacity>
-              <Text style={styles.countTextStyle}>{count}</Text>
-              <TouchableOpacity onPress={onPressAdd}>
-                <Text style={styles.plusTexStyke}>+</Text>
+                <Text style={styles.countTextStyle}>ADDED</Text>
               </TouchableOpacity>
             </ImageBackground>
           </View>
@@ -176,8 +177,8 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.green_2),
   },
   countTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.green_2),
-    marginHorizontal: wp(14),
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.green_2),
+    marginHorizontal: wp(4),
   },
   plusTexStyke: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.green_2),

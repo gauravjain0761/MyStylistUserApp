@@ -22,17 +22,17 @@ const Appointments = ({ navigation }) => {
   useEffect(() => {
     async function getList() {
       const userInfo = await getAsyncUserInfo();
-      console.log("userInfo?._id", userInfo?._id);
       let data = {
-        userId: "65eed8e49e6593d24b2a52d2",
-        // userId: userInfo?._id,
+        userId: userInfo?._id,
         page: 1,
         limit: 10,
       };
       let obj = {
         data,
-        onSuccess: () => {},
-        onFailure: () => {},
+        onSuccess: (ressponce) => {},
+        onFailure: (Err) => {
+          console.log(Err);
+        },
       };
       dispatch(getUserAppointments(obj));
     }
@@ -42,12 +42,13 @@ const Appointments = ({ navigation }) => {
   const onPressItem = (item: any) => {
     let obj = {
       id: item?._id,
-      onSuccess: () => {
+      onSuccess: (response) => {
         // @ts-ignore
         navigate(screenName.AppointmentDetails);
       },
       onFailure: () => {},
     };
+    console.log(item?._id);
     dispatch(getAppointmentDetails(obj));
   };
 

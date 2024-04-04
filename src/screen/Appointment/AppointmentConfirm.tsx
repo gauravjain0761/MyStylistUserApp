@@ -1,4 +1,5 @@
 import {
+  Alert,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -18,6 +19,8 @@ import { commonFontStyle } from "../../theme/fonts";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { useAppDispatch } from "../../redux/hooks";
+import { writeReview } from "../../actions";
 
 type RowItemValueProps = {
   title: string;
@@ -35,6 +38,7 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 
 const AppointmentConfirm = () => {
   const [IsModal, setIsModal] = useState(false);
+  const dispatch = useAppDispatch();
 
   const { navigate } = useNavigation();
 
@@ -42,8 +46,28 @@ const AppointmentConfirm = () => {
     setIsModal(!IsModal);
   };
 
-  const onPressSubmit = () => {
-    navigate(screenName.Feedback);
+  const onPressSubmit = (rating: number, review: string) => {
+    if (review.trim().length < 0) {
+      Alert.alert("Enter review");
+    } else if (rating < 1) {
+      Alert.alert("Enter rating");
+    } else {
+      let obj = {
+        data: {
+          expertId: "65eed0259e6593d24b2a5210",
+          userId: "65eed8e49e6593d24b2a52d2",
+          star_rating: rating,
+          review: review,
+        },
+        onSuccess: () => {
+          navigate(screenName.Feedback);
+        },
+        onFailure: (Err) => {
+          console.log(Err);
+        },
+      };
+      dispatch(writeReview(obj));
+    }
   };
 
   const onPressBookagain = () => {
@@ -104,7 +128,7 @@ const AppointmentConfirm = () => {
       <FeedbackModal
         close={setIsModal}
         visible={IsModal}
-        onPresssubmit={() => onPressSubmit()}
+        onPresssubmit={(rating, review) => onPressSubmit(rating, review)}
       />
     </View>
   );

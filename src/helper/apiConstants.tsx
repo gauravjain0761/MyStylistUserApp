@@ -44,13 +44,15 @@ export const api = {
 
   // favourite
   getUsersFavList: "favourite/getUsersFavList",
-  saveAsfavourite: "saveAsfavourite",
+  saveAsfavourite: "favourite/saveAsfavourite",
+  removeAsfavourite: "favourite/removefav",
 
   // Appointments
   userAppointments: "appointment/getUserAppointments",
   appointmentDetails: "appointment/getAppointmentDetails/",
-
   expertAvailability: "expertUnavailability/getExpertAvailability",
+  writeReviews: "review/writeReviews",
+  cancelAppointment: "appointment/cancelAppointment?=&=",
 
   // campaign/getCampaignExpert
   campaignExpert: "campaign/getCampaignExpert",

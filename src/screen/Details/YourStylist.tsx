@@ -68,6 +68,8 @@ import {
   getAllOffersByUser,
   getAllPackageByUser,
   getCartlist,
+  getUsersFavList,
+  removeAsfavourite,
   saveAsfavourite,
 } from "../../actions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
@@ -161,6 +163,8 @@ const YourStylist = () => {
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
   const animated = useSharedValue(0);
   const [animatedValue, setAnimatedValue] = useState(0);
+  const [like, setLike] = useState(false);
+  const [likeID, setLikeID] = useState("");
   const animatedStyle = useAnimatedStyle(() => {
     return {
       width:
@@ -179,18 +183,17 @@ const YourStylist = () => {
   }, []);
 
   useEffect(() => {
-    getCart();
-  }, [cartDetails]);
+    getFavUser();
+  }, []);
 
   const getCart = useCallback(async () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        // userId: userInfo._id,
-        userId: "66052db37e5822f655b581a6",
+        userId: userInfo._id,
       },
       onSuccess: (response: any) => {
-        // dispatch({ type: CART_DETAILS, payload: response?.data });
+        dispatch({ type: CART_DETAILS, payload: response?.data });
         let totals = 0;
         response.data?.cart?.items.map((item) => {
           totals += item?.price;
@@ -203,6 +206,30 @@ const YourStylist = () => {
     };
     dispatch(getCartlist(obj));
   }, [cartDetails]);
+
+  const getFavUser = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: (response: any) => {
+        response.data.map((item, index) => {
+          if (item.id == itemDetails?._id) {
+            setLike(true);
+            setLikeID(item._id);
+          } else {
+            setLike(false);
+          }
+        });
+        getCart();
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(getUsersFavList(obj));
+  };
 
   useEffect(() => {
     let obj = {
@@ -271,10 +298,27 @@ const YourStylist = () => {
     };
     let obj = {
       data: data,
-      onSuccess: () => {},
+      onSuccess: (respone) => {
+        let id = respone.data?._id;
+        setLikeID(id);
+        setLike(true);
+      },
       onFailure: (err: any) => {},
     };
-    dispatch(saveAsfavourite(obj));
+
+    let unlikeData = {
+      data: {
+        id: likeID,
+      },
+      onSuccess: (respone) => {
+        setLike(false);
+      },
+      onFailure: (err: any) => {},
+    };
+
+    like
+      ? dispatch(removeAsfavourite(unlikeData))
+      : dispatch(saveAsfavourite(obj));
   };
 
   return (
@@ -297,7 +341,7 @@ const YourStylist = () => {
         </Animation.View>
         {animatedValue === 0 ? (
           <TouchableOpacity onPress={onPressLike}>
-            <FillLike />
+            <FillLike fill={like ? "#000" : "none"} />
           </TouchableOpacity>
         ) : null}
         {animatedValue === 0 ? (

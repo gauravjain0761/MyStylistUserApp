@@ -62,3 +62,55 @@ export const getAppointmentDetails =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const writeReview =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.writeReviews,
+      headers: headers,
+      data: request?.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200 || response.status === 201) {
+          dispatch({ type: IS_LOADING, payload: false });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const cancelAppointment =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.cancelAppointment,
+      headers: headers,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200 || response.status === 201) {
+          dispatch({ type: IS_LOADING, payload: false });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

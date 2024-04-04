@@ -19,6 +19,7 @@ import { RatingStars } from "../../theme/SvgIcon";
 const FeedbackModal = ({ visible, close, onPresssubmit }) => {
   const [maxrating, setmaxRating] = useState([1, 2, 3, 4, 5]);
   const [defaultrating, setdefaultrating] = useState(0);
+  const [input, setInput] = useState("");
   return (
     <View style={styles.conatiner}>
       <Modals
@@ -63,10 +64,15 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
                 numberOfLines={4}
                 multiline
                 style={styles.input}
+                value={input}
+                onChangeText={(e) => setInput(e)}
                 placeholder="Write here..."
               />
             </View>
-            <TouchableOpacity style={styles.btn} onPress={onPresssubmit}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={() => onPresssubmit(defaultrating, input)}
+            >
               <ImageBackground
                 resizeMode="contain"
                 style={styles.submitImgStyle}

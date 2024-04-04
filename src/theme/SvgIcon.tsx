@@ -349,13 +349,13 @@ export const PackagesText = () => (
     />
   </Svg>
 );
-export const FillLike = () => {
+export const FillLike: FC<{ fill: any }> = ({ fill = "none" }) => {
   return (
     <Svg
       width="26"
       height="26"
       viewBox="0 0 24 24"
-      fill="none"
+      fill={fill}
       xmlns="http://www.w3.org/2000/svg"
     >
       <Path

@@ -32,6 +32,7 @@ export const GET_ALL_PACKAGES = "GET_ALL_PACKAGES";
 
 // favourite
 export const GET_USER_FAV_LIST = "GET_USER_FAV_LIST";
+export const SET_FAV_USER = "SET_FAV_USER";
 
 // appointment
 export const GET_APPOINTMENTS_LIST = "GET_APPOINTMENTS_LIST";

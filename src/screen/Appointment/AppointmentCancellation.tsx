@@ -16,9 +16,15 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { cancelAppointment } from "../../actions";
 
 const AppointmentCancellation = () => {
   const [select, SetSelect] = useState(0);
+  const { appointmentDetails } = useAppSelector((state) => state.appointment);
+  const { Appointment } = appointmentDetails;
+  const dispatch = useAppDispatch();
+
   const { navigate } = useNavigation();
   const reason = [
     {
@@ -48,14 +54,42 @@ const AppointmentCancellation = () => {
   ];
 
   const onPressCancel = () => {
-    navigate(screenName.Home);
+    let obj = {
+      data: {
+        appointmentId: Appointment?._id,
+        status: "cancelled",
+      },
+      onSuccess: (respo) => {
+        console.log("ressss", respo);
+        navigate(screenName.Home);
+      },
+      onFailure: (err: any) => {
+        console.log(err);
+      },
+    };
+    dispatch(cancelAppointment(obj));
   };
 
   const onPressNo = () => {
     navigate(screenName.Home);
   };
   const onPressYes = () => {
-    navigate(screenName.Home);
+    console.log("hi");
+
+    let obj = {
+      data: {
+        appointmentId: Appointment?._id,
+        status: "cancelled",
+      },
+      onSuccess: (resss) => {
+        navigate(screenName.Home);
+        console.log(resss);
+      },
+      onFailure: (err: any) => {
+        console.log(err);
+      },
+    };
+    dispatch(cancelAppointment(obj));
   };
 
   return (

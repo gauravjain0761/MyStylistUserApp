@@ -318,7 +318,7 @@ const Home = () => {
   const handleScroll = (event) => {
     const { contentOffset } = event.nativeEvent;
     // Check if the scroll offset is greater than or equal to the height of the sticky header
-    setIsSticky(contentOffset.y >= 1100); // Adjust this value according to your header's height
+    setIsSticky(contentOffset.y >= 1550); // Adjust this value according to your header's height
   };
 
   const onPressServicesItem = (item: any) => {

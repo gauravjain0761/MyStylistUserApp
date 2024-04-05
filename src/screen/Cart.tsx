@@ -35,8 +35,8 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
 import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
-import { bookAppointment, getCartlist } from "../actions";
 import { CART_DETAILS } from "../actions/dispatchTypes";
+import { bookAppointment } from "../actions";
 
 type RowItemValueProps = {
   title: string;
@@ -62,6 +62,7 @@ const Cart = () => {
   const [selectedDateIndex, setSelectedDate] = useState(null);
   const [selectedTimeIndex, setSelectedTime] = useState(null);
   const [bookTime, setBookTime] = useState({});
+  const [date, setDate] = useState("");
 
   useEffect(() => {
     async function getDatesList() {
@@ -113,7 +114,8 @@ const Cart = () => {
 
   const onPressDateItem = (index: any) => {
     setSelectedDate(index);
-    setTimes([...dates][index].value);
+    setDate(dates[index].title);
+    setTimes(dates[index].value);
     setSelectedTime(null);
   };
 
@@ -145,7 +147,7 @@ const Cart = () => {
         timeSlot: [
           {
             timeSlot_id: bookTime?._id,
-            availableDate: moment(bookTime?.createdAt).format("YYYY-MM-DD"),
+            availableDate: date,
             availableTime: bookTime?.time,
           },
         ],
@@ -236,7 +238,7 @@ const Cart = () => {
                       {","}
                       {cartDetails?.user?.district[0]?.district_name}
                       {","}
-                      {cartDetails?.user?.city[0]?.city_name}
+                      {cartDetails?.user?.state[0]?.state_name}
                     </Text>
                   </View>
                 </TouchableOpacity>

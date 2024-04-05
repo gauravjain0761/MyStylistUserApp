@@ -22,10 +22,17 @@ type Props = {
   isOffer?: boolean;
   data: any;
   baseUrl?: string;
+  count?: boolean;
+  setCount?: any;
 };
-const StylistInnerItem = ({ isOffer, data, baseUrl }: Props) => {
+const StylistInnerItem = ({
+  isOffer,
+  data,
+  baseUrl,
+  count,
+  setCount,
+}: Props) => {
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(false);
 
   const onPressDelete = useCallback(async () => {
     let itemId = "";

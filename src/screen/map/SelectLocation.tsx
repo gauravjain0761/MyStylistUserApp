@@ -23,8 +23,16 @@ import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { images } from "../../theme/icons";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { deleteAddress, getUserAddresses } from "../../actions";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import {
+  addAddress,
+  deleteAddress,
+  editAddress,
+  getUserAddresses,
+  updateLocation,
+} from "../../actions";
+import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
+import { requestLocationPermission } from "../../helper/locationHandler";
+import { err } from "react-native-svg";
 
 const SelectLocation = ({}) => {
   const dispatch = useAppDispatch();
@@ -36,9 +44,12 @@ const SelectLocation = ({}) => {
   const [sector, setSector] = useState("");
   const [landmark, setlandMark] = useState("");
   const [pincode, setPincode] = useState("");
+  const [type, setType] = useState("Add");
+  const [editData, seteditData] = useState({});
 
   useEffect(() => {
     getList();
+    console.log("ji");
   }, []);
 
   const getList = async () => {
@@ -49,7 +60,10 @@ const SelectLocation = ({}) => {
         userId: userInfo._id,
         // userId: "65eed0259e6593d24b2a5210",
       },
-      onSuccess: () => {},
+      onSuccess: (responce) => {
+        // getLocation();
+        seteditData(responce?.addresses);
+      },
       onFailure: () => {},
     };
     dispatch(getUserAddresses(obj));
@@ -62,15 +76,99 @@ const SelectLocation = ({}) => {
 
   const onPressAddNew = () => {
     setIsAddModal(true);
+    setType("Add");
   };
 
   const onPressLabel = (type: string) => setSelectType(type);
 
-  const onPressSave = () => {
-    setIsAddModal(false);
+  const onPressSave = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let coord = await getAsyncCoord();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+        addressData: {
+          addressType: selectType,
+          houseNumber: house,
+          sector: sector,
+          pinCode: pincode,
+          landmark: landmark,
+          location: {
+            type: "Point",
+            coordinates: [coord.latitude, coord.longitude],
+          },
+          isDefault: true,
+        },
+      },
+      onSuccess: () => {
+        setIsAddModal(false);
+        setHouse("");
+        setSector("");
+        setlandMark("");
+        setPincode("");
+        getList();
+      },
+      onFailure: (Err) => {
+        // getList();
+        infoToast(Err.data.error);
+      },
+    };
+    if (house.trim().length < 0) {
+      infoToast("Enter House num");
+    } else if (sector.trim().length < 0) {
+      infoToast("Enter Sector");
+    } else if (pincode.trim().length < 0) {
+      infoToast("Enter Pincode");
+    }
+
+    let editobj = {
+      data: {
+        addressId: editData[0]?._id,
+        userId: userInfo?._id,
+        addressData: {
+          addressType: selectType,
+          houseNumber: house,
+          sector: sector,
+          pinCode: pincode,
+          landmark: landmark,
+          location: {
+            type: "Point",
+            coordinates: [coord.latitude, coord.longitude],
+          },
+          isDefault: true,
+        },
+      },
+      onSuccess: () => {
+        setIsAddModal(false);
+        setHouse("");
+        setSector("");
+        setlandMark("");
+        setPincode("");
+        getList();
+      },
+      onFailure: (Err) => {
+        getList();
+        infoToast(Err.data.error);
+      },
+    };
+    if (house.trim().length < 0) {
+      infoToast("Enter House num");
+    } else if (sector.trim().length < 0) {
+      infoToast("Enter Sector");
+    } else if (pincode.trim().length < 0) {
+      infoToast("Enter Pincode");
+    }
+
+    if (type === "Edit") {
+      dispatch(editAddress(editobj));
+    } else {
+      dispatch(addAddress(obj));
+    }
+    console.log(editData[0]?._id);
   };
 
-  const onPressEditItem = (item: any) => {
+  const onPressEditItem = async (item: any) => {
+    setType("Edit");
     setIsAddModal(true);
     setHouse(item?.address?.houseNumber);
     setSector(item?.address?.sector);

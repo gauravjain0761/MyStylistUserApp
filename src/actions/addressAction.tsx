@@ -31,7 +31,7 @@ export const getUserAddresses =
             type: GET_ADDRESS_LIST,
             payload: result?.data?.data,
           });
-          if (request.onSuccess) request.onSuccess(result.data);
+          if (request.onSuccess) request.onSuccess(result.data.data);
         }
       })
       .catch((error: any) => {
@@ -56,6 +56,8 @@ export const deleteAddress =
     })
       .then((result: any) => {
         if (result.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+
           if (request.onSuccess) request.onSuccess(result.data);
         }
       })
@@ -81,6 +83,34 @@ export const editAddress =
     })
       .then((result: any) => {
         if (result.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+
+          if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const addAddress =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.adduserAddress,
+      headers: header,
+      data: request.data,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
           if (request.onSuccess) request.onSuccess(result.data);
         }
       })

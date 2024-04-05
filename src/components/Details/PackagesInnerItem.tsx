@@ -27,6 +27,15 @@ const PackagesInnerItem = ({ data }: Props) => {
 
   const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    getStatus();
+  }, []);
+
+  const getStatus = async () => {
+    let userId = await getAsyncUserInfo();
+    console.log(userId);
+  };
+
   const onPressDelete = useCallback(async () => {
     let itemId = "";
     addtocart?.items?.map((item) => {

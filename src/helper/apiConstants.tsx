@@ -1,5 +1,6 @@
 export const api = {
   BASE_URL: "https://api.mystylist.in/",
+  IMG_URL: "https://mystylist-media.s3.amazonaws.com/",
 
   // Auth
   login: "login",
@@ -31,6 +32,8 @@ export const api = {
   //Map
   location: "user/getUsersByLocation",
   updatelocation: "user/updateUserLocation",
+  adduserAddress: "user/updateUserAddress",
+  edituserAddress: "user/updateUserAddress",
 
   //Offers
   getAllOffersByUser: "generateOffer/getAllOffersByUser/",
@@ -53,6 +56,7 @@ export const api = {
   expertAvailability: "expertUnavailability/getExpertAvailability",
   writeReviews: "review/writeReviews",
   cancelAppointment: "appointment/cancelAppointment?=&=",
+  reschedule: "appointment/rescheduleAppointment",
 
   // campaign/getCampaignExpert
   campaignExpert: "campaign/getCampaignExpert",

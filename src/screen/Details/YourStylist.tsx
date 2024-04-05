@@ -211,13 +211,13 @@ const YourStylist = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo?._id,
       },
       onSuccess: (response: any) => {
-        response.data.map((item, index) => {
-          if (item.id == itemDetails?._id) {
+        response?.data.map((item) => {
+          if (item._id == itemDetails?.user._id) {
+            setLikeID(item?.favouriteId);
             setLike(true);
-            setLikeID(item._id);
           } else {
             setLike(false);
           }

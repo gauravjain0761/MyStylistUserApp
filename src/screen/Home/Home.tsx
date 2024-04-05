@@ -1,6 +1,7 @@
 import {
   ActivityIndicator,
   FlatList,
+  // FlatList,
   Image,
   ScrollView,
   StyleSheet,
@@ -72,7 +73,6 @@ import {
 import { setLocation } from "../../actions/locationAction";
 import { getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
-import { call } from "ramda";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -104,6 +104,8 @@ const Home = () => {
   const { getallservices, userList, barberList } = useAppSelector(
     (state) => state.home
   );
+  const [rating, setRating] = useState(null);
+  const [gender, setGender] = useState(null);
 
   useEffect(() => {
     let banner = {
@@ -173,6 +175,8 @@ const Home = () => {
             maxDistance: 50000,
             page: page,
             limit: 10,
+            rating: rating,
+            gender: gender,
           },
           onSuccess: () => {
             setPage(page + 1);
@@ -208,6 +212,7 @@ const Home = () => {
             maxDistance: 50000,
           };
           await setAsyncCoord(coord);
+          console.log("oooo", coord);
           dispatch({ type: COORD, payload: coord });
           dispatch({ type: IS_LOADING, payload: false });
           SetLocation();
@@ -288,6 +293,10 @@ const Home = () => {
     } else if (item == 2) {
     } else if (item == 3) {
       setCostmodal(!costmodal);
+    } else if (item == 4) {
+      setRating(4);
+    } else if (item == 5) {
+      setGender("Male");
     }
   };
 
@@ -596,6 +605,8 @@ const Home = () => {
                 />
               );
             }}
+            onEndReached={() => console.log("hi")}
+            onEndReachedThreshold={0.8}
             ItemSeparatorComponent={() => (
               <View style={styles.card_separator}></View>
             )}
@@ -850,6 +861,7 @@ const styles = StyleSheet.create({
   barber_card_container: {
     marginHorizontal: wp(20),
     marginTop: hp(20),
+    flex: 1,
   },
   card_separator: {
     height: hp(24),

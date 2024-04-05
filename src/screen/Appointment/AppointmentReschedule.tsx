@@ -7,9 +7,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AppointmentDetailCard from "../../components/common/AppointmentDetailCard";
 import {
+  convertToOutput,
   generateTimes,
   generateWeekDates,
   hp,
@@ -22,6 +23,11 @@ import { BackHeader, TimeSelector, WeekDateSelector } from "../../components";
 import { screenName } from "../../helper/routeNames";
 import { colors } from "../../theme/color";
 import { useNavigation } from "@react-navigation/native";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import moment from "moment";
+import { getExpertAvailability } from "../../actions/commonActions";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { rescheduleAppointment } from "../../actions";
 
 type RowItemValueProps = {
   title: string;
@@ -38,39 +44,77 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 };
 
 const AppointmentReschedule = () => {
-  const [dates, setDates] = useState(generateWeekDates());
-  const [times, setTimes] = useState(generateTimes());
-
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [selectedDateIndex, setSelectedDate] = useState(null);
+  const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [bookTime, setBookTime] = useState({});
+  const [date, setDate] = useState("");
+  const { appointmentDetails } = useAppSelector((state) => state.appointment);
+  const { Appointment } = appointmentDetails;
+  const { userId, expertId } = Appointment;
   const { navigate } = useNavigation();
+  const dispatch = useAppDispatch();
 
-  const onPressDateItem = (item: any) => {
-    let data = [...dates];
+  useEffect(() => {
+    async function getDatesList() {
+      let userInfo = await getAsyncUserInfo();
+      let data = generateWeekDates();
 
-    dates.map((eItem, index) => {
-      if (eItem.id === item.id) {
-        eItem.isSelected = true;
-      } else {
-        eItem.isSelected = false;
-      }
-    });
-    setDates(data);
+      let obj = {
+        data: {
+          startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
+          endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+          timeSlotDuration: 1,
+          expertId: userInfo._id,
+        },
+        onSuccess: (response: any) => {
+          setDates(convertToOutput(response));
+        },
+        onFailure: () => {},
+      };
+      dispatch(getExpertAvailability(obj));
+    }
+    getDatesList();
+  }, []);
+
+  const onPressDateItem = (index: any) => {
+    setSelectedDate(index);
+    setDate(dates[index].title);
+    setTimes(dates[index].value);
+    setSelectedTime(null);
   };
 
-  const onPressTimeItem = (item: any) => {
-    let data = [...times];
-    times.map((eItem, index) => {
-      if (eItem.id === item.id) {
-        eItem.isSelected = true;
-      } else {
-        eItem.isSelected = false;
-      }
-    });
-    setTimes(data);
+  const onPressTimeItem = (index: any) => {
+    setSelectedTime(index);
+    let bookDates = times[index];
+    setBookTime(bookDates);
   };
 
   const onPressBook = () => {
-    navigate(screenName.AppointmentConfirm);
+    let obj = {
+      data: {
+        appointmentId: Appointment?._id,
+        newTimeSlot: {
+          timeSlot_id: bookTime?._id,
+          availableDate: date,
+          availableTime: bookTime?.time,
+        },
+      },
+      onSuccess: (response: any) => {
+        navigate(screenName.AppointmentConfirm);
+        console.log(response);
+      },
+      onFailure: () => {},
+    };
+    dispatch(rescheduleAppointment(obj));
   };
+
+  const initialValue = 0;
+  let price = Appointment?.services.reduce(
+    (accumulator, currentValue) => currentValue.price + accumulator,
+    initialValue
+  );
 
   return (
     <View style={styles.conatiner}>
@@ -79,12 +123,20 @@ const AppointmentReschedule = () => {
         <View style={styles.card}>
           <AppointmentDetailCard
             images={images.barber5}
-            name={strings.Majid_Khan}
-            rating={"4.6"}
-            jobs={343}
-            location={strings.Sector_Mohali}
-            date={"26 May,2024"}
-            time={"08:30PM"}
+            name={expertId?.name}
+            rating={expertId?.averageRating}
+            jobs={expertId?.jobDone}
+            location={
+              expertId?.addresses?.[0].address?.houseNumber +
+              "," +
+              expertId?.addresses?.[0].address?.sector +
+              "," +
+              expertId?.addresses?.[0].address?.landmark
+            }
+            date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
+              "DD MMM,YYYY"
+            )}
+            time={Appointment?.timeSlot?.[0]?.availableTime}
             previousBooking
           />
         </View>
@@ -110,16 +162,17 @@ const AppointmentReschedule = () => {
 
         <View style={{ ...styles.whiteContainer, marginTop: hp(20) }}>
           <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-          <RowItemValue title="Hair Cut" value="₹200" />
-          <RowItemValue title="Beard Trim" value="₹100" />
-          <RowItemValue title="Hair color" value="₹500" />
-          <RowItemValue title="Discount Applied" value="-₹300" />
-          <RowItemValue title="Tax" value="₹50" />
+          {Appointment?.services.map((item) => (
+            <RowItemValue
+              title={item?.service_name}
+              value={"₹" + item?.price}
+            />
+          ))}
           <RowItemValue title="Payment Method" value="Cash" />
           <View style={styles.lineStyle} />
           <View style={styles.rowSpaceStyle}>
             <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-            <Text style={styles.valueTextStyle}>{"₹550.00"}</Text>
+            <Text style={styles.valueTextStyle}>{"₹" + price}</Text>
           </View>
         </View>
 
@@ -127,7 +180,8 @@ const AppointmentReschedule = () => {
           <Text style={styles.titleStyle}>{strings["Select Date"]}</Text>
           <WeekDateSelector
             list={dates}
-            onPressDate={(index) => onPressDateItem(dates[index])}
+            selectIndex={selectedDateIndex}
+            onPressDate={(index) => onPressDateItem(index)}
           />
         </View>
 
@@ -135,7 +189,8 @@ const AppointmentReschedule = () => {
           <Text style={styles.titleStyle}>{strings["Select Time"]}</Text>
           <TimeSelector
             data={times}
-            onPressTime={(index) => onPressTimeItem(times[index])}
+            selectIndex={selectedTimeIndex}
+            onPressTime={(index) => onPressTimeItem(index)}
           />
         </View>
       </ScrollView>

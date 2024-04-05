@@ -19,8 +19,9 @@ import { commonFontStyle } from "../../theme/fonts";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { writeReview } from "../../actions";
+import { api } from "../../helper/apiConstants";
 
 type RowItemValueProps = {
   title: string;
@@ -37,6 +38,11 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 };
 
 const AppointmentConfirm = () => {
+  const { appointmentReschedule, appointmentDetails } = useAppSelector(
+    (state) => state.appointment
+  );
+  const { Appointment } = appointmentDetails;
+  const { userId, expertId } = Appointment;
   const [IsModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
 
@@ -54,8 +60,8 @@ const AppointmentConfirm = () => {
     } else {
       let obj = {
         data: {
-          expertId: "65eed0259e6593d24b2a5210",
-          userId: "65eed8e49e6593d24b2a52d2",
+          expertId: expertId._id,
+          userId: userId._id,
           star_rating: rating,
           review: review,
         },
@@ -79,11 +85,19 @@ const AppointmentConfirm = () => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <AppointmentConfirmCard
-            name={strings.Majid_Khan}
-            image={images.barber5}
-            jobs={343}
-            rating={4.6}
-            location={strings.Sector_Mohali}
+            name={expertId?.name}
+            image={{
+              uri: api.IMG_URL + expertId?.user_profile_images[0]?.image,
+            }}
+            jobs={expertId?.jobDone}
+            rating={expertId?.averageRating}
+            location={
+              expertId?.addresses?.[0].address?.houseNumber +
+              "," +
+              expertId?.addresses?.[0].address?.sector +
+              "," +
+              expertId?.addresses?.[0].address?.landmark
+            }
             time={"08:30PM"}
             date={"26 May, 2024"}
           />

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   LayoutAnimation,
@@ -12,6 +12,11 @@ import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { ArrowUp, TrashIcon } from "../../theme/SvgIcon";
 import { StylistInnerItem } from "..";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getCartlist } from "../../actions";
+import { CART_DETAILS } from "../../actions/dispatchTypes";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 type Props = {
   isOffer?: boolean;
@@ -21,11 +26,48 @@ type Props = {
 
 const StylistItem = ({ isOffer, data, offers }: Props) => {
   const [expanded, setExpanded] = useState(true);
+  const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
+  const [count, setCount] = useState(false);
+  const dispatch = useAppDispatch();
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     setExpanded(!expanded);
   };
+
+  useEffect(() => {
+    getCart();
+  }, []);
+
+  const getStatus = useCallback(async () => {
+    cartDetails?.cart?.items.map((items, index) => {
+      return offers?.offers.map((item) => {
+        if (item?.sub_services?.sub_service_id == items?.serviceId) {
+          setCount(true);
+        } else {
+          setCount(false);
+        }
+      });
+    });
+  }, [count]);
+
+  const getCart = useCallback(async () => {
+    console.log("hi");
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: (response: any) => {
+        dispatch({ type: CART_DETAILS, payload: response?.data });
+        getStatus();
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(getCartlist(obj));
+  }, [count]);
 
   return (
     <View>
@@ -46,6 +88,8 @@ const StylistItem = ({ isOffer, data, offers }: Props) => {
                 data={item}
                 key={index}
                 baseUrl={offers?.featured_image_url}
+                count={count}
+                setCount={setCount}
               />
             );
           }}

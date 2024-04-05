@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -14,15 +14,38 @@ import { images } from "../../theme/icons";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { screenName } from "../../helper/routeNames";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getChatParticipants } from "../../actions";
 
 const Chats = ({ navigation }) => {
+  const dispatch = useAppDispatch();
   const [type, setType] = useState("All");
-  const onPressMenu = () => {
-    navigation.openDrawer();
+  const { chatParticipants } = useAppSelector((state) => state.chat);
+
+  useEffect(() => {
+    getChatsUserList();
+  }, []);
+
+  const getChatsUserList = async () => {
+    let userInfo = await getAsyncUserInfo();
+
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getChatParticipants(obj));
   };
 
   const onPressItem = () => {
     navigation.navigate(screenName.ChatDetails);
+  };
+
+  const onPressMenu = () => {
+    navigation.openDrawer();
   };
 
   return (
@@ -63,17 +86,26 @@ const Chats = ({ navigation }) => {
           </ImageBackground>
         </TouchableOpacity>
       </View>
-      <FlatList
-        style={styles.flatListStyle}
-        data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]}
-        renderItem={({ item, index }) => {
-          return (
-            <MessageItem index={index} onPressItem={() => onPressItem(item)} />
-          );
-        }}
-        keyExtractor={(item, index) => index.toString()}
-        ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
-      />
+      {chatParticipants?.chatParticipants?.length ? (
+        <FlatList
+          style={styles.flatListStyle}
+          data={chatParticipants?.chatParticipants || []}
+          renderItem={({ item, index }) => {
+            return (
+              <MessageItem
+                index={index}
+                onPressItem={() => onPressItem(item)}
+              />
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
+        />
+      ) : (
+        <View style={styles.center}>
+          <Text style={styles.noDataTextStyle}>{"No Data"}</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -121,6 +153,14 @@ const styles = StyleSheet.create({
   },
   flatListStyle: {
     marginTop: hp(15),
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noDataTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),
   },
 });
 

@@ -111,29 +111,31 @@ const Home = () => {
               outputData.push(response.services.slice(i, i + 2));
             }
             setFemaleData(outputData);
+            let obj_male = {
+              type: "Male",
+              onSuccess: (response: any) => {
+                setMaleBaseURL(response?.featured_image_url);
+                let outputData = [];
+                for (let i = 0; i < response.services.length; i += 2) {
+                  outputData.push(response.services.slice(i, i + 2));
+                }
+                setMaleData(outputData);
+                getLocation();
+                setTimeout(() => {
+                  GetStatus();
+                }, 500);
+              },
+              onFailure: () => {},
+            };
+            dispatch(getAllServicesForMaleAndFemale(obj_male));
           },
           onFailure: () => {},
         };
         dispatch(getAllServicesForMaleAndFemale(obj_female));
-        let obj_male = {
-          type: "Male",
-          onSuccess: (response: any) => {
-            setMaleBaseURL(response?.featured_image_url);
-            let outputData = [];
-            for (let i = 0; i < response.services.length; i += 2) {
-              outputData.push(response.services.slice(i, i + 2));
-            }
-            setMaleData(outputData);
-            getLocation();
-          },
-          onFailure: () => {},
-        };
-        dispatch(getAllServicesForMaleAndFemale(obj_male));
       },
       onFailure: () => {},
     };
     dispatch(getAllBanner(banner));
-    GetStatus();
   }, []);
 
   useEffect(() => {
@@ -142,7 +144,6 @@ const Home = () => {
 
   const getProfileData = async () => {
     let userInfo = await getAsyncUserInfo();
-
     let obj = {
       isLoading: false,
       data: {
@@ -166,8 +167,6 @@ const Home = () => {
             limit: 10,
           },
         };
-        console.log(obj);
-
         dispatch(getUsersByLocation(obj));
       },
       (err) => {

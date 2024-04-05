@@ -12,6 +12,8 @@ import packagesReducers from "./packagesReducers";
 import favouriteReducers from "./favouriteReducers";
 import appointmentReducer from "./appointmentReducer";
 import cartReducers from "./cartReducers";
+import chatReducer from "./chatReducer";
+import addressReducer from "./addressReducer";
 
 const middleware = [thunk];
 const reducers = combineReducers({
@@ -25,6 +27,8 @@ const reducers = combineReducers({
   favourite: favouriteReducers,
   appointment: appointmentReducer,
   cart: cartReducers,
+  chat: chatReducer,
+  address: addressReducer,
 });
 
 const RootReducer = (state: any, action: any) => {

@@ -292,10 +292,9 @@ const styles = StyleSheet.create({
   profile_pic: {
     width: wp(128),
     height: wp(128),
-    marginTop: hp(23),
+    paddingTop: hp(23),
     alignSelf: "center",
     borderRadius: wp(20),
-    backgroundColor: colors.grey_19,
   },
   inputs_conatiner: {
     marginHorizontal: wp(20),

@@ -155,4 +155,5 @@ export const strings = {
   "Landmark (optional)": "Landmark (optional)",
   "Save address": "Save address",
   Save: "Save",
+  Pincode: "Pincode",
 };

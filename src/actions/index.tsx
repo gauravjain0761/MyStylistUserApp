@@ -7,3 +7,5 @@ export * from "./pakagesAction";
 export * from "./favouriteActions";
 export * from "./appointmentsAction";
 export * from "./cartAction";
+export * from "./chatAction";
+export * from "./addressAction";

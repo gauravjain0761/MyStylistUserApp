@@ -72,7 +72,7 @@ const Cart = () => {
         data: {
           startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
-          timeSlotDuration: 1,
+          timeSlotDuration: 60,
           expertId: userInfo._id,
         },
         onSuccess: (response: any) => {

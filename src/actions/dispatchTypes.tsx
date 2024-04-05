@@ -42,3 +42,9 @@ export const APPOINTMENTS_DETAILS = "APPOINTMENTS_DETAILS";
 
 export const ADD_TO_CART = "ADD_TO_CART";
 export const CART_DETAILS = "CAR_TDETAILS";
+
+// chat
+export const GET_CHATS_PARTICIPANTS = "GET_CHATS_PARTICIPANTS";
+
+// Address
+export const GET_ADDRESS_LIST = "GET_ADDRESS_LIST";

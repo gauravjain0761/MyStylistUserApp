@@ -56,6 +56,14 @@ export const api = {
 
   // campaign/getCampaignExpert
   campaignExpert: "campaign/getCampaignExpert",
+
+  // chat
+  chatParticipants: "chat/getChatParticipants",
+
+  // Address
+  userAddresses: "user/getUserAddresses",
+  unsetUserAddress: "user/UnsetUserAddress",
+  editUserAddress: "user/EditUserAddress",
 };
 
 export const POST = "POST";

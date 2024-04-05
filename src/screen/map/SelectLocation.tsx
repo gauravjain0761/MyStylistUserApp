@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
 import { colors } from "../../theme/color";
 import { AddressItem, BackHeader, Modals } from "../../components";
 import { strings } from "../../helper/string";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, infoToast, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import {
   GpsLocationIcon,
@@ -21,13 +21,39 @@ import {
 } from "../../theme/SvgIcon";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { images } from "../../theme/icons";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { deleteAddress, getUserAddresses } from "../../actions";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const SelectLocation = ({}) => {
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   const [isAddModal, setIsAddModal] = useState(false);
   const [selectType, setSelectType] = useState("Home");
+  const { addressList } = useAppSelector((state) => state.address);
+  const [house, setHouse] = useState("");
+  const [sector, setSector] = useState("");
+  const [landmark, setlandMark] = useState("");
+  const [pincode, setPincode] = useState("");
+
+  useEffect(() => {
+    getList();
+  }, []);
+
+  const getList = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      isLoading: true,
+      data: {
+        userId: userInfo._id,
+        // userId: "65eed0259e6593d24b2a5210",
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getUserAddresses(obj));
+  };
 
   const onPressCurrentLocation = () => {
     // @ts-ignore
@@ -44,8 +70,31 @@ const SelectLocation = ({}) => {
     setIsAddModal(false);
   };
 
-  const onPressEdit = () => {
+  const onPressEditItem = (item: any) => {
     setIsAddModal(true);
+    setHouse(item?.address?.houseNumber);
+    setSector(item?.address?.sector);
+    setPincode(item?.address?.pinCode);
+    setlandMark(item?.address?.landmark);
+    setSelectType(item?.address?.addressType);
+  };
+
+  const onPressDeleteItem = async (item: any) => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+        // userId: "65eed0259e6593d24b2a5210",
+        addressId: item?._id,
+      },
+      onSuccess: () => {
+        getList();
+      },
+      onFailure: (error: any) => {
+        infoToast(error?.data?.error);
+      },
+    };
+    dispatch(deleteAddress(obj));
   };
 
   return (
@@ -82,13 +131,24 @@ const SelectLocation = ({}) => {
       <View style={styles.lineStyle}>
         <Text style={styles.saveTextStyle}>{strings["SAVED ADDRESSES"]}</Text>
       </View>
-      <FlatList
-        data={[1, 2, 3]}
-        renderItem={({ item, index }) => {
-          return <AddressItem onPressEdit={() => onPressEdit()} />;
-        }}
-        keyExtractor={(item, index) => index.toString()}
-      />
+      {addressList?.addresses?.length ? (
+        <FlatList
+          data={addressList?.addresses || []}
+          renderItem={({ item, index }) => {
+            return (
+              <AddressItem
+                data={item}
+                onPressEdit={() => onPressEditItem(item)}
+                onPressDelete={() => onPressDeleteItem(item)}
+              />
+            );
+          }}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      ) : (
+        <Text style={styles.noDataTextStyle}>{"No Data found"}</Text>
+      )}
+
       <Modals
         isIcon
         visible={isAddModal}
@@ -153,6 +213,8 @@ const SelectLocation = ({}) => {
                 style={styles.inputStyle}
                 placeholder={strings["Enter here"]}
                 placeholderTextColor={"#A7A7A7"}
+                value={house}
+                onChangeText={setHouse}
               />
             </View>
             <View>
@@ -163,6 +225,20 @@ const SelectLocation = ({}) => {
                 style={styles.inputStyle}
                 placeholder={strings["Enter here"]}
                 placeholderTextColor={"#A7A7A7"}
+                value={sector}
+                onChangeText={setSector}
+              />
+            </View>
+            <View>
+              <Text style={styles.inputLabelTextStyle}>
+                {strings["Pincode"]}
+              </Text>
+              <TextInput
+                style={styles.inputStyle}
+                placeholder={strings["Enter here"]}
+                placeholderTextColor={"#A7A7A7"}
+                value={pincode}
+                onChangeText={setPincode}
               />
             </View>
             <View>
@@ -173,6 +249,8 @@ const SelectLocation = ({}) => {
                 style={styles.inputStyle}
                 placeholder={strings["Enter here"]}
                 placeholderTextColor={"#A7A7A7"}
+                value={landmark}
+                onChangeText={setlandMark}
               />
             </View>
             <TouchableOpacity onPress={onPressSave}>
@@ -320,6 +398,10 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
     paddingVertical: hp(20),
     paddingHorizontal: wp(60),
+  },
+  noDataTextStyle: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.black),
+    textAlign: "center",
   },
 });
 

@@ -9,9 +9,11 @@ import { strings } from "../../helper/string";
 
 type props = {
   onPressEdit: () => void;
+  onPressDelete: () => void;
+  data: any;
 };
 
-const AddressItem = ({ onPressEdit }: props) => {
+const AddressItem = ({ onPressEdit, onPressDelete, data }: props) => {
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
@@ -21,7 +23,7 @@ const AddressItem = ({ onPressEdit }: props) => {
     <View style={styles.itemContainer}>
       <View style={styles.rowItemStyle}>
         <TabHome />
-        <Text style={styles.boldTextStyle}>{"Home"}</Text>
+        <Text style={styles.boldTextStyle}>{data?.address?.addressType}</Text>
         <Menu
           visible={visible}
           anchor={
@@ -47,16 +49,21 @@ const AddressItem = ({ onPressEdit }: props) => {
             textStyle={{ ...styles.menuTextStyle, color: colors.red }}
             onPress={() => {
               hideMenu();
+              setTimeout(() => {
+                onPressDelete();
+              }, 1000);
             }}
           >
             {strings["Delete"]}
           </MenuItem>
         </Menu>
       </View>
-      <Text style={styles.addressTextStyle}>
-        {
+      <Text numberOfLines={3} style={styles.addressTextStyle}>
+        {/* {
           "Flat No. 14, Ansal Palm Grove, Sector-115 landran-kharar Road, Mohali"
-        }
+        } */}
+        {data?.address?.houseNumber} {data?.address?.sector}{" "}
+        {data?.address?.pinCode} {data?.address?.landmark}
       </Text>
     </View>
   );
@@ -64,7 +71,6 @@ const AddressItem = ({ onPressEdit }: props) => {
 
 const styles = StyleSheet.create({
   itemContainer: {
-    height: hp(120),
     borderRadius: 8,
     marginBottom: hp(20),
     marginHorizontal: wp(20),

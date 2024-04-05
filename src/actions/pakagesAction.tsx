@@ -4,11 +4,11 @@ import { AnyAction } from "redux";
 import {
   GET_All_PACKAGE_LIST,
   GET_ALL_PACKAGES,
+  GET_PACKAGES_LIST,
   IS_LOADING,
 } from "./dispatchTypes";
 import { makeAPIRequest } from "../helper/apiGlobal";
 import { GET, POST, api } from "../helper/apiConstants";
-import { errorToast } from "../helper/globalFunction";
 
 export const getAllPackageByUser =
   (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -35,6 +35,7 @@ export const getAllPackageByUser =
       })
       .catch((error: any) => {
         console.log("error", error);
+        if (request.onFailure) request.onFailure(error.response);
       });
   };
 
@@ -44,7 +45,7 @@ export const getAllPackageByLocation =
     let header = {
       "Content-Type": "application/json",
     };
-    dispatch({ type: IS_LOADING, payload: true });
+    dispatch({ type: IS_LOADING, payload: request?.isLoading });
     return makeAPIRequest({
       method: POST,
       url: api.allPackageByLocation,
@@ -54,14 +55,20 @@ export const getAllPackageByLocation =
       .then((result: any) => {
         if (result.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
+          let data = { ...result?.data, page: request?.data.page };
           dispatch({
             type: GET_ALL_PACKAGES,
-            payload: result?.data,
+            payload: data,
           });
+          dispatch({
+            type: GET_PACKAGES_LIST,
+            payload: data,
+          });
+          if (request.onSuccess) request.onSuccess(result.data);
         }
       })
       .catch((error: any) => {
-        console.log("error", error);
         dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
       });
   };

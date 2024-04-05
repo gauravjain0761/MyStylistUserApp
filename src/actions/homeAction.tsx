@@ -4,6 +4,7 @@ import { AnyAction } from "redux";
 import {
   EXPERT_USER_LIST,
   GETALLSERVICES,
+  GET_BARBER_LIST,
   IS_LOADING,
   ITEM_DETAILS,
   USER_LIST,
@@ -127,7 +128,7 @@ export const getUsersByLocation =
       "Content-Type": "application/json",
       Authorization: await getAsyncToken(),
     };
-    dispatch({ type: IS_LOADING, payload: true });
+    dispatch({ type: IS_LOADING, payload: request.isLoading });
     return makeAPIRequest({
       method: POST,
       url: api.usersByLocation,
@@ -137,12 +138,16 @@ export const getUsersByLocation =
       .then(async (response: any) => {
         if (response.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
-          dispatch({ type: USER_LIST, payload: response.data });
+          let data = { ...response.data, page: response.data?.page };
+          dispatch({ type: USER_LIST, payload: data });
+          dispatch({ type: GET_BARBER_LIST, payload: data });
+          if (request.onSuccess) request.onSuccess(response.data);
         }
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });
         dispatch({ type: USER_LIST, payload: [] });
+        if (request.onFailure) request.onFailure(error.response);
       });
   };
 

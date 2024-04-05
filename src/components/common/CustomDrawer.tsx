@@ -62,7 +62,8 @@ const CustomDrawer = () => {
                 profileData?.user?.user_profile_images?.[0]?.image
                   ? {
                       uri:
-                        profileData?.user_profile_images_url +
+                        profileData?.featured_image_url +
+                        "/" +
                         profileData?.user?.user_profile_images?.[0]?.image,
                     }
                   : images.profile

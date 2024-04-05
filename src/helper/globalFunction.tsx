@@ -175,3 +175,16 @@ export function convertToOutput(input: any) {
 
   return output;
 }
+
+// Helper function to check if the user has scrolled to the bottom
+export const isCloseToBottom = ({
+  layoutMeasurement,
+  contentOffset,
+  contentSize,
+}) => {
+  const paddingToBottom = 20;
+  return (
+    layoutMeasurement.height + contentOffset.y >=
+    contentSize.height - paddingToBottom
+  );
+};

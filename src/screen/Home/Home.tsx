@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   ScrollView,
@@ -14,6 +15,7 @@ import {
   generateWeekDates,
   hp,
   infoToast,
+  isCloseToBottom,
   screen_width,
   wp,
 } from "../../helper/globalFunction";
@@ -96,7 +98,12 @@ const Home = () => {
   const [maleBaseURL, setMaleBaseURL] = useState<any>([]);
   const [subServicesModalData, setSubServicesModalData] = useState<any>({});
   const [isSticky, setIsSticky] = useState(false);
-  const { getallservices, userList } = useAppSelector((state) => state.home);
+  const [footerLoading, setFooterLoading] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const { getallservices, userList, barberList } = useAppSelector(
+    (state) => state.home
+  );
 
   useEffect(() => {
     let banner = {
@@ -106,7 +113,7 @@ const Home = () => {
           type: "Female",
           onSuccess: (response: any) => {
             setFemaleBaseURL(response?.featured_image_url);
-            let outputData = [];
+            let outputData: any = [];
             for (let i = 0; i < response.services.length; i += 2) {
               outputData.push(response.services.slice(i, i + 2));
             }
@@ -115,12 +122,12 @@ const Home = () => {
               type: "Male",
               onSuccess: (response: any) => {
                 setMaleBaseURL(response?.featured_image_url);
-                let outputData = [];
+                let outputData: any = [];
                 for (let i = 0; i < response.services.length; i += 2) {
                   outputData.push(response.services.slice(i, i + 2));
                 }
                 setMaleData(outputData);
-                getLocation();
+                getUserList(true);
                 setTimeout(() => {
                   GetStatus();
                 }, 500);
@@ -155,17 +162,23 @@ const Home = () => {
     dispatch(getUserDetails(obj));
   };
 
-  const getLocation = async () => {
+  const getUserList = async (isLoading: boolean) => {
     await requestLocationPermission(
       async (response) => {
         let obj = {
+          isLoading: isLoading,
           data: {
             latitude: response?.latitude,
             longitude: response?.longitude,
             maxDistance: 50000,
-            page: 1,
+            page: page,
             limit: 10,
           },
+          onSuccess: () => {
+            setPage(page + 1);
+            setFooterLoading(false);
+          },
+          onFailure: () => {},
         };
         dispatch(getUsersByLocation(obj));
       },
@@ -314,7 +327,15 @@ const Home = () => {
     navigate(screenName.SelectLocation);
   };
 
-  const handleScroll = (event) => {
+  const loadMoreData = () => {
+    setFooterLoading(true);
+    getUserList(false);
+  };
+
+  const handleScroll = (event: any) => {
+    if (isCloseToBottom(event?.nativeEvent)) {
+      loadMoreData();
+    }
     const { contentOffset } = event.nativeEvent;
     // Check if the scroll offset is greater than or equal to the height of the sticky header
     setIsSticky(contentOffset.y >= 1550); // Adjust this value according to your header's height
@@ -371,6 +392,7 @@ const Home = () => {
         stickyHeaderIndices={[5]}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
+        scrollEventThrottle={400}
       >
         <View style={styles.carousel_container}>
           <Carousel
@@ -554,7 +576,7 @@ const Home = () => {
 
         <View style={styles?.barber_card_container}>
           <FlatList
-            data={userList?.users || []}
+            data={barberList || []}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
               return (
@@ -672,6 +694,7 @@ const Home = () => {
           contain={<ReviewModal />}
           isIcon
         />
+        {footerLoading && <ActivityIndicator />}
       </ScrollView>
     </View>
   );

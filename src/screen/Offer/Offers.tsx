@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,10 +8,16 @@ import {
   TouchableOpacity,
   ImageBackground,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { BackHeader, Filter_Button } from "../../components";
 import { strings } from "../../helper/string";
-import { hp, screen_width, wp } from "../../helper/globalFunction";
+import {
+  hp,
+  isCloseToBottom,
+  screen_width,
+  wp,
+} from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
@@ -36,18 +42,31 @@ let offersOffList = [
 const Offers = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const { profileData } = useAppSelector((state) => state.profile);
-  const { allOffers } = useAppSelector((state) => state.offers);
+  const { allOffers, offerList } = useAppSelector((state) => state.offers);
+
+  const [footerLoading, setFooterLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
+    getAllOfferData(true);
+  }, []);
+
+  const getAllOfferData = (isLoading: boolean) => {
     let obj = {
+      isLoading: isLoading,
       data: {
         city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
-        page: 1,
+        page: page,
       },
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+      },
+      onFailure: () => {},
     };
     dispatch(getAllOffersByLocation(obj));
-  }, []);
+  };
 
   const onPressMenu = () => {
     navigation.openDrawer();
@@ -76,6 +95,13 @@ const Offers = ({ navigation }) => {
     dispatch(getCampaignExpert(obj));
   };
 
+  const loadMoreData = () => {
+    if (offerList?.length !== allOffers?.totalOffers) {
+      setFooterLoading(true);
+      getAllOfferData(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -84,7 +110,15 @@ const Offers = ({ navigation }) => {
         title={strings.Offers}
         onPressMenu={onPressMenu}
       />
-      <ScrollView stickyHeaderIndices={[1]}>
+      <ScrollView
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            loadMoreData();
+          }
+        }}
+        scrollEventThrottle={400}
+        stickyHeaderIndices={[1]}
+      >
         <Image
           style={styles.bannerImgStyle}
           resizeMode="cover"
@@ -172,7 +206,7 @@ const Offers = ({ navigation }) => {
           />
 
           <FlatList
-            data={allOffers?.offers || []}
+            data={offerList || []}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
@@ -198,8 +232,7 @@ const Offers = ({ navigation }) => {
                         uri:
                           allOffers?.featured_image_url +
                           "/" +
-                          item?.expertDetails?.user_profile_images?.[0]
-                            .image_medium,
+                          item?.expertDetails?.user_profile_images?.[0].image,
                       }}
                       style={styles.barberImgStyle}
                     />
@@ -226,6 +259,7 @@ const Offers = ({ navigation }) => {
             }}
           />
         </View>
+        {footerLoading && <ActivityIndicator />}
       </ScrollView>
     </View>
   );

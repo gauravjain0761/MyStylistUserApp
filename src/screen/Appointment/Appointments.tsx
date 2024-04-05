@@ -1,43 +1,63 @@
-import React, { useEffect } from "react";
-import { StyleSheet, View, Text, FlatList, ScrollView } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import { strings } from "../../helper/string";
 import { PastServices, barbers } from "../../helper/constunts";
 import BarberAppointmentCard from "../../components/common/BarberAppointmentCard";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, isCloseToBottom, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { BackHeader } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { getAppointmentDetails, getUserAppointments } from "../../actions";
 import moment from "moment";
+import debounce from "lodash.debounce"; // Import debounce from lodash library
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
   const dispatch = useAppDispatch();
-  const { appointmentList } = useAppSelector((state) => state.appointment);
+  const { appointmentList, appointment } = useAppSelector(
+    (state) => state.appointment
+  );
+  const [footerLoading, setFooterLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    async function getList() {
-      const userInfo = await getAsyncUserInfo();
-      let data = {
-        userId: userInfo?._id,
-        page: 1,
-        limit: 10,
-      };
-      let obj = {
-        data,
-        onSuccess: (ressponce) => {},
-        onFailure: (Err) => {
-          console.log(Err);
-        },
-      };
-      dispatch(getUserAppointments(obj));
-    }
-    getList();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setPage(1);
+      getList(true);
+    }, [])
+  );
+
+  async function getList(isLoading: boolean) {
+    const userInfo = await getAsyncUserInfo();
+    let data = {
+      userId: userInfo?._id,
+      page: page,
+      limit: 10,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data,
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+      },
+      onFailure: (Err: any) => {
+        console.log(Err);
+      },
+    };
+    dispatch(getUserAppointments(obj));
+  }
 
   const onPressItem = (item: any) => {
     let obj = {
@@ -48,9 +68,17 @@ const Appointments = ({ navigation }) => {
       },
       onFailure: () => {},
     };
-    console.log(item?._id);
     dispatch(getAppointmentDetails(obj));
   };
+
+  const loadMoreData = () => {
+    if (appointment?.length !== appointmentList?.totalAppointments) {
+      setFooterLoading(true);
+      getList(false);
+    }
+  };
+
+  const debouncedLoadMoreData = debounce(loadMoreData, 500); // Adjust the delay as needed
 
   return (
     <View style={styles.container}>
@@ -59,16 +87,21 @@ const Appointments = ({ navigation }) => {
         title={strings.Your_Appointments}
         onPressMenu={() => navigation.openDrawer()}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <FlatList
-          data={
-            appointmentList?.appointments?.filter(
-              (i: any) => i.appointmentType !== "past"
-            ) || []
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        onScroll={({ nativeEvent }) => {
+          if (isCloseToBottom(nativeEvent)) {
+            debouncedLoadMoreData();
           }
-          renderItem={({ item, index }) => {
+        }}
+        scrollEventThrottle={400}
+        showsVerticalScrollIndicator={false}
+      >
+        {appointment
+          ?.filter((i: any) => i.appointmentType !== "past")
+          .map((item, index) => {
             return (
-              <View style={styles.cards}>
+              <View key={index} style={styles.cards}>
                 <BarberAppointmentCard
                   name={item.expertDetails?.name}
                   date={moment(item?.timeSlot?.[0]?.availableDate).format(
@@ -89,19 +122,16 @@ const Appointments = ({ navigation }) => {
                   rating={item?.expertDetails?.averageRating}
                   isCompleted={false}
                   price={item.totalAmount}
-                  image={
-                    item.expertDetails.user_profile_images?.[0]?.image_small
-                  }
+                  image={item.expertDetails.user_profile_images?.[0]?.image}
                   onPress={() => onPressItem(item)}
+                  imgBaseURL={appointmentList?.featured_image_url}
                 />
               </View>
             );
-          }}
-        />
+          })}
 
-        {appointmentList?.appointments?.filter(
-          (i: any) => i.appointmentType === "past"
-        )?.length > 0 ? (
+        {appointment?.filter((i: any) => i.appointmentType === "past")?.length >
+        0 ? (
           <View style={styles?.stylists_title_container}>
             <View style={styles?.title_border}></View>
             <Text style={styles?.your_stylists_title}>
@@ -110,47 +140,40 @@ const Appointments = ({ navigation }) => {
             <View style={styles?.title_border}></View>
           </View>
         ) : null}
+        {appointment
+          ?.filter((i: any) => i.appointmentType === "past")
+          .map((item, index) => {
+            return (
+              <View key={index} style={styles.cards}>
+                <BarberAppointmentCard
+                  name={item.expertDetails?.name}
+                  date={moment(item?.timeSlot?.[0]?.availableDate).format(
+                    "DD MMM YYYY, "
+                  )}
+                  time={item?.timeSlot?.[0]?.availableTime}
+                  location={
+                    item.expertDetails?.city?.[0]?.city_name +
+                    ", " +
+                    item.expertDetails?.district?.[0]?.district_name +
+                    ", " +
+                    item.expertDetails?.state?.[0]?.state_name
+                  }
+                  service={item?.services
+                    ?.map((i: any) => i.service_name)
+                    .join(", ")}
+                  type={item.appointmentType}
+                  rating={item?.expertDetails?.averageRating}
+                  isCompleted={true}
+                  price={item.totalAmount}
+                  image={item.expertDetails.user_profile_images?.[0]?.image}
+                  onPress={() => onPressItem(item)}
+                  imgBaseURL={appointmentList?.featured_image_url}
+                />
+              </View>
+            );
+          })}
 
-        <View>
-          <FlatList
-            data={
-              appointmentList?.appointments?.filter(
-                (i: any) => i.appointmentType === "past"
-              ) || []
-            }
-            renderItem={({ item, index }) => {
-              return (
-                <View style={styles.cards}>
-                  <BarberAppointmentCard
-                    name={item.expertDetails?.name}
-                    date={moment(item?.timeSlot?.[0]?.availableDate).format(
-                      "DD MMM YYYY, "
-                    )}
-                    time={item?.timeSlot?.[0]?.availableTime}
-                    location={
-                      item.expertDetails?.city?.[0]?.city_name +
-                      ", " +
-                      item.expertDetails?.district?.[0]?.district_name +
-                      ", " +
-                      item.expertDetails?.state?.[0]?.state_name
-                    }
-                    service={item?.services
-                      ?.map((i: any) => i.service_name)
-                      .join(", ")}
-                    type={item.appointmentType}
-                    rating={item?.expertDetails?.averageRating}
-                    isCompleted={true}
-                    price={item.totalAmount}
-                    image={
-                      item.expertDetails.user_profile_images?.[0]?.image_small
-                    }
-                    onPress={() => onPressItem(item)}
-                  />
-                </View>
-              );
-            }}
-          />
-        </View>
+        {footerLoading && <ActivityIndicator />}
       </ScrollView>
     </View>
   );

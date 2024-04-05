@@ -1,6 +1,7 @@
 import {
   Image,
   ImageBackground,
+  Platform,
   StatusBar,
   StyleSheet,
   Text,
@@ -49,13 +50,15 @@ const OtpVerification = ({ route }: any) => {
     if (value.length === 0) {
       infoToast("Please enter your OTP");
     } else {
+      let data = {
+        phone: params?.phone,
+        otp: value,
+        device_token: params.deviceToken,
+        mobile_type: Platform.OS === "ios" ? "IOS" : "ANDROID",
+      };
+      console.log("data", data);
       const obj = {
-        data: {
-          phone: params?.phone,
-          otp: value,
-          device_token: params.deviceToken,
-          mobile_type: "IOS",
-        },
+        data: data,
         onSuccess: (res: any) => {
           successToast("OTP verification successful");
           dispatchNavigation(screenName?.Home);

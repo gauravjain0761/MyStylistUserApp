@@ -4,6 +4,7 @@ import { AnyAction } from "redux";
 import { getAsyncToken } from "../helper/asyncStorage";
 import {
   APPOINTMENTS_DETAILS,
+  GET_APPOINTMENT,
   GET_APPOINTMENTS_LIST,
   IS_LOADING,
 } from "./dispatchTypes";
@@ -17,17 +18,24 @@ export const getUserAppointments =
       "Content-Type": "application/json",
       Authorization: await getAsyncToken(),
     };
-    dispatch({ type: IS_LOADING, payload: true });
+    console.log("PAGE: ", request?.data?.page);
+
+    dispatch({ type: IS_LOADING, payload: request.isLoading });
     return makeAPIRequest({
       method: POST,
       url: api.userAppointments,
       headers: headers,
-      data: request?.data,
+      data: request.data,
     })
       .then(async (response: any) => {
         if (response.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
-          dispatch({ type: GET_APPOINTMENTS_LIST, payload: response.data });
+          let data = { ...response.data, page: request?.data?.page };
+          dispatch({ type: GET_APPOINTMENTS_LIST, payload: data });
+          dispatch({
+            type: GET_APPOINTMENT,
+            payload: data,
+          });
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })

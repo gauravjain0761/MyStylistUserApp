@@ -35,6 +35,7 @@ type props = {
   date?: any;
   time?: any;
   isCompleted?: boolean;
+  imgBaseURL?: string;
 };
 
 const BarberAppointmentCard = ({
@@ -49,6 +50,7 @@ const BarberAppointmentCard = ({
   isCompleted,
   onPress,
   rating = 0,
+  imgBaseURL,
 }: props) => {
   return (
     <Pressable style={styles.conatiner} onPress={onPress}>
@@ -58,7 +60,7 @@ const BarberAppointmentCard = ({
             <Image
               resizeMode="cover"
               style={styles.img}
-              source={{ uri: api.BASE_URL + image }}
+              source={{ uri: imgBaseURL + "/" + image }}
             />
           </View>
         </View>

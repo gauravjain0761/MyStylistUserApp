@@ -73,7 +73,7 @@ import {
   saveAsfavourite,
 } from "../../actions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { CART_DETAILS } from "../../actions/dispatchTypes";
+import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 
 type TagViewProps = {
@@ -150,7 +150,7 @@ const getAmenitiesIcon = (key: string) => {
 };
 
 const YourStylist = () => {
-  const { cartDetails } = useAppSelector((state) => state.cart);
+  const { cartDetails, addtocart } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
   const { itemDetails } = useAppSelector((state) => state.home);
@@ -187,26 +187,11 @@ const YourStylist = () => {
     getFavUser();
   }, []);
 
-  const getCart = useCallback(async () => {
-    let userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        userId: userInfo._id,
-      },
-      onSuccess: (response: any) => {
-        dispatch({ type: CART_DETAILS, payload: response?.data });
-        let totals = 0;
-        response.data?.cart?.items.map((item) => {
-          totals += item?.price;
-        });
-        setTotal(totals);
-      },
-      onFailure: (Errr: any) => {
-        console.log("Errr", Errr);
-      },
-    };
-    dispatch(getCartlist(obj));
-  }, [cartDetails]);
+  useEffect(() => {
+    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
+      Calculate();
+    }
+  }, [addtocart]);
 
   const getFavUser = async () => {
     let userInfo = await getAsyncUserInfo();
@@ -215,6 +200,7 @@ const YourStylist = () => {
         userId: userInfo?._id,
       },
       onSuccess: (response: any) => {
+        getCart();
         response?.data.map((item) => {
           if (item._id == itemDetails?.user._id) {
             setLikeID(item?.favouriteId);
@@ -223,7 +209,6 @@ const YourStylist = () => {
             setLike(false);
           }
         });
-        getCart();
       },
       onFailure: (Errr: any) => {
         console.log("Errr", Errr);
@@ -231,6 +216,42 @@ const YourStylist = () => {
     };
     dispatch(getUsersFavList(obj));
   };
+
+  const getCart = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: async (response: any) => {
+        dispatch({ type: CART_DETAILS, payload: response?.data });
+        dispatch({
+          type: ADD_TO_CART,
+          payload: { items: [...response?.data?.cart?.items] },
+        });
+        let initialvalue = 0;
+        let total = response?.data?.cart?.items.reduce(
+          (acc, item) => acc + item?.price,
+          initialvalue
+        );
+        setTotal(total);
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(getCartlist(obj));
+  };
+
+  const Calculate = useCallback(() => {
+    let initialvalue = 0;
+    let total = addtocart?.items.reduce(
+      (acc, item) => acc + item?.price,
+      initialvalue
+    );
+    console.log("resss", total);
+    setTotal(total);
+  }, [addtocart]);
 
   useEffect(() => {
     let obj = {

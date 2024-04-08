@@ -22,6 +22,7 @@ export const api = {
   removeTocart: "cart/removeCartItem",
   getCart: "cart/getCartList",
   bookAppointments: "appointment/addAppointment?=&=",
+  removeMultipleCartItems: "removeMultipleCartItems",
 
   //Profile
   FAQ: "faq/getAllFAQ",

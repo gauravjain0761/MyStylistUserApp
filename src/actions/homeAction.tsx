@@ -139,7 +139,6 @@ export const getUsersByLocation =
         if (response.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
           let data = { ...response.data, page: response.data?.page };
-          console.log(data);
           dispatch({ type: USER_LIST, payload: data });
           dispatch({ type: GET_BARBER_LIST, payload: data });
           if (request.onSuccess) request.onSuccess(response.data);

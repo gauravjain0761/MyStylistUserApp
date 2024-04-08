@@ -50,6 +50,7 @@ const StylistInnerItem = ({
     let obj = {
       data: passData,
       onSuccess: (response: any) => {
+        dispatch({ type: ADD_TO_CART, payload: response.data });
         setCount(false);
         console.log("ressponce", response);
       },

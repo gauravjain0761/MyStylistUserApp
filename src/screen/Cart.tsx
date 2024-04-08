@@ -36,7 +36,11 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
 import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
 import { CART_DETAILS } from "../actions/dispatchTypes";
-import { bookAppointment, getCartlist } from "../actions";
+import {
+  bookAppointment,
+  getCartlist,
+  removeMultipleCartItems,
+} from "../actions";
 import FastImage from "react-native-fast-image";
 
 type RowItemValueProps = {
@@ -85,7 +89,7 @@ const Cart = () => {
       };
       dispatch(getExpertAvailability(obj));
     }
-    // getDatesList();
+    getDatesList();
   }, []);
 
   const getCart = async () => {
@@ -106,7 +110,8 @@ const Cart = () => {
         });
       },
       onFailure: (Errr: any) => {
-        console.log("Errr", Errr);
+        alert(Errr?.data?.message);
+        data = ["0"];
       },
     };
     dispatch(getCartlist(obj));
@@ -155,8 +160,7 @@ const Cart = () => {
         notes: "Special requests or notes for the appointment",
       },
       onSuccess: (response: any) => {
-        console.log("responsessssss", response);
-        setIsShowCongrestModal(true);
+        RemoveItems();
       },
       onFailure: (Errr: any) => {
         infoToast(Errr?.data?.error);
@@ -168,6 +172,23 @@ const Cart = () => {
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
+  };
+
+  const RemoveItems = async () => {
+    let Ids = addtocart.items.map((items) => items?._id);
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        cartId: cartDetails?.cart?._id,
+        userId: userInfo?._id,
+        itemIds: Ids,
+      },
+      onSuccess: (response: any) => {
+        setIsShowCongrestModal(true);
+      },
+      onFailure: (Errr: any) => {},
+    };
+    dispatch(removeMultipleCartItems(obj));
   };
 
   return (

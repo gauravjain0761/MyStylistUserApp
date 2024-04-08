@@ -144,11 +144,11 @@ const Barber_Card = ({
               <View style={styles.location_container}>
                 <CarIcon />
                 <Text style={styles.location_title}>
-                  {data?.city?.[0]?.city_name}
+                  {data?.offers[0]?.city?.[0]?.city_name}
                   {","}
-                  {data?.district?.[0]?.district_name}
+                  {data?.offers[0]?.district?.[0]?.district_name}
                   {","}
-                  {data?.state?.[0]?.state_name}
+                  {data?.offers[0]?.state?.[0]?.state_name}
                 </Text>
               </View>
               <View style={styles.price_container}>
@@ -233,11 +233,11 @@ const Barber_Card = ({
               <View style={styles.location_container}>
                 <CarIcon />
                 <Text style={styles.location_title}>
-                  {data?.city?.[0]?.city_name}
+                  {data?.offers[0]?.city?.[0]?.city_name}
                   {","}
-                  {data?.district?.[0]?.district_name}
+                  {data?.offers[0]?.district?.[0]?.district_name}
                   {","}
-                  {data?.state?.[0]?.state_name}
+                  {data?.offers[0]?.state?.[0]?.state_name}
                 </Text>
               </View>
               {isNewYearOffer ? (

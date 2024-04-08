@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { colors } from "../../theme/color";
 import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { PackagesInnerItem } from "..";
+import { useAppSelector } from "../../redux/hooks";
 
 type Props = {
   data: any;
@@ -20,6 +21,31 @@ type Props = {
 
 const PackagesItem = ({ packages }: Props) => {
   const [expanded, setExpanded] = useState(true);
+  const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
+  const [count, setCount] = useState(false);
+
+  useEffect(() => {
+    CheckStatus();
+  }, []);
+
+  const CheckStatus = useCallback(() => {
+    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
+      console.log(addtocart);
+      packages?.packages.map((item, index) => {
+        addtocart?.items.map((items, index) => {
+          if (items?.serviceType == "Package") {
+            if (item?.service_name[0]?._id == items?.serviceId) {
+              setCount(true);
+            } else {
+              setCount(false);
+            }
+          }
+        });
+      });
+    } else {
+      setCount(false);
+    }
+  }, [count]);
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
@@ -39,7 +65,14 @@ const PackagesItem = ({ packages }: Props) => {
           data={packages?.packages || []}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            return <PackagesInnerItem data={item} key={index} />;
+            return (
+              <PackagesInnerItem
+                data={item}
+                key={index}
+                count={count}
+                setCount={setCount}
+              />
+            );
           }}
         />
       ) : null}

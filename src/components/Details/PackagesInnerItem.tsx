@@ -19,22 +19,14 @@ import { ADD_TO_CART } from "../../actions/dispatchTypes";
 
 type Props = {
   data: any;
+  count: boolean;
+  setCount: any;
 };
 
-const PackagesInnerItem = ({ data }: Props) => {
+const PackagesInnerItem = ({ data, count, setCount }: Props) => {
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(false);
 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    getStatus();
-  }, []);
-
-  const getStatus = async () => {
-    let userId = await getAsyncUserInfo();
-    console.log(userId);
-  };
 
   const onPressDelete = useCallback(async () => {
     let itemId = "";
@@ -53,8 +45,8 @@ const PackagesInnerItem = ({ data }: Props) => {
     let obj = {
       data: passData,
       onSuccess: (response: any) => {
+        dispatch({ type: ADD_TO_CART, payload: response.data });
         setCount(false);
-        console.log("ressponce", response);
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);

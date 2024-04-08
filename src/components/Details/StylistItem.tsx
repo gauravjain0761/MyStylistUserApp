@@ -36,37 +36,25 @@ const StylistItem = ({ isOffer, data, offers }: Props) => {
   };
 
   useEffect(() => {
-    getCart();
+    getStatus();
   }, []);
 
   const getStatus = useCallback(async () => {
-    cartDetails?.cart?.items.map((items, index) => {
-      return offers?.offers.map((item) => {
-        if (item?.sub_services?.sub_service_id == items?.serviceId) {
-          setCount(true);
-        } else {
-          setCount(false);
-        }
+    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
+      addtocart?.items?.map((item, index) => {
+        offers?.offers.map((items, indexs) => {
+          if (item?.serviceType == "Offer") {
+            if (items?.sub_services?.sub_service_id == item?.serviceId) {
+              setCount(true);
+            } else {
+              setCount(false);
+            }
+          }
+        });
       });
-    });
-  }, [count]);
-
-  const getCart = useCallback(async () => {
-    console.log("hi");
-    let userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        userId: userInfo._id,
-      },
-      onSuccess: (response: any) => {
-        dispatch({ type: CART_DETAILS, payload: response?.data });
-        getStatus();
-      },
-      onFailure: (Errr: any) => {
-        console.log("Errr", Errr);
-      },
-    };
-    dispatch(getCartlist(obj));
+    } else {
+      setCount(false);
+    }
   }, [count]);
 
   return (

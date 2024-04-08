@@ -638,7 +638,6 @@ const Home = () => {
             data={barberList || []}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
-              console.log(userList);
               return (
                 <Barber_Card
                   data={item}
@@ -648,8 +647,8 @@ const Home = () => {
                   images={item?.user_profile_images}
                   rating={item.averageRating}
                   jobs={item?.jobDone}
-                  location={item.address}
-                  offers={item?.offers}
+                  // location={item?.addresses[0]?.address}
+                  offers={item?.offers[0]?.discount}
                   onPress={() => onPressItem(item)}
                   onPressRating={setReviewModal}
                   barberdetailscontinerStyle={styles.barberdetailscontinerStyle}

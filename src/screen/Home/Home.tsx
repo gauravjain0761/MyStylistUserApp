@@ -37,6 +37,7 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import {
   Barber_Card,
+  CarouselLoader,
   Filter_Button,
   HomeHeader,
   LocationModal,
@@ -75,11 +76,13 @@ import { setLocation } from "../../actions/locationAction";
 import { getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
 import FastImage from "react-native-fast-image";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 const Home = () => {
   const { navigate } = useNavigation();
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
+  const { isLoading } = useAppSelector((state) => state.common);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModal, setIsModal] = useState(false);
@@ -103,6 +106,7 @@ const Home = () => {
   const [footerLoading, setFooterLoading] = useState(false);
   const [refreshControl, setRefreshControle] = useState(false);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const { getallservices, userList, barberList } = useAppSelector(
     (state) => state.home
@@ -184,6 +188,7 @@ const Home = () => {
           onSuccess: () => {
             setPage(page + 1);
             setFooterLoading(false);
+            setLoading(false);
           },
           onFailure: () => {},
         };
@@ -280,19 +285,8 @@ const Home = () => {
   };
 
   const onPressItem = (item: any) => {
-    let userid = item._id;
-    let obj = {
-      isLoading: true,
-      data: {
-        userid: userid,
-      },
-      onSuccess: () => {
-        //@ts-ignore
-        navigate(screenName.YourStylist);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getUserItemDetails(obj));
+    //@ts-ignore
+    navigate(screenName.YourStylist, { id: item._id });
   };
 
   const onPresstoNavigate = (item: any) => {
@@ -394,9 +388,7 @@ const Home = () => {
       onSuccess: (response: any) => {
         setSubServicesModalData(response);
         setModalTitle(item.service_name);
-        setTimeout(() => {
-          setServicesModal(!servicesModal);
-        }, 500);
+        setServicesModal(!servicesModal);
       },
       onFailure: () => {},
     };
@@ -449,28 +441,32 @@ const Home = () => {
         }
       >
         <View style={styles.carousel_container}>
-          <Carousel
-            layout={"default"}
-            data={banner}
-            sliderWidth={screen_width}
-            itemWidth={screen_width}
-            inactiveSlideScale={2}
-            renderItem={({ item }: any) => {
-              return (
-                <View style={styles?.carousel_img_container}>
-                  <FastImage
-                    source={{
-                      uri: item?.imageUrl + "/" + item?.fileName,
-                      priority: FastImage.priority.high,
-                    }}
-                    defaultSource={item?.image}
-                    style={styles?.carousel_img}
-                  />
-                </View>
-              );
-            }}
-            onSnapToItem={onSnapToItem}
-          />
+          {loading ? (
+            <CarouselLoader />
+          ) : (
+            <Carousel
+              layout={"default"}
+              data={banner}
+              sliderWidth={screen_width}
+              itemWidth={screen_width}
+              inactiveSlideScale={2}
+              renderItem={({ item }: any) => {
+                return (
+                  <View style={styles?.carousel_img_container}>
+                    <FastImage
+                      source={{
+                        uri: item?.imageUrl + "/" + item?.fileName,
+                        priority: FastImage.priority.high,
+                      }}
+                      defaultSource={item?.image}
+                      style={styles?.carousel_img}
+                    />
+                  </View>
+                );
+              }}
+              onSnapToItem={onSnapToItem}
+            />
+          )}
         </View>
         <Pagination
           // @ts-ignore
@@ -515,17 +511,44 @@ const Home = () => {
                           }}
                           style={styles?.service_card_container}
                         >
-                          <Text style={styles?.card_title}>
-                            {item?.service_name}
-                          </Text>
-                          <FastImage
-                            style={styles?.images}
-                            source={{
-                              uri: femaleBaseURL + "/" + item?.fileName,
-                              priority: FastImage.priority.high,
-                            }}
-                            resizeMode="contain"
-                          />
+                          {isLoading ? (
+                            <SkeletonPlaceholder borderRadius={4}>
+                              <SkeletonPlaceholder.Item alignItems="center">
+                                <SkeletonPlaceholder.Item>
+                                  <SkeletonPlaceholder.Item
+                                    width={120}
+                                    height={20}
+                                    marginTop={hp(15)}
+                                  />
+                                </SkeletonPlaceholder.Item>
+                              </SkeletonPlaceholder.Item>
+                            </SkeletonPlaceholder>
+                          ) : (
+                            <Text style={styles?.card_title}>
+                              {item?.service_name}
+                            </Text>
+                          )}
+
+                          {isLoading ? (
+                            <SkeletonPlaceholder borderRadius={4}>
+                              <SkeletonPlaceholder.Item alignItems="center">
+                                <SkeletonPlaceholder.Item
+                                  width={hp(119)}
+                                  height={hp(119)}
+                                  borderRadius={10}
+                                />
+                              </SkeletonPlaceholder.Item>
+                            </SkeletonPlaceholder>
+                          ) : (
+                            <FastImage
+                              style={styles?.images}
+                              source={{
+                                uri: femaleBaseURL + "/" + item?.fileName,
+                                priority: FastImage.priority.high,
+                              }}
+                              resizeMode="contain"
+                            />
+                          )}
                         </TouchableOpacity>
                       );
                     }}

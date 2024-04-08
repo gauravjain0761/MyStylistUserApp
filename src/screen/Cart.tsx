@@ -12,6 +12,7 @@ import {
 import {
   BackHeader,
   CongratulationModal,
+  Loader,
   TimeSelector,
   WeekDateSelector,
 } from "../components";
@@ -68,6 +69,7 @@ const Cart = () => {
   const [selectedTimeIndex, setSelectedTime] = useState(null);
   const [bookTime, setBookTime] = useState({});
   const [date, setDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCart();
@@ -133,42 +135,49 @@ const Cart = () => {
   let data = ["1"];
 
   const onPressBook = useCallback(async () => {
-    let newobj = cartDetails?.cart?.items.map((item, index) => {
-      return {
-        service_id: item?.serviceId,
-        service_name: item?.serviceName,
-        price: item?.price,
-      };
-    });
+    if (selectedDateIndex === null) {
+      infoToast("Please select a date");
+    } else if (selectedTimeIndex === null) {
+      infoToast("Please select a time");
+    } else {
+      setLoading(true);
+      let newobj = cartDetails?.cart?.items.map((item, index) => {
+        return {
+          service_id: item?.serviceId,
+          service_name: item?.serviceName,
+          price: item?.price,
+        };
+      });
 
-    let userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
-        userId: userInfo?._id,
-        expertId: cartDetails?.cart?.expertId,
-        customerName: cartDetails?.user?.name,
-        services: newobj,
-        timeSlot: [
-          {
-            timeSlot_id: bookTime?._id,
-            availableDate: date,
-            availableTime: bookTime?.time,
-          },
-        ],
-        paymentType: "COD",
-        notes: "Special requests or notes for the appointment",
-      },
-      onSuccess: (response: any) => {
-        RemoveItems();
-      },
-      onFailure: (Errr: any) => {
-        infoToast(Errr?.data?.error);
-      },
-    };
-    console.log("data", obj.data);
-    dispatch(bookAppointment(obj));
-  }, [bookTime]);
+      let userInfo = await getAsyncUserInfo();
+      let obj = {
+        data: {
+          bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
+          userId: userInfo?._id,
+          expertId: cartDetails?.cart?.expertId,
+          customerName: cartDetails?.user?.name,
+          services: newobj,
+          timeSlot: [
+            {
+              timeSlot_id: bookTime?._id,
+              availableDate: date,
+              availableTime: bookTime?.time,
+            },
+          ],
+          paymentType: "COD",
+          notes: "Special requests or notes for the appointment",
+        },
+        onSuccess: (response: any) => {
+          RemoveItems();
+        },
+        onFailure: (Errr: any) => {
+          infoToast(Errr?.data?.error);
+          setLoading(false);
+        },
+      };
+      dispatch(bookAppointment(obj));
+    }
+  }, [bookTime, selectedDateIndex, selectedTimeIndex]);
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
@@ -185,8 +194,11 @@ const Cart = () => {
       },
       onSuccess: (response: any) => {
         setIsShowCongrestModal(true);
+        setLoading(false);
       },
-      onFailure: (Errr: any) => {},
+      onFailure: (Errr: any) => {
+        setLoading(false);
+      },
     };
     dispatch(removeMultipleCartItems(obj));
   };
@@ -194,7 +206,8 @@ const Cart = () => {
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Cart"]} />
-      {data?.length === 0 ? (
+      <Loader visible={loading} />
+      {cartDetails?.cart?.items?.length === 0 ? (
         <View style={styles.centerContainer}>
           <Image
             resizeMode="contain"

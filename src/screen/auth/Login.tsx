@@ -30,20 +30,13 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch } from "../../redux/hooks";
-import {
-  NavigationProp,
-  NavigationState,
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { Citylist, sendVerifyCode } from "../../actions/authAction";
-import {
-  getAddress,
-  requestLocationPermission,
-} from "../../helper/locationHandler";
+
 import { Dropdown } from "react-native-element-dropdown";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import messaging from "@react-native-firebase/messaging";
+import { Loader } from "../../components";
 
 const Login: FC = () => {
   const [phoneNum, setphoneNum] = useState<string>("");
@@ -54,8 +47,7 @@ const Login: FC = () => {
   const navigation = useNavigation<any>();
   const [selectedCity, setSelectedCity] = useState<any>({});
   const [deviceToken, setDeviceToken] = useState<string>("");
-
-  console.log("selectedCity", selectedCity);
+  const [loading, setLoading] = useState(false);
 
   async function requestNotificationUserPermission() {
     if (Platform.OS === "android") {
@@ -156,6 +148,7 @@ const Login: FC = () => {
     } else if (value == null) {
       infoToast("Please enter your city");
     } else {
+      setLoading(true);
       let data = {
         phone: phoneNum,
         name: name,
@@ -175,13 +168,16 @@ const Login: FC = () => {
       let obj = {
         data: data,
         onSuccess: (res: any) => {
+          setLoading(false);
           navigation.navigate(screenName.OptVerification, {
             phone: phoneNum,
             data: data,
             deviceToken: deviceToken,
           });
         },
-        onFailure: () => {},
+        onFailure: () => {
+          setLoading(false);
+        },
       };
       dispatch(sendVerifyCode(obj));
     }
@@ -197,6 +193,7 @@ const Login: FC = () => {
         keyboardShouldPersistTaps={"handled"}
         style={{ flex: 1 }}
       >
+        <Loader visible={loading} />
         <View style={styles.login_bg}>
           <Image
             source={images?.login_bg}

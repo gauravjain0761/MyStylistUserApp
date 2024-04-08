@@ -125,7 +125,7 @@ export const formatWorkingHours = (workingHoursData: any) => {
   const formattedHours: any = [];
 
   // Loop through each day
-  for (const day in workingHoursData[0]) {
+  for (const day in workingHoursData?.[0]) {
     if (day !== "_id") {
       formattedHours.push({
         day,

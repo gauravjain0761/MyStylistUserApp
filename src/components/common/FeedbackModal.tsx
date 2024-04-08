@@ -15,11 +15,19 @@ import { colors } from "../../theme/color";
 import { icons, images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { RatingStars } from "../../theme/SvgIcon";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const FeedbackModal = ({ visible, close, onPresssubmit }) => {
+const FeedbackModal = ({
+  visible,
+  close,
+  onPresssubmit,
+  expertInfo,
+  userImg,
+}) => {
   const [maxrating, setmaxRating] = useState([1, 2, 3, 4, 5]);
   const [defaultrating, setdefaultrating] = useState(0);
   const [input, setInput] = useState("");
+
   return (
     <View style={styles.conatiner}>
       <Modals
@@ -27,11 +35,11 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
         close={close}
         isIcon
         contain={
-          <View style={styles.modal_conatiner}>
+          <KeyboardAwareScrollView style={styles.modal_conatiner}>
             <Text style={styles.modal_title}>{strings.Feedback}</Text>
             <View style={styles.details_container}>
-              <Image style={styles.img} source={images.barber5} />
-              <Text style={styles.name}>Rate {strings.Majid_Khan}</Text>
+              <Image style={styles.img} source={{ uri: userImg }} />
+              <Text style={styles.name}>Rate {expertInfo?.name}</Text>
             </View>
             <View style={styles.star_container}>
               {maxrating.map((item, index) => {
@@ -60,6 +68,7 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
                 {strings["Add a detailed review"]}
               </Text>
               <TextInput
+                textAlignVertical="top"
                 editable
                 numberOfLines={4}
                 multiline
@@ -71,7 +80,10 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
             </View>
             <TouchableOpacity
               style={styles.btn}
-              onPress={() => onPresssubmit(defaultrating, input)}
+              onPress={() => {
+                close();
+                onPresssubmit(defaultrating, input);
+              }}
             >
               <ImageBackground
                 resizeMode="contain"
@@ -83,7 +95,7 @@ const FeedbackModal = ({ visible, close, onPresssubmit }) => {
                 </Text>
               </ImageBackground>
             </TouchableOpacity>
-          </View>
+          </KeyboardAwareScrollView>
         }
       />
     </View>
@@ -140,6 +152,7 @@ const styles = StyleSheet.create({
     paddingTop: hp(20),
     paddingHorizontal: wp(20),
     marginTop: hp(12),
+    height: hp(100),
   },
   submitImgStyle: {
     justifyContent: "center",

@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import { BackHeader } from "../../components";
+import { BackHeader, Loader } from "../../components";
 import { strings } from "../../helper/string";
 import { icons, images } from "../../theme/icons";
 import {
@@ -46,6 +46,7 @@ const Profile = () => {
   const [dates, setDates] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [imageData, setImageData] = useState<any>({ uri: "" });
+  const [loading, setLoading] = useState(false);
 
   const { profileData } = useAppSelector((state) => state.profile);
 
@@ -60,7 +61,6 @@ const Profile = () => {
     setPhone(profileData?.user?.phone || "");
     setValue(profileData?.user?.gender);
     setDate(profileData?.user?.birthday);
-    setDate("");
     if (profileData?.user?.user_profile_images?.length > 0) {
       setImageData({
         uri:
@@ -79,10 +79,13 @@ const Profile = () => {
         userid: userInfo._id,
       },
       onSuccess: () => {
+        setLoading(false);
         setIsEditable(!isEditable);
         successToast("Your profile has been successfully updated.");
       },
-      onFailure: () => {},
+      onFailure: () => {
+        setLoading(false);
+      },
     };
     dispatch(getUserDetails(obj));
   };
@@ -112,13 +115,16 @@ const Profile = () => {
       type: imageData?.mime,
       name: imageData?.name,
     });
+    setLoading(true);
 
     let obj = {
       data: formData,
       onSuccess: () => {
         getProfileData();
       },
-      onFailure: () => {},
+      onFailure: () => {
+        setLoading(false);
+      },
     };
     dispatch(editProfile(obj));
   };
@@ -141,6 +147,7 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <BackHeader title={strings.Personal_Information} />
+      <Loader visible={loading} />
       <KeyboardAwareScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         enableAutomaticScroll

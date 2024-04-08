@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     flexWrap: "wrap",
-    justifyContent: "space-between",
   },
   itemContainer: {
     height: hp(40),
@@ -74,6 +73,7 @@ const styles = StyleSheet.create({
     marginBottom: wp(12),
     alignItems: "center",
     justifyContent: "center",
+    marginRight: wp(5),
   },
   timeTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.black),

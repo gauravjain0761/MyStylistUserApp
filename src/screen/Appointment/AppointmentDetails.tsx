@@ -6,18 +6,20 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import { BackHeader } from "../../components";
+import React, { useEffect } from "react";
+import { AppointmentDetailsLoader, BackHeader } from "../../components";
 import { strings } from "../../helper/string";
 import AppointmentDetailCard from "../../components/common/AppointmentDetailCard";
 import { images } from "../../theme/icons";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import moment from "moment";
+import { getAppointmentDetails } from "../../actions";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 type RowItemValueProps = {
   title: string;
@@ -34,10 +36,21 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 };
 
 const AppointmentDetails = () => {
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
+  const { params }: any = useRoute();
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
   const { Appointment } = appointmentDetails;
-  const { userId, expertId } = Appointment;
+  const { isLoading } = useAppSelector((state) => state.common);
+
+  useEffect(() => {
+    let obj = {
+      id: params?.id,
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAppointmentDetails(obj));
+  }, [params?.id]);
 
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
@@ -51,62 +64,81 @@ const AppointmentDetails = () => {
     <View style={styles.conatiner}>
       <BackHeader title={strings.Appointment_Detail} />
       <ScrollView>
-        <View style={styles.card_container}>
-          <AppointmentDetailCard
-            userImg={userId?.user_profile_images?.[0]?.image_medium}
-            name={expertId?.name}
-            rating={expertId?.averageRating}
-            jobs={expertId?.jobDone}
-            location={
-              expertId?.addresses?.[0].address?.houseNumber +
-              "," +
-              expertId?.addresses?.[0].address?.sector +
-              "," +
-              expertId?.addresses?.[0].address?.landmark
-            }
-            date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
-              "DD MMM,YYYY"
-            )}
-            time={Appointment?.timeSlot?.[0]?.availableTime}
-          />
-        </View>
+        {isLoading ? (
+          <AppointmentDetailsLoader />
+        ) : (
+          <View style={styles.card_container}>
+            <AppointmentDetailCard
+              imgBaseURL={appointmentDetails?.featured_image_url}
+              userImg={Appointment?.expertId?.user_profile_images?.[0]?.image}
+              name={Appointment?.expertId?.name}
+              rating={Appointment?.expertId?.averageRating}
+              jobs={Appointment?.expertId?.jobDone}
+              location={
+                Appointment?.expertId?.addresses?.[0].address?.houseNumber +
+                "," +
+                Appointment?.expertId?.addresses?.[0].address?.sector +
+                "," +
+                Appointment?.expertId?.addresses?.[0].address?.landmark
+              }
+              date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
+                "DD MMM,YYYY"
+              )}
+              time={Appointment?.timeSlot?.[0]?.availableTime}
+            />
+          </View>
+        )}
 
         <View style={styles.otp_conatiner}>
-          <View style={styles.otp_detail_container}>
-            <Text style={styles.otp_title}>
-              {strings["OTP to start the service"]}
-            </Text>
-            <Text style={styles.otp_number}>4 4 2 5 2 5</Text>
-          </View>
+          {isLoading ? (
+            <SkeletonPlaceholder borderRadius={4}>
+              <SkeletonPlaceholder.Item
+                width={120}
+                height={20}
+                backgroundColor={colors.primary_light_blue_4}
+              />
+            </SkeletonPlaceholder>
+          ) : (
+            <View style={styles.otp_detail_container}>
+              <Text style={styles.otp_title}>
+                {strings["OTP to start the service"]}
+              </Text>
+              <Text style={styles.otp_number}>4 4 2 5 2 5</Text>
+            </View>
+          )}
         </View>
 
-        <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-          <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-          {Appointment?.services?.map((item: any) => {
-            return (
-              <RowItemValue
-                title={item?.service_name}
-                value={`₹ ${item?.price}`}
-              />
-            );
-          })}
-          <RowItemValue
-            title="Discount Applied"
-            value={`-₹ ${Appointment?.discount}`}
-          />
-          <RowItemValue title="Tax" value={`₹ ${Appointment?.tax}`} />
-          <RowItemValue
-            title="Payment Method"
-            value={Appointment?.paymentType}
-          />
-          <View style={styles.lineStyle} />
-          <View style={styles.rowSpaceStyle}>
-            <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-            <Text
-              style={styles.valueTextStyle}
-            >{`₹ ${Appointment?.totalAmount}`}</Text>
+        {isLoading ? (
+          <View />
+        ) : (
+          <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
+            <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
+            {Appointment?.services?.map((item: any) => {
+              return (
+                <RowItemValue
+                  title={item?.service_name}
+                  value={`₹ ${item?.price}`}
+                />
+              );
+            })}
+            <RowItemValue
+              title="Discount Applied"
+              value={`-₹ ${Appointment?.discount}`}
+            />
+            <RowItemValue title="Tax" value={`₹ ${Appointment?.tax}`} />
+            <RowItemValue
+              title="Payment Method"
+              value={Appointment?.paymentType}
+            />
+            <View style={styles.lineStyle} />
+            <View style={styles.rowSpaceStyle}>
+              <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
+              <Text
+                style={styles.valueTextStyle}
+              >{`₹ ${Appointment?.totalAmount}`}</Text>
+            </View>
           </View>
-        </View>
+        )}
       </ScrollView>
       <View style={styles.elevationStyle}>
         <TouchableOpacity onPress={() => onPressCancel()}>

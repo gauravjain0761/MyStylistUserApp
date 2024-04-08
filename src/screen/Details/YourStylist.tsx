@@ -17,8 +17,10 @@ import {
 import {
   BackHeader,
   Modals,
+  OfferLoader,
   PackagesItem,
   StylistItem,
+  UserItemLoader,
 } from "../../components";
 import { images } from "../../theme/icons";
 import {
@@ -53,7 +55,7 @@ import {
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import MyWorkItem from "../../components/Details/MyWorkItem";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import ReviewModel from "../../components/Details/ReviewModal";
 import LinearGradient from "react-native-linear-gradient";
@@ -68,6 +70,7 @@ import {
   getAllOffersByUser,
   getAllPackageByUser,
   getCartlist,
+  getUserItemDetails,
   getUsersFavList,
   removeAsfavourite,
   saveAsfavourite,
@@ -75,6 +78,7 @@ import {
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 type TagViewProps = {
   Icon?: any;
@@ -150,6 +154,7 @@ const getAmenitiesIcon = (key: string) => {
 };
 
 const YourStylist = () => {
+  const { params }: any = useRoute();
   const { cartDetails, addtocart } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
@@ -166,6 +171,7 @@ const YourStylist = () => {
   const [animatedValue, setAnimatedValue] = useState(0);
   const [like, setLike] = useState(false);
   const [likeID, setLikeID] = useState("");
+  const [loading, setLoading] = useState(true);
   const animatedStyle = useAnimatedStyle(() => {
     return {
       width:
@@ -175,16 +181,32 @@ const YourStylist = () => {
     };
   });
 
+  const getDetails = () => {
+    setLoading(true);
+    let userid = params?.id;
+    let obj = {
+      isLoading: true,
+      data: {
+        userid: userid,
+      },
+      onSuccess: () => {
+        getFavUser();
+      },
+
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUserItemDetails(obj));
+  };
+
   useEffect(() => {
     if (Platform.OS === "android") {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
       }
     }
-  }, []);
-
-  useEffect(() => {
-    getFavUser();
+    getDetails();
   }, []);
 
   useEffect(() => {
@@ -209,6 +231,7 @@ const YourStylist = () => {
             setLike(false);
           }
         });
+        setLoading(false);
       },
       onFailure: (Errr: any) => {
         console.log("Errr", Errr);
@@ -249,13 +272,12 @@ const YourStylist = () => {
       (acc, item) => acc + item?.price,
       initialvalue
     );
-    console.log("resss", total);
     setTotal(total);
   }, [addtocart]);
 
   useEffect(() => {
     let obj = {
-      id: itemDetails?.user._id,
+      id: itemDetails?.user?._id,
     };
     dispatch(getAllOffersByUser(obj));
     dispatch(getAllPackageByUser(obj));
@@ -385,55 +407,62 @@ const YourStylist = () => {
         scrollEventThrottle={16}
         onScroll={handleScroll}
       >
-        <View style={styles.rowStyle}>
-          <FastImage
-            resizeMode="cover"
-            style={styles.personStyle}
-            source={{
-              uri:
-                itemDetails?.featured_image_url +
-                "/" +
-                itemDetails?.user?.user_profile_images?.[0]?.image,
-              priority: FastImage.priority.high,
-            }}
-          />
-          <View style={styles.columStyle}>
-            <View
-              style={{
-                ...styles.rowNameStyle,
-                justifyContent: "space-between",
+        {loading ? (
+          <View style={{ paddingHorizontal: wp(20), paddingVertical: hp(10) }}>
+            <UserItemLoader />
+          </View>
+        ) : (
+          <View style={styles.rowStyle}>
+            <FastImage
+              resizeMode="cover"
+              style={styles.personStyle}
+              source={{
+                uri:
+                  itemDetails?.featured_image_url +
+                  "/" +
+                  itemDetails?.user?.user_profile_images?.[0]?.image,
+                priority: FastImage.priority.high,
               }}
-            >
-              <Text style={styles.nameTextStyle}>
-                {itemDetails?.user?.name}
-              </Text>
-              <VerifyIcon />
-            </View>
-            <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
-              <TouchableOpacity
-                style={styles.startContainer}
-                onPress={() => setIsModal(!isModal)}
+            />
+            <View style={styles.columStyle}>
+              <View
+                style={{
+                  ...styles.rowNameStyle,
+                  justifyContent: "space-between",
+                }}
               >
-                <Text style={styles.startTextStyle}>
-                  {itemDetails?.user?.averageRating}
+                <Text style={styles.nameTextStyle}>
+                  {itemDetails?.user?.name}
                 </Text>
-                <StarIcon />
-              </TouchableOpacity>
-              <View style={styles.dotStyle} />
-              <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
-            </View>
-            <View style={styles.rowNameStyle}>
-              <CarIcon />
-              <Text style={styles.locationTextStyle}>
-                {itemDetails?.user?.city?.[0].city_name}
-                {","}
-                {itemDetails?.user?.district?.[0].district_name}
-                {","}
-                {itemDetails?.user?.state?.[0].state_name}
-              </Text>
+                <VerifyIcon />
+              </View>
+              <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
+                <TouchableOpacity
+                  style={styles.startContainer}
+                  onPress={() => setIsModal(!isModal)}
+                >
+                  <Text style={styles.startTextStyle}>
+                    {itemDetails?.user?.averageRating}
+                  </Text>
+                  <StarIcon />
+                </TouchableOpacity>
+                <View style={styles.dotStyle} />
+                <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
+              </View>
+              <View style={styles.rowNameStyle}>
+                <CarIcon />
+                <Text style={styles.locationTextStyle}>
+                  {itemDetails?.user?.city?.[0].city_name}
+                  {","}
+                  {itemDetails?.user?.district?.[0].district_name}
+                  {","}
+                  {itemDetails?.user?.state?.[0].state_name}
+                </Text>
+              </View>
             </View>
           </View>
-        </View>
+        )}
+
         <View style={styles.gradinetStyle}>
           <View style={styles.offerContainer}>
             <OfferIcon />
@@ -494,27 +523,34 @@ const YourStylist = () => {
               />
             </View>
           ) : null} */}
-
-          {isOffers ? (
-            <View>
-              <FlatList
-                style={{ flex: 1 }}
-                data={[1]}
-                scrollEnabled={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => {
-                  return (
-                    <StylistItem
-                      key={index}
-                      isOffer={true}
-                      data={item}
-                      offers={userOfferList}
-                    />
-                  );
-                }}
-              />
+          {loading ? (
+            <View style={{ marginTop: hp(40) }}>
+              <OfferLoader />
             </View>
-          ) : null}
+          ) : (
+            <>
+              {isOffers ? (
+                <View>
+                  <FlatList
+                    style={{ flex: 1 }}
+                    data={[1]}
+                    scrollEnabled={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <StylistItem
+                          key={index}
+                          isOffer={true}
+                          data={item}
+                          offers={userOfferList}
+                        />
+                      );
+                    }}
+                  />
+                </View>
+              ) : null}
+            </>
+          )}
 
           {isPackages ? (
             <View>

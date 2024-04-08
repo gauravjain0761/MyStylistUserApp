@@ -1,6 +1,7 @@
 import {
   FlatList,
   ImageBackground,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { cancelAppointment } from "../../actions";
+import moment from "moment";
 
 const AppointmentCancellation = () => {
   const [select, SetSelect] = useState(0);
@@ -95,44 +97,52 @@ const AppointmentCancellation = () => {
   return (
     <View style={styles.conatiner}>
       <BackHeader title={strings.Appointment_Cancellation} />
-      <View style={styles.card}>
-        <AppointmentCancelCard
-          name={strings.Majid_Khan}
-          image={images.barber5}
-          date="26 May, 2024"
-          time="08:30PM"
-          onPressNo={onPressNo}
-          onPressYes={onPressYes}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.card}>
+          <AppointmentCancelCard
+            name={Appointment?.expertId?.name}
+            image={
+              appointmentDetails?.featured_image_url +
+              "/" +
+              Appointment?.expertId?.user_profile_images?.[0]?.image
+            }
+            date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
+              "DD MMM,YYYY"
+            )}
+            time={Appointment?.timeSlot?.[0]?.availableTime}
+            onPressNo={onPressNo}
+            onPressYes={onPressYes}
+          />
+        </View>
 
-      <View style={styles.reason_conatiner}>
-        <Text style={styles.title}>
-          {strings["What is the reason of cancellation?"]}
-        </Text>
-        <FlatList
-          data={reason}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => {
-            return (
-              <TouchableOpacity
-                onPress={() => SetSelect(item.id)}
-                style={styles.btn_conatiner}
-              >
-                <View style={styles.radio_btn}>
-                  {select == item.id && (
-                    <View style={styles.radio_btn_icon}></View>
-                  )}
-                </View>
-                <Text style={styles.reason_title}>{item.title}</Text>
-              </TouchableOpacity>
-            );
-          }}
-          ItemSeparatorComponent={() => (
-            <View style={styles.item_separator}></View>
-          )}
-        />
-      </View>
+        <View style={styles.reason_conatiner}>
+          <Text style={styles.title}>
+            {strings["What is the reason of cancellation?"]}
+          </Text>
+          <FlatList
+            data={reason}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => SetSelect(item.id)}
+                  style={styles.btn_conatiner}
+                >
+                  <View style={styles.radio_btn}>
+                    {select == item.id && (
+                      <View style={styles.radio_btn_icon}></View>
+                    )}
+                  </View>
+                  <Text style={styles.reason_title}>{item.title}</Text>
+                </TouchableOpacity>
+              );
+            }}
+            ItemSeparatorComponent={() => (
+              <View style={styles.item_separator}></View>
+            )}
+          />
+        </View>
+      </ScrollView>
       <View style={styles.bottomStyle}>
         <TouchableOpacity onPress={onPressCancel}>
           <ImageBackground

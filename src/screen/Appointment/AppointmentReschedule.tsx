@@ -14,12 +14,18 @@ import {
   generateTimes,
   generateWeekDates,
   hp,
+  infoToast,
   wp,
 } from "../../helper/globalFunction";
 import { strings } from "../../helper/string";
 import { images } from "../../theme/icons";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { BackHeader, TimeSelector, WeekDateSelector } from "../../components";
+import {
+  BackHeader,
+  Loader,
+  TimeSelector,
+  WeekDateSelector,
+} from "../../components";
 import { screenName } from "../../helper/routeNames";
 import { colors } from "../../theme/color";
 import { useNavigation } from "@react-navigation/native";
@@ -48,6 +54,7 @@ const AppointmentReschedule = () => {
   const [times, setTimes] = useState([]);
   const [selectedDateIndex, setSelectedDate] = useState(null);
   const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [bookTime, setBookTime] = useState({});
   const [date, setDate] = useState("");
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
@@ -65,7 +72,7 @@ const AppointmentReschedule = () => {
         data: {
           startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
-          timeSlotDuration: 1,
+          timeSlotDuration: 60,
           expertId: userInfo._id,
         },
         onSuccess: (response: any) => {
@@ -92,22 +99,31 @@ const AppointmentReschedule = () => {
   };
 
   const onPressBook = () => {
-    let obj = {
-      data: {
-        appointmentId: Appointment?._id,
-        newTimeSlot: {
-          timeSlot_id: bookTime?._id,
-          availableDate: date,
-          availableTime: bookTime?.time,
+    if (selectedDateIndex === null) {
+      infoToast("Please select a date");
+    } else if (selectedTimeIndex === null) {
+      infoToast("Please select a time");
+    } else {
+      setLoading(true);
+      let obj = {
+        data: {
+          appointmentId: Appointment?._id,
+          newTimeSlot: {
+            timeSlot_id: bookTime?._id,
+            availableDate: date,
+            availableTime: bookTime?.time,
+          },
         },
-      },
-      onSuccess: (response: any) => {
-        navigate(screenName.AppointmentConfirm);
-        console.log(response);
-      },
-      onFailure: () => {},
-    };
-    dispatch(rescheduleAppointment(obj));
+        onSuccess: (response: any) => {
+          setLoading(false);
+          navigate(screenName.AppointmentConfirm);
+        },
+        onFailure: () => {
+          setLoading(false);
+        },
+      };
+      dispatch(rescheduleAppointment(obj));
+    }
   };
 
   const initialValue = 0;
@@ -118,11 +134,13 @@ const AppointmentReschedule = () => {
 
   return (
     <View style={styles.conatiner}>
+      <Loader visible={loading} />
       <BackHeader title={strings.Appointment_Detail} />
       <ScrollView>
         <View style={styles.card}>
           <AppointmentDetailCard
-            images={images.barber5}
+            imgBaseURL={appointmentDetails?.featured_image_url}
+            userImg={Appointment?.expertId?.user_profile_images?.[0]?.image}
             name={expertId?.name}
             rating={expertId?.averageRating}
             jobs={expertId?.jobDone}

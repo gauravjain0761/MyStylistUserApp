@@ -69,7 +69,6 @@ export const getUserDetails =
     let header = {
       "Content-Type": "application/json",
     };
-    dispatch({ type: IS_LOADING, payload: request?.isLoading });
     return makeAPIRequest({
       method: POST,
       url: api.userDetails,

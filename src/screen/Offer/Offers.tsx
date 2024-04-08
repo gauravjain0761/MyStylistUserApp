@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { BackHeader, Filter_Button } from "../../components";
+import { BackHeader, CarouselLoader, Filter_Button } from "../../components";
 import { strings } from "../../helper/string";
 import {
   hp,
@@ -32,6 +32,7 @@ import {
 } from "../../actions/offerAction";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 let offersOffList = [
   { id: 1, off: "10%" },
@@ -45,6 +46,7 @@ const Offers = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const { profileData } = useAppSelector((state) => state.profile);
   const { allOffers, offerList } = useAppSelector((state) => state.offers);
+  const { isLoading } = useAppSelector((state) => state.common);
 
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -76,26 +78,13 @@ const Offers = ({ navigation }) => {
   };
 
   const onPressCampaignItem = (item: any) => {
-    let obj = {
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 10,
-        page: 1,
-        campaignId: item?.campaign?._id,
+    navigation.navigate(screenName.NewYearOffer, {
+      item: {
+        ...item,
+        bannerImg:
+          allOffers?.featured_image_url + "/" + item?.campaign?.fileName,
       },
-      onSuccess: () => {
-        navigation.navigate(screenName.NewYearOffer, {
-          item: {
-            ...item,
-            bannerImg:
-              allOffers?.featured_image_url + "/" + item?.campaign?.fileName,
-          },
-        });
-        console.log("item", item);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getCampaignExpert(obj));
+    });
   };
 
   const loadMoreData = () => {
@@ -131,17 +120,22 @@ const Offers = ({ navigation }) => {
         scrollEventThrottle={400}
         stickyHeaderIndices={[1]}
       >
-        <FastImage
-          style={styles.bannerImgStyle}
-          resizeMode="cover"
-          source={{
-            uri:
-              allOffers?.featured_image_url +
-              "/" +
-              allOffers?.offerBanner?.fileName,
-            priority: FastImage.priority.high,
-          }}
-        />
+        {isLoading ? (
+          <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+        ) : (
+          <FastImage
+            style={styles.bannerImgStyle}
+            resizeMode="cover"
+            source={{
+              uri:
+                allOffers?.featured_image_url +
+                "/" +
+                allOffers?.offerBanner?.fileName,
+              priority: FastImage.priority.high,
+            }}
+          />
+        )}
+
         <FlatList
           style={styles.filterStyle}
           data={offer_filter}
@@ -194,40 +188,38 @@ const Offers = ({ navigation }) => {
             }}
           />
 
-          <FlatList
-            data={allOffers.campaigns}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => onPressCampaignItem(item)}
-                  style={{}}
-                >
-                  <FastImage
-                    resizeMode="cover"
-                    style={styles.imgStyle}
-                    source={{
-                      uri:
-                        allOffers?.featured_image_url +
-                        "/" +
-                        item?.campaign.fileName,
-                      priority: FastImage.priority.high,
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          {isLoading ? (
+            <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+          ) : (
+            <FlatList
+              data={allOffers.campaigns}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity onPress={() => onPressCampaignItem(item)}>
+                    <FastImage
+                      resizeMode="cover"
+                      style={styles.imgStyle}
+                      source={{
+                        uri:
+                          allOffers?.featured_image_url +
+                          "/" +
+                          item?.campaign.fileName,
+                        priority: FastImage.priority.high,
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          )}
 
           <FlatList
             data={offerList || []}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity
-                  // onPress={onPressOfferItem}
-                  style={styles.offerContainer}
-                >
+                <TouchableOpacity style={styles.offerContainer}>
                   <FastImage
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}
@@ -291,6 +283,7 @@ const styles = StyleSheet.create({
     height: hp(280),
     borderRadius: 15,
     marginVertical: hp(15),
+    marginTop: hp(10),
   },
   offersContainer: {
     height: hp(83),

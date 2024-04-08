@@ -16,7 +16,7 @@ import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { BackHeader } from "../../components";
+import { AppointmentLoader, BackHeader } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { getAppointmentDetails, getUserAppointments } from "../../actions";
@@ -32,13 +32,19 @@ const Appointments = ({ navigation }) => {
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [refreshControl, setRefreshControle] = useState(false);
+  const { isLoading } = useAppSelector((state) => state.common);
 
-  useFocusEffect(
-    useCallback(() => {
-      setPage(1);
-      getList(true);
-    }, [])
-  );
+  useEffect(() => {
+    setPage(1);
+    getList(true);
+  }, []);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setPage(1);
+  //     getList(false);
+  //   }, [])
+  // );
 
   async function getList(isLoading: boolean) {
     const userInfo = await getAsyncUserInfo();
@@ -62,15 +68,8 @@ const Appointments = ({ navigation }) => {
   }
 
   const onPressItem = (item: any) => {
-    let obj = {
-      id: item?._id,
-      onSuccess: (response) => {
-        // @ts-ignore
-        navigate(screenName.AppointmentDetails);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getAppointmentDetails(obj));
+    //@ts-ignore
+    navigate(screenName.AppointmentDetails, { id: item?._id });
   };
 
   const loadMoreData = () => {
@@ -109,81 +108,92 @@ const Appointments = ({ navigation }) => {
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
       >
-        {appointment
-          ?.filter((i: any) => i.appointmentType !== "past")
-          .map((item, index) => {
-            return (
-              <View key={index} style={styles.cards}>
-                <BarberAppointmentCard
-                  name={item.expertDetails?.name}
-                  date={moment(item?.timeSlot?.[0]?.availableDate).format(
-                    "DD MMM YYYY, "
-                  )}
-                  time={item?.timeSlot?.[0]?.availableTime}
-                  location={
-                    item.expertDetails?.city?.[0]?.city_name +
-                    ", " +
-                    item.expertDetails?.district?.[0]?.district_name +
-                    ", " +
-                    item.expertDetails?.state?.[0]?.state_name
-                  }
-                  service={item?.services
-                    ?.map((i: any) => i.service_name)
-                    .join(", ")}
-                  type={item.appointmentType}
-                  rating={item?.expertDetails?.averageRating}
-                  isCompleted={false}
-                  price={item.totalAmount}
-                  image={item.expertDetails.user_profile_images?.[0]?.image}
-                  onPress={() => onPressItem(item)}
-                  imgBaseURL={appointmentList?.featured_image_url}
-                />
-              </View>
-            );
-          })}
+        {isLoading ? (
+          <FlatList
+            data={[1, 2, 3, 4, 5]}
+            renderItem={({ item, index }) => {
+              return <AppointmentLoader />;
+            }}
+          />
+        ) : (
+          <>
+            {appointment
+              ?.filter((i: any) => i.appointmentType !== "past")
+              .map((item, index) => {
+                return (
+                  <View key={index} style={styles.cards}>
+                    <BarberAppointmentCard
+                      name={item.expertDetails?.name}
+                      date={moment(item?.timeSlot?.[0]?.availableDate).format(
+                        "DD MMM YYYY, "
+                      )}
+                      time={item?.timeSlot?.[0]?.availableTime}
+                      location={
+                        item.expertDetails?.city?.[0]?.city_name +
+                        ", " +
+                        item.expertDetails?.district?.[0]?.district_name +
+                        ", " +
+                        item.expertDetails?.state?.[0]?.state_name
+                      }
+                      service={item?.services
+                        ?.map((i: any) => i.service_name)
+                        .join(", ")}
+                      type={item.appointmentType}
+                      rating={item?.expertDetails?.averageRating}
+                      isCompleted={false}
+                      price={item.totalAmount}
+                      image={item.expertDetails.user_profile_images?.[0]?.image}
+                      onPress={() => onPressItem(item)}
+                      imgBaseURL={appointmentList?.featured_image_url}
+                    />
+                  </View>
+                );
+              })}
 
-        {appointment?.filter((i: any) => i.appointmentType === "past")?.length >
-        0 ? (
-          <View style={styles?.stylists_title_container}>
-            <View style={styles?.title_border}></View>
-            <Text style={styles?.your_stylists_title}>
-              {strings?.Past_Services}
-            </Text>
-            <View style={styles?.title_border}></View>
-          </View>
-        ) : null}
-        {appointment
-          ?.filter((i: any) => i.appointmentType === "past")
-          .map((item, index) => {
-            return (
-              <View key={index} style={styles.cards}>
-                <BarberAppointmentCard
-                  name={item.expertDetails?.name}
-                  date={moment(item?.timeSlot?.[0]?.availableDate).format(
-                    "DD MMM YYYY, "
-                  )}
-                  time={item?.timeSlot?.[0]?.availableTime}
-                  location={
-                    item.expertDetails?.city?.[0]?.city_name +
-                    ", " +
-                    item.expertDetails?.district?.[0]?.district_name +
-                    ", " +
-                    item.expertDetails?.state?.[0]?.state_name
-                  }
-                  service={item?.services
-                    ?.map((i: any) => i.service_name)
-                    .join(", ")}
-                  type={item.appointmentType}
-                  rating={item?.expertDetails?.averageRating}
-                  isCompleted={true}
-                  price={item.totalAmount}
-                  image={item.expertDetails.user_profile_images?.[0]?.image}
-                  onPress={() => onPressItem(item)}
-                  imgBaseURL={appointmentList?.featured_image_url}
-                />
+            {appointment?.filter((i: any) => i.appointmentType === "past")
+              ?.length > 0 ? (
+              <View style={styles?.stylists_title_container}>
+                <View style={styles?.title_border}></View>
+                <Text style={styles?.your_stylists_title}>
+                  {strings?.Past_Services}
+                </Text>
+                <View style={styles?.title_border}></View>
               </View>
-            );
-          })}
+            ) : null}
+            {appointment
+              ?.filter((i: any) => i.appointmentType === "past")
+              .map((item, index) => {
+                return (
+                  <View key={index} style={styles.cards}>
+                    <BarberAppointmentCard
+                      name={item.expertDetails?.name}
+                      date={moment(item?.timeSlot?.[0]?.availableDate).format(
+                        "DD MMM YYYY, "
+                      )}
+                      time={item?.timeSlot?.[0]?.availableTime}
+                      location={
+                        item.expertDetails?.city?.[0]?.city_name +
+                        ", " +
+                        item.expertDetails?.district?.[0]?.district_name +
+                        ", " +
+                        item.expertDetails?.state?.[0]?.state_name
+                      }
+                      service={item?.services
+                        ?.map((i: any) => i.service_name)
+                        .join(", ")}
+                      type={item.appointmentType}
+                      rating={item?.expertDetails?.averageRating}
+                      isCompleted={true}
+                      price={item.totalAmount}
+                      image={item.expertDetails.user_profile_images?.[0]?.image}
+                      onPress={() => onPressItem(item)}
+                      imgBaseURL={appointmentList?.featured_image_url}
+                    />
+                  </View>
+                );
+              })}
+          </>
+        )}
 
         {footerLoading && <ActivityIndicator />}
       </ScrollView>

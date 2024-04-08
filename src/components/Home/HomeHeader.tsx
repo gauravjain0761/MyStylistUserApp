@@ -67,7 +67,9 @@ const HomeHeader = ({
               <Text numberOfLines={1} style={styles.addrs}>
                 {location}
               </Text>
-            ) : null}
+            ) : (
+              <Text></Text>
+            )}
           </View>
         </View>
       </View>

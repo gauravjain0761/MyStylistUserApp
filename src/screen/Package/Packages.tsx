@@ -11,7 +11,7 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { BackHeader, Filter_Button } from "../../components";
+import { BackHeader, CarouselLoader, Filter_Button } from "../../components";
 import { strings } from "../../helper/string";
 import {
   hp,
@@ -45,6 +45,7 @@ const Packages = ({ navigation }) => {
   const [page, setPage] = useState(1);
   const [footerLoading, setFooterLoading] = useState(false);
   const [refreshControl, setRefreshControle] = useState(false);
+  const { isLoading } = useAppSelector((state) => state.common);
 
   useEffect(() => {
     getPackagesData(true);
@@ -76,25 +77,13 @@ const Packages = ({ navigation }) => {
   };
 
   const onPressCampaignItem = (item: any) => {
-    let obj = {
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 10,
-        page: 1,
-        campaignId: item?.campaign?._id,
+    navigation.navigate(screenName.NewYearOffer, {
+      item: {
+        ...item,
+        bannerImg:
+          allpackages?.featured_image_url + "/" + item?.campaign?.fileName,
       },
-      onSuccess: () => {
-        navigation.navigate(screenName.NewYearOffer, {
-          item: {
-            ...item,
-            bannerImg:
-              allpackages?.featured_image_url + "/" + item?.campaign?.fileName,
-          },
-        });
-      },
-      onFailure: () => {},
-    };
-    dispatch(getCampaignExpert(obj));
+    });
   };
 
   const loadMoreData = () => {
@@ -130,17 +119,21 @@ const Packages = ({ navigation }) => {
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
       >
-        <FastImage
-          style={styles.bannerImgStyle}
-          resizeMode="cover"
-          source={{
-            uri:
-              allpackages?.featured_image_url +
-              "/" +
-              allpackages?.packageBanner?.fileName,
-            priority: FastImage.priority.high,
-          }}
-        />
+        {isLoading ? (
+          <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+        ) : (
+          <FastImage
+            style={styles.bannerImgStyle}
+            resizeMode="cover"
+            source={{
+              uri:
+                allpackages?.featured_image_url +
+                "/" +
+                allpackages?.packageBanner?.fileName,
+              priority: FastImage.priority.high,
+            }}
+          />
+        )}
         <FlatList
           style={styles.filterStyle}
           data={offer_filter}
@@ -191,30 +184,34 @@ const Packages = ({ navigation }) => {
               );
             }}
           />
-          <FlatList
-            data={allpackages.campaigns}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => onPressCampaignItem(item)}
-                  style={{}}
-                >
-                  <FastImage
-                    resizeMode="cover"
-                    style={styles.imgStyle}
-                    source={{
-                      uri:
-                        allpackages?.featured_image_url +
-                        "/" +
-                        item?.campaign.fileName,
-                      priority: FastImage.priority.high,
-                    }}
-                  />
-                </TouchableOpacity>
-              );
-            }}
-            keyExtractor={(item, index) => index.toString()}
-          />
+          {isLoading ? (
+            <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+          ) : (
+            <FlatList
+              data={allpackages.campaigns}
+              renderItem={({ item, index }) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => onPressCampaignItem(item)}
+                    style={{}}
+                  >
+                    <FastImage
+                      resizeMode="cover"
+                      style={styles.imgStyle}
+                      source={{
+                        uri:
+                          allpackages?.featured_image_url +
+                          "/" +
+                          item?.campaign.fileName,
+                        priority: FastImage.priority.high,
+                      }}
+                    />
+                  </TouchableOpacity>
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          )}
 
           <FlatList
             data={packageList || []}

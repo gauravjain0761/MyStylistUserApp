@@ -48,7 +48,11 @@ const AppointmentCancelCard = ({
         <View style={styles.information_container}>
           <View style={styles.img_container}>
             <View style={styles.img_con}>
-              <Image resizeMode="stretch" source={image} style={styles.img} />
+              <Image
+                resizeMode="stretch"
+                source={{ uri: image }}
+                style={styles.img}
+              />
             </View>
           </View>
           <View style={styles.name_container}>

@@ -1,6 +1,11 @@
 import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
-import { BackHeader, Barber_Card, FavouriteCard } from "../../components";
+import {
+  BackHeader,
+  Barber_Card,
+  FavouriteCard,
+  UserItemLoader,
+} from "../../components";
 import { strings } from "../../helper/string";
 import { hp, screen_height, wp } from "../../helper/globalFunction";
 import { barbers } from "../../helper/constunts";
@@ -18,6 +23,7 @@ const MyFavorites = () => {
   const { userInfo } = useAppSelector((state) => state.common);
   const { favoriteList } = useAppSelector((state) => state.favourite);
   const [refreshControl, setRefreshControle] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getData();
@@ -30,14 +36,18 @@ const MyFavorites = () => {
       data: {
         userId: userInfo?._id,
       },
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: () => {
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
     };
     dispatch(getUsersFavList(obj));
   };
 
-  const onPressCard = () => {
-    navigate(screenName.YourStylist);
+  const onPressCard = (item: any) => {
+    navigate(screenName.YourStylist, { id: item?._id });
   };
 
   const onRefresh = useCallback(async () => {
@@ -50,48 +60,62 @@ const MyFavorites = () => {
     <View style={styles.container}>
       <BackHeader title={strings.My_Favorites} />
       <View style={styles?.barber_card_container}>
-        {favoriteList?.data?.length > 0 ? (
+        {loading ? (
           <FlatList
-            data={favoriteList?.data || []}
-            showsVerticalScrollIndicator={false}
-            refreshControl={
-              <RefreshControl
-                refreshing={refreshControl}
-                onRefresh={onRefresh}
-              />
-            }
+            data={[1, 2, 3, 4, 5, 6]}
             renderItem={({ item, index }) => {
-              return (
-                <FavouriteCard
-                  img_url={favoriteList?.user_profile_images_url}
-                  data={item}
-                  name={item.name}
-                  type="Without Service"
-                  // images={item?.image}
-                  // rating={item?.rating}
-                  // jobs={item?.jobs_done}
-                  // location={item?.address}
-                  // offers={item?.offers}
-                  barberdetailscontinerStyle={styles.barberdetailscontinerStyle}
-                  onPress={onPressCard}
-                  // onPress={onPressItem}
-                  // onPressRating={setReviewModal}
-                />
-              );
+              return <UserItemLoader />;
             }}
-            contentContainerStyle={{
-              marginVertical: hp(20),
-              marginBottom: hp(20),
-            }}
-            ItemSeparatorComponent={() => (
-              <View style={styles.card_separator}></View>
-            )}
-            ListFooterComponent={<View style={{ height: hp(20) }} />}
+            keyExtractor={(item, index) => index.toString()}
           />
         ) : (
-          <View style={styles.centerStyle}>
-            <Text style={styles.noDataTextStyle}>{"No Data"}</Text>
-          </View>
+          <>
+            {favoriteList?.data?.length > 0 ? (
+              <FlatList
+                data={favoriteList?.data || []}
+                showsVerticalScrollIndicator={false}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={refreshControl}
+                    onRefresh={onRefresh}
+                  />
+                }
+                renderItem={({ item, index }) => {
+                  return (
+                    <FavouriteCard
+                      img_url={favoriteList?.user_profile_images_url}
+                      data={item}
+                      name={item.name}
+                      type="Without Service"
+                      // images={item?.image}
+                      rating={item?.totalReviews}
+                      jobs={item?.jobDone}
+                      // location={item?.address}
+                      // offers={item?.offers}
+                      barberdetailscontinerStyle={
+                        styles.barberdetailscontinerStyle
+                      }
+                      onPress={() => onPressCard(item)}
+                      // onPress={onPressItem}
+                      // onPressRating={setReviewModal}
+                    />
+                  );
+                }}
+                contentContainerStyle={{
+                  marginVertical: hp(20),
+                  marginBottom: hp(20),
+                }}
+                ItemSeparatorComponent={() => (
+                  <View style={styles.card_separator}></View>
+                )}
+                ListFooterComponent={<View style={{ height: hp(20) }} />}
+              />
+            ) : (
+              <View style={styles.centerStyle}>
+                <Text style={styles.noDataTextStyle}>{"No Data"}</Text>
+              </View>
+            )}
+          </>
         )}
       </View>
     </View>

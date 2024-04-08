@@ -27,7 +27,6 @@ type props = {
   rating?: string | number;
   onPress?: () => void;
   containerStyle?: ViewStyle;
-  location?: string;
   service?: string;
   price?: string;
   jobs?: number | string;
@@ -41,6 +40,9 @@ type props = {
   data?: any;
   img_url?: string;
   featured_image_url?: string;
+  offerName?: string;
+  isOtherWayLocation?: boolean;
+  location?: string;
 };
 const Barber_Card = ({
   data,
@@ -60,6 +62,9 @@ const Barber_Card = ({
   barberdetailscontinerStyle,
   img_url,
   featured_image_url,
+  offerName,
+  isOtherWayLocation,
+  location,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -144,11 +149,11 @@ const Barber_Card = ({
               <View style={styles.location_container}>
                 <CarIcon />
                 <Text style={styles.location_title}>
-                  {data?.offers[0]?.city?.[0]?.city_name}
+                  {data?.offers?.[0]?.city?.[0]?.city_name}
                   {","}
-                  {data?.offers[0]?.district?.[0]?.district_name}
+                  {data?.offers?.[0]?.district?.[0]?.district_name}
                   {","}
-                  {data?.offers[0]?.state?.[0]?.state_name}
+                  {data?.offers?.[0]?.state?.[0]?.state_name}
                 </Text>
               </View>
               <View style={styles.price_container}>
@@ -232,21 +237,23 @@ const Barber_Card = ({
               </View>
               <View style={styles.location_container}>
                 <CarIcon />
-                <Text style={styles.location_title}>
-                  {data?.offers[0]?.city?.[0]?.city_name}
-                  {","}
-                  {data?.offers[0]?.district?.[0]?.district_name}
-                  {","}
-                  {data?.offers[0]?.state?.[0]?.state_name}
-                </Text>
+                {isOtherWayLocation ? (
+                  <Text style={styles.location_title}>{location}</Text>
+                ) : (
+                  <Text style={styles.location_title}>
+                    {data?.offers[0]?.city?.[0]?.city_name}
+                    {","}
+                    {data?.offers[0]?.district?.[0]?.district_name}
+                    {","}
+                    {data?.offers[0]?.state?.[0]?.state_name}
+                  </Text>
+                )}
               </View>
               {isNewYearOffer ? (
                 <>
                   <View style={styles.dashlineStyle} />
                   <View style={styles.rowSpaceStyle}>
-                    <Text style={styles.newofferTextStyle}>
-                      {strings["New Year Offer"]}
-                    </Text>
+                    <Text style={styles.newofferTextStyle}>{offerName}</Text>
                     <Text style={styles.newofferTextStyle}>{"₹1299"}</Text>
                   </View>
                 </>
@@ -288,7 +295,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.bold, 26, colors.black),
+    ...commonFontStyle(fontFamily.bold, 23, colors.black),
   },
   name_container: {
     flexDirection: "row",
@@ -330,7 +337,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   location_title: {
-    ...commonFontStyle(fontFamily.medium, 13, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 12, colors.dark_grey),
   },
   pagination_container: {
     justifyContent: "center",

@@ -262,9 +262,6 @@ const styles = StyleSheet.create({
   },
   barber_card_container: {
     flexDirection: "row",
-    // borderBottomColor: colors.active_dot,
-    // borderBottomWidth: wp(1),
-    // backgroundColor: "green",
   },
   image_conatiner: {},
   carousel_img_container: {
@@ -273,6 +270,7 @@ const styles = StyleSheet.create({
   carousel_img: {
     width: "100%",
     height: hp(144),
+    backgroundColor: colors.grey_19,
   },
   barber_details_continer: {
     paddingLeft: wp(28),
@@ -280,7 +278,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.bold, 26, colors.black),
+    ...commonFontStyle(fontFamily.bold, 23, colors.black),
   },
   name_container: {
     flexDirection: "row",

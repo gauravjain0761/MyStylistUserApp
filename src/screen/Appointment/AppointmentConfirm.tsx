@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { writeReview } from "../../actions";
 import { api } from "../../helper/apiConstants";
 import FastImage from "react-native-fast-image";
+import moment from "moment";
 
 type RowItemValueProps = {
   title: string;
@@ -100,8 +101,10 @@ const AppointmentConfirm = () => {
               "," +
               expertId?.addresses?.[0].address?.landmark
             }
-            time={"08:30PM"}
-            date={"26 May, 2024"}
+            date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
+              "DD MMM YYYY, "
+            )}
+            time={Appointment?.timeSlot?.[0]?.availableTime}
           />
         </View>
 
@@ -142,6 +145,12 @@ const AppointmentConfirm = () => {
         </TouchableOpacity>
       </View>
       <FeedbackModal
+        userImg={
+          appointmentDetails?.featured_image_url +
+          "/" +
+          Appointment?.expertId?.user_profile_images?.[0]?.image
+        }
+        expertInfo={Appointment?.expertId}
         close={setIsModal}
         visible={IsModal}
         onPresssubmit={(rating, review) => onPressSubmit(rating, review)}

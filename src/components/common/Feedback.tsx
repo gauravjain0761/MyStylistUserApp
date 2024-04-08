@@ -8,6 +8,7 @@ import { strings } from "../../helper/string";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Feedback = () => {
   const { navigate } = useNavigation();
@@ -17,7 +18,7 @@ const Feedback = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView edges={["top"]} style={styles.container}>
       <TouchableOpacity onPress={onPressClose} style={styles.close}>
         <CrossIcon />
       </TouchableOpacity>
@@ -31,7 +32,7 @@ const Feedback = () => {
           {strings["Thank you for your valuable feedback!"]}
         </Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -47,11 +48,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: hp(40),
     height: "100%",
-    // marginTop: hp(255),
+    marginTop: hp(-40),
   },
   close: {
     alignSelf: "flex-end",
     marginRight: wp(20),
+    marginTop: hp(10),
+    zIndex: 1,
   },
   img: {
     width: wp(140),

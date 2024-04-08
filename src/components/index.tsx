@@ -29,6 +29,12 @@ import Loader from "./common/Loader";
 import AddressItem from "./common/AddressItem";
 import FavouriteCard from "./Home/FavouriteCard";
 
+import CarouselLoader from "./SkeletonPlaceholder/CarouselLoader";
+import AppointmentLoader from "./SkeletonPlaceholder/AppointmentLoader";
+import AppointmentDetailsLoader from "./SkeletonPlaceholder/AppointmentDetailsLoader";
+import UserItemLoader from "./SkeletonPlaceholder/UserItemLoader";
+import OfferLoader from "./SkeletonPlaceholder/OfferLoader";
+
 export {
   LocationModal,
   BackHeader,
@@ -60,4 +66,11 @@ export {
   Loader,
   AddressItem,
   FavouriteCard,
+
+  // Loader
+  CarouselLoader,
+  AppointmentLoader,
+  AppointmentDetailsLoader,
+  UserItemLoader,
+  OfferLoader,
 };

@@ -33,6 +33,7 @@ import { useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { sendVerifyCode, verifyOTP } from "../../actions/authAction";
 import { useAppDispatch } from "../../redux/hooks";
+import { Loader } from "../../components";
 
 const CELL_COUNT = 6;
 
@@ -45,25 +46,29 @@ const OtpVerification = ({ route }: any) => {
     setValue,
   });
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
 
   const onPressSubmit = () => {
     if (value.length === 0) {
       infoToast("Please enter your OTP");
     } else {
+      setLoading(true);
       let data = {
         phone: params?.phone,
         otp: value,
         device_token: params.deviceToken,
         mobile_type: Platform.OS === "ios" ? "IOS" : "ANDROID",
       };
-      console.log("data", data);
       const obj = {
         data: data,
         onSuccess: (res: any) => {
+          setLoading(false);
           successToast("OTP verification successful");
           dispatchNavigation(screenName?.Home);
         },
-        onFailure: () => {},
+        onFailure: () => {
+          setLoading(false);
+        },
       };
       dispatch(verifyOTP(obj));
     }
@@ -81,6 +86,7 @@ const OtpVerification = ({ route }: any) => {
   return (
     <View style={styles?.container}>
       <StatusBar translucent backgroundColor={"transparent"} />
+      <Loader visible={loading} />
       <ImageBackground
         source={images?.gradient_bg}
         style={styles?.bg_container}

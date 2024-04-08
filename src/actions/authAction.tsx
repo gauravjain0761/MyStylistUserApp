@@ -18,7 +18,6 @@ export const sendVerifyCode =
     let headers = {
       "Content-Type": "application/json",
     };
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
       url: api.send_verify_code,
@@ -29,7 +28,6 @@ export const sendVerifyCode =
         if (response.data.status === 200) {
           console.log("resss", response?.data);
 
-          dispatch({ type: IS_LOADING, payload: false });
           if (response.data.success) {
             successToast(response?.data?.message);
             if (request.onSuccess) request.onSuccess(response.data);
@@ -39,7 +37,6 @@ export const sendVerifyCode =
         }
       })
       .catch((error) => {
-        dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure)
           request.onFailure("Login API Error", error.response);
       });

@@ -1,7 +1,16 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  ImageBackground,
+  StyleSheet,
+  View,
+} from "react-native";
 import React, { useEffect } from "react";
 import { getAsyncToken } from "../../helper/asyncStorage";
-import { dispatchNavigation } from "../../helper/globalFunction";
+import {
+  dispatchNavigation,
+  screen_height,
+  screen_width,
+} from "../../helper/globalFunction";
 import { screenName } from "../../helper/routeNames";
 
 const Loading = () => {
@@ -19,7 +28,10 @@ const Loading = () => {
   };
   return (
     <View style={styles.containerStyle}>
-      <ActivityIndicator size={"large"} />
+      <ImageBackground
+        source={require("../../assets/image/launch_screen.png")}
+        style={styles.backgroundStyle}
+      />
     </View>
   );
 };
@@ -31,5 +43,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+  },
+  backgroundStyle: {
+    height: screen_height,
+    width: screen_width,
   },
 });

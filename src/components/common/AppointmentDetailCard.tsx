@@ -44,6 +44,7 @@ type props = {
   date?: any;
   time?: any;
   previousBooking?: boolean;
+  imgBaseURL?: string;
 };
 
 const AppointmentDetailCard = ({
@@ -59,6 +60,7 @@ const AppointmentDetailCard = ({
   rating,
   jobs,
   previousBooking = false,
+  imgBaseURL,
 }: props) => {
   const { navigate } = useNavigation();
 
@@ -74,7 +76,10 @@ const AppointmentDetailCard = ({
             <View style={styles.img_con}>
               <FastImage
                 resizeMode="cover"
-                source={{ uri: userImg, priority: FastImage.priority.high }}
+                source={{
+                  uri: imgBaseURL + "/" + userImg,
+                  priority: FastImage.priority.high,
+                }}
                 style={styles.img}
               />
             </View>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
   Modals,
   ReviewModal,
   SelectDateModal,
+  UserItemLoader,
 } from "../../components";
 import { strings } from "../../helper/string";
 import { images } from "../../theme/icons";
@@ -31,12 +32,13 @@ import { colors } from "../../theme/color";
 import { screenName } from "../../helper/routeNames";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getUserItemDetails } from "../../actions";
+import { getCampaignExpert, getUserItemDetails } from "../../actions";
 import FastImage from "react-native-fast-image";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 const NewYearOffer = () => {
   const dispatch = useAppDispatch();
-  const { params } = useRoute();
+  const { params }: any = useRoute();
   const { navigate } = useNavigation();
   const [isModal, setIsModal] = useState(false);
   const [costmodal, setCostmodal] = useState(false);
@@ -45,6 +47,22 @@ const NewYearOffer = () => {
   const [reviewModal, setReviewModal] = useState(false);
 
   const { usersWithCampaignList } = useAppSelector((state) => state.offers);
+  const { profileData } = useAppSelector((state) => state.profile);
+  const { isLoading } = useAppSelector((state) => state.common);
+
+  useEffect(() => {
+    let obj = {
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: 1,
+        campaignId: params?.item?.campaign?._id,
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getCampaignExpert(obj));
+  }, []);
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
@@ -81,19 +99,19 @@ const NewYearOffer = () => {
   };
   const onPressItem = (item: any) => {
     //@ts-ignore
-    let userid = item._id;
-    let obj = {
-      isLoading: true,
-      data: {
-        userid: userid,
-      },
-      onSuccess: () => {
-        //@ts-ignore
-        navigate(screenName.YourStylist);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getUserItemDetails(obj));
+    // let userid = item._id;
+    // let obj = {
+    //   isLoading: true,
+    //   data: {
+    //     userid: userid,
+    //   },
+    //   onSuccess: () => {
+    // @ts-ignore
+    navigate(screenName.YourStylist, { id: item._id });
+    //   },
+    //   onFailure: () => {},
+    // };
+    // dispatch(getUserItemDetails(obj));
   };
 
   const onPresstoNavigate = () => {
@@ -140,31 +158,50 @@ const NewYearOffer = () => {
           <View style={styles?.title_border}></View>
         </View>
         <View style={styles?.barber_card_container}>
-          <FlatList
-            scrollEnabled={false}
-            data={usersWithCampaignList?.usersWithCampaign}
-            renderItem={({ item, index }) => {
-              return (
-                <Barber_Card
-                  data={item?.user}
-                  isNewYearOffer
-                  name={item.user.name}
-                  type="Without Service"
-                  images={item?.user?.user_profile_images}
-                  rating={item?.user?.averageRating}
-                  jobs={item?.user?.jobDone}
-                  location={item.address}
-                  offers={item?.offers}
-                  onPress={() => onPressItem(item?.user)}
-                  onPressRating={setReviewModal}
-                  featured_image_url={usersWithCampaignList?.featured_image_url}
-                />
-              );
-            }}
-            ItemSeparatorComponent={() => (
-              <View style={styles.card_separator}></View>
-            )}
-          />
+          {isLoading ? (
+            <FlatList
+              data={[1, 2, 3, 4]}
+              renderItem={({ item, index }) => {
+                return <UserItemLoader />;
+              }}
+            />
+          ) : (
+            <FlatList
+              scrollEnabled={false}
+              data={usersWithCampaignList?.usersWithCampaign}
+              renderItem={({ item, index }) => {
+                return (
+                  <Barber_Card
+                    isOtherWayLocation
+                    data={item?.user}
+                    isNewYearOffer
+                    name={item.user.name}
+                    type="Without Service"
+                    images={item?.user?.user_profile_images}
+                    rating={item?.user?.averageRating}
+                    jobs={item?.user?.jobDone}
+                    location={
+                      item.user?.city?.[0]?.city_name +
+                      ", " +
+                      item.user?.district?.[0]?.district_name +
+                      ", " +
+                      item.user?.state?.[0]?.state_name
+                    }
+                    offers={item?.offers}
+                    onPress={() => onPressItem(item?.user)}
+                    onPressRating={setReviewModal}
+                    featured_image_url={
+                      usersWithCampaignList?.featured_image_url
+                    }
+                    offerName={params?.item?.campaign?.title}
+                  />
+                );
+              }}
+              ItemSeparatorComponent={() => (
+                <View style={styles.card_separator}></View>
+              )}
+            />
+          )}
         </View>
         <Modals
           visible={costmodal}

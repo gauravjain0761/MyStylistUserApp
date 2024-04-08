@@ -4,6 +4,7 @@ import { hp, wp } from "../../helper/globalFunction";
 import { MarkReadIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
+import FastImage from "react-native-fast-image";
 
 type props = {
   index: number;
@@ -13,9 +14,10 @@ type props = {
 const MessageItem = ({ index, onPressItem }: props) => {
   return (
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
-      <Image
+      <FastImage
         source={{
           uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+          priority: FastImage.priority.high,
         }}
         style={styles.imageStyle}
       />

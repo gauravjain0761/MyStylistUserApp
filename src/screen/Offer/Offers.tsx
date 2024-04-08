@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -9,6 +9,7 @@ import {
   ImageBackground,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { BackHeader, Filter_Button } from "../../components";
 import { strings } from "../../helper/string";
@@ -30,6 +31,7 @@ import {
   getCampaignExpert,
 } from "../../actions/offerAction";
 import moment from "moment";
+import FastImage from "react-native-fast-image";
 
 let offersOffList = [
   { id: 1, off: "10%" },
@@ -46,6 +48,7 @@ const Offers = ({ navigation }) => {
 
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [refreshControl, setRefreshControle] = useState(false);
 
   useEffect(() => {
     getAllOfferData(true);
@@ -102,6 +105,12 @@ const Offers = ({ navigation }) => {
     }
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshControle(true);
+    getAllOfferData(true);
+    setRefreshControle(false);
+  }, [refreshControl]);
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -116,10 +125,13 @@ const Offers = ({ navigation }) => {
             loadMoreData();
           }
         }}
+        refreshControl={
+          <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
+        }
         scrollEventThrottle={400}
         stickyHeaderIndices={[1]}
       >
-        <Image
+        <FastImage
           style={styles.bannerImgStyle}
           resizeMode="cover"
           source={{
@@ -127,6 +139,7 @@ const Offers = ({ navigation }) => {
               allOffers?.featured_image_url +
               "/" +
               allOffers?.offerBanner?.fileName,
+            priority: FastImage.priority.high,
           }}
         />
         <FlatList
@@ -189,7 +202,7 @@ const Offers = ({ navigation }) => {
                   onPress={() => onPressCampaignItem(item)}
                   style={{}}
                 >
-                  <ImageBackground
+                  <FastImage
                     resizeMode="cover"
                     style={styles.imgStyle}
                     source={{
@@ -197,6 +210,7 @@ const Offers = ({ navigation }) => {
                         allOffers?.featured_image_url +
                         "/" +
                         item?.campaign.fileName,
+                      priority: FastImage.priority.high,
                     }}
                   />
                 </TouchableOpacity>
@@ -214,7 +228,7 @@ const Offers = ({ navigation }) => {
                   // onPress={onPressOfferItem}
                   style={styles.offerContainer}
                 >
-                  <ImageBackground
+                  <FastImage
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}
                     source={{
@@ -222,17 +236,19 @@ const Offers = ({ navigation }) => {
                         allOffers?.featured_image_url +
                         "/" +
                         item?.featured_image,
+                      priority: FastImage.priority.high,
                     }}
                     style={styles.manImgStyle}
                   />
                   <View style={styles.infoContainer}>
-                    <Image
+                    <FastImage
                       resizeMode="cover"
                       source={{
                         uri:
                           allOffers?.featured_image_url +
                           "/" +
                           item?.expertDetails?.user_profile_images?.[0].image,
+                        priority: FastImage.priority.high,
                       }}
                       style={styles.barberImgStyle}
                     />

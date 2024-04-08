@@ -6,6 +6,7 @@ import {
   FlatList,
   ScrollView,
   ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { strings } from "../../helper/string";
 import { PastServices, barbers } from "../../helper/constunts";
@@ -30,6 +31,7 @@ const Appointments = ({ navigation }) => {
   );
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
+  const [refreshControl, setRefreshControle] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -78,6 +80,13 @@ const Appointments = ({ navigation }) => {
     }
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshControle(true);
+    setPage(1);
+    getList(true);
+    setRefreshControle(false);
+  }, [refreshControl]);
+
   const debouncedLoadMoreData = debounce(loadMoreData, 500); // Adjust the delay as needed
 
   return (
@@ -96,6 +105,9 @@ const Appointments = ({ navigation }) => {
         }}
         scrollEventThrottle={400}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
+        }
       >
         {appointment
           ?.filter((i: any) => i.appointmentType !== "past")

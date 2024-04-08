@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   ImageBackground,
   ScrollView,
+  ActivityIndicator,
+  RefreshControl,
 } from "react-native";
 import { BackHeader, Filter_Button } from "../../components";
 import { strings } from "../../helper/string";
@@ -26,6 +28,7 @@ import { screenName } from "../../helper/routeNames";
 import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAllPackageByLocation, getCampaignExpert } from "../../actions";
+import FastImage from "react-native-fast-image";
 
 let offersOffList = [
   { id: 1, off: "10%" },
@@ -41,6 +44,7 @@ const Packages = ({ navigation }) => {
   const { profileData } = useAppSelector((state) => state.profile);
   const [page, setPage] = useState(1);
   const [footerLoading, setFooterLoading] = useState(false);
+  const [refreshControl, setRefreshControle] = useState(false);
 
   useEffect(() => {
     getPackagesData(true);
@@ -100,6 +104,12 @@ const Packages = ({ navigation }) => {
     }
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshControle(true);
+    getPackagesData(true);
+    setRefreshControle(false);
+  }, [refreshControl]);
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -116,8 +126,11 @@ const Packages = ({ navigation }) => {
         }}
         scrollEventThrottle={400}
         stickyHeaderIndices={[1]}
+        refreshControl={
+          <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
+        }
       >
-        <Image
+        <FastImage
           style={styles.bannerImgStyle}
           resizeMode="cover"
           source={{
@@ -125,6 +138,7 @@ const Packages = ({ navigation }) => {
               allpackages?.featured_image_url +
               "/" +
               allpackages?.packageBanner?.fileName,
+            priority: FastImage.priority.high,
           }}
         />
         <FlatList
@@ -185,7 +199,7 @@ const Packages = ({ navigation }) => {
                   onPress={() => onPressCampaignItem(item)}
                   style={{}}
                 >
-                  <ImageBackground
+                  <FastImage
                     resizeMode="cover"
                     style={styles.imgStyle}
                     source={{
@@ -193,6 +207,7 @@ const Packages = ({ navigation }) => {
                         allpackages?.featured_image_url +
                         "/" +
                         item?.campaign.fileName,
+                      priority: FastImage.priority.high,
                     }}
                   />
                 </TouchableOpacity>
@@ -207,25 +222,25 @@ const Packages = ({ navigation }) => {
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity style={styles.offerContainer}>
-                  <ImageBackground
-                    borderTopLeftRadius={10}
-                    borderTopRightRadius={10}
+                  <FastImage
                     source={{
                       uri:
                         allpackages?.featured_image_url +
                         "/" +
                         item?.featured_image,
+                      priority: FastImage.priority.high,
                     }}
                     style={styles.manImgStyle}
                   />
                   <View style={styles.infoContainer}>
-                    <Image
+                    <FastImage
                       resizeMode="cover"
                       source={{
                         uri:
                           allpackages?.featured_image_url +
                           "/" +
                           item?.expertDetails?.user_profile_images?.[0]?.image,
+                        priority: FastImage.priority.high,
                       }}
                       style={styles.barberImgStyle}
                     />
@@ -252,6 +267,7 @@ const Packages = ({ navigation }) => {
             }}
           />
         </View>
+        {footerLoading && <ActivityIndicator />}
       </ScrollView>
     </View>
   );
@@ -298,6 +314,8 @@ const styles = StyleSheet.create({
   offerContainer: {
     height: hp(366),
     marginHorizontal: wp(20),
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   manImgStyle: {
     height: hp(290),

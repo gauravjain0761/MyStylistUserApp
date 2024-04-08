@@ -17,6 +17,7 @@ import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { addToCart, removeToCart } from "../../actions";
 import { ADD_TO_CART } from "../../actions/dispatchTypes";
+import FastImage from "react-native-fast-image";
 
 type Props = {
   isOffer?: boolean;
@@ -131,10 +132,13 @@ const StylistInnerItem = ({
           </View>
         )}
       </View>
-      <Image
+      <FastImage
         resizeMode="cover"
         style={styles.imgStyle}
-        source={{ uri: baseUrl + "/" + data?.sub_services?.fileName }}
+        source={{
+          uri: baseUrl + "/" + data?.sub_services?.fileName,
+          priority: FastImage.priority.high,
+        }}
       />
     </View>
   );

@@ -3,6 +3,7 @@ import {
   FlatList,
   // FlatList,
   Image,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -73,6 +74,7 @@ import {
 import { setLocation } from "../../actions/locationAction";
 import { getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
+import FastImage from "react-native-fast-image";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -99,6 +101,7 @@ const Home = () => {
   const [subServicesModalData, setSubServicesModalData] = useState<any>({});
   const [isSticky, setIsSticky] = useState(false);
   const [footerLoading, setFooterLoading] = useState(false);
+  const [refreshControl, setRefreshControle] = useState(false);
   const [page, setPage] = useState(1);
 
   const { getallservices, userList, barberList } = useAppSelector(
@@ -191,6 +194,37 @@ const Home = () => {
       }
     );
   };
+
+  const onPressRating = useCallback(
+    async (isLoading: boolean, rating: number) => {
+      await requestLocationPermission(
+        async (response) => {
+          let obj = {
+            isLoading: isLoading,
+            data: {
+              latitude: response?.latitude,
+              longitude: response?.longitude,
+              maxDistance: 50000,
+              page: page,
+              limit: 10,
+              rating: rating,
+              gender: gender,
+            },
+            onSuccess: () => {
+              setPage(page + 1);
+              setFooterLoading(false);
+            },
+            onFailure: () => {},
+          };
+          dispatch(getUsersByLocation(obj));
+        },
+        (err) => {
+          console.log("Home Location API", err);
+        }
+      );
+    },
+    [rating]
+  );
 
   const getCurrentLocation = async () => {
     dispatch({ type: IS_LOADING, payload: true });
@@ -294,7 +328,8 @@ const Home = () => {
     } else if (item == 3) {
       setCostmodal(!costmodal);
     } else if (item == 4) {
-      setRating(4);
+      setRating(5);
+      onPressRating(true, 5);
     } else if (item == 5) {
       setGender("Male");
     }
@@ -368,6 +403,13 @@ const Home = () => {
     dispatch(getAllSubServicesForMobile(obj));
   };
 
+  const onRefresh = useCallback(async () => {
+    setRefreshControle(true);
+    dispatch(getAllBanner(banner));
+    setRefreshControle(false);
+    getProfileData();
+  }, [refreshControl]);
+
   return (
     <View style={styles?.container}>
       <LocationModal
@@ -402,6 +444,9 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={400}
+        refreshControl={
+          <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
+        }
       >
         <View style={styles.carousel_container}>
           <Carousel
@@ -413,8 +458,11 @@ const Home = () => {
             renderItem={({ item }: any) => {
               return (
                 <View style={styles?.carousel_img_container}>
-                  <Image
-                    source={{ uri: item?.imageUrl + "/" + item?.fileName }}
+                  <FastImage
+                    source={{
+                      uri: item?.imageUrl + "/" + item?.fileName,
+                      priority: FastImage.priority.high,
+                    }}
                     defaultSource={item?.image}
                     style={styles?.carousel_img}
                   />
@@ -470,10 +518,11 @@ const Home = () => {
                           <Text style={styles?.card_title}>
                             {item?.service_name}
                           </Text>
-                          <Image
+                          <FastImage
                             style={styles?.images}
                             source={{
                               uri: femaleBaseURL + "/" + item?.fileName,
+                              priority: FastImage.priority.high,
                             }}
                             resizeMode="contain"
                           />
@@ -523,10 +572,11 @@ const Home = () => {
                           <Text style={styles?.card_title}>
                             {item?.service_name}
                           </Text>
-                          <Image
+                          <FastImage
                             style={styles?.images}
                             source={{
                               uri: maleBaseURL + "/" + item?.fileName,
+                              priority: FastImage.priority.high,
                             }}
                             resizeMode="contain"
                           />
@@ -588,6 +638,7 @@ const Home = () => {
             data={barberList || []}
             showsVerticalScrollIndicator={false}
             renderItem={({ item, index }) => {
+              console.log(userList);
               return (
                 <Barber_Card
                   data={item}
@@ -605,8 +656,6 @@ const Home = () => {
                 />
               );
             }}
-            onEndReached={() => console.log("hi")}
-            onEndReachedThreshold={0.8}
             ItemSeparatorComponent={() => (
               <View style={styles.card_separator}></View>
             )}
@@ -646,13 +695,14 @@ const Home = () => {
                         <Text style={styles?.makeup_title}>
                           {subServices?.sub_service_name}
                         </Text>
-                        <Image
+                        <FastImage
                           resizeMode="contain"
                           source={{
                             uri:
                               subServicesModalData?.imageUrl +
                               "/" +
                               subServices?.fileName,
+                            priority: FastImage.priority.high,
                           }}
                           style={styles?.makeup_images}
                         />

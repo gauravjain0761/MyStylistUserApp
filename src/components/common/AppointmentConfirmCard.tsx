@@ -23,6 +23,7 @@ import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import FastImage from "react-native-fast-image";
 
 type props = {
   name?: string;
@@ -61,7 +62,7 @@ const AppointmentConfirmCard = ({
       <View style={styles.card_upper}>
         <View style={styles.img_container}>
           <View style={styles.img_con}>
-            <Image resizeMode="cover" source={image} style={styles.img} />
+            <FastImage resizeMode="cover" source={image} style={styles.img} />
           </View>
         </View>
         <TouchableOpacity onPress={onPressCard} style={styles.name_container}>

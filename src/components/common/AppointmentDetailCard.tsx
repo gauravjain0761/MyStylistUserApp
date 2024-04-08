@@ -27,6 +27,7 @@ import { strings } from "../../helper/string";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { icons, images } from "../../theme/icons";
+import FastImage from "react-native-fast-image";
 
 type props = {
   type?: "Give Feedback" | "Rating" | "Total Price";
@@ -71,9 +72,9 @@ const AppointmentDetailCard = ({
         <View style={styles.information_container}>
           <View style={styles.img_container}>
             <View style={styles.img_con}>
-              <Image
+              <FastImage
                 resizeMode="cover"
-                source={{ uri: userImg }}
+                source={{ uri: userImg, priority: FastImage.priority.high }}
                 style={styles.img}
               />
             </View>

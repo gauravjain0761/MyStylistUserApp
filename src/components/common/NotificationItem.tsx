@@ -3,15 +3,17 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
+import FastImage from "react-native-fast-image";
 
 const NotificationItem = () => {
   return (
     <View style={styles.conatiner}>
-      <Image
+      <FastImage
         resizeMode="cover"
         style={styles.imgStyle}
         source={{
           uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+          priority: FastImage.priority.high,
         }}
       />
       <View style={{ marginLeft: wp(10), flex: 1 }}>

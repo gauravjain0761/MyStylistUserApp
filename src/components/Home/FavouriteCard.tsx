@@ -20,6 +20,7 @@ import {
   StarIcon,
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
+import FastImage from "react-native-fast-image";
 type props = {
   type: "with Service" | "Without Service";
   name: string;
@@ -83,9 +84,10 @@ const FavouriteCard = ({
                   renderItem={({ item }: any) => {
                     return (
                       <View style={styles?.carousel_img_container}>
-                        <Image
+                        <FastImage
                           source={{
                             uri: data?.user_profile_images_url + data?.image,
+                            priority: FastImage.priority.high,
                           }}
                           style={styles?.carousel_img}
                           resizeMode="stretch"
@@ -165,9 +167,10 @@ const FavouriteCard = ({
                   renderItem={({ item }: any) => {
                     return (
                       <View style={styles?.carousel_img_container}>
-                        <Image
+                        <FastImage
                           source={{
                             uri: img_url + item?.image,
+                            priority: FastImage.priority.high,
                           }}
                           style={[styles?.carousel_img, carouselitemHeight]}
                           resizeMode="stretch"

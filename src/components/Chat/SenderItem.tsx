@@ -3,16 +3,18 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
+import FastImage from "react-native-fast-image";
 
 const SenderItem = () => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.rowStyle}>
         <Text style={styles.timeTextStyle}>{"11:00 PM"}</Text>
-        <Image
+        <FastImage
           style={styles.imgStyle}
           source={{
             uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+            priority: FastImage.priority.high,
           }}
         />
       </View>

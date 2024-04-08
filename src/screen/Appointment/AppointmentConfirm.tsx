@@ -22,6 +22,7 @@ import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { writeReview } from "../../actions";
 import { api } from "../../helper/apiConstants";
+import FastImage from "react-native-fast-image";
 
 type RowItemValueProps = {
   title: string;
@@ -88,6 +89,7 @@ const AppointmentConfirm = () => {
             name={expertId?.name}
             image={{
               uri: api.IMG_URL + expertId?.user_profile_images[0]?.image,
+              priority: FastImage.priority.high,
             }}
             jobs={expertId?.jobDone}
             rating={expertId?.averageRating}

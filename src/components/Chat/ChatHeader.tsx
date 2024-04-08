@@ -6,6 +6,7 @@ import { hp, wp } from "../../helper/globalFunction";
 import { BackIcon, ThreeDotIcon } from "../../theme/SvgIcon";
 import { useNavigation } from "@react-navigation/native";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
+import FastImage from "react-native-fast-image";
 
 const ChatHeader = () => {
   const { goBack, navigate } = useNavigation();
@@ -18,10 +19,11 @@ const ChatHeader = () => {
       </TouchableOpacity>
       <View style={styles.rowSpaceStyle}>
         <View style={styles.circleStyle}>
-          <Image
+          <FastImage
             style={styles.imgStyle}
             source={{
               uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+              priority: FastImage.priority.high,
             }}
           />
           <View style={styles.greenTickStyle} />

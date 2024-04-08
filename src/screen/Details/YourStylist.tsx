@@ -74,6 +74,7 @@ import {
 } from "../../actions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { CART_DETAILS } from "../../actions/dispatchTypes";
+import FastImage from "react-native-fast-image";
 
 type TagViewProps = {
   Icon?: any;
@@ -303,7 +304,9 @@ const YourStylist = () => {
         setLikeID(id);
         setLike(true);
       },
-      onFailure: (err: any) => {},
+      onFailure: (err: any) => {
+        console.log("Errr", err);
+      },
     };
 
     let unlikeData = {
@@ -339,19 +342,21 @@ const YourStylist = () => {
             placeholderTextColor={colors.gery_2}
           />
         </Animation.View>
-        {animatedValue === 0 ? (
-          <TouchableOpacity onPress={onPressLike}>
-            <FillLike fill={like ? "#000" : "none"} />
+        <Animated.View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+          {animatedValue === 0 ? (
+            <TouchableOpacity onPress={onPressLike}>
+              <FillLike fill={like ? "#000" : "none"} />
+            </TouchableOpacity>
+          ) : null}
+          {animatedValue === 0 ? (
+            <TouchableOpacity style={styles.shareContainer}>
+              <ShareIcon />
+            </TouchableOpacity>
+          ) : null}
+          <TouchableOpacity onPress={onPressSearch}>
+            {animatedValue === 0 ? <SearchIcon /> : <CloseIcon />}
           </TouchableOpacity>
-        ) : null}
-        {animatedValue === 0 ? (
-          <TouchableOpacity style={styles.shareContainer}>
-            <ShareIcon />
-          </TouchableOpacity>
-        ) : null}
-        <TouchableOpacity onPress={onPressSearch}>
-          {animatedValue === 0 ? <SearchIcon /> : <CloseIcon />}
-        </TouchableOpacity>
+        </Animated.View>
       </SafeAreaView>
       <Animation.ScrollView
         stickyHeaderIndices={[2]}
@@ -360,7 +365,7 @@ const YourStylist = () => {
         onScroll={handleScroll}
       >
         <View style={styles.rowStyle}>
-          <Image
+          <FastImage
             resizeMode="cover"
             style={styles.personStyle}
             source={{
@@ -368,6 +373,7 @@ const YourStylist = () => {
                 itemDetails?.featured_image_url +
                 "/" +
                 itemDetails?.user?.user_profile_images?.[0]?.image,
+              priority: FastImage.priority.high,
             }}
           />
           <View style={styles.columStyle}>
@@ -715,11 +721,11 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 10,
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 10,
+    elevation: 15,
     backgroundColor: colors.white,
     padding: wp(20),
     flexDirection: "row",

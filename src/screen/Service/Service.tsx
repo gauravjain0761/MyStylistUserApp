@@ -19,6 +19,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAllExpertBySubService, getUserItemDetails } from "../../actions";
+import FastImage from "react-native-fast-image";
 
 const Service = () => {
   const { navigate } = useNavigation();
@@ -55,7 +56,13 @@ const Service = () => {
         stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
       >
-        <Image source={{ uri: params?.item?.imageUrl }} style={styles.banner} />
+        <FastImage
+          source={{
+            uri: params?.item?.imageUrl,
+            priority: FastImage.priority.high,
+          }}
+          style={styles.banner}
+        />
         <View style={styles?.service_filter_conatiner}>
           <FlatList
             data={stylists_filter}

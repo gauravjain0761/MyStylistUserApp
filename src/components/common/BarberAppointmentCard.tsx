@@ -22,6 +22,7 @@ import {
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { strings } from "../../helper/string";
 import { api } from "../../helper/apiConstants";
+import FastImage from "react-native-fast-image";
 
 type props = {
   type?: string;
@@ -57,10 +58,13 @@ const BarberAppointmentCard = ({
       <View style={styles.card_upper}>
         <View style={styles.img_container}>
           <View style={styles.img_con}>
-            <Image
+            <FastImage
               resizeMode="cover"
               style={styles.img}
-              source={{ uri: imgBaseURL + "/" + image }}
+              source={{
+                uri: imgBaseURL + "/" + image,
+                priority: FastImage.priority.high,
+              }}
             />
           </View>
         </View>

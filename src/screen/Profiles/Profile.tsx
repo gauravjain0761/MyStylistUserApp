@@ -33,6 +33,7 @@ import moment from "moment";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { editProfile, getUserDetails } from "../../actions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import FastImage from "react-native-fast-image";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -158,7 +159,10 @@ const Profile = () => {
         ) : null}
         <View style={{ ...styles.profile_pic, marginTop: 0 }}>
           {imageData?.uri?.length ? (
-            <Image source={{ uri: imageData.uri }} style={styles.profile_pic} />
+            <FastImage
+              source={{ uri: imageData.uri, priority: FastImage.priority.high }}
+              style={styles.profile_pic}
+            />
           ) : (
             <Image source={images.profile} style={styles.profile_pic} />
           )}

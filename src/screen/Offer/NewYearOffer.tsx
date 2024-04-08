@@ -32,6 +32,7 @@ import { screenName } from "../../helper/routeNames";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUserItemDetails } from "../../actions";
+import FastImage from "react-native-fast-image";
 
 const NewYearOffer = () => {
   const dispatch = useAppDispatch();
@@ -103,9 +104,12 @@ const NewYearOffer = () => {
     <View style={styles.conatiner}>
       <BackHeader isSearch title={params?.item?.campaign?.title} />
       <ScrollView stickyHeaderIndices={[1]}>
-        <Image
+        <FastImage
           style={styles.bannerImgStyle}
-          source={{ uri: params?.item?.bannerImg }}
+          source={{
+            uri: params?.item?.bannerImg,
+            priority: FastImage.priority.high,
+          }}
         />
         <View style={styles?.service_filter_conatiner}>
           <FlatList

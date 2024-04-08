@@ -16,6 +16,7 @@ import { PackagesInnerItem } from "..";
 import { strings } from "../../helper/string";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import FastImage from "react-native-fast-image";
 
 type Props = {
   data: any;
@@ -59,11 +60,12 @@ const SearchImageItem = ({ data }: Props) => {
               onPress={onPressImageItem}
               style={styles.itemContainer}
             >
-              <Image
+              <FastImage
                 resizeMode="cover"
                 style={styles.imgStyle}
                 source={{
                   uri: "https://i.pinimg.com/736x/0a/21/70/0a217095d0a9aa63c28a6adca86c8a82.jpg",
+                  priority: FastImage.priority.high,
                 }}
               />
             </TouchableOpacity>

@@ -13,6 +13,7 @@ import { colors } from "../../theme/color";
 import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useAppSelector } from "../../redux/hooks";
+import FastImage from "react-native-fast-image";
 
 type Props = {
   data: any;
@@ -44,11 +45,12 @@ const MyWorkItem = ({ data }: Props) => {
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemContainer}>
-                <Image
+                <FastImage
                   resizeMode="cover"
                   style={styles.imgStyle}
                   source={{
                     uri: itemDetails?.featured_image_url + "/" + item.image,
+                    priority: FastImage.priority.high,
                   }}
                 />
               </View>

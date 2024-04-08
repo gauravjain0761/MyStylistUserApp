@@ -19,6 +19,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppSelector } from "../../redux/hooks";
+import FastImage from "react-native-fast-image";
 
 const CustomDrawer = () => {
   const { navigate } = useNavigation();
@@ -56,7 +57,7 @@ const CustomDrawer = () => {
       <View>
         <TouchableOpacity onPress={onPressName} style={styles.image_container}>
           <View style={styles.img_conatiner}>
-            <Image
+            <FastImage
               resizeMode="cover"
               source={
                 profileData?.user?.user_profile_images?.[0]?.image
@@ -65,6 +66,7 @@ const CustomDrawer = () => {
                         profileData?.featured_image_url +
                         "/" +
                         profileData?.user?.user_profile_images?.[0]?.image,
+                      priority: FastImage.priority.high,
                     }
                   : images.profile
               }

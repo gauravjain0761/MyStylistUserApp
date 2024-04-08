@@ -36,7 +36,8 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
 import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
 import { CART_DETAILS } from "../actions/dispatchTypes";
-import { bookAppointment } from "../actions";
+import { bookAppointment, getCartlist } from "../actions";
+import FastImage from "react-native-fast-image";
 
 type RowItemValueProps = {
   title: string;
@@ -54,7 +55,7 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 
 const Cart = () => {
   const dispatch = useAppDispatch();
-  const { cartDetails } = useAppSelector((state) => state.cart);
+  const { cartDetails, addtocart } = useAppSelector((state) => state.cart);
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
   const [isShowCongrestModal, setIsShowCongrestModal] = useState(false);
@@ -65,6 +66,7 @@ const Cart = () => {
   const [date, setDate] = useState("");
 
   useEffect(() => {
+    getCart();
     async function getDatesList() {
       let userInfo = await getAsyncUserInfo();
       let data = generateWeekDates();
@@ -78,13 +80,12 @@ const Cart = () => {
         },
         onSuccess: (response: any) => {
           setDates(convertToOutput(response));
-          getCart();
         },
         onFailure: () => {},
       };
       dispatch(getExpertAvailability(obj));
     }
-    getDatesList();
+    // getDatesList();
   }, []);
 
   const getCart = async () => {
@@ -94,21 +95,20 @@ const Cart = () => {
         userId: userInfo._id,
       },
       onSuccess: (response: any) => {
-        let totals = 0;
-        response.data?.cart?.items.map((item) => {
-          totals += item?.price;
-        });
+        let initialvalue = 0;
+        let total = response.data?.cart?.items?.reduce(
+          (accumulator, curruntvalue) => curruntvalue.price + accumulator,
+          initialvalue
+        );
         dispatch({
           type: CART_DETAILS,
-          payload: { ...response?.data, total: totals },
+          payload: { ...response?.data, total: total },
         });
       },
       onFailure: (Errr: any) => {
         console.log("Errr", Errr);
       },
     };
-    console.log(await getAsyncToken());
-
     dispatch(getCartlist(obj));
   };
 
@@ -159,7 +159,6 @@ const Cart = () => {
         setIsShowCongrestModal(true);
       },
       onFailure: (Errr: any) => {
-        console.log("Errr", Errr?.data?.error);
         infoToast(Errr?.data?.error);
       },
     };
@@ -197,13 +196,14 @@ const Cart = () => {
           <ScrollView style={{ flex: 1 }}>
             <View style={styles.whiteContainer}>
               <View style={styles.rowStyle}>
-                <Image
+                <FastImage
                   style={styles.personStyle}
                   source={{
                     uri:
                       cartDetails?.featured_image_url +
                       "/" +
                       cartDetails?.user?.user_profile_images[0]?.image,
+                    priority: FastImage.priority.high,
                   }}
                 />
                 <TouchableOpacity

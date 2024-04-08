@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import { FlatList, RefreshControl, StyleSheet, Text, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
 import { BackHeader, Barber_Card, FavouriteCard } from "../../components";
 import { strings } from "../../helper/string";
 import { hp, screen_height, wp } from "../../helper/globalFunction";
@@ -17,26 +17,35 @@ const MyFavorites = () => {
   const dispatch = useAppDispatch();
   const { userInfo } = useAppSelector((state) => state.common);
   const { favoriteList } = useAppSelector((state) => state.favourite);
+  const [refreshControl, setRefreshControle] = useState(false);
 
   useEffect(() => {
-    async function getData() {
-      let userInfo = await getAsyncUserInfo();
-
-      let obj = {
-        data: {
-          userId: userInfo?._id,
-        },
-        onSuccess: () => {},
-        onFailure: () => {},
-      };
-      dispatch(getUsersFavList(obj));
-    }
     getData();
   }, []);
+
+  const getData = async () => {
+    let userInfo = await getAsyncUserInfo();
+
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getUsersFavList(obj));
+  };
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
   };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshControle(true);
+    getData();
+    setRefreshControle(false);
+  }, [refreshControl]);
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings.My_Favorites} />
@@ -45,6 +54,12 @@ const MyFavorites = () => {
           <FlatList
             data={favoriteList?.data || []}
             showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshControl}
+                onRefresh={onRefresh}
+              />
+            }
             renderItem={({ item, index }) => {
               return (
                 <FavouriteCard

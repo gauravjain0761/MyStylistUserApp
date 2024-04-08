@@ -66,7 +66,6 @@ export const getCartlist =
       "Content-Type": "application/json",
     };
 
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
       url: api.getCart,
@@ -74,14 +73,12 @@ export const getCartlist =
       data: request.data,
     })
       .then(async (response: any) => {
-        dispatch({ type: IS_LOADING, payload: false });
         console.log("respone", response.data);
         if (response.status === 200 || response.status === 201) {
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })
       .catch((error) => {
-        dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure) request.onFailure(error.response);
       });
   };

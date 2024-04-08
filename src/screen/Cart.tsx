@@ -14,6 +14,7 @@ import {
   CongratulationModal,
   Loader,
   TimeSelector,
+  UserItemLoader,
   WeekDateSelector,
 } from "../components";
 import { strings } from "../helper/string";
@@ -70,6 +71,7 @@ const Cart = () => {
   const [bookTime, setBookTime] = useState({});
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(true);
 
   useEffect(() => {
     getCart();
@@ -95,6 +97,7 @@ const Cart = () => {
   }, []);
 
   const getCart = async () => {
+    setCartLoading(true);
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
@@ -110,10 +113,12 @@ const Cart = () => {
           type: CART_DETAILS,
           payload: { ...response?.data, total: total },
         });
+        setCartLoading(false);
       },
       onFailure: (Errr: any) => {
         alert(Errr?.data?.message);
         data = ["0"];
+        setCartLoading(false);
       },
     };
     dispatch(getCartlist(obj));
@@ -207,7 +212,7 @@ const Cart = () => {
     <View style={styles.container}>
       <BackHeader title={strings["Cart"]} />
       <Loader visible={loading} />
-      {cartDetails?.cart?.items?.length === 0 ? (
+      {data?.length === 0 ? (
         <View style={styles.centerContainer}>
           <Image
             resizeMode="contain"
@@ -228,69 +233,80 @@ const Cart = () => {
       ) : (
         <>
           <ScrollView style={{ flex: 1 }}>
-            <View style={styles.whiteContainer}>
-              <View style={styles.rowStyle}>
-                <FastImage
-                  style={styles.personStyle}
-                  source={{
-                    uri:
-                      cartDetails?.featured_image_url +
-                      "/" +
-                      cartDetails?.user?.user_profile_images[0]?.image,
-                    priority: FastImage.priority.high,
-                  }}
-                />
-                <TouchableOpacity
-                  onPress={onPressCard}
-                  style={styles.columStyle}
-                >
-                  <View style={styles.rowNameStyle}>
-                    <Text style={styles.nameTextStyle}>
-                      {cartDetails?.user?.name}
-                    </Text>
-                    <VerifyIcon />
-                  </View>
-                  <View
-                    style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}
-                  >
-                    <View style={styles.startContainer}>
-                      <Text style={styles.startTextStyle}>
-                        {cartDetails?.user?.averageRating}
-                      </Text>
-                      <StarIcon />
-                    </View>
-                    <View style={styles.dotStyle} />
-                    <Text style={styles.greyTextStyle}>
-                      {cartDetails?.user?.jobDone}
-                      {" Jobs Done"}
-                    </Text>
-                  </View>
-                  <View style={styles.rowNameStyle}>
-                    <CarIcon />
-                    <Text style={styles.locationTextStyle}>
-                      {cartDetails?.user?.city[0]?.city_name}
-                      {","}
-                      {cartDetails?.user?.district[0]?.district_name}
-                      {","}
-                      {cartDetails?.user?.state[0]?.state_name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
+            {cartLoading ? (
+              <View style={{ ...styles.whiteContainer, paddingTop: 0 }}>
+                <UserItemLoader />
               </View>
-            </View>
+            ) : (
+              <View style={styles.whiteContainer}>
+                <View style={styles.rowStyle}>
+                  <FastImage
+                    style={styles.personStyle}
+                    source={{
+                      uri:
+                        cartDetails?.featured_image_url +
+                        "/" +
+                        cartDetails?.user?.user_profile_images[0]?.image,
+                      priority: FastImage.priority.high,
+                    }}
+                  />
+                  <TouchableOpacity
+                    onPress={onPressCard}
+                    style={styles.columStyle}
+                  >
+                    <View style={styles.rowNameStyle}>
+                      <Text style={styles.nameTextStyle}>
+                        {cartDetails?.user?.name}
+                      </Text>
+                      <VerifyIcon />
+                    </View>
+                    <View
+                      style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}
+                    >
+                      <View style={styles.startContainer}>
+                        <Text style={styles.startTextStyle}>
+                          {cartDetails?.user?.averageRating}
+                        </Text>
+                        <StarIcon />
+                      </View>
+                      <View style={styles.dotStyle} />
+                      <Text style={styles.greyTextStyle}>
+                        {cartDetails?.user?.jobDone}
+                        {" Jobs Done"}
+                      </Text>
+                    </View>
+                    <View style={styles.rowNameStyle}>
+                      <CarIcon />
+                      <Text style={styles.locationTextStyle}>
+                        {cartDetails?.user?.city[0]?.city_name}
+                        {","}
+                        {cartDetails?.user?.district[0]?.district_name}
+                        {","}
+                        {cartDetails?.user?.state[0]?.state_name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
               <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-              <FlatList
-                data={cartDetails?.cart?.items}
-                renderItem={({ item }) => {
-                  return (
-                    <RowItemValue
-                      title={item?.serviceName}
-                      value={"₹" + item?.price}
-                    />
-                  );
-                }}
-              />
+              {cartLoading ? null : (
+                <FlatList
+                  data={cartDetails?.cart?.items}
+                  renderItem={({ item }) => {
+                    return (
+                      <RowItemValue
+                        title={item?.serviceName}
+                        value={"₹" + item?.price}
+                      />
+                    );
+                  }}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
+
               <RowItemValue title="Payment Method" value="Cash" />
               <View style={styles.lineStyle} />
               <View style={styles.rowSpaceStyle}>

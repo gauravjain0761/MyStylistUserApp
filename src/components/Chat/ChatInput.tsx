@@ -27,9 +27,9 @@ const ChatInput = ({ value, onChangeText, onPressSend }: props) => {
         value={value}
         onChangeText={onChangeText}
       />
-      <TouchableOpacity style={{ marginHorizontal: wp(10) }}>
+      {/* <TouchableOpacity style={{ marginHorizontal: wp(10) }}>
         <EmjoyIcon />
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <TouchableOpacity onPress={onPressSend}>
         <SendButtonIcon />
       </TouchableOpacity>

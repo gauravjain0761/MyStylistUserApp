@@ -9,9 +9,10 @@ import FastImage from "react-native-fast-image";
 type props = {
   index: number;
   onPressItem?: () => void;
+  data: any;
 };
 
-const MessageItem = ({ index, onPressItem }: props) => {
+const MessageItem = ({ index, onPressItem, data }: props) => {
   return (
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
       <FastImage
@@ -23,21 +24,23 @@ const MessageItem = ({ index, onPressItem }: props) => {
       />
       <View style={{ marginLeft: wp(10), flex: 1 }}>
         <View style={styles.rowStyle}>
-          <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+          <Text style={styles.nameTextStyle}>
+            {data?.users?.[0]?.name || "Dummy Name"}
+          </Text>
           <Text style={styles.timeTextStyle}> {"04:43"}</Text>
         </View>
         <View style={{ flex: 1 }} />
         <View style={styles.rowStyle}>
-          <Text style={styles.greyTxtStyle}>
-            {"Hello, welcome to our store. How can... "}
+          <Text numberOfLines={2} style={styles.greyTxtStyle}>
+            {data?.lastMessage?.content}
           </Text>
-          {index === 1 ? (
+          {/* {index === 1 ? (
             <View style={styles.circleStyle}>
               <Text style={styles.countTextStyle}>{"5"}</Text>
             </View>
           ) : (
             <MarkReadIcon color="#2BE8D9" />
-          )}
+          )} */}
         </View>
       </View>
     </TouchableOpacity>

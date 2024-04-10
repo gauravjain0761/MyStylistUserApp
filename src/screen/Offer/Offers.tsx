@@ -104,6 +104,11 @@ const Offers = ({ navigation }) => {
     });
   };
 
+  const onPressOfferItem = (item: any) => {
+    console.log("item", item);
+    navigation.navigate(screenName.YourStylist, { id: item?.expert_id });
+  };
+
   const loadMoreData = () => {
     if (offerList?.length !== allOffers?.totalOffers) {
       setFooterLoading(true);
@@ -234,11 +239,15 @@ const Offers = ({ navigation }) => {
           )}
 
           <FlatList
+            style={{ marginTop: hp(15) }}
             data={offerList || []}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity style={styles.offerContainer}>
+                <TouchableOpacity
+                  onPress={() => onPressOfferItem(item)}
+                  style={styles.offerContainer}
+                >
                   <FastImage
                     borderTopLeftRadius={10}
                     borderTopRightRadius={10}

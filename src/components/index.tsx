@@ -34,6 +34,7 @@ import AppointmentLoader from "./SkeletonPlaceholder/AppointmentLoader";
 import AppointmentDetailsLoader from "./SkeletonPlaceholder/AppointmentDetailsLoader";
 import UserItemLoader from "./SkeletonPlaceholder/UserItemLoader";
 import OfferLoader from "./SkeletonPlaceholder/OfferLoader";
+import ChatLoader from "./SkeletonPlaceholder/ChatLoader";
 
 export {
   LocationModal,
@@ -73,4 +74,5 @@ export {
   AppointmentDetailsLoader,
   UserItemLoader,
   OfferLoader,
+  ChatLoader,
 };

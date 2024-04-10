@@ -71,10 +71,6 @@ const Packages = ({ navigation }) => {
     navigation.openDrawer();
   };
 
-  const onPressNewYearOffer = () => {
-    navigation.navigate(screenName.NewYearOffer);
-  };
-
   const onPressCampaignItem = (item: any) => {
     navigation.navigate(screenName.NewYearOffer, {
       item: {
@@ -115,6 +111,13 @@ const Packages = ({ navigation }) => {
     getPackagesData(true);
     setRefreshControle(false);
   }, [refreshControl]);
+
+  const onPressItem = (item: any) => {
+    navigation.navigate(screenName.YourStylist, {
+      id: item?.expert_id,
+      isPackages: true,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -211,10 +214,7 @@ const Packages = ({ navigation }) => {
               data={allpackages.campaigns}
               renderItem={({ item, index }) => {
                 return (
-                  <TouchableOpacity
-                    onPress={() => onPressCampaignItem(item)}
-                    style={{}}
-                  >
+                  <TouchableOpacity onPress={() => onPressCampaignItem(item)}>
                     <FastImage
                       resizeMode="cover"
                       style={styles.imgStyle}
@@ -234,11 +234,15 @@ const Packages = ({ navigation }) => {
           )}
 
           <FlatList
+            style={{ marginTop: hp(15) }}
             data={packageList || []}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity style={styles.offerContainer}>
+                <TouchableOpacity
+                  onPress={() => onPressItem(item)}
+                  style={styles.offerContainer}
+                >
                   <FastImage
                     source={{
                       uri:

@@ -11,18 +11,26 @@ import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { EmjoyIcon, SendButtonIcon } from "../../theme/SvgIcon";
 
-const ChatInput = () => {
+type props = {
+  value: string;
+  onChangeText: (value: string) => void;
+  onPressSend: () => void;
+};
+
+const ChatInput = ({ value, onChangeText, onPressSend }: props) => {
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.inputStyle}
         placeholder="Type here..."
         placeholderTextColor={colors.dashed_boredr}
+        value={value}
+        onChangeText={onChangeText}
       />
       <TouchableOpacity style={{ marginHorizontal: wp(10) }}>
         <EmjoyIcon />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onPressSend}>
         <SendButtonIcon />
       </TouchableOpacity>
     </View>

@@ -28,12 +28,12 @@ import {
 } from "../../components";
 import { screenName } from "../../helper/routeNames";
 import { colors } from "../../theme/color";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import moment from "moment";
 import { getExpertAvailability } from "../../actions/commonActions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { rescheduleAppointment } from "../../actions";
+import { createChatRoom, rescheduleAppointment } from "../../actions";
 
 type RowItemValueProps = {
   title: string;
@@ -50,6 +50,7 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 };
 
 const AppointmentReschedule = () => {
+  const { params }: any = useRoute();
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
   const [selectedDateIndex, setSelectedDate] = useState(null);
@@ -58,6 +59,8 @@ const AppointmentReschedule = () => {
   const [bookTime, setBookTime] = useState({});
   const [date, setDate] = useState("");
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
+  const { profileData } = useAppSelector((state) => state.profile);
+
   const { Appointment } = appointmentDetails;
   const { userId, expertId } = Appointment;
   const { navigate } = useNavigation();
@@ -132,6 +135,26 @@ const AppointmentReschedule = () => {
     initialValue
   );
 
+  const onPressChat = () => {
+    setLoading(true);
+    let data = {
+      participants: [params?.id, profileData?.user?._id],
+    };
+    let obj = {
+      data: data,
+      onSuccess: (response: any) => {
+        setLoading(false);
+        let roomId = response?.roomId;
+        //@ts-ignore
+        navigate(screenName.ChatDetails, { roomId: roomId });
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(createChatRoom(obj));
+  };
+
   return (
     <View style={styles.conatiner}>
       <Loader visible={loading} />
@@ -156,6 +179,7 @@ const AppointmentReschedule = () => {
             )}
             time={Appointment?.timeSlot?.[0]?.availableTime}
             previousBooking
+            onPressChat={onPressChat}
           />
         </View>
 

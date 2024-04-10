@@ -6,6 +6,7 @@ import {
   GET_ALL_OFFERS,
   GET_ALL_PACKAGES,
   GET_OFFERS_LIST,
+  GET_OFFER_DETAILS,
   GET_USER_CAMPAIGN_LIST,
   IS_LOADING,
 } from "./dispatchTypes";
@@ -100,6 +101,32 @@ export const getCampaignExpert =
       .catch((error: any) => {
         console.log("error", error);
         dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getOfferDetails =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    return makeAPIRequest({
+      method: GET,
+      url: api.offerDetails + request.id,
+      headers: header,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          dispatch({
+            type: GET_OFFER_DETAILS,
+            payload: result?.data,
+          });
+          if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
+        console.log("error", error);
         if (request.onFailure) request.onFailure(error.response);
       });
   };

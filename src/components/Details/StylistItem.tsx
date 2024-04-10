@@ -22,9 +22,10 @@ type Props = {
   isOffer?: boolean;
   data: any;
   offers: any;
+  index: number;
 };
 
-const StylistItem = ({ isOffer, data, offers }: Props) => {
+const StylistItem = ({ isOffer, data, offers, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
   const [count, setCount] = useState(false);
@@ -58,7 +59,7 @@ const StylistItem = ({ isOffer, data, offers }: Props) => {
   }, [count]);
 
   return (
-    <View>
+    <View key={index}>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
         <Text style={styles.titleTextStyle}>{"Offers"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>

@@ -41,6 +41,7 @@ export const api = {
   getAllOffersByUser: "generateOffer/getAllOffersByUser/",
   getAllOffers: "generateOffer/getAllOffers",
   allOffersByLocation: "generateOffer/getAllOffersByLocation",
+  offerDetails: "generateOffer/getOfferDetails/",
 
   //Pakages
   getAllPackageByUser: "generatePackage/getAllPackageByUser/",

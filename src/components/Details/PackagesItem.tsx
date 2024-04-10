@@ -17,9 +17,10 @@ import { useAppSelector } from "../../redux/hooks";
 type Props = {
   data: any;
   packages: any;
+  index: number;
 };
 
-const PackagesItem = ({ packages }: Props) => {
+const PackagesItem = ({ packages, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
   const [count, setCount] = useState(false);
@@ -53,7 +54,7 @@ const PackagesItem = ({ packages }: Props) => {
   };
 
   return (
-    <View>
+    <View key={index}>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
         <Text style={styles.titleTextStyle}>{"Our Packages"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>

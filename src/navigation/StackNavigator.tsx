@@ -37,6 +37,8 @@ import Loading from "../screen/auth/Loading";
 import MapLocation from "../screen/map/MapLocation";
 import SelectLocation from "../screen/map/SelectLocation";
 import ConfirmAddress from "../screen/map/ConfirmAddress";
+import OfferDetails from "../screen/Offer/OfferDetails";
+import PackgesDetails from "../screen/Package/PackgesDetails";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -66,6 +68,11 @@ const StackNavigator: FC = () => {
       <Stack.Screen name={screenName.Cart} component={Cart} />
       <Stack.Screen name={screenName.Service} component={Service} />
       <Stack.Screen name={screenName.NewYearOffer} component={NewYearOffer} />
+      <Stack.Screen name={screenName.OfferDetails} component={OfferDetails} />
+      <Stack.Screen
+        name={screenName.PackgesDetails}
+        component={PackgesDetails}
+      />
       <Stack.Screen
         name={screenName.AppointmentDetails}
         component={AppointmentDetails}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,7 +8,7 @@ import {
   FlatList,
   RefreshControl,
 } from "react-native";
-import { BackHeader, MessageItem } from "../../components";
+import { BackHeader, ChatLoader, MessageItem } from "../../components";
 import { strings } from "../../helper/string";
 import { hp, wp } from "../../helper/globalFunction";
 import { images } from "../../theme/icons";
@@ -18,9 +18,7 @@ import { screenName } from "../../helper/routeNames";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getChatParticipants } from "../../actions";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { io } from "socket.io-client";
-import { api } from "../../helper/apiConstants";
+import { useFocusEffect } from "@react-navigation/native";
 
 const Chats = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -29,10 +27,12 @@ const Chats = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [isRefresh, setIsRefresh] = useState(false);
 
-  useEffect(() => {
-    setLoading(true);
-    getChatsUserList();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      getChatsUserList();
+    }, [])
+  );
 
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
@@ -52,8 +52,10 @@ const Chats = ({ navigation }) => {
     dispatch(getChatParticipants(obj));
   };
 
-  const onPressItem = () => {
-    navigation.navigate(screenName.ChatDetails);
+  const onPressItem = (item: any) => {
+    navigation.navigate(screenName.ChatDetails, {
+      roomId: item.chatId,
+    });
   };
 
   const onPressMenu = () => {
@@ -64,14 +66,6 @@ const Chats = ({ navigation }) => {
     setIsRefresh(true);
     getChatsUserList();
   };
-
-  useEffect(() => {
-    const socket = io(api.BASE_URL);
-    // console.log(socket)
-    socket.on("connect", () => {
-      console.log("connect");
-    });
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -115,30 +109,7 @@ const Chats = ({ navigation }) => {
         <FlatList
           data={[1, 2, 3, 4, 5, 6]}
           renderItem={({ item, index }) => {
-            return (
-              <View style={styles.loaderContainer}>
-                <SkeletonPlaceholder borderRadius={4}>
-                  <SkeletonPlaceholder.Item
-                    flexDirection="row"
-                    alignItems="center"
-                  >
-                    <SkeletonPlaceholder.Item
-                      width={60}
-                      height={60}
-                      borderRadius={50}
-                    />
-                    <SkeletonPlaceholder.Item marginLeft={20}>
-                      <SkeletonPlaceholder.Item width={80} height={20} />
-                      <SkeletonPlaceholder.Item
-                        marginTop={6}
-                        width={180}
-                        height={20}
-                      />
-                    </SkeletonPlaceholder.Item>
-                  </SkeletonPlaceholder.Item>
-                </SkeletonPlaceholder>
-              </View>
-            );
+            return <ChatLoader />;
           }}
         />
       ) : (
@@ -151,6 +122,7 @@ const Chats = ({ navigation }) => {
                 return (
                   <MessageItem
                     index={index}
+                    data={item}
                     onPressItem={() => onPressItem(item)}
                   />
                 );

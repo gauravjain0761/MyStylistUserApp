@@ -16,6 +16,8 @@ export const screenName = {
     Chat: "Chats",
   },
   NewYearOffer: "NewYearOffer",
+  OfferDetails: "OfferDetails",
+  PackgesDetails: "PackgesDetails",
   AppointmentDetails: "AppointmentDetails",
   SearchItem: "SearchItem",
   ImageDetails: "ImageDetails",

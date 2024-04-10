@@ -4,25 +4,27 @@ import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
+import { api } from "../../helper/apiConstants";
+import moment from "moment";
 
-const ReciverItem = () => {
+const ReciverItem = ({ data }: any) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.rowStyle}>
         <FastImage
           style={styles.imgStyle}
           source={{
-            uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+            uri: api.IMG_URL + data?.image,
             priority: FastImage.priority.high,
           }}
         />
-        <Text style={styles.timeTextStyle}>{"11:00 PM"}</Text>
+        <Text style={styles.timeTextStyle}>
+          {moment(data?.time).format("HH:mm A")}
+        </Text>
       </View>
       <View style={styles.msgViewStyle}>
         <View style={styles.tirangle}></View>
-        <Text style={styles.textStyle}>
-          {"Hello, welcome to our store. How can I help you today?"}
-        </Text>
+        <Text style={styles.textStyle}>{data?.content}</Text>
       </View>
     </View>
   );

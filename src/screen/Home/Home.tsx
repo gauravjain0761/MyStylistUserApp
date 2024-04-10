@@ -127,6 +127,17 @@ const Home = () => {
   const [bestService, setBestService] = useState("Yes");
 
   useEffect(() => {
+    const socket = io(api.BASE_URL);
+    // console.log(socket)
+    socket.on("connect", () => {
+      console.log("connect", socket.id);
+    });
+    return () => {
+      socket.on("disconnect", () => {});
+    };
+  }, []);
+
+  useEffect(() => {
     let banner = {
       onSuccess: (res: any) => {
         setbanner(res?.banners);

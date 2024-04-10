@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.green_2),
   },
   countTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.green_2),
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.green_2),
     marginHorizontal: wp(4),
   },
   plusTexStyke: {

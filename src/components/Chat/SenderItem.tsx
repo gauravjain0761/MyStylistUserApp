@@ -4,25 +4,27 @@ import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
+import { api } from "../../helper/apiConstants";
+import moment from "moment";
 
-const SenderItem = () => {
+const SenderItem = ({ data }: any) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.rowStyle}>
-        <Text style={styles.timeTextStyle}>{"11:00 PM"}</Text>
+        <Text style={styles.timeTextStyle}>
+          {moment(data?.time).format("HH:mm A")}
+        </Text>
         <FastImage
           style={styles.imgStyle}
           source={{
-            uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+            uri: api.IMG_URL + data?.image,
             priority: FastImage.priority.high,
           }}
         />
       </View>
       <View style={styles.msgViewStyle}>
         <View style={styles.tirangle} />
-        <Text style={styles.textStyle}>
-          {"I'm looking for a new hairstyle."}
-        </Text>
+        <Text style={styles.textStyle}>{data?.content}</Text>
       </View>
     </View>
   );
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
     padding: wp(15),
     backgroundColor: colors.primary_light_blue,
     borderRadius: 10,
-    alignSelf: "flex-start",
+    alignSelf: "flex-end",
     marginVertical: hp(20),
   },
   textStyle: {

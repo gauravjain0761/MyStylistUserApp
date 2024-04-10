@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import moment from "moment";
 import { createChatRoom, getAppointmentDetails } from "../../actions";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { log } from "console";
 
 type RowItemValueProps = {
   title: string;
@@ -59,18 +60,22 @@ const AppointmentDetails = () => {
   };
 
   const onPressReschedule = () => {
-    navigate(screenName.AppointmentReschedule);
+    navigate(screenName.AppointmentReschedule, { id: params?.id });
   };
+
+  console.log("profileData?.user?._id", profileData?.user?._id);
 
   const onPressChat = () => {
     setLoading(true);
     let data = {
-      participants: [params?.id, profileData?.user?._id],
+      participants: ["66052db37e5822f655b581a6", "65eed0259e6593d24b2a5210"],
     };
     let obj = {
       data: data,
-      onSuccess: () => {
+      onSuccess: (response: any) => {
         setLoading(false);
+        let roomId = response?.roomId;
+        navigate(screenName.ChatDetails, { roomId: roomId });
       },
       onFailure: () => {
         setLoading(false);

@@ -190,9 +190,9 @@ const YourStylist = () => {
         userid: userid,
       },
       onSuccess: () => {
+        setLoading(false);
         getFavUser();
       },
-
       onFailure: () => {
         setLoading(false);
       },
@@ -207,6 +207,11 @@ const YourStylist = () => {
       }
     }
     getDetails();
+    if (params?.isPackages) {
+      setIsOffers(false);
+      setIsPackages(true);
+      setIsMyWork(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -510,19 +515,6 @@ const YourStylist = () => {
         </View>
 
         <View style={{ flex: 1, marginTop: hp(-130) }}>
-          {/* {!isOffers && !isPackages && !isMyWork ? (
-            <View>
-              <FlatList
-                style={{ flex: 1 }}
-                data={[1, 2, 3, 4, 5, 6, 7, 8]}
-                scrollEnabled={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => {
-                  return <StylistItem data={item} />;
-                }}
-              />
-            </View>
-          ) : null} */}
           {loading ? (
             <View style={{ marginTop: hp(40) }}>
               <OfferLoader />
@@ -530,7 +522,7 @@ const YourStylist = () => {
           ) : (
             <>
               {isOffers ? (
-                <View>
+                <View key={"offer"}>
                   <FlatList
                     style={{ flex: 1 }}
                     data={[1]}
@@ -539,10 +531,39 @@ const YourStylist = () => {
                     renderItem={({ item, index }) => {
                       return (
                         <StylistItem
-                          key={index}
+                          key={`offer${index}`}
                           isOffer={true}
                           data={item}
                           offers={userOfferList}
+                          index={index}
+                        />
+                      );
+                    }}
+                  />
+                </View>
+              ) : null}
+            </>
+          )}
+          {loading ? (
+            <View style={{ marginTop: hp(40) }}>
+              <OfferLoader />
+            </View>
+          ) : (
+            <>
+              {isPackages ? (
+                <View key={"package"}>
+                  <FlatList
+                    style={{ flex: 1 }}
+                    data={[2]}
+                    scrollEnabled={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <PackagesItem
+                          key={`package${index}`}
+                          data={item}
+                          packages={userPackageList}
+                          index={index}
                         />
                       );
                     }}
@@ -552,34 +573,21 @@ const YourStylist = () => {
             </>
           )}
 
-          {isPackages ? (
-            <View>
+          {isMyWork ? (
+            <View key={`mywork`}>
               <FlatList
                 style={{ flex: 1 }}
-                data={[1]}
+                data={[3]}
                 scrollEnabled={false}
                 keyExtractor={(item, index) => index.toString()}
                 renderItem={({ item, index }) => {
                   return (
-                    <PackagesItem
-                      key={index}
+                    <MyWorkItem
                       data={item}
-                      packages={userPackageList}
+                      index={index}
+                      key={`work${index}`}
                     />
                   );
-                }}
-              />
-            </View>
-          ) : null}
-          {isMyWork ? (
-            <View>
-              <FlatList
-                style={{ flex: 1 }}
-                data={[1]}
-                scrollEnabled={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => {
-                  return <MyWorkItem data={item} />;
                 }}
               />
             </View>

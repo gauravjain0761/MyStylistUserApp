@@ -17,9 +17,10 @@ import FastImage from "react-native-fast-image";
 
 type Props = {
   data: any;
+  index: number;
 };
 
-const MyWorkItem = ({ data }: Props) => {
+const MyWorkItem = ({ data, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { itemDetails } = useAppSelector((state) => state.home);
 
@@ -29,7 +30,7 @@ const MyWorkItem = ({ data }: Props) => {
   };
 
   return (
-    <View>
+    <View key={index}>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
         <Text style={styles.titleTextStyle}>{"My Work"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
@@ -44,7 +45,7 @@ const MyWorkItem = ({ data }: Props) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
             return (
-              <View style={styles.itemContainer}>
+              <View key={index} style={styles.itemContainer}>
                 <FastImage
                   resizeMode="cover"
                   style={styles.imgStyle}

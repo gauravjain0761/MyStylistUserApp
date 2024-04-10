@@ -2,6 +2,7 @@ import {
   GET_ALL_OFFER,
   GET_ALL_OFFERS,
   GET_OFFERS_LIST,
+  GET_OFFER_DETAILS,
   GET_USER_CAMPAIGN_LIST,
 } from "../actions/dispatchTypes";
 
@@ -10,6 +11,7 @@ const initialState = {
   allOffers: {},
   usersWithCampaignList: {},
   offerList: [],
+  offerDetails: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -40,6 +42,12 @@ export default function (state = initialState, action: any) {
       return {
         ...state,
         usersWithCampaignList: action.payload,
+      };
+    }
+    case GET_OFFER_DETAILS: {
+      return {
+        ...state,
+        offerDetails: action.payload,
       };
     }
 

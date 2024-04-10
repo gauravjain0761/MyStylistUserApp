@@ -18,25 +18,22 @@ import {
   UserItemLoader,
 } from "../../components";
 import { strings } from "../../helper/string";
-import { images } from "../../theme/icons";
 import {
   generateTimes,
   generateWeekDates,
   hp,
-  screen_width,
   wp,
 } from "../../helper/globalFunction";
-import { barbers, stylists_filter } from "../../helper/constunts";
+import { stylists_filter } from "../../helper/constunts";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { screenName } from "../../helper/routeNames";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getCampaignExpert, getUserItemDetails } from "../../actions";
+import { getCampaignExpert, getOfferDetails } from "../../actions";
 import FastImage from "react-native-fast-image";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
-const NewYearOffer = () => {
+const PackgesDetails = () => {
   const dispatch = useAppDispatch();
   const { params }: any = useRoute();
   const { navigate } = useNavigation();
@@ -46,22 +43,17 @@ const NewYearOffer = () => {
   const [times, setTimes] = useState(generateTimes());
   const [reviewModal, setReviewModal] = useState(false);
 
-  const { usersWithCampaignList } = useAppSelector((state) => state.offers);
+  const { offerDetails } = useAppSelector((state) => state.offers);
   const { profileData } = useAppSelector((state) => state.profile);
   const { isLoading } = useAppSelector((state) => state.common);
 
   useEffect(() => {
     let obj = {
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 20,
-        page: 1,
-        campaignId: params?.item?.campaign?._id,
-      },
+      id: params?.item?._id,
       onSuccess: () => {},
       onFailure: () => {},
     };
-    dispatch(getCampaignExpert(obj));
+    dispatch(getOfferDetails(obj));
   }, []);
 
   const onPressDateItem = (item: any) => {
@@ -102,13 +94,9 @@ const NewYearOffer = () => {
     navigate(screenName.YourStylist, { id: item._id });
   };
 
-  const onPresstoNavigate = () => {
-    navigate(screenName.Service);
-  };
-
   return (
     <View style={styles.conatiner}>
-      <BackHeader isSearch title={params?.item?.campaign?.title} />
+      <BackHeader isSearch title={offerDetails?.offer?.offer_name} />
       <ScrollView stickyHeaderIndices={[1]}>
         <FastImage
           style={styles.bannerImgStyle}
@@ -156,7 +144,7 @@ const NewYearOffer = () => {
           ) : (
             <FlatList
               scrollEnabled={false}
-              data={usersWithCampaignList?.usersWithCampaign}
+              data={[]}
               renderItem={({ item, index }) => {
                 return (
                   <Barber_Card
@@ -263,4 +251,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewYearOffer;
+export default PackgesDetails;

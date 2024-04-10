@@ -28,6 +28,7 @@ export const GET_ALL_OFFER = "GET_ALL_OFFER";
 export const GET_ALL_OFFERS = "GET_ALL_OFFERS";
 export const GET_OFFERS_LIST = "GET_OFFERS_LIST";
 export const GET_USER_CAMPAIGN_LIST = "GET_USER_CAMPAIGN_LIST";
+export const GET_OFFER_DETAILS = "GET_OFFER_DETAILS";
 
 //pakages
 export const GET_All_PACKAGE_LIST = "GET_All_PACKAGE_LIST";

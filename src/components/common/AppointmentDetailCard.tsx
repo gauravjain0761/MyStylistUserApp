@@ -66,9 +66,7 @@ const AppointmentDetailCard = ({
 }: props) => {
   const { navigate } = useNavigation();
 
-  const onPressCard = () => {
-    navigate(screenName.YourStylist);
-  };
+  const onPressCard = () => {};
 
   return (
     <View style={styles.conatiner}>

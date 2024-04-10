@@ -32,14 +32,13 @@ import {
 } from "../../actions/offerAction";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 let offersOffList = [
-  { id: 1, off: "10%" },
-  { id: 2, off: "20%" },
-  { id: 3, off: "30%" },
-  { id: 4, off: "40%" },
-  { id: 5, off: "50%" },
+  { id: 1, off: "10%", discount: 10 },
+  { id: 2, off: "20%", discount: 20 },
+  { id: 3, off: "30%", discount: 30 },
+  { id: 4, off: "40%", discount: 40 },
+  { id: 5, off: "50%", discount: 50 },
 ];
 
 const Offers = ({ navigation }) => {
@@ -75,6 +74,24 @@ const Offers = ({ navigation }) => {
 
   const onPressMenu = () => {
     navigation.openDrawer();
+  };
+
+  const onPressPercetageItem = (discount: number) => {
+    let obj = {
+      isLoading: true,
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: page,
+        discount: discount,
+      },
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getAllOffersByLocation(obj));
   };
 
   const onPressCampaignItem = (item: any) => {
@@ -121,7 +138,7 @@ const Offers = ({ navigation }) => {
         stickyHeaderIndices={[1]}
       >
         {isLoading ? (
-          <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+          <CarouselLoader marginTop={hp(10)} height={hp(290)} />
         ) : (
           <FastImage
             style={styles.bannerImgStyle}
@@ -170,7 +187,9 @@ const Offers = ({ navigation }) => {
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onPressPercetageItem(item.discount)}
+                >
                   <ImageBackground
                     borderRadius={10}
                     resizeMode="cover"

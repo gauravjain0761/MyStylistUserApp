@@ -31,13 +31,12 @@ import { getAllPackageByLocation, getCampaignExpert } from "../../actions";
 import FastImage from "react-native-fast-image";
 
 let offersOffList = [
-  { id: 1, off: "10%" },
-  { id: 2, off: "20%" },
-  { id: 3, off: "30%" },
-  { id: 4, off: "40%" },
-  { id: 5, off: "50%" },
+  { id: 1, off: "10%", discount: 10 },
+  { id: 2, off: "20%", discount: 20 },
+  { id: 3, off: "30%", discount: 30 },
+  { id: 4, off: "40%", discount: 40 },
+  { id: 5, off: "50%", discount: 50 },
 ];
-
 const Packages = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const { allpackages, packageList } = useAppSelector((state) => state.package);
@@ -86,6 +85,24 @@ const Packages = ({ navigation }) => {
     });
   };
 
+  const onPressPercetageItem = (discount: number) => {
+    let obj = {
+      isLoading: true,
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: page,
+        discount: discount,
+      },
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getAllPackageByLocation(obj));
+  };
+
   const loadMoreData = () => {
     if (packageList?.length !== allpackages?.totalPackages) {
       setFooterLoading(true);
@@ -120,7 +137,7 @@ const Packages = ({ navigation }) => {
         }
       >
         {isLoading ? (
-          <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+          <CarouselLoader marginTop={hp(10)} height={hp(290)} />
         ) : (
           <FastImage
             style={styles.bannerImgStyle}
@@ -165,9 +182,12 @@ const Packages = ({ navigation }) => {
             showsHorizontalScrollIndicator={false}
             data={offersOffList}
             keyExtractor={(item, index) => index.toString()}
+            ListFooterComponent={<View style={{ width: wp(25) }} />}
             renderItem={({ item, index }) => {
               return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onPressPercetageItem(item.discount)}
+                >
                   <ImageBackground
                     borderRadius={10}
                     resizeMode="cover"

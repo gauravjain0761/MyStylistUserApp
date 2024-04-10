@@ -11,6 +11,7 @@ export const USER_LIST = "USER_LIST";
 export const ITEM_DETAILS = "ITEM_DETAILS";
 export const EXPERT_USER_LIST = "EXPERT_USER_LIST";
 export const GET_BARBER_LIST = "GET_BARBER_LIST";
+export const SEARCH_LIST = "SEARCH_LIST";
 
 //Profile
 export const GET_FAQ = "GET_FAQ";

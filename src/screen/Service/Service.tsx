@@ -18,7 +18,6 @@ import { fontFamily, commonFontStyle } from "../../theme/fonts";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllExpertBySubService, getUserItemDetails } from "../../actions";
 import FastImage from "react-native-fast-image";
 
 const Service = () => {
@@ -31,22 +30,9 @@ const Service = () => {
     navigate(screenName.YourStylist);
   };
 
-  console.log("params", params.item);
-
   const onPressItem = (item: any) => {
-    let userid = item._id;
-    let obj = {
-      isLoading: true,
-      data: {
-        userid: userid,
-      },
-      onSuccess: () => {
-        //@ts-ignore
-        navigate(screenName.YourStylist);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getUserItemDetails(obj));
+    //@ts-ignore
+    navigate(screenName.YourStylist, { id: item._id });
   };
 
   return (
@@ -101,15 +87,21 @@ const Service = () => {
             renderItem={({ item, index }: any) => {
               return (
                 <Barber_Card
+                  featured_image_url={expertUserList?.featured_image_url}
                   name={item.name}
                   type="with Service"
                   images={item?.user_profile_images}
                   rating={item.averageRating}
                   jobs={item?.jobDone}
-                  location={item.address}
+                  location={
+                    item?.city?.[0]?.city_name +
+                    ", " +
+                    item?.district?.[0]?.district_name +
+                    ", " +
+                    item?.state?.[0]?.state_name
+                  }
                   offers={item?.offers}
-                  service="Party Makeup"
-                  price="₹500"
+                  service={params.item?.sub_service_name}
                   carouselitemHeight={hp(157)}
                   carouselitemWidth={wp(132)}
                   onPress={() => onPressItem(item)}

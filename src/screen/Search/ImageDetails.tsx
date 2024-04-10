@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -15,6 +15,7 @@ import {
   Modals,
   ReviewModal,
   SelectDateModal,
+  UserItemLoader,
 } from "../../components";
 import { strings } from "../../helper/string";
 import { images } from "../../theme/icons";
@@ -29,15 +30,43 @@ import { barbers, stylists_filter } from "../../helper/constunts";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { screenName } from "../../helper/routeNames";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { getAllExpertBySubService } from "../../actions";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 
 const ImageDetails = () => {
+  const { params }: any = useRoute();
   const { navigate } = useNavigation();
   const [isModal, setIsModal] = useState(false);
   const [costmodal, setCostmodal] = useState(false);
   const [dates, setDates] = useState(generateWeekDates());
   const [times, setTimes] = useState(generateTimes());
   const [reviewModal, setReviewModal] = useState(false);
+  const dispatch = useAppDispatch();
+  const { expertUserList } = useAppSelector((state) => state.home);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = () => {
+    let obj = {
+      data: {
+        sub_service_id: params?.item?._id,
+        limit: 20,
+        page: 1,
+      },
+      onSuccess: () => {
+        setLoading(false);
+        // @ts-ignore
+      },
+      onFailure: (err: any) => {
+        setLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
 
   const onPressDateItem = (item: any) => {
     let data = [...dates];
@@ -72,14 +101,14 @@ const ImageDetails = () => {
       setCostmodal(!costmodal);
     }
   };
-  const onPressItem = () => {
+  const onPressItem = (item: any) => {
     //@ts-ignore
-    navigate(screenName.YourStylist);
+    navigate(screenName.YourStylist, { id: item._id });
   };
 
   return (
     <View style={styles.conatiner}>
-      <BackHeader title={"Majid"} />
+      <BackHeader title={params?.item?.sub_service_name} />
       <ScrollView stickyHeaderIndices={[1]}>
         <View />
         <View style={styles?.service_filter_conatiner}>
@@ -110,30 +139,59 @@ const ImageDetails = () => {
           </Text>
           <View style={styles?.title_border}></View>
         </View>
-        <View style={styles?.barber_card_container}>
+        {loading ? (
           <FlatList
-            scrollEnabled={false}
-            data={barbers}
+            data={[1, 2, 3, 4, 5, 6]}
             renderItem={({ item, index }) => {
-              return (
-                <Barber_Card
-                  name={item.name}
-                  type="Without Service"
-                  images={item?.image}
-                  rating={item.rating}
-                  jobs={item?.jobs_done}
-                  location={item.address}
-                  offers={item?.offers}
-                  onPress={onPressItem}
-                  onPressRating={setReviewModal}
-                />
-              );
+              return <UserItemLoader />;
             }}
-            ItemSeparatorComponent={() => (
-              <View style={styles.card_separator}></View>
-            )}
           />
-        </View>
+        ) : (
+          <>
+            {expertUserList?.users?.length > 0 ? (
+              <View style={styles?.barber_card_container}>
+                <FlatList
+                  scrollEnabled={false}
+                  data={expertUserList?.users || []}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <Barber_Card
+                        featured_image_url={expertUserList?.featured_image_url}
+                        name={item.name}
+                        type="Without Service"
+                        images={item?.user_profile_images}
+                        rating={item.averageRating}
+                        jobs={item?.jobDone}
+                        location={
+                          item?.city?.[0]?.city_name +
+                          ", " +
+                          item?.district?.[0]?.district_name +
+                          ", " +
+                          item?.state?.[0]?.state_name
+                        }
+                        offers={item?.offers}
+                        service={params.item?.sub_service_name}
+                        carouselitemHeight={hp(157)}
+                        carouselitemWidth={wp(132)}
+                        onPress={() => onPressItem(item)}
+                        data={item}
+                        isOtherWayLocation
+                      />
+                    );
+                  }}
+                  ItemSeparatorComponent={() => (
+                    <View style={styles.card_separator}></View>
+                  )}
+                />
+              </View>
+            ) : (
+              <View style={styles.centerContainer}>
+                <Text style={styles.nodataTextStyle}>{"No Data Found"}</Text>
+              </View>
+            )}
+          </>
+        )}
+
         <Modals
           visible={costmodal}
           close={setCostmodal}
@@ -204,6 +262,15 @@ const styles = StyleSheet.create({
   },
   card_separator: {
     height: hp(24),
+  },
+  centerContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  nodataTextStyle: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.black),
+    marginTop: hp(20),
   },
 });
 

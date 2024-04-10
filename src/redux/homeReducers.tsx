@@ -3,6 +3,7 @@ import {
   GETALLSERVICES,
   GET_BARBER_LIST,
   ITEM_DETAILS,
+  SEARCH_LIST,
   USER_LIST,
 } from "../actions/dispatchTypes";
 
@@ -12,6 +13,7 @@ const initialState = {
   itemDetails: {},
   expertUserList: [],
   barberList: [],
+  searchList: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -37,6 +39,9 @@ export default function (state = initialState, action: any) {
     }
     case EXPERT_USER_LIST: {
       return { ...state, expertUserList: action.payload };
+    }
+    case SEARCH_LIST: {
+      return { ...state, searchList: action.payload };
     }
     default:
       return state;

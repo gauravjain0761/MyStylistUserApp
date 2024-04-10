@@ -7,6 +7,7 @@ import {
   GET_BARBER_LIST,
   IS_LOADING,
   ITEM_DETAILS,
+  SEARCH_LIST,
   USER_LIST,
 } from "./dispatchTypes";
 import { GET, POST, api } from "../helper/apiConstants";
@@ -183,7 +184,6 @@ export const getAllExpertBySubService =
     let header = {
       "Content-Type": "application/json",
     };
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
       url: api.allExpertBySubService,
@@ -191,7 +191,6 @@ export const getAllExpertBySubService =
       data: request.data,
     })
       .then(async (response: any) => {
-        dispatch({ type: IS_LOADING, payload: false });
         if (response.status === 200) {
           dispatch({
             type: EXPERT_USER_LIST,
@@ -201,7 +200,36 @@ export const getAllExpertBySubService =
         }
       })
       .catch((error) => {
-        dispatch({ type: IS_LOADING, payload: false });
+        dispatch({
+          type: EXPERT_USER_LIST,
+          payload: {},
+        });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getAllSubServicesSearch =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.search,
+      headers: header,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          dispatch({
+            type: SEARCH_LIST,
+            payload: response?.data,
+          });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
         if (request.onFailure) request.onFailure(error.response);
       });
   };

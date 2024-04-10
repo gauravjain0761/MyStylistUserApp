@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
-import { AppointmentDetailsLoader, BackHeader } from "../../components";
+import React, { useEffect, useState } from "react";
+import { AppointmentDetailsLoader, BackHeader, Loader } from "../../components";
 import { strings } from "../../helper/string";
 import AppointmentDetailCard from "../../components/common/AppointmentDetailCard";
 import { images } from "../../theme/icons";
@@ -18,7 +18,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import moment from "moment";
-import { getAppointmentDetails } from "../../actions";
+import { createChatRoom, getAppointmentDetails } from "../../actions";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 type RowItemValueProps = {
@@ -40,8 +40,10 @@ const AppointmentDetails = () => {
   const { navigate } = useNavigation();
   const { params }: any = useRoute();
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
+  const { profileData } = useAppSelector((state) => state.profile);
   const { Appointment } = appointmentDetails;
   const { isLoading } = useAppSelector((state) => state.common);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     let obj = {
@@ -60,9 +62,27 @@ const AppointmentDetails = () => {
     navigate(screenName.AppointmentReschedule);
   };
 
+  const onPressChat = () => {
+    setLoading(true);
+    let data = {
+      participants: [params?.id, profileData?.user?._id],
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(createChatRoom(obj));
+  };
+
   return (
     <View style={styles.conatiner}>
       <BackHeader title={strings.Appointment_Detail} />
+      <Loader visible={loading} />
       <ScrollView>
         {isLoading ? (
           <AppointmentDetailsLoader />
@@ -85,6 +105,7 @@ const AppointmentDetails = () => {
                 "DD MMM,YYYY"
               )}
               time={Appointment?.timeSlot?.[0]?.availableTime}
+              onPressChat={onPressChat}
             />
           </View>
         )}

@@ -98,20 +98,8 @@ const NewYearOffer = () => {
     }
   };
   const onPressItem = (item: any) => {
-    //@ts-ignore
-    // let userid = item._id;
-    // let obj = {
-    //   isLoading: true,
-    //   data: {
-    //     userid: userid,
-    //   },
-    //   onSuccess: () => {
     // @ts-ignore
     navigate(screenName.YourStylist, { id: item._id });
-    //   },
-    //   onFailure: () => {},
-    // };
-    // dispatch(getUserItemDetails(obj));
   };
 
   const onPresstoNavigate = () => {

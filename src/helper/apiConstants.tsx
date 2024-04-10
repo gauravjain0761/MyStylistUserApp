@@ -16,6 +16,7 @@ export const api = {
   allSubServicesForMobile: "service/getAllSubServicesForMobile",
   usersByLocation: "user/getUsersByLocation",
   allExpertBySubService: "user/getAllExpertBySubService",
+  search: "service/getAllSubServicesSearch",
 
   // cart
   cart: "cart/addToCart",
@@ -64,6 +65,7 @@ export const api = {
 
   // chat
   chatParticipants: "chat/getChatParticipants",
+  room: "user/createRoom",
 
   // Address
   userAddresses: "user/getUserAddresses",

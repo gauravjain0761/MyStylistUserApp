@@ -45,6 +45,7 @@ type props = {
   time?: any;
   previousBooking?: boolean;
   imgBaseURL?: string;
+  onPressChat: () => void;
 };
 
 const AppointmentDetailCard = ({
@@ -61,6 +62,7 @@ const AppointmentDetailCard = ({
   jobs,
   previousBooking = false,
   imgBaseURL,
+  onPressChat,
 }: props) => {
   const { navigate } = useNavigation();
 
@@ -87,7 +89,9 @@ const AppointmentDetailCard = ({
           <View style={styles.name_container}>
             <View style={styles.info_container}>
               <TouchableOpacity>
-                <Text style={styles.barber_name}>{name}</Text>
+                <Text numberOfLines={1} style={styles.barber_name}>
+                  {name}
+                </Text>
               </TouchableOpacity>
               <VerifyIcon width={14} height={14} />
             </View>
@@ -115,7 +119,7 @@ const AppointmentDetailCard = ({
             <DirectionIcon />
             <Text style={styles.btn_title}>{strings.Directions}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.service_btn}>
+          <TouchableOpacity onPress={onPressChat} style={styles.service_btn}>
             <ChatIcon />
             <Text style={styles.btn_title}>{strings.Chat}</Text>
           </TouchableOpacity>
@@ -198,6 +202,7 @@ const styles = StyleSheet.create({
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 28, colors.black),
+    maxWidth: wp(170),
   },
   info_container: {
     flexDirection: "row",

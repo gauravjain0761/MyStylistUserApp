@@ -29,7 +29,6 @@ export const getExpertAvailability =
     let header = {
       "Content-Type": "application/json",
     };
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
       url: api.expertAvailability,
@@ -38,13 +37,11 @@ export const getExpertAvailability =
     })
       .then((result: any) => {
         if (result.status === 200) {
-          dispatch({ type: IS_LOADING, payload: false });
           if (request.onSuccess) request.onSuccess(result.data);
         }
       })
       .catch((error: any) => {
         console.log("error", error);
-        dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure) request.onFailure(error.response);
       });
   };

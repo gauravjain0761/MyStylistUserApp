@@ -17,62 +17,57 @@ import { strings } from "../../helper/string";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import FastImage from "react-native-fast-image";
+import { useAppSelector } from "../../redux/hooks";
 
 type Props = {
   data: any;
+  onPressItem: () => void;
 };
 
-const SearchImageItem = ({ data }: Props) => {
+const SearchImageItem = ({ data, onPressItem }: Props) => {
   const { navigate } = useNavigation();
   const [count, setCount] = useState<any>(6);
+  const { searchList } = useAppSelector((state) => state.home);
+
   const onPressMore = () => {
     setCount(8);
   };
 
-  const onPressImageItem = () => {
-    // @ts-ignore
-    navigate(screenName.ImageDetails);
-  };
-
   return (
-    <View>
-      <View style={styles.headerRowStyle}>
-        <View style={styles.rowStyle}>
-          <Text style={styles.titleTextStyle}>{"Hair Cut"}</Text>
-          <TouchableOpacity>
-            <Text style={styles.viewmoreTextStyle}>{"View More"}</Text>
-          </TouchableOpacity>
-        </View>
-        {count === 8 ? null : (
-          <TouchableOpacity onPress={onPressMore}>
-            <Text style={styles.moreTextStyle}>{strings["View More"]}</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-      <FlatList
-        style={styles.listContainerStyle}
-        numColumns={3}
-        data={[1, 2, 3, 4, 5, 6, 7, 8].slice(0, count)}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item, index }) => {
-          return (
-            <TouchableOpacity
-              onPress={onPressImageItem}
-              style={styles.itemContainer}
-            >
-              <FastImage
-                resizeMode="cover"
-                style={styles.imgStyle}
-                source={{
-                  uri: "https://i.pinimg.com/736x/0a/21/70/0a217095d0a9aa63c28a6adca86c8a82.jpg",
-                  priority: FastImage.priority.high,
-                }}
-              />
-            </TouchableOpacity>
-          );
+    // <View>
+    //   <View style={styles.headerRowStyle}>
+    //     <View style={styles.rowStyle}>
+    //       <Text style={styles.titleTextStyle}>{"Hair Cut"}</Text>
+    //       <TouchableOpacity>
+    //         <Text style={styles.viewmoreTextStyle}>{"View More"}</Text>
+    //       </TouchableOpacity>
+    //     </View>
+    //     {count === 8 ? null : (
+    //       <TouchableOpacity onPress={onPressMore}>
+    //         <Text style={styles.moreTextStyle}>{strings["View More"]}</Text>
+    //       </TouchableOpacity>
+    //     )}
+    //   </View>
+    //   <FlatList
+    //     style={styles.listContainerStyle}
+    //     numColumns={3}
+    //     data={[1, 2, 3, 4, 5, 6, 7, 8].slice(0, count)}
+    //     keyExtractor={(item, index) => index.toString()}
+    //     renderItem={({ item, index }) => {
+    <TouchableOpacity onPress={onPressItem} style={styles.itemContainer}>
+      <FastImage
+        resizeMode="cover"
+        style={styles.imgStyle}
+        source={{
+          uri: searchList?.imageUrl + "/" + data?.fileName,
+          priority: FastImage.priority.high,
         }}
       />
-    </View>
+    </TouchableOpacity>
+    //     );
+    //   }}
+    // />
+    // </View>
   );
 };
 
@@ -103,6 +98,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     height: screen_width - wp(267),
     width: screen_width - wp(267),
+    backgroundColor: colors.grey_19,
   },
   moreTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),

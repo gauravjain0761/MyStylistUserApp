@@ -13,7 +13,6 @@ export const getChatParticipants =
       "Content-Type": "application/json",
       Authorization: await getAsyncToken(),
     };
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
       url: api.chatParticipants,
@@ -22,7 +21,6 @@ export const getChatParticipants =
     })
       .then((result: any) => {
         if (result.status === 200) {
-          dispatch({ type: IS_LOADING, payload: false });
           dispatch({
             type: GET_CHATS_PARTICIPANTS,
             payload: result?.data,
@@ -31,7 +29,29 @@ export const getChatParticipants =
         }
       })
       .catch((error: any) => {
-        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const createChatRoom =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.room,
+      headers: header,
+      data: request.data,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
         if (request.onFailure) request.onFailure(error.response);
       });
   };

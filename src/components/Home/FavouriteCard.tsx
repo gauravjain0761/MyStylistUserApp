@@ -123,7 +123,9 @@ const FavouriteCard = ({
             >
               <View style={styles.name_container}>
                 <View>
-                  <Text style={styles.barber_name}>{name}</Text>
+                  <Text numberOfLines={1} style={styles.barber_name}>
+                    {name}
+                  </Text>
                 </View>
                 <VerifyIcon width={14} height={14} />
               </View>
@@ -279,6 +281,7 @@ const styles = StyleSheet.create({
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 23, colors.black),
+    maxWidth: wp(170),
   },
   name_container: {
     flexDirection: "row",

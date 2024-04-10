@@ -13,6 +13,7 @@ import {
 import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { colors } from "../../theme/color";
 import {
+  convertToOutput,
   generateTimes,
   generateWeekDates,
   hp,
@@ -44,6 +45,7 @@ import {
   Modals,
   ReviewModal,
   SelectDateModal,
+  UserItemLoader,
 } from "../../components";
 import babelConfig from "../../../babel.config";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -61,7 +63,6 @@ import {
   getAllExpertBySubService,
   getAllServicesForMaleAndFemale,
   getAllSubServicesForMobile,
-  getUserItemDetails,
   getUsersByLocation,
 } from "../../actions/homeAction";
 import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
@@ -77,6 +78,10 @@ import { getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import moment from "moment";
+import { getExpertAvailability } from "../../actions/commonActions";
+import { io } from "socket.io-client";
+import { api } from "../../helper/apiConstants";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -87,8 +92,8 @@ const Home = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModal, setIsModal] = useState(false);
   const [costmodal, setCostmodal] = useState(false);
-  const [dates, setDates] = useState(generateWeekDates());
-  const [times, setTimes] = useState(generateTimes());
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
   const [servicesModal, setServicesModal] = useState(false);
   const [menservicesModal, setmenservicesModal] = useState(false);
   const [modalTitle, setModalTitle] = useState(false);
@@ -107,12 +112,19 @@ const Home = () => {
   const [refreshControl, setRefreshControle] = useState(false);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [filterData, setFilterData] = useState({});
+  const [listLoader, setListLoader] = useState(false);
+  const [selectedDateIndex, setSelectedDate] = useState(null);
+  const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [date, setDate] = useState("");
+  const [bookTime, setBookTime] = useState({});
 
   const { getallservices, userList, barberList } = useAppSelector(
     (state) => state.home
   );
   const [rating, setRating] = useState(null);
   const [gender, setGender] = useState(null);
+  const [bestService, setBestService] = useState("Yes");
 
   useEffect(() => {
     let banner = {
@@ -156,6 +168,7 @@ const Home = () => {
 
   useEffect(() => {
     getProfileData();
+    getDatesList();
   }, []);
 
   const getProfileData = async () => {
@@ -174,18 +187,20 @@ const Home = () => {
   const getUserList = async (isLoading: boolean) => {
     await requestLocationPermission(
       async (response) => {
+        let data = {
+          latitude: response?.latitude,
+          longitude: response?.longitude,
+          maxDistance: 50000,
+          page: page,
+          limit: 20,
+          rating: rating,
+          gender: gender,
+        };
         let obj = {
           isLoading: isLoading,
-          data: {
-            latitude: response?.latitude,
-            longitude: response?.longitude,
-            maxDistance: 50000,
-            page: page,
-            limit: 10,
-            rating: rating,
-            gender: gender,
-          },
+          data: data,
           onSuccess: () => {
+            setFilterData(data);
             setPage(page + 1);
             setFooterLoading(false);
             setLoading(false);
@@ -200,36 +215,48 @@ const Home = () => {
     );
   };
 
-  const onPressRating = useCallback(
-    async (isLoading: boolean, rating: number) => {
-      await requestLocationPermission(
-        async (response) => {
-          let obj = {
-            isLoading: isLoading,
-            data: {
-              latitude: response?.latitude,
-              longitude: response?.longitude,
-              maxDistance: 50000,
-              page: page,
-              limit: 10,
-              rating: rating,
-              gender: gender,
-            },
-            onSuccess: () => {
-              setPage(page + 1);
-              setFooterLoading(false);
-            },
-            onFailure: () => {},
-          };
-          dispatch(getUsersByLocation(obj));
-        },
-        (err) => {
-          console.log("Home Location API", err);
-        }
-      );
-    },
-    [rating]
-  );
+  const onPressRating = (isLoading: boolean, rating: number) => {
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      rating: rating,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const onPressBestService = () => {
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      best_service: "Yes",
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+        setBestService("Yes");
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
 
   const getCurrentLocation = async () => {
     dispatch({ type: IS_LOADING, payload: true });
@@ -251,7 +278,6 @@ const Home = () => {
             maxDistance: 50000,
           };
           await setAsyncCoord(coord);
-          console.log("oooo", coord);
           dispatch({ type: COORD, payload: coord });
           dispatch({ type: IS_LOADING, payload: false });
           SetLocation();
@@ -295,7 +321,7 @@ const Home = () => {
       let obj = {
         data: {
           sub_service_id: item?._id,
-          limit: 10,
+          limit: 20,
           page: 1,
         },
         onSuccess: () => {
@@ -325,33 +351,46 @@ const Home = () => {
       setRating(5);
       onPressRating(true, 5);
     } else if (item == 5) {
-      setGender("Male");
+      onPressBestService();
     }
   };
 
-  const onPressDateItem = (item: any) => {
-    let data = [...dates];
-
-    dates.map((eItem, index) => {
-      if (eItem.id === item.id) {
-        eItem.isSelected = true;
-      } else {
-        eItem.isSelected = false;
-      }
-    });
-    setDates(data);
+  const onPressDateItem = (index: any) => {
+    setSelectedDate(index);
+    setDate(moment(dates[index].title));
+    setTimes(dates[index].value);
+    setSelectedTime(null);
   };
 
-  const onPressTimeItem = (item: any) => {
-    let data = [...times];
-    times.map((eItem, index) => {
-      if (eItem.id === item.id) {
-        eItem.isSelected = true;
-      } else {
-        eItem.isSelected = false;
-      }
-    });
-    setTimes(data);
+  const onPressTimeItem = (index: any) => {
+    setSelectedTime(index);
+    let bookDates = times[index];
+    setBookTime(bookDates);
+  };
+
+  const onPressApplyDate = () => {
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      dateTime: {
+        timeSlot_id: bookTime?._id,
+        availableDate: date,
+      },
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+        setBestService("Yes");
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
   };
 
   const onPressSearch = () => {
@@ -401,6 +440,25 @@ const Home = () => {
     setRefreshControle(false);
     getProfileData();
   }, [refreshControl]);
+
+  async function getDatesList() {
+    let userInfo = await getAsyncUserInfo();
+    let data = generateWeekDates();
+
+    let obj = {
+      data: {
+        startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
+        endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+        timeSlotDuration: 60,
+        expertId: userInfo._id,
+      },
+      onSuccess: (response: any) => {
+        setDates(convertToOutput(response));
+      },
+      onFailure: () => {},
+    };
+    dispatch(getExpertAvailability(obj));
+  }
 
   return (
     <View style={styles?.container}>
@@ -655,34 +713,48 @@ const Home = () => {
             )}
           />
         </View>
+        {listLoader ? (
+          <View style={styles?.barber_card_container}>
+            <FlatList
+              data={[1, 2, 3, 4]}
+              renderItem={({ item, index }) => {
+                return <UserItemLoader key={index} />;
+              }}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        ) : (
+          <View style={styles?.barber_card_container}>
+            <FlatList
+              data={barberList || []}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item, index }) => {
+                return (
+                  <Barber_Card
+                    data={item}
+                    featured_image_url={userList?.featured_image_url}
+                    name={item.name}
+                    type="Without Service"
+                    images={item?.user_profile_images}
+                    rating={item.averageRating}
+                    jobs={item?.jobDone}
+                    // location={item?.addresses[0]?.address}
+                    offers={item?.offers[0]?.discount}
+                    onPress={() => onPressItem(item)}
+                    onPressRating={setReviewModal}
+                    barberdetailscontinerStyle={
+                      styles.barberdetailscontinerStyle
+                    }
+                  />
+                );
+              }}
+              ItemSeparatorComponent={() => (
+                <View style={styles.card_separator}></View>
+              )}
+            />
+          </View>
+        )}
 
-        <View style={styles?.barber_card_container}>
-          <FlatList
-            data={barberList || []}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }) => {
-              return (
-                <Barber_Card
-                  data={item}
-                  featured_image_url={userList?.featured_image_url}
-                  name={item.name}
-                  type="Without Service"
-                  images={item?.user_profile_images}
-                  rating={item.averageRating}
-                  jobs={item?.jobDone}
-                  // location={item?.addresses[0]?.address}
-                  offers={item?.offers[0]?.discount}
-                  onPress={() => onPressItem(item)}
-                  onPressRating={setReviewModal}
-                  barberdetailscontinerStyle={styles.barberdetailscontinerStyle}
-                />
-              );
-            }}
-            ItemSeparatorComponent={() => (
-              <View style={styles.card_separator}></View>
-            )}
-          />
-        </View>
         <SelectDateModal
           visible={isModal}
           close={setIsModal}
@@ -691,6 +763,9 @@ const Home = () => {
           onPressTimeItem={onPressTimeItem}
           setIsModal={setIsModal}
           times={times}
+          selectedDateIndex={selectedDateIndex}
+          selectedTimeIndex={selectedTimeIndex}
+          onPressApply={onPressApplyDate}
         />
 
         <Modals

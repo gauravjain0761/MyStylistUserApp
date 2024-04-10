@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   FlatList,
+  RefreshControl,
 } from "react-native";
 import { BackHeader, MessageItem } from "../../components";
 import { strings } from "../../helper/string";
@@ -17,25 +18,36 @@ import { screenName } from "../../helper/routeNames";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getChatParticipants } from "../../actions";
+import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import { io } from "socket.io-client";
+import { api } from "../../helper/apiConstants";
 
 const Chats = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const [type, setType] = useState("All");
   const { chatParticipants } = useAppSelector((state) => state.chat);
+  const [loading, setLoading] = useState(true);
+  const [isRefresh, setIsRefresh] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     getChatsUserList();
   }, []);
 
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
-
     let obj = {
       data: {
         userId: userInfo._id,
       },
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: () => {
+        setLoading(false);
+        setIsRefresh(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+        setIsRefresh(false);
+      },
     };
     dispatch(getChatParticipants(obj));
   };
@@ -47,6 +59,19 @@ const Chats = ({ navigation }) => {
   const onPressMenu = () => {
     navigation.openDrawer();
   };
+
+  const onRefresh = () => {
+    setIsRefresh(true);
+    getChatsUserList();
+  };
+
+  useEffect(() => {
+    const socket = io(api.BASE_URL);
+    // console.log(socket)
+    socket.on("connect", () => {
+      console.log("connect");
+    });
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -86,25 +111,62 @@ const Chats = ({ navigation }) => {
           </ImageBackground>
         </TouchableOpacity>
       </View>
-      {chatParticipants?.chatParticipants?.length ? (
+      {loading ? (
         <FlatList
-          style={styles.flatListStyle}
-          data={chatParticipants?.chatParticipants || []}
+          data={[1, 2, 3, 4, 5, 6]}
           renderItem={({ item, index }) => {
             return (
-              <MessageItem
-                index={index}
-                onPressItem={() => onPressItem(item)}
-              />
+              <View style={styles.loaderContainer}>
+                <SkeletonPlaceholder borderRadius={4}>
+                  <SkeletonPlaceholder.Item
+                    flexDirection="row"
+                    alignItems="center"
+                  >
+                    <SkeletonPlaceholder.Item
+                      width={60}
+                      height={60}
+                      borderRadius={50}
+                    />
+                    <SkeletonPlaceholder.Item marginLeft={20}>
+                      <SkeletonPlaceholder.Item width={80} height={20} />
+                      <SkeletonPlaceholder.Item
+                        marginTop={6}
+                        width={180}
+                        height={20}
+                      />
+                    </SkeletonPlaceholder.Item>
+                  </SkeletonPlaceholder.Item>
+                </SkeletonPlaceholder>
+              </View>
             );
           }}
-          keyExtractor={(item, index) => index.toString()}
-          ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
         />
       ) : (
-        <View style={styles.center}>
-          <Text style={styles.noDataTextStyle}>{"No Data"}</Text>
-        </View>
+        <>
+          {chatParticipants?.chatParticipants?.length ? (
+            <FlatList
+              style={styles.flatListStyle}
+              data={chatParticipants?.chatParticipants || []}
+              renderItem={({ item, index }) => {
+                return (
+                  <MessageItem
+                    index={index}
+                    onPressItem={() => onPressItem(item)}
+                  />
+                );
+              }}
+              keyExtractor={(item, index) => index.toString()}
+              ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
+              refreshControl={
+                <RefreshControl refreshing={isRefresh} onRefresh={onRefresh} />
+              }
+            />
+          ) : (
+            <View style={styles.center}>
+              <Text style={styles.noDataTextStyle}>{"No Data"}</Text>
+            </View>
+          )}
+        </>
       )}
     </View>
   );
@@ -161,6 +223,10 @@ const styles = StyleSheet.create({
   },
   noDataTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),
+  },
+  loaderContainer: {
+    paddingHorizontal: wp(20),
+    marginTop: hp(10),
   },
 });
 

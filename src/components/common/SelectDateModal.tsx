@@ -23,6 +23,9 @@ type props = {
   times: any;
   onPressTimeItem: (value: any) => void;
   setIsModal: (value: boolean) => void;
+  selectedDateIndex: number;
+  selectedTimeIndex: number;
+  onPressApply: () => void;
 };
 
 const SelectDateModal = ({
@@ -33,6 +36,9 @@ const SelectDateModal = ({
   times,
   onPressTimeItem,
   setIsModal,
+  selectedDateIndex,
+  selectedTimeIndex,
+  onPressApply,
 }: props) => {
   return (
     <Modals
@@ -44,9 +50,10 @@ const SelectDateModal = ({
           <View style={styles.week_container}>
             <WeekDateSelector
               list={dates}
-              onPressDate={(index) => onPressDateItem(dates[index])}
+              onPressDate={(index) => onPressDateItem(index)}
               containerStyle={styles.date_container}
               itemStyle={styles.item_style}
+              selectIndex={selectedDateIndex}
             />
           </View>
           <View style={styles.time_container}>
@@ -54,8 +61,9 @@ const SelectDateModal = ({
             <View style={styles.timeselect_container}>
               <TimeSelector
                 data={times}
-                onPressTime={(index) => onPressTimeItem(times[index])}
+                onPressTime={(index) => onPressTimeItem(index)}
                 itemStyle={styles.timeslot_style}
+                selectIndex={selectedTimeIndex}
               />
             </View>
           </View>
@@ -77,7 +85,15 @@ const SelectDateModal = ({
               </ImageBackground>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setIsModal(!visible)}>
+            <TouchableOpacity
+              disabled={
+                !(selectedDateIndex !== null && selectedTimeIndex !== null)
+              }
+              onPress={() => {
+                setIsModal(!visible);
+                if (onPressApply) onPressApply();
+              }}
+            >
               <ImageBackground
                 source={images?.blue_button}
                 style={styles.btn_style}

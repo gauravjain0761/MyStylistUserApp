@@ -73,6 +73,8 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(true);
 
+  console.log("cartDetails", cartDetails);
+
   useEffect(() => {
     getCart();
     async function getDatesList() {
@@ -255,7 +257,7 @@ const Cart = () => {
                     style={styles.columStyle}
                   >
                     <View style={styles.rowNameStyle}>
-                      <Text style={styles.nameTextStyle}>
+                      <Text numberOfLines={1} style={styles.nameTextStyle}>
                         {cartDetails?.user?.name}
                       </Text>
                       <VerifyIcon />
@@ -381,6 +383,7 @@ const styles = StyleSheet.create({
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 30, colors.black),
     marginRight: wp(5),
+    maxWidth: wp(170),
   },
   columStyle: {
     marginLeft: wp(15),

@@ -129,7 +129,9 @@ const Barber_Card = ({
             >
               <View style={styles.name_container}>
                 <View>
-                  <Text style={styles.barber_name}>{name}</Text>
+                  <Text numberOfLines={1} style={styles.barber_name}>
+                    {name}
+                  </Text>
                 </View>
                 <VerifyIcon width={14} height={14} />
               </View>
@@ -148,13 +150,17 @@ const Barber_Card = ({
               </View>
               <View style={styles.location_container}>
                 <CarIcon />
-                <Text style={styles.location_title}>
-                  {data?.offers?.[0]?.city?.[0]?.city_name}
-                  {","}
-                  {data?.offers?.[0]?.district?.[0]?.district_name}
-                  {","}
-                  {data?.offers?.[0]?.state?.[0]?.state_name}
-                </Text>
+                {location ? (
+                  <Text style={styles.location_title}>{location}</Text>
+                ) : (
+                  <Text style={styles.location_title}>
+                    {data?.offers?.[0]?.city?.[0]?.city_name}
+                    {","}
+                    {data?.offers?.[0]?.district?.[0]?.district_name}
+                    {","}
+                    {data?.offers?.[0]?.state?.[0]?.state_name}
+                  </Text>
+                )}
               </View>
               <View style={styles.price_container}>
                 <Text style={styles.price_title}>{service}</Text>
@@ -218,7 +224,9 @@ const Barber_Card = ({
             >
               <View style={styles.name_container}>
                 <View>
-                  <Text style={styles.barber_name}>{name}</Text>
+                  <Text numberOfLines={1} style={styles.barber_name}>
+                    {name}
+                  </Text>
                 </View>
                 <VerifyIcon width={14} height={14} />
               </View>
@@ -241,11 +249,11 @@ const Barber_Card = ({
                   <Text style={styles.location_title}>{location}</Text>
                 ) : (
                   <Text style={styles.location_title}>
-                    {data?.offers[0]?.city?.[0]?.city_name}
+                    {data?.offers?.[0]?.city?.[0]?.city_name}
                     {","}
-                    {data?.offers[0]?.district?.[0]?.district_name}
+                    {data?.offers?.[0]?.district?.[0]?.district_name}
                     {","}
-                    {data?.offers[0]?.state?.[0]?.state_name}
+                    {data?.offers?.[0]?.state?.[0]?.state_name}
                   </Text>
                 )}
               </View>
@@ -296,6 +304,7 @@ const styles = StyleSheet.create({
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 23, colors.black),
+    maxWidth: wp(170),
   },
   name_container: {
     flexDirection: "row",

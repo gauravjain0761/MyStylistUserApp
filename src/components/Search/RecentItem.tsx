@@ -7,30 +7,51 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import FastImage from "react-native-fast-image";
 type props = {
   data: any;
   isHideClose?: boolean;
+  featured_image_url?: string;
+  onPressItem: () => void;
+  onPressClose?: () => void;
 };
 
-const RecentItem = ({ data, isHideClose }: props) => {
+const RecentItem = ({
+  data,
+  isHideClose,
+  featured_image_url,
+  onPressItem,
+  onPressClose,
+}: props) => {
   const { navigate } = useNavigation();
-  const onPressItem = () => {
-    // @ts-ignore
-    navigate(screenName.YourStylist);
-  };
+  // const onPressItem = () => {
+  //   // @ts-ignore
+  //   navigate(screenName.YourStylist, { id: data?._id });
+  // };
   return (
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
-      <Image source={images.barber} style={styles.imgStyle} />
+      <FastImage
+        source={{
+          uri: featured_image_url + "/" + data?.user_profile_images?.[0]?.image,
+          priority: FastImage.priority.high,
+        }}
+        style={styles.imgStyle}
+      />
       <View style={{ marginLeft: wp(10), flex: 1 }}>
         <View style={styles.rowStyle}>
-          <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+          <Text style={styles.nameTextStyle}>{data?.name}</Text>
           <VerifyIcon height={12} width={12} />
         </View>
         <View style={{ height: hp(6) }} />
-        <Text style={styles.addressTextStyle}>{"Sector 67, Mohali"}</Text>
+        <Text numberOfLines={1} style={styles.addressTextStyle}>
+          {data?.addresses?.[0]?.address?.houseNumber}{" "}
+          {data?.addresses?.[0]?.address?.sector}{" "}
+          {data?.addresses?.[0]?.address?.pinCode}{" "}
+          {data?.addresses?.[0]?.address?.landmark}
+        </Text>
       </View>
       {isHideClose ? null : (
-        <TouchableOpacity hitSlop={hitSlop}>
+        <TouchableOpacity onPress={onPressClose} hitSlop={hitSlop}>
           <Text style={styles.addressTextStyle}>{"X"}</Text>
         </TouchableOpacity>
       )}
@@ -49,6 +70,7 @@ const styles = StyleSheet.create({
     height: wp(56),
     width: wp(56),
     borderRadius: 8,
+    backgroundColor: colors.grey_19,
   },
   rowStyle: {
     flexDirection: "row",

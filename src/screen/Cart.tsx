@@ -72,8 +72,7 @@ const Cart = () => {
   const [date, setDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(true);
-
-  console.log("cartDetails", cartDetails);
+  const [cartEmpty, setCartEmpty] = useState(false);
 
   useEffect(() => {
     getCart();
@@ -118,8 +117,13 @@ const Cart = () => {
         setCartLoading(false);
       },
       onFailure: (Errr: any) => {
-        alert(Errr?.data?.message);
-        data = ["0"];
+        if (Errr?.data?.message === "Cart not found") {
+          setCartEmpty(true);
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
         setCartLoading(false);
       },
     };
@@ -139,9 +143,7 @@ const Cart = () => {
     setBookTime(bookDates);
   };
 
-  let data = ["1"];
-
-  const onPressBook = useCallback(async () => {
+  const onPressBook = async () => {
     if (selectedDateIndex === null) {
       infoToast("Please select a date");
     } else if (selectedTimeIndex === null) {
@@ -184,7 +186,7 @@ const Cart = () => {
       };
       dispatch(bookAppointment(obj));
     }
-  }, [bookTime, selectedDateIndex, selectedTimeIndex]);
+  };
 
   const onPressCard = () => {
     navigate(screenName.YourStylist);
@@ -193,14 +195,19 @@ const Cart = () => {
   const RemoveItems = async () => {
     let Ids = addtocart.items.map((items) => items?._id);
     let userInfo = await getAsyncUserInfo();
+    let data = {
+      cartId: cartDetails?.cart?._id,
+      userId: userInfo?._id,
+      itemIds: Ids,
+    };
     let obj = {
-      data: {
-        cartId: cartDetails?.cart?._id,
-        userId: userInfo?._id,
-        itemIds: Ids,
-      },
+      data: data,
       onSuccess: (response: any) => {
         setLoading(false);
+        dispatch({
+          type: CART_DETAILS,
+          payload: {},
+        });
         setTimeout(() => {
           setIsShowCongrestModal(true);
         }, 700);
@@ -216,7 +223,7 @@ const Cart = () => {
     <View style={styles.container}>
       <BackHeader title={strings["Cart"]} />
       <Loader visible={loading} />
-      {data?.length === 0 ? (
+      {cartEmpty ? (
         <View style={styles.centerContainer}>
           <Image
             resizeMode="contain"
@@ -341,7 +348,9 @@ const Cart = () => {
               isVisible={isShowCongrestModal}
               onPressHome={() => {
                 setIsShowCongrestModal(false);
-                dispatchNavigation(screenName.Home);
+                setTimeout(() => {
+                  dispatchNavigation(screenName.Home);
+                }, 600);
               }}
             />
           </ScrollView>

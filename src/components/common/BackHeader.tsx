@@ -13,16 +13,27 @@ type Props = {
   isSearch?: boolean;
   isMenu?: boolean;
   onPressMenu?: () => void;
+  onPressScreenSearch?: () => void;
 };
 
-const BackHeader = ({ title, isSearch, isMenu, onPressMenu }: Props) => {
+const BackHeader = ({
+  title,
+  isSearch,
+  isMenu,
+  onPressMenu,
+  onPressScreenSearch,
+}: Props) => {
   const { goBack, navigate } = useNavigation();
 
   const onPressBack = () => goBack();
 
   const onPressSearch = () => {
-    // @ts-ignore
-    navigate(screenName.SearchItem);
+    if (onPressScreenSearch) {
+      onPressScreenSearch();
+    } else {
+      // @ts-ignore
+      navigate(screenName.SearchItem);
+    }
   };
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>

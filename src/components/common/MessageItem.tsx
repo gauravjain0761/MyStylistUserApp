@@ -17,7 +17,7 @@ const MessageItem = ({ index, onPressItem, data }: props) => {
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
       <FastImage
         source={{
-          uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+          // uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
           priority: FastImage.priority.high,
         }}
         style={styles.imageStyle}
@@ -56,6 +56,7 @@ const styles = StyleSheet.create({
     height: wp(50),
     width: wp(50),
     borderRadius: wp(50 / 2),
+    backgroundColor: colors.grey_19,
   },
   rowStyle: {
     flexDirection: "row",

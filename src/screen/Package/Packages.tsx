@@ -119,6 +119,10 @@ const Packages = ({ navigation }) => {
     });
   };
 
+  const onPressSearch = () => {
+    navigation.navigate(screenName.SearchStylistName);
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -126,6 +130,7 @@ const Packages = ({ navigation }) => {
         isSearch
         title={strings.Packages}
         onPressMenu={onPressMenu}
+        onPressScreenSearch={onPressSearch}
       />
       <ScrollView
         onScroll={({ nativeEvent }) => {

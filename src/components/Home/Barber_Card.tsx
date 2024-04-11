@@ -21,6 +21,7 @@ import {
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import FastImage from "react-native-fast-image";
+
 type props = {
   type: "with Service" | "Without Service";
   name: string;
@@ -298,7 +299,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.grey_19,
   },
   barber_details_continer: {
-    paddingLeft: wp(28),
+    paddingLeft: wp(20),
     justifyContent: "center",
     width: "100%",
   },

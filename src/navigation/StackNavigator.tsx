@@ -39,11 +39,12 @@ import SelectLocation from "../screen/map/SelectLocation";
 import ConfirmAddress from "../screen/map/ConfirmAddress";
 import OfferDetails from "../screen/Offer/OfferDetails";
 import PackgesDetails from "../screen/Package/PackgesDetails";
+import SearchStylistName from "../screen/Search/SearchStylistName";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
-  animation: "default",
   animationDuration: 300,
+  animation: "ios",
   // headerStyle: {
   //   backgroundColor: 'transparent',
   // },
@@ -78,6 +79,10 @@ const StackNavigator: FC = () => {
         component={AppointmentDetails}
       />
       <Stack.Screen name={screenName.SearchItem} component={SearchItem} />
+      <Stack.Screen
+        name={screenName.SearchStylistName}
+        component={SearchStylistName}
+      />
       <Stack.Screen name={screenName.ImageDetails} component={ImageDetails} />
       <Stack.Screen name={screenName.Notifications} component={Notifications} />
       <Stack.Screen

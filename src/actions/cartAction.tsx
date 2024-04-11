@@ -73,7 +73,6 @@ export const getCartlist =
       data: request.data,
     })
       .then(async (response: any) => {
-        console.log("respone", response.data);
         if (response.status === 200 || response.status === 201) {
           if (request.onSuccess) request.onSuccess(response.data);
         }
@@ -99,7 +98,6 @@ export const removeMultipleCartItems =
     })
       .then(async (response: any) => {
         dispatch({ type: IS_LOADING, payload: false });
-        console.log("respone", response.data);
         if (response.status === 200 || response.status === 201) {
           if (request.onSuccess) request.onSuccess(response.data);
         }

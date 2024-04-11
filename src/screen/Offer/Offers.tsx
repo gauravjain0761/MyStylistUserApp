@@ -122,6 +122,10 @@ const Offers = ({ navigation }) => {
     setRefreshControle(false);
   }, [refreshControl]);
 
+  const onPressSearch = () => {
+    navigation.navigate(screenName.SearchStylistName);
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -129,6 +133,7 @@ const Offers = ({ navigation }) => {
         isSearch
         title={strings.Offers}
         onPressMenu={onPressMenu}
+        onPressScreenSearch={onPressSearch}
       />
       <ScrollView
         onScroll={({ nativeEvent }) => {

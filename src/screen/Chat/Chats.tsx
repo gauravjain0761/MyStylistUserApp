@@ -36,6 +36,7 @@ const Chats = ({ navigation }) => {
 
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
+    console.log("userInfo._id", userInfo._id);
     let obj = {
       data: {
         userId: userInfo._id,

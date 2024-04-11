@@ -1,6 +1,7 @@
 export const api = {
   BASE_URL: "https://api.mystylist.in/",
   IMG_URL: "https://mystylist-media.s3.amazonaws.com/",
+  IMG_URL_2: "https://mystylist-media.s3.amazonaws.com",
 
   // Auth
   login: "login",
@@ -17,13 +18,13 @@ export const api = {
   usersByLocation: "user/getUsersByLocation",
   allExpertBySubService: "user/getAllExpertBySubService",
   search: "service/getAllSubServicesSearch",
-
+  searchUserName: "user/getAllUserName",
   // cart
   cart: "cart/addToCart",
   removeTocart: "cart/removeCartItem",
   getCart: "cart/getCartList",
+  removeMultipleCartItems: "cart/removeMultipleCartItems",
   bookAppointments: "appointment/addAppointment?=&=",
-  removeMultipleCartItems: "removeMultipleCartItems",
 
   //Profile
   FAQ: "faq/getAllFAQ",

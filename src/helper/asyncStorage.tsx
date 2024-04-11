@@ -5,6 +5,7 @@ export const asyncKeys = {
   token: "@token",
   user_info: "@user_info",
   notifiaction_data: "@notifiaction_data",
+  search_user_list: "@search_user_list",
   // no clear in logout time
   guest: "@guest",
   location: "@location",
@@ -81,5 +82,18 @@ export const getAsyncCoord = async () => {
     return JSON.parse(locationCoord);
   } else {
     return null;
+  }
+};
+
+export const setAsyncSearchUserList = async (data: any) => {
+  await AsyncStorage.setItem(asyncKeys.search_user_list, JSON.stringify(data));
+};
+
+export const getAsyncSearchUserList = async () => {
+  const userList = await AsyncStorage.getItem(asyncKeys.search_user_list);
+  if (userList) {
+    return JSON.parse(userList) || [];
+  } else {
+    return [];
   }
 };

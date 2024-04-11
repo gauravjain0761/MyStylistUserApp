@@ -293,11 +293,13 @@ const YourStylist = () => {
     setIsPackages(false);
     setIsMyWork(false);
   };
+
   const onPressPackages = () => {
     setIsOffers(false);
     setIsPackages(true);
     setIsMyWork(false);
   };
+
   const onPressMyWork = () => {
     setIsOffers(false);
     setIsPackages(false);

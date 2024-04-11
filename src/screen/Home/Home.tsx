@@ -37,6 +37,7 @@ import {
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import {
+  AnimatedSearchBars,
   Barber_Card,
   CarouselLoader,
   Filter_Button,
@@ -82,6 +83,7 @@ import moment from "moment";
 import { getExpertAvailability } from "../../actions/commonActions";
 import { io } from "socket.io-client";
 import { api } from "../../helper/apiConstants";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -426,7 +428,7 @@ const Home = () => {
     }
     const { contentOffset } = event.nativeEvent;
     // Check if the scroll offset is greater than or equal to the height of the sticky header
-    setIsSticky(contentOffset.y >= 1550); // Adjust this value according to your header's height
+    setIsSticky(contentOffset.y >= 1700); // Adjust this value according to your header's height
   };
 
   const onPressServicesItem = (item: any) => {
@@ -472,7 +474,7 @@ const Home = () => {
   }
 
   return (
-    <View style={styles?.container}>
+    <SafeAreaView edges={["top"]} style={styles?.container}>
       <LocationModal
         onPressAllow={getCurrentLocation}
         onPressDontAllow={setCityModal}
@@ -480,28 +482,9 @@ const Home = () => {
         close={setLocationModal}
       />
       {!cityModal ? null : <CityModal LocationAllow={LocationAllow} />}
-      <HomeHeader
-        onPressProfile={() => navigation.openDrawer()}
-        onPressCart={() => navigate(screenName.Cart)}
-        location={value}
-        onPresslocation={onPressLocation}
-        onPressLike={() => navigate(screenName.MyFavorites)}
-      />
-      <TouchableOpacity
-        onPress={onPressSearch}
-        style={styles?.search_container}
-      >
-        <View style={styles?.search_box}>
-          <SearchIcon />
-          <View style={styles?.input}>
-            <Text style={styles.searchTextStyle}>
-              {strings?.Search_by_Stylist_Name}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+
       <ScrollView
-        stickyHeaderIndices={[5]}
+        stickyHeaderIndices={[1, 7]}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={400}
@@ -509,6 +492,17 @@ const Home = () => {
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
       >
+        <HomeHeader
+          edges={[]}
+          onPressProfile={() => navigation.openDrawer()}
+          onPressCart={() => navigate(screenName.Cart)}
+          location={value}
+          onPresslocation={onPressLocation}
+          onPressLike={() => navigate(screenName.MyFavorites)}
+          containerStyle={{ backgroundColor: colors.background_grey }}
+        />
+        <AnimatedSearchBars onPressSearch={onPressSearch} />
+
         <View style={styles.carousel_container}>
           {loading ? (
             <CarouselLoader />
@@ -865,7 +859,7 @@ const Home = () => {
         />
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -889,8 +883,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(10),
   },
   search_container: {
-    marginHorizontal: wp(20),
-    marginVertical: hp(9),
+    paddingHorizontal: wp(20),
+    paddingVertical: hp(9),
+    backgroundColor: colors.background_grey,
   },
   search_icon: {
     width: wp(24),

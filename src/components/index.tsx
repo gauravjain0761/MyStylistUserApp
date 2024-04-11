@@ -28,6 +28,7 @@ import ChatInput from "./Chat/ChatInput";
 import Loader from "./common/Loader";
 import AddressItem from "./common/AddressItem";
 import FavouriteCard from "./Home/FavouriteCard";
+import AnimatedSearchBars from "./common/AnimatedSearchBars";
 
 import CarouselLoader from "./SkeletonPlaceholder/CarouselLoader";
 import AppointmentLoader from "./SkeletonPlaceholder/AppointmentLoader";
@@ -67,6 +68,7 @@ export {
   Loader,
   AddressItem,
   FavouriteCard,
+  AnimatedSearchBars,
 
   // Loader
   CarouselLoader,

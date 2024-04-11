@@ -200,8 +200,10 @@ const Cart = () => {
         itemIds: Ids,
       },
       onSuccess: (response: any) => {
-        setIsShowCongrestModal(true);
         setLoading(false);
+        setTimeout(() => {
+          setIsShowCongrestModal(true);
+        }, 700);
       },
       onFailure: (Errr: any) => {
         setLoading(false);

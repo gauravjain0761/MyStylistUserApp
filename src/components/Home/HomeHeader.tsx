@@ -1,4 +1,11 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { colors } from "../../theme/color";
 import { icons, images } from "../../theme/icons";
@@ -25,6 +32,8 @@ type HomeProps = {
   onPressProfile?: () => void;
   onPressLike?: () => void;
   location?: any;
+  edges?: any;
+  containerStyle?: ViewStyle;
 };
 
 const HomeHeader = ({
@@ -33,6 +42,8 @@ const HomeHeader = ({
   onPressProfile,
   location = null,
   onPressLike,
+  edges,
+  containerStyle,
 }: HomeProps) => {
   const { navigate } = useNavigation();
   const { profileData } = useAppSelector((state) => state.profile);
@@ -43,7 +54,10 @@ const HomeHeader = ({
   };
 
   return (
-    <SafeAreaView edges={["top"]} style={styles?.container}>
+    <SafeAreaView
+      edges={edges || ["top"]}
+      style={{ ...styles.container, ...containerStyle }}
+    >
       <View style={styles?.drawer_btn}>
         <TouchableOpacity onPress={onPressProfile} style={styles.profile}>
           <Text style={styles.profile_text}>

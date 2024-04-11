@@ -42,8 +42,8 @@ import PackgesDetails from "../screen/Package/PackgesDetails";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
-  animation: "slide_from_bottom",
-  animationDuration: 500,
+  animation: "default",
+  animationDuration: 300,
   // headerStyle: {
   //   backgroundColor: 'transparent',
   // },

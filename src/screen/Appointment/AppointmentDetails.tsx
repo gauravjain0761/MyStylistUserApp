@@ -63,19 +63,26 @@ const AppointmentDetails = () => {
     navigate(screenName.AppointmentReschedule, { id: params?.id });
   };
 
-  console.log("profileData?.user?._id", profileData?.user?._id);
-
   const onPressChat = () => {
     setLoading(true);
     let data = {
-      participants: ["66052db37e5822f655b581a6", "65eed0259e6593d24b2a5210"],
+      // participants: ["65eed0259e6593d24b2a5210", profileData?.user?._id],
+      participants: [params?.id, profileData?.user?._id],
     };
     let obj = {
       data: data,
       onSuccess: (response: any) => {
         setLoading(false);
         let roomId = response?.roomId;
-        navigate(screenName.ChatDetails, { roomId: roomId });
+        let receiver = response?.participants?.filter(
+          (item: any) => item._id == params?.id
+        )?.[0];
+        //@ts-ignore
+        navigate(screenName.ChatDetails, {
+          roomId: roomId,
+          name: receiver?.name,
+          receiverId: receiver?._id,
+        });
       },
       onFailure: () => {
         setLoading(false);

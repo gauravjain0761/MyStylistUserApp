@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
@@ -10,14 +10,16 @@ const PrivacyPolicy = () => {
   return (
     <View style={styles.container}>
       <BackHeader title={strings.Privacy_Policy} />
-      <Text style={styles.title}>{strings.Privacy_Policy}</Text>
-      <Text style={styles.policy_style}>
-        {
-          strings[
-            " My Stylist, collects personal information including names, email addresses, phone numbers, and location data to personalize user experiences and improve service quality. Usage data and device information are also gathered to analyze user behavior and ensure application compatibility. This information may be shared with third-party service providers for operational purposes or in the event of business transfers. We prioritize data security and take measures to protect information from unauthorized access or disclosure. Changes to our privacy policy will be promptly communicated, and users are encouraged to review updates periodically. For inquiries or concerns regarding our privacy practices, please contact us."
-          ]
-        }
-      </Text>
+      <ScrollView style={styles.mainContainer}>
+        <Text style={styles.title}>{strings.Privacy_Policy}</Text>
+        <Text style={styles.policy_style}>
+          {
+            strings[
+              " My Stylist, collects personal information including names, email addresses, phone numbers, and location data to personalize user experiences and improve service quality. Usage data and device information are also gathered to analyze user behavior and ensure application compatibility. This information may be shared with third-party service providers for operational purposes or in the event of business transfers. We prioritize data security and take measures to protect information from unauthorized access or disclosure. Changes to our privacy policy will be promptly communicated, and users are encouraged to review updates periodically. For inquiries or concerns regarding our privacy practices, please contact us."
+            ]
+          }
+        </Text>
+      </ScrollView>
     </View>
   );
 };
@@ -36,7 +38,11 @@ const styles = StyleSheet.create({
   policy_style: {
     ...commonFontStyle(fontFamily.medium, 15, colors.gery_1),
     textAlign: "justify",
-    paddingHorizontal: wp(10),
+    marginHorizontal: wp(20),
     lineHeight: hp(20),
+    marginBottom: hp(40),
+  },
+  mainContainer: {
+    backgroundColor: colors.background_grey,
   },
 });

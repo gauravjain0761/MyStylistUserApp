@@ -413,8 +413,18 @@ const YourStylist = () => {
     }
   };
 
+  const translateX = useRef(new Animated.Value(200)).current; // Initial translateX value set to -200 (off-screen)
+
+  useEffect(() => {
+    Animated.timing(translateX, {
+      toValue: 0, // Animate to translateX 0 (on-screen)
+      duration: 1000, // Adjust the duration as needed
+      useNativeDriver: true, // Add this line for performance
+    }).start();
+  }, [translateX]);
+
   return (
-    <View style={styles.container}>
+    <Animated.View style={{ ...styles.container, transform: [{ translateX }] }}>
       <SafeAreaView style={styles.headerContainer} edges={["top"]}>
         <TouchableOpacity onPress={onPressBack}>
           <BackIcon />
@@ -712,7 +722,7 @@ const YourStylist = () => {
         contain={<ReviewModel />}
         containStyle={{ maxHeight: "80%" }}
       />
-    </View>
+    </Animated.View>
   );
 };
 

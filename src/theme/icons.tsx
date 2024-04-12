@@ -66,6 +66,7 @@ export const images = {
 export const icons = {
   // login
   left_arrow: require("../assets/icon/left_arrow.png"),
+  delete: require("../assets/icon/delete.png"),
 
   // home
   search_placehonder: require("../assets/icon/search_placehonder.png"),

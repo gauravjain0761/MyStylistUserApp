@@ -56,6 +56,8 @@ const Chats = ({ navigation }) => {
   const onPressItem = (item: any) => {
     navigation.navigate(screenName.ChatDetails, {
       roomId: item.chatId,
+      name: item?.users?.[0]?.name,
+      receiverId: item?.users?.[0]?.userId,
     });
   };
 
@@ -100,9 +102,9 @@ const Chats = ({ navigation }) => {
             style={styles.oval_bg}
           >
             <Text style={styles.labelTextStyle}>{strings.Unread}</Text>
-            <View style={styles.circleStyle}>
+            {/* <View style={styles.circleStyle}>
               <Text style={styles.countTextStyle}>{"1"}</Text>
-            </View>
+            </View> */}
           </ImageBackground>
         </TouchableOpacity>
       </View>

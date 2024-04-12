@@ -20,18 +20,40 @@ const ChatDetails = () => {
   const { profileData } = useAppSelector((state) => state.profile);
   const [messageList, setMessageList] = useState<any>([]);
   const flatListRef = useRef<any>(null);
+  const [userOnline, setUserOnline] = useState<boolean>(false);
+  const [userTyping, setUserTyping] = useState<boolean>(false);
 
   useEffect(() => {
     // Connect to the socket server
     socket.emit("join_room", params.roomId);
     socket.emit("user_online", {
-      chatid: params.roomId,
+      chatId: params.roomId,
       name: profileData?.user?._id,
     });
     socket.emit("fetch_messages", params.roomId);
 
     socket.on("update_online_users", (data) => {
       console.log("update_online_users", data);
+      data.map((data: any) => {
+        if (data?.name === params?.receiverId) {
+          setUserOnline(true);
+          return;
+        }
+      });
+    });
+
+    socket.on("user_typing", (data) => {
+      console.log("user_typing", data);
+      if (data?.username === params?.receiverId) {
+        setUserTyping(true);
+      }
+    });
+
+    socket.on("user_stopped_typing", (data) => {
+      console.log("user_stopped_typing", data);
+      if (data?.username === params?.receiverId) {
+        setUserTyping(false);
+      }
     });
 
     socket.on("receive_message", (data: any) => {
@@ -39,6 +61,10 @@ const ChatDetails = () => {
       setMessageList((list) => [...list, data]);
       socket.emit("fetch_messages", params.roomId);
       scrollToBottom();
+    });
+
+    socket.on("disconnect", (data) => {
+      console.log("disconnect", data);
     });
 
     socket.on("past_messages", (data: any) => {
@@ -58,6 +84,10 @@ const ChatDetails = () => {
   }, []);
 
   const sendMessage = (message: string) => {
+    socket.emit("typing_end", {
+      chatId: params.roomId,
+      username: profileData?.user?._id,
+    });
     // Connect to the socket server
     const messageData = {
       chatId: params.roomId,
@@ -71,8 +101,6 @@ const ChatDetails = () => {
     scrollToBottom();
   };
 
-  console.log("messageList", messageList);
-
   const scrollToBottom = () => {
     if (flatListRef?.current) {
       setTimeout(() => {
@@ -83,7 +111,11 @@ const ChatDetails = () => {
 
   return (
     <View style={styles.container}>
-      <ChatHeader />
+      <ChatHeader
+        name={params?.name}
+        isTyping={userTyping}
+        status={userOnline ? "Online" : "Offline"}
+      />
       <FlatList
         ref={flatListRef}
         style={styles.listStyle}
@@ -100,7 +132,20 @@ const ChatDetails = () => {
       <KeyboardAvoidingView behavior={isIos ? "padding" : null}>
         <ChatInput
           value={text}
-          onChangeText={setText}
+          onChangeText={(text) => {
+            setText(text);
+            if (text.trim().length > 0) {
+              socket.emit("typing_start", {
+                chatId: params.roomId,
+                username: profileData?.user?._id,
+              });
+            } else {
+              socket.emit("typing_end", {
+                chatId: params.roomId,
+                username: profileData?.user?._id,
+              });
+            }
+          }}
           onPressSend={() => sendMessage(text)}
         />
       </KeyboardAvoidingView>

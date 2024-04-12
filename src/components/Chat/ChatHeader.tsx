@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../theme/color";
 import { hp, wp } from "../../helper/globalFunction";
@@ -8,7 +8,13 @@ import { useNavigation } from "@react-navigation/native";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import FastImage from "react-native-fast-image";
 
-const ChatHeader = () => {
+type props = {
+  name: string;
+  status: string;
+  isTyping: boolean;
+};
+
+const ChatHeader = ({ name, status, isTyping }: props) => {
   const { goBack, navigate } = useNavigation();
 
   const onPressBack = () => goBack();
@@ -22,16 +28,24 @@ const ChatHeader = () => {
           <FastImage
             style={styles.imgStyle}
             source={{
-              uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+              uri: "",
               priority: FastImage.priority.high,
             }}
           />
-          <View style={styles.greenTickStyle} />
+          {status === "Online" ? (
+            <View style={styles.greenTickStyle} />
+          ) : (
+            <View style={styles.greyTickStyle} />
+          )}
         </View>
         <View style={styles.cloumStyle}>
-          <Text style={styles.nameTextStyle}>{"Majid Khan"}</Text>
+          <Text style={styles.nameTextStyle}>{name}</Text>
           <View style={{ height: hp(5) }} />
-          <Text style={styles.onlienTextStyle}>{"Online"}</Text>
+          {isTyping ? (
+            <Text style={styles.onlienTextStyle}>{"Typing.."}</Text>
+          ) : (
+            <Text style={styles.onlienTextStyle}>{status}</Text>
+          )}
         </View>
         <TouchableOpacity style={{ marginRight: wp(20) }}>
           <ThreeDotIcon />
@@ -53,6 +67,7 @@ const styles = StyleSheet.create({
     height: wp(40),
     width: wp(40),
     borderRadius: wp(40 / 2),
+    backgroundColor: colors.grey_19,
   },
   circleStyle: {
     width: wp(45),
@@ -78,6 +93,17 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: hp(-5),
     backgroundColor: "#43F174",
+    borderWidth: 2,
+    borderColor: colors.white,
+    alignSelf: "flex-end",
+  },
+  greyTickStyle: {
+    height: wp(14),
+    width: wp(14),
+    borderRadius: wp(wp(14 / 2)),
+    position: "absolute",
+    bottom: hp(-5),
+    backgroundColor: colors.gery_3,
     borderWidth: 2,
     borderColor: colors.white,
     alignSelf: "flex-end",

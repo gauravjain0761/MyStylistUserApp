@@ -1,4 +1,12 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  Alert,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React from "react";
 import { icons, images } from "../../theme/icons";
 import { dispatchNavigation, hp, wp } from "../../helper/globalFunction";
@@ -18,10 +26,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FastImage from "react-native-fast-image";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { deleteAccount } from "../../actions";
 
 const CustomDrawer = () => {
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   const { profileData } = useAppSelector((state) => state.profile);
 
@@ -52,9 +63,40 @@ const CustomDrawer = () => {
     navigate(screenName.tab_bar_name.Appointment);
   };
 
+  const onPressYes = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      userId: userInfo._id,
+      onSuccess: () => {
+        dispatchNavigation(screenName.Login);
+      },
+      onFailure: () => {},
+    };
+    dispatch(deleteAccount(obj));
+  };
+
+  const onPressDeleteAccount = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want delete your account?.",
+      [
+        {
+          text: "Yes",
+          onPress: () => onPressYes(),
+          style: "destructive",
+        },
+        {
+          text: "No",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
-      <View>
+      <ScrollView>
         <TouchableOpacity onPress={onPressName} style={styles.image_container}>
           <View style={styles.img_conatiner}>
             <FastImage
@@ -199,9 +241,26 @@ const CustomDrawer = () => {
                 </View>
               </TouchableOpacity>
             </View>
+            <View style={[styles.drawer_border, { borderBottomWidth: 0 }]}>
+              <TouchableOpacity
+                onPress={onPressDeleteAccount}
+                style={[styles.Tab_container]}
+              >
+                <View style={styles.tab_img_constiner}>
+                  <Image
+                    source={icons.delete}
+                    resizeMode="contain"
+                    style={styles.tab_img}
+                  />
+                  <Text style={{ ...styles.tab_title, color: colors.red }}>
+                    {"Delete Account"}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
       <TouchableOpacity style={styles.connect_btn}>
         <Image source={images.contectus} style={styles.connect_us} />
       </TouchableOpacity>

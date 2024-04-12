@@ -6,9 +6,6 @@ import Toast from "react-native-toast-message";
 import { colors } from "./src/theme/color";
 import { Provider } from "react-redux";
 import store from "./src/redux";
-import { dispatchNavigation } from "./src/helper/globalFunction";
-import { getAsyncToken } from "./src/helper/asyncStorage";
-import { screenName } from "./src/helper/routeNames";
 
 const App = () => {
   useEffect(() => {

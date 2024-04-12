@@ -44,7 +44,7 @@ import SearchStylistName from "../screen/Search/SearchStylistName";
 const options: NativeStackNavigationOptions = {
   headerShown: false,
   animationDuration: 300,
-  animation: "ios",
+  animation: "none",
   // headerStyle: {
   //   backgroundColor: 'transparent',
   // },

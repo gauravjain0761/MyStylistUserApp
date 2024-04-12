@@ -32,6 +32,7 @@ export const api = {
   termsandconditions: "cms/getCMSPageForMobile/64fc1e863f161dd8548acb1e",
   userDetails: "user/getUserDetails",
   editProfile: "user/edit-profile",
+  deleteProfile: "user/deleteAccount",
 
   //Map
   location: "user/getUsersByLocation",

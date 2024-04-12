@@ -121,3 +121,30 @@ export const editProfile =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const deleteAccount =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.editProfile,
+      headers: header,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        if (error.response?.data?.errors?.[0]?.message) {
+          errorToast(error.response?.data?.errors?.[0]?.message);
+        } else {
+          errorToast(error.response?.data?.message);
+        }
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

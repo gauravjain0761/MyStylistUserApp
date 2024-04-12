@@ -37,7 +37,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
 import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
-import { CART_DETAILS } from "../actions/dispatchTypes";
+import { ADD_TO_CART, CART_DETAILS } from "../actions/dispatchTypes";
 import {
   bookAppointment,
   getCartlist,
@@ -210,6 +210,10 @@ const Cart = () => {
         dispatch({
           type: CART_DETAILS,
           payload: {},
+        });
+        dispatch({
+          type: ADD_TO_CART,
+          payload: [],
         });
       },
       onFailure: (Errr: any) => {

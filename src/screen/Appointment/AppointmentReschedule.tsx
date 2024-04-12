@@ -138,6 +138,7 @@ const AppointmentReschedule = () => {
   const onPressChat = () => {
     setLoading(true);
     let data = {
+      // participants: ["65eed0259e6593d24b2a5210", profileData?.user?._id],
       participants: [params?.id, profileData?.user?._id],
     };
     let obj = {
@@ -145,8 +146,15 @@ const AppointmentReschedule = () => {
       onSuccess: (response: any) => {
         setLoading(false);
         let roomId = response?.roomId;
+        let receiver = response?.participants?.filter(
+          (item: any) => item._id == params?.id
+        )?.[0];
         //@ts-ignore
-        navigate(screenName.ChatDetails, { roomId: roomId });
+        navigate(screenName.ChatDetails, {
+          roomId: roomId,
+          name: receiver?.name,
+          receiverId: receiver?._id,
+        });
       },
       onFailure: () => {
         setLoading(false);

@@ -177,7 +177,10 @@ const Cart = () => {
           notes: "Special requests or notes for the appointment",
         },
         onSuccess: (response: any) => {
-          RemoveItems();
+          setLoading(false);
+          setTimeout(() => {
+            setIsShowCongrestModal(true);
+          }, 500);
         },
         onFailure: (Errr: any) => {
           infoToast(Errr?.data?.error);
@@ -208,9 +211,6 @@ const Cart = () => {
           type: CART_DETAILS,
           payload: {},
         });
-        setTimeout(() => {
-          setIsShowCongrestModal(true);
-        }, 700);
       },
       onFailure: (Errr: any) => {
         setLoading(false);
@@ -349,8 +349,9 @@ const Cart = () => {
               onPressHome={() => {
                 setIsShowCongrestModal(false);
                 setTimeout(() => {
+                  RemoveItems();
                   dispatchNavigation(screenName.Home);
-                }, 600);
+                }, 500);
               }}
             />
           </ScrollView>

@@ -7,6 +7,7 @@ import {
   InteractionManager,
   Platform,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -28,6 +29,7 @@ import {
   formatData,
   formatWorkingHours,
   hp,
+  infoToast,
   screen_width,
   wp,
 } from "../../helper/globalFunction";
@@ -70,6 +72,7 @@ import {
   getAllOffersByUser,
   getAllPackageByUser,
   getCartlist,
+  getDeeplink,
   getUserItemDetails,
   getUsersFavList,
   removeAsfavourite,
@@ -214,6 +217,8 @@ const YourStylist = () => {
     }
   }, []);
 
+  console.log("addtocart", addtocart);
+
   useEffect(() => {
     if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
       Calculate();
@@ -247,6 +252,7 @@ const YourStylist = () => {
 
   const getCart = async () => {
     let userInfo = await getAsyncUserInfo();
+
     let obj = {
       data: {
         userId: userInfo._id,
@@ -374,6 +380,39 @@ const YourStylist = () => {
       : dispatch(saveAsfavourite(obj));
   };
 
+  const onPressShare = () => {
+    let obj = {
+      params: {
+        platform: Platform.OS === "ios" ? "ios" : "android",
+      },
+      onSuccess: (response: any) => {
+        let url = response?.deepLinkUrl;
+        onShare(url);
+      },
+      onFailure: (error) => {},
+    };
+    dispatch(getDeeplink(obj));
+  };
+
+  const onShare = async (message: string) => {
+    try {
+      const result = await Share.share({
+        message: message,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error: any) {
+      infoToast(error.message);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView style={styles.headerContainer} edges={["top"]}>
@@ -399,7 +438,10 @@ const YourStylist = () => {
             </TouchableOpacity>
           ) : null}
           {animatedValue === 0 ? (
-            <TouchableOpacity style={styles.shareContainer}>
+            <TouchableOpacity
+              onPress={onPressShare}
+              style={styles.shareContainer}
+            >
               <ShareIcon />
             </TouchableOpacity>
           ) : null}

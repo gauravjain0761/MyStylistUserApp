@@ -15,13 +15,14 @@ const AppointmentDetailsLoader = () => {
             borderRadius={10}
           />
           <SkeletonPlaceholder.Item marginLeft={20}>
-            <SkeletonPlaceholder.Item width={120} height={20} />
-            <SkeletonPlaceholder.Item marginTop={6} width={80} height={20} />
+            <SkeletonPlaceholder.Item width={180} height={20} />
+            <SkeletonPlaceholder.Item marginTop={6} width={130} height={20} />
             <SkeletonPlaceholder.Item marginTop={6} width={80} height={20} />
           </SkeletonPlaceholder.Item>
         </SkeletonPlaceholder.Item>
         <SkeletonPlaceholder.Item>
           <SkeletonPlaceholder.Item marginTop={10} width={"100%"} height={20} />
+          <SkeletonPlaceholder.Item marginTop={10} width={"80%"} height={20} />
         </SkeletonPlaceholder.Item>
       </SkeletonPlaceholder>
     </View>

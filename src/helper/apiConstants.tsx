@@ -19,6 +19,7 @@ export const api = {
   allExpertBySubService: "user/getAllExpertBySubService",
   search: "service/getAllSubServicesSearch",
   searchUserName: "user/getAllUserName",
+  deeplink: "deeplink/getdeeplink",
   // cart
   cart: "cart/addToCart",
   removeTocart: "cart/removeCartItem",

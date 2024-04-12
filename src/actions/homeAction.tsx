@@ -260,3 +260,25 @@ export const getAllUserName =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const getDeeplink =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    return makeAPIRequest({
+      method: GET,
+      url: api.deeplink,
+      headers: header,
+      params: request.params,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

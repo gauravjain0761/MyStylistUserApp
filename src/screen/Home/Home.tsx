@@ -3,6 +3,7 @@ import {
   FlatList,
   // FlatList,
   Image,
+  Linking,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -137,6 +138,20 @@ const Home = () => {
     return () => {
       socket.on("disconnect", () => {});
     };
+  }, []);
+
+  useEffect(() => {
+    Linking.getInitialURL().then((url) => {
+      if (url !== null) {
+        console.log("DEEPLINK::", url);
+        // let id = url.split("//")[1];
+        // if (id.length > 0) {
+        // }
+      }
+    });
+    // Linking.addEventListener('url', ({url}) => {
+    //   console.log('CAALALA hELO', url);
+    // });
   }, []);
 
   useEffect(() => {

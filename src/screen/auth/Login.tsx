@@ -175,8 +175,9 @@ const Login: FC = () => {
             deviceToken: deviceToken,
           });
         },
-        onFailure: () => {
+        onFailure: (error: any) => {
           setLoading(false);
+          infoToast(error?.data?.message);
         },
       };
       dispatch(sendVerifyCode(obj));

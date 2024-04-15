@@ -66,8 +66,9 @@ const OtpVerification = ({ route }: any) => {
           successToast("OTP verification successful");
           dispatchNavigation(screenName?.Home);
         },
-        onFailure: () => {
+        onFailure: (error) => {
           setLoading(false);
+          infoToast(error?.data?.message);
         },
       };
       dispatch(verifyOTP(obj));

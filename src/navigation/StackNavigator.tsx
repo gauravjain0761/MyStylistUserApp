@@ -40,6 +40,7 @@ import ConfirmAddress from "../screen/map/ConfirmAddress";
 import OfferDetails from "../screen/Offer/OfferDetails";
 import PackgesDetails from "../screen/Package/PackgesDetails";
 import SearchStylistName from "../screen/Search/SearchStylistName";
+import StylistDetails from "../screen/Details/StylistDetails";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,

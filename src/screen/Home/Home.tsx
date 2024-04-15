@@ -85,6 +85,7 @@ import { getExpertAvailability } from "../../actions/commonActions";
 import { io } from "socket.io-client";
 import { api } from "../../helper/apiConstants";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { debounce } from "lodash";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -248,7 +249,9 @@ const Home = () => {
     let data = {
       ...filterData,
       rating: rating,
+      page: 1,
     };
+
     let obj = {
       isLoading: isLoading,
       data: data,
@@ -264,11 +267,14 @@ const Home = () => {
     dispatch(getUsersByLocation(obj));
   };
 
+  console.log("-----::BARBER LENGTH::------", barberList?.length);
+
   const onPressBestService = () => {
     setListLoader(true);
     let data = {
       ...filterData,
       best_service: "Yes",
+      page: 1,
     };
     let obj = {
       isLoading: isLoading,
@@ -400,6 +406,7 @@ const Home = () => {
     setListLoader(true);
     let data = {
       ...filterData,
+      page: 1,
       dateTime: {
         timeSlot_id: bookTime?._id,
         availableDate: date,
@@ -437,13 +444,15 @@ const Home = () => {
     getUserList(false);
   };
 
+  const debouncedLoadMoreData = debounce(loadMoreData, 500); // Adjust the delay as needed
+
   const handleScroll = (event: any) => {
-    if (isCloseToBottom(event?.nativeEvent)) {
-      loadMoreData();
-    }
     const { contentOffset } = event.nativeEvent;
     // Check if the scroll offset is greater than or equal to the height of the sticky header
     setIsSticky(contentOffset.y >= 1700); // Adjust this value according to your header's height
+    if (isCloseToBottom(event?.nativeEvent)) {
+      debouncedLoadMoreData(); // Adjust the delay as needed
+    }
   };
 
   const onPressServicesItem = (item: any) => {

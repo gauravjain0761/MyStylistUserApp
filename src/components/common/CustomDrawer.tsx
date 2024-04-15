@@ -66,7 +66,9 @@ const CustomDrawer = () => {
   const onPressYes = async () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
-      userId: userInfo._id,
+      data: {
+        userId: userInfo._id,
+      },
       onSuccess: () => {
         dispatchNavigation(screenName.Login);
       },

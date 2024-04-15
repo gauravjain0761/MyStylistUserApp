@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StatusBar, StyleSheet, Text, View } from "react-native";
+import { LogBox, StatusBar, StyleSheet, Text, View } from "react-native";
 import MainNavigator from "./src/navigation/MainNavigator";
 import SplashScreen from "react-native-splash-screen";
 import Toast from "react-native-toast-message";
@@ -12,6 +12,7 @@ const App = () => {
     setTimeout(() => {
       SplashScreen.hide();
     }, 1000);
+    LogBox.ignoreAllLogs();
   }, []);
 
   return (

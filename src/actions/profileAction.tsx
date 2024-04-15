@@ -130,7 +130,7 @@ export const deleteAccount =
     };
     return makeAPIRequest({
       method: POST,
-      url: api.editProfile,
+      url: api.deleteProfile,
       headers: header,
       data: request.data,
     })

@@ -131,13 +131,12 @@ export const getUsersByLocation =
       method: POST,
       url: api.usersByLocation,
       headers: headers,
-      data: request?.data,
+      data: request.data,
     })
       .then(async (response: any) => {
-        console.log("response::::", response);
         if (response.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
-          let data = { ...response.data, page: response.data?.page };
+          let data = { ...response.data, page: request.data?.page };
           dispatch({ type: USER_LIST, payload: data });
           dispatch({ type: GET_BARBER_LIST, payload: data });
           if (request.onSuccess) request.onSuccess(response.data);

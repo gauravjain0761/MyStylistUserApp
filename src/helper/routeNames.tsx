@@ -3,6 +3,7 @@ export const screenName = {
   OptVerification: "OptVerification",
   Home: "Home",
   YourStylist: "YourStylist",
+  StylistDetails: "StylistDetails",
   Cart: "Cart",
   Service: "Service",
   DrawerNavigator: "DrawerNavigator",

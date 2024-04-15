@@ -26,8 +26,6 @@ export const sendVerifyCode =
     })
       .then(async (response: any) => {
         if (response.data.status === 200) {
-          console.log("resss", response?.data);
-
           if (response.data.success) {
             successToast(response?.data?.message);
             if (request.onSuccess) request.onSuccess(response.data);
@@ -37,8 +35,7 @@ export const sendVerifyCode =
         }
       })
       .catch((error) => {
-        if (request.onFailure)
-          request.onFailure("Login API Error", error.response);
+        if (request.onFailure) request.onFailure(error.response);
       });
   };
 

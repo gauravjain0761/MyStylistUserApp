@@ -106,17 +106,26 @@ const Cart = () => {
       },
       onSuccess: (response: any) => {
         let initialvalue = 0;
-        let total = response.data?.cart?.items?.reduce(
-          (accumulator, curruntvalue) => curruntvalue.price + accumulator,
-          initialvalue
-        );
-        dispatch({
-          type: CART_DETAILS,
-          payload: { ...response?.data, total: total },
-        });
+        if (response.data?.cart?.items?.length > 0) {
+          let total = response.data?.cart?.items?.reduce(
+            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
+            initialvalue
+          );
+          dispatch({
+            type: CART_DETAILS,
+            payload: { ...response?.data, total: total },
+          });
+        } else {
+          setCartEmpty(true);
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
         setCartLoading(false);
       },
       onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
         if (Errr?.data?.message === "Cart not found") {
           setCartEmpty(true);
           dispatch({

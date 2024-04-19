@@ -71,7 +71,9 @@ const BarberAppointmentCard = ({
         <View style={styles.name_container}>
           <View style={styles.info_container}>
             <View>
-              <Text style={styles.barber_name}>{name}</Text>
+              <Text numberOfLines={1} style={styles.barber_name}>
+                {name}
+              </Text>
             </View>
             <VerifyIcon width={14} height={14} />
           </View>
@@ -173,10 +175,10 @@ const styles = StyleSheet.create({
   barber_info_conatiner: {},
   name_container: {
     alignItems: "center",
-    // paddingRight: wp(20),
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 26, colors.black),
+    maxWidth: wp(170),
   },
   info_container: {
     flexDirection: "row",

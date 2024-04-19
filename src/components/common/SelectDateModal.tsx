@@ -61,6 +61,7 @@ const SelectDateModal = ({
             <View style={styles.timeselect_container}>
               <TimeSelector
                 data={times}
+                withOutDisable={true}
                 onPressTime={(index) => onPressTimeItem(index)}
                 itemStyle={styles.timeslot_style}
                 selectIndex={selectedTimeIndex}

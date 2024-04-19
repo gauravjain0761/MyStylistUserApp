@@ -49,7 +49,7 @@ const Service = () => {
           }}
           style={styles.banner}
         />
-        <View style={styles?.service_filter_conatiner}>
+        {/* <View style={styles?.service_filter_conatiner}>
           <FlatList
             data={stylists_filter}
             horizontal
@@ -72,7 +72,7 @@ const Service = () => {
               <View style={styles?.filter_item_separator}></View>
             )}
           />
-        </View>
+        </View> */}
         <View style={styles?.stylists_title_container}>
           <View style={styles?.title_border}></View>
           <Text style={styles?.your_stylists_title}>

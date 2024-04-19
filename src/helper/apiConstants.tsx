@@ -29,7 +29,7 @@ export const api = {
 
   //Profile
   FAQ: "faq/getAllFAQ",
-  termsandconditions: "cms/getCMSPageForMobile/64fc1e863f161dd8548acb1e",
+  termsandconditions: "cms/getCMSPageForMobile/",
   userDetails: "user/getUserDetails",
   editProfile: "user/edit-profile",
   deleteProfile: "user/deleteAccount",
@@ -63,6 +63,7 @@ export const api = {
   writeReviews: "review/writeReviews",
   cancelAppointment: "appointment/cancelAppointment?=&=",
   reschedule: "appointment/rescheduleAppointment",
+  get_review: "review/getAllExpertReview/",
 
   // campaign/getCampaignExpert
   campaignExpert: "campaign/getCampaignExpert",

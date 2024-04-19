@@ -29,7 +29,6 @@ const StylistItem = ({ isOffer, data, offers, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
   const [count, setCount] = useState(false);
-  const dispatch = useAppDispatch();
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);

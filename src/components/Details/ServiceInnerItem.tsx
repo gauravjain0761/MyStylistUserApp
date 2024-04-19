@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
-  Image,
 } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
@@ -25,14 +24,21 @@ type Props = {
   baseUrl?: string;
   count?: boolean;
   setCount?: any;
+  actionId?: string;
 };
-const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
+const ServiceInnerItem = ({
+  data,
+  baseUrl,
+  count,
+  setCount,
+  actionId,
+}: Props) => {
   const { addtocart } = useAppSelector((state) => state.cart);
 
   const onPressDelete = useCallback(async () => {
     let itemId = "";
     addtocart?.items?.map((item) => {
-      if (item.serviceId == data.sub_services.sub_service_id) {
+      if (item.serviceId == data.sub_service_id) {
         itemId = item._id;
       }
     });
@@ -59,17 +65,18 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
 
   const onPressAdd = useCallback(async () => {
     let userInfo = await getAsyncUserInfo();
+
     let objs: any = {
-      actionId: data?._id,
-      serviceId: data?.sub_services?.sub_service_id,
-      serviceName: data?.sub_services?.sub_service_name,
-      serviceType: "Offer",
-      price: data?.sub_services?.price,
+      actionId: data?.sub_service_id,
+      serviceId: data?.sub_service_id,
+      serviceName: data?.sub_service_name,
+      serviceType: "Service",
+      price: data?.price,
       quantity: 1,
     };
     let passData = {
       userId: userInfo._id,
-      expertId: data?.expert_id,
+      expertId: actionId,
       items: [objs],
     };
     let obj = {
@@ -88,11 +95,11 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.cloumStyle}>
-        <Text style={styles.labelTextStyle}>{data?.offer_name}</Text>
+        <Text style={styles.labelTextStyle}>{data?.sub_service_name}</Text>
         <View style={styles.rowStyle}>
           <Text style={styles.priceStyle}>
             {"₹ "}
-            {data?.sub_services?.price}
+            {data?.price}
           </Text>
           {/* {isOffer ? (
             <Text style={styles.offerPriceStyle}>{"₹ 400"}</Text>
@@ -131,7 +138,7 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
         resizeMode="cover"
         style={styles.imgStyle}
         source={{
-          uri: baseUrl + "/" + data?.sub_services?.fileName,
+          uri: baseUrl + "/" + data?.fileName,
           priority: FastImage.priority.high,
         }}
       />
@@ -191,4 +198,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StylistInnerItem;
+export default ServiceInnerItem;

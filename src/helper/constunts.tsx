@@ -481,18 +481,18 @@ export const offer_filter = [
     id: 2,
     title: "Male",
   },
-  {
-    id: 3,
-    title: "Nearest",
-  },
-  {
-    id: 4,
-    title: "Waxing",
-  },
-  {
-    id: 5,
-    title: "Skin Care",
-  },
+  // {
+  //   id: 3,
+  //   title: "Nearest",
+  // },
+  // {
+  //   id: 4,
+  //   title: "Waxing",
+  // },
+  // {
+  //   id: 5,
+  //   title: "Skin Care",
+  // },
 ];
 
 export const PastServices = [
@@ -554,13 +554,16 @@ export const ReviewFilter = [
   {
     id: 1,
     title: "Newest",
+    type: "newest",
   },
   {
     id: 2,
     title: "Highest",
+    type: "highest",
   },
   {
     id: 3,
     title: "Lowest",
+    type: "lowest",
   },
 ];

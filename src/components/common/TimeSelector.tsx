@@ -21,6 +21,7 @@ type props = {
   containerStyle?: ViewStyle;
   itemStyle?: ViewStyle;
   selectIndex: number;
+  withOutDisable?: boolean;
 };
 
 const TimeSelector = ({
@@ -29,32 +30,69 @@ const TimeSelector = ({
   containerStyle,
   itemStyle,
   selectIndex,
+  withOutDisable,
 }: props) => {
   return (
     <View style={[styles.container, containerStyle]}>
-      {data?.map((item: any, index: number) => {
-        return (
-          <TouchableOpacity
-            onPress={() => onPressTime(index)}
-            key={index}
-            style={[
-              {
-                ...styles.itemContainer,
-                borderWidth: selectIndex === index ? 1.5 : 1,
-                backgroundColor:
-                  selectIndex === index ? colors.green_opacity : colors.white,
-                borderColor:
-                  selectIndex === index
-                    ? colors.theme_1
-                    : colors.date_slot_border,
-              },
-              itemStyle,
-            ]}
-          >
-            <Text style={styles.timeTextStyle}>{item.time}</Text>
-          </TouchableOpacity>
-        );
-      })}
+      {withOutDisable ? (
+        <>
+          {data?.map((item: any, index: number) => {
+            return (
+              <TouchableOpacity
+                onPress={() => onPressTime(index)}
+                key={index}
+                style={[
+                  {
+                    ...styles.itemContainer,
+                    borderWidth: selectIndex === index ? 1.5 : 1,
+                    backgroundColor:
+                      selectIndex === index
+                        ? colors.green_opacity
+                        : colors.white,
+                    borderColor:
+                      selectIndex === index
+                        ? colors.theme_1
+                        : colors.date_slot_border,
+                  },
+                  itemStyle,
+                ]}
+              >
+                <Text style={styles.timeTextStyle}>{item.time}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </>
+      ) : (
+        <>
+          {data?.map((item: any, index: number) => {
+            return (
+              <TouchableOpacity
+                disabled={item?.isPast}
+                onPress={() => onPressTime(index)}
+                key={index}
+                style={[
+                  {
+                    ...styles.itemContainer,
+                    opacity: item?.isPast ? 0.5 : 1,
+                    borderWidth: selectIndex === index ? 1.5 : 1,
+                    backgroundColor:
+                      selectIndex === index
+                        ? colors.green_opacity
+                        : colors.white,
+                    borderColor:
+                      selectIndex === index
+                        ? colors.theme_1
+                        : colors.date_slot_border,
+                  },
+                  itemStyle,
+                ]}
+              >
+                <Text style={styles.timeTextStyle}>{item.time}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </>
+      )}
     </View>
   );
 };

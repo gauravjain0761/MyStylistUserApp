@@ -86,7 +86,6 @@ const MyFavorites = () => {
                       img_url={favoriteList?.user_profile_images_url}
                       data={item}
                       name={item.name}
-                      type="Without Service"
                       // images={item?.image}
                       rating={item?.totalReviews}
                       jobs={item?.jobDone}

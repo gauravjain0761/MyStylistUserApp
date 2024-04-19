@@ -30,7 +30,7 @@ const AnimatedSearchTexts = ({
 
   const animate = () => {
     Animated.timing(translateY, {
-      toValue: -10,
+      toValue: 0,
       duration: 2000,
       easing: Easing.linear,
       useNativeDriver: true,

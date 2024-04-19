@@ -20,6 +20,7 @@ import {
   Modals,
   OfferLoader,
   PackagesItem,
+  ServiceItem,
   StylistItem,
   UserItemLoader,
 } from "../../components";
@@ -164,7 +165,7 @@ const YourStylist = () => {
   const { itemDetails } = useAppSelector((state) => state.home);
   const { userOfferList } = useAppSelector((state) => state.offers);
   const { userPackageList } = useAppSelector((state) => state.package);
-  const [isOffers, setIsOffers] = useState(true);
+  const [isOffers, setIsOffers] = useState(false);
   const [isPackages, setIsPackages] = useState(false);
   const [isMyWork, setIsMyWork] = useState(false);
   const [isModal, setIsModal] = useState(false);
@@ -216,8 +217,6 @@ const YourStylist = () => {
       setIsMyWork(false);
     }
   }, []);
-
-  console.log("addtocart", addtocart);
 
   useEffect(() => {
     if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
@@ -413,12 +412,12 @@ const YourStylist = () => {
     }
   };
 
-  const translateX = useRef(new Animated.Value(200)).current; // Initial translateX value set to -200 (off-screen)
+  const translateX = useRef(new Animated.Value(100)).current; // Initial translateX value set to -200 (off-screen)
 
   useEffect(() => {
     Animated.timing(translateX, {
       toValue: 0, // Animate to translateX 0 (on-screen)
-      duration: 1000, // Adjust the duration as needed
+      duration: 700, // Adjust the duration as needed
       useNativeDriver: true, // Add this line for performance
     }).start();
   }, [translateX]);
@@ -490,13 +489,14 @@ const YourStylist = () => {
                   justifyContent: "space-between",
                 }}
               >
-                <Text style={styles.nameTextStyle}>
+                <Text numberOfLines={1} style={styles.nameTextStyle}>
                   {itemDetails?.user?.name}
                 </Text>
                 <VerifyIcon />
               </View>
               <View style={{ ...styles.rowNameStyle, marginVertical: hp(10) }}>
                 <TouchableOpacity
+                  disabled={true}
                   style={styles.startContainer}
                   onPress={() => setIsModal(!isModal)}
                 >
@@ -506,7 +506,10 @@ const YourStylist = () => {
                   <StarIcon />
                 </TouchableOpacity>
                 <View style={styles.dotStyle} />
-                <Text style={styles.greyTextStyle}>{"343 Jobs Done"}</Text>
+                <Text style={styles.greyTextStyle}>
+                  {itemDetails?.user?.jobDone}
+                  {" Jobs Done"}
+                </Text>
               </View>
               <View style={styles.rowNameStyle}>
                 <CarIcon />
@@ -531,10 +534,18 @@ const YourStylist = () => {
             colors={["#D1F8F5", "#D9D9D900"]}
           >
             <Image style={styles.lineStyle} source={images.gradient_line} />
-            <Text style={styles.offerTextStyle}>{"Flat 50% off"}</Text>
-            <Text style={styles.greyOfferTextStyle}>
-              {"NO CODE REQUIRED | ABOVE 999"}
-            </Text>
+            {itemDetails?.offers?.[0]?.discount ? (
+              <>
+                <Text
+                  style={styles.offerTextStyle}
+                >{`Flat ${itemDetails?.offers?.[0]?.discount}% off`}</Text>
+                <Text style={styles.greyOfferTextStyle}>
+                  {"NO CODE REQUIRED | ABOVE 999"}
+                </Text>
+              </>
+            ) : (
+              <Text style={styles.offerTextStyle}>{"No Offers"}</Text>
+            )}
           </LinearGradient>
         </View>
 
@@ -569,6 +580,36 @@ const YourStylist = () => {
         </View>
 
         <View style={{ flex: 1, marginTop: hp(-130) }}>
+          {loading ? (
+            <View style={{ marginTop: hp(40) }}>
+              <OfferLoader />
+            </View>
+          ) : (
+            <>
+              {!isOffers && !isPackages && !isMyWork ? (
+                <View key={"service"}>
+                  <FlatList
+                    style={{ flex: 1 }}
+                    data={[1]}
+                    scrollEnabled={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <ServiceItem
+                          data={item}
+                          index={index}
+                          key={`service${index}`}
+                          service={itemDetails?.user?.sub_services}
+                          baseUrl={itemDetails?.featured_image_url}
+                          actionId={itemDetails?.user?._id}
+                        />
+                      );
+                    }}
+                  />
+                </View>
+              ) : null}
+            </>
+          )}
           {loading ? (
             <View style={{ marginTop: hp(40) }}>
               <OfferLoader />
@@ -746,6 +787,7 @@ const styles = StyleSheet.create({
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 26, colors.black),
     marginRight: wp(5),
+    width: wp(170),
   },
   columStyle: {
     marginLeft: wp(15),
@@ -849,6 +891,8 @@ const styles = StyleSheet.create({
     padding: wp(20),
     flexDirection: "row",
     alignItems: "center",
+    borderTopWidth: 1,
+    borderTopColor: colors.grey_19,
   },
   cartBtnStyle: {
     height: hp(60),
@@ -941,7 +985,7 @@ const styles = StyleSheet.create({
     gap: wp(5),
   },
   shareContainer: {
-    marginHorizontal: wp(5),
+    marginHorizontal: wp(10),
   },
   dayTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),

@@ -22,7 +22,6 @@ import {
 import { strings } from "../../helper/string";
 import FastImage from "react-native-fast-image";
 type props = {
-  type: "with Service" | "Without Service";
   name: string;
   rating?: string | number;
   onPress?: () => void;
@@ -67,190 +66,100 @@ const FavouriteCard = ({
   };
 
   return (
-    <>
-      {type == "with Service" ? (
-        <View style={styles.container}>
-          <View style={styles.barber_card_container}>
-            <View style={styles.image_conatiner}>
-              <View style={styles.carousel_view}>
-                <Carousel
-                  layout={"default"}
-                  data={data?.user_profile_images}
-                  sliderWidth={carouselitemWidth}
-                  itemWidth={carouselitemWidth}
-                  itemHeight={carouselitemHeight}
-                  sliderHeight={carouselitemHeight}
-                  inactiveSlideScale={1}
-                  renderItem={({ item }: any) => {
-                    return (
-                      <View style={styles?.carousel_img_container}>
-                        <FastImage
-                          source={{
-                            uri: data?.user_profile_images_url + data?.image,
-                            priority: FastImage.priority.high,
-                          }}
-                          style={styles?.carousel_img}
-                          resizeMode="stretch"
-                        />
-                      </View>
-                    );
-                  }}
-                  onSnapToItem={onSnapToItem}
-                />
-                <View style={styles.offer_badge}>
-                  <Offer_Badge />
-                  <Text style={styles?.offer_title}>
-                    {strings.Flat} {offers} {strings.OFF}
-                  </Text>
-                </View>
-              </View>
-              <Pagination
-                dotsLength={data?.user_profile_images?.length}
-                activeDotIndex={activeIndex}
-                containerStyle={styles?.pagination_container}
-                dotStyle={styles?.dotStyle}
-                inactiveDotStyle={styles?.inactiveDotStyle}
-                inactiveDotScale={1}
-                dotContainerStyle={styles?.dotContainerStyle}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={onPress}
-              style={[
-                styles.barber_details_continer,
-                barberdetailscontinerStyle,
-              ]}
-            >
-              <View style={styles.name_container}>
-                <View>
-                  <Text numberOfLines={1} style={styles.barber_name}>
-                    {name}
-                  </Text>
-                </View>
-                <VerifyIcon width={14} height={14} />
-              </View>
-              <View style={styles.barber_job_coantiner}>
-                <TouchableOpacity
-                  onPress={() => onPressRating(true)}
-                  style={styles.rating_badge}
-                >
-                  <Text style={styles.rating_title}>{rating}</Text>
-                  <StarIcon />
-                </TouchableOpacity>
-                <View style={styles.seprator}></View>
-                <Text style={styles.jobs_title}>
-                  {jobs} {strings.Jobs_Done}
-                </Text>
-              </View>
-              <View style={styles.location_container}>
-                <CarIcon />
-                <Text style={styles.location_title}>{location}</Text>
-              </View>
-              <View style={styles.price_container}>
-                <Text style={styles.price_title}>{service}</Text>
-                <Text style={styles.price_title}>{price}</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </View>
-      ) : (
-        <View style={styles.container}>
-          <View style={styles.barber_card_container}>
-            <View style={styles.image_conatiner}>
-              <View style={styles.carousel_view}>
-                <Carousel
-                  layout={"default"}
-                  data={data?.user_profile_images}
-                  sliderWidth={carouselitemWidth}
-                  itemWidth={carouselitemWidth}
-                  itemHeight={carouselitemHeight}
-                  sliderHeight={carouselitemHeight}
-                  inactiveSlideScale={1}
-                  renderItem={({ item }: any) => {
-                    return (
-                      <View style={styles?.carousel_img_container}>
-                        <FastImage
-                          source={{
-                            uri: img_url + item?.image,
-                            priority: FastImage.priority.high,
-                          }}
-                          style={[styles?.carousel_img, carouselitemHeight]}
-                          resizeMode="stretch"
-                        />
-                      </View>
-                    );
-                  }}
-                  onSnapToItem={onSnapToItem}
-                />
-                <View style={styles.offer_badge}>
-                  <Offer_Badge />
-                  <Text style={styles?.offer_title}>
-                    {strings.Flat} {offers} {strings.OFF}
-                  </Text>
-                </View>
-              </View>
-              <Pagination
-                dotsLength={images?.length}
-                activeDotIndex={activeIndex}
-                containerStyle={styles?.pagination_container}
-                dotStyle={styles?.dotStyle}
-                inactiveDotStyle={styles?.inactiveDotStyle}
-                inactiveDotScale={1}
-                dotContainerStyle={styles?.dotContainerStyle}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={onPress}
-              style={[
-                styles.barber_details_continer,
-                barberdetailscontinerStyle,
-              ]}
-            >
-              <View style={styles.name_container}>
-                <View>
-                  <Text style={styles.barber_name}>{data?.name}</Text>
-                </View>
-                <VerifyIcon width={14} height={14} />
-              </View>
-              <View style={styles.barber_job_coantiner}>
-                <TouchableOpacity
-                  onPress={() => onPressRating(true)}
-                  style={styles.rating_badge}
-                >
-                  <Text style={styles.rating_title}>{rating}</Text>
-                  <StarIcon />
-                </TouchableOpacity>
-                <View style={styles.seprator}></View>
-                <Text style={styles.jobs_title}>
-                  {jobs} {strings.Jobs_Done}
-                </Text>
-              </View>
-              <View style={styles.location_container}>
-                <CarIcon />
-                <Text style={styles.location_title}>
-                  {data?.city?.[0]?.city_name}
-                  {","}
-                  {data?.district?.[0]?.district_name}
-                  {","}
-                  {data?.state?.[0]?.state_name}
-                </Text>
-              </View>
-              {isNewYearOffer ? (
-                <>
-                  <View style={styles.dashlineStyle} />
-                  <View style={styles.rowSpaceStyle}>
-                    <Text style={styles.newofferTextStyle}>
-                      {strings["New Year Offer"]}
-                    </Text>
-                    <Text style={styles.newofferTextStyle}>{"₹1299"}</Text>
+    <View style={styles.container}>
+      <View style={styles.barber_card_container}>
+        <View style={styles.image_conatiner}>
+          <View style={styles.carousel_view}>
+            <Carousel
+              layout={"default"}
+              data={data?.user_profile_images}
+              sliderWidth={carouselitemWidth}
+              itemWidth={carouselitemWidth}
+              itemHeight={carouselitemHeight}
+              sliderHeight={carouselitemHeight}
+              inactiveSlideScale={1}
+              renderItem={({ item }: any) => {
+                return (
+                  <View style={styles?.carousel_img_container}>
+                    <FastImage
+                      source={{
+                        uri: img_url + item?.image,
+                        priority: FastImage.priority.high,
+                      }}
+                      style={[styles?.carousel_img, carouselitemHeight]}
+                      resizeMode="cover"
+                    />
                   </View>
-                </>
-              ) : null}
-            </TouchableOpacity>
+                );
+              }}
+              onSnapToItem={onSnapToItem}
+            />
+            <View style={styles.offer_badge}>
+              <Offer_Badge />
+              <Text style={styles?.offer_title}>
+                {strings.Flat} {offers} {strings.OFF}
+              </Text>
+            </View>
           </View>
+          <Pagination
+            dotsLength={images?.length}
+            activeDotIndex={activeIndex}
+            containerStyle={styles?.pagination_container}
+            dotStyle={styles?.dotStyle}
+            inactiveDotStyle={styles?.inactiveDotStyle}
+            inactiveDotScale={1}
+            dotContainerStyle={styles?.dotContainerStyle}
+          />
         </View>
-      )}
-    </>
+        <TouchableOpacity
+          onPress={onPress}
+          style={[styles.barber_details_continer, barberdetailscontinerStyle]}
+        >
+          <View style={styles.name_container}>
+            <View>
+              <Text numberOfLines={1} style={styles.barber_name}>
+                {data?.name}
+              </Text>
+            </View>
+            <VerifyIcon width={14} height={14} />
+          </View>
+          <View style={styles.barber_job_coantiner}>
+            <TouchableOpacity
+              onPress={() => onPressRating(true)}
+              style={styles.rating_badge}
+            >
+              <Text style={styles.rating_title}>{rating}</Text>
+              <StarIcon />
+            </TouchableOpacity>
+            <View style={styles.seprator}></View>
+            <Text style={styles.jobs_title}>
+              {jobs} {strings.Jobs_Done}
+            </Text>
+          </View>
+          <View style={styles.location_container}>
+            <CarIcon />
+            <Text style={styles.location_title}>
+              {data?.city?.[0]?.city_name}
+              {","}
+              {data?.district?.[0]?.district_name}
+              {","}
+              {data?.state?.[0]?.state_name}
+            </Text>
+          </View>
+          {isNewYearOffer ? (
+            <>
+              <View style={styles.dashlineStyle} />
+              <View style={styles.rowSpaceStyle}>
+                <Text style={styles.newofferTextStyle}>
+                  {strings["New Year Offer"]}
+                </Text>
+                <Text style={styles.newofferTextStyle}>{"₹1299"}</Text>
+              </View>
+            </>
+          ) : null}
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 
@@ -281,7 +190,7 @@ const styles = StyleSheet.create({
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 23, colors.black),
-    maxWidth: wp(170),
+    maxWidth: wp(160),
   },
   name_container: {
     flexDirection: "row",

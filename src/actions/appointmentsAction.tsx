@@ -8,6 +8,7 @@ import {
   GET_APPOINTMENT,
   GET_APPOINTMENTS_LIST,
   IS_LOADING,
+  REVIEW_LIST,
 } from "./dispatchTypes";
 import { makeAPIRequest } from "../helper/apiGlobal";
 import { GET, POST, api } from "../helper/apiConstants";
@@ -174,6 +175,31 @@ export const bookAppointment =
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getAllExpertReview =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: GET,
+      url: api.get_review + request.user_id,
+      headers: headers,
+      params: request.params,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200 || response.status === 201) {
+          dispatch({ type: REVIEW_LIST, payload: response.data });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
         if (request.onFailure) request.onFailure(error.response);
       });
   };

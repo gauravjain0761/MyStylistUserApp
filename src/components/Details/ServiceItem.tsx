@@ -1,44 +1,56 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  LayoutAnimation,
   FlatList,
+  LayoutAnimation,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
-import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { PackagesInnerItem } from "..";
-import { useAppSelector } from "../../redux/hooks";
+import { ArrowUp, TrashIcon } from "../../theme/SvgIcon";
+import { ServiceInnerItem, StylistInnerItem } from "..";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getCartlist } from "../../actions";
+import { CART_DETAILS } from "../../actions/dispatchTypes";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 type Props = {
   data: any;
-  packages: any;
+  service: any;
   index: number;
+  type?: string;
+  baseUrl: string;
+  actionId: string;
 };
 
-const PackagesItem = ({ packages, index }: Props) => {
+const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const [expanded, setExpanded] = useState(true);
-  const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
+  const { addtocart } = useAppSelector((state) => state.cart);
   const [count, setCount] = useState(false);
 
+  const onPressArrow = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    setExpanded(!expanded);
+  };
+
   useEffect(() => {
-    CheckStatus();
+    getStatus();
   }, []);
 
-  const CheckStatus = useCallback(() => {
+  console.log("addtocart", addtocart);
+
+  const getStatus = useCallback(async () => {
     if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
-      packages?.packages.map((item, index) => {
-        addtocart?.items.map((items, index) => {
-          if (items?.serviceType == "Package") {
-            if (item?.service_name[0]?._id == items?.serviceId) {
-              setCount(true);
-            } else {
-              setCount(false);
-            }
+      addtocart?.items?.map((item, index) => {
+        service.map((items, indexs) => {
+          if (items?.sub_service_id == item?.serviceId) {
+            setCount(true);
+          } else {
+            setCount(false);
           }
         });
       });
@@ -47,30 +59,27 @@ const PackagesItem = ({ packages, index }: Props) => {
     }
   }, [count]);
 
-  const onPressArrow = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setExpanded(!expanded);
-  };
-
   return (
     <View key={index}>
       <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Our Packages"}</Text>
+        <Text style={styles.titleTextStyle}>{"Services"}</Text>
         <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
           <ArrowUp />
         </View>
       </TouchableOpacity>
       {expanded ? (
         <FlatList
-          data={packages?.packages || []}
+          data={service}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
             return (
-              <PackagesInnerItem
+              <ServiceInnerItem
                 data={item}
                 key={index}
+                baseUrl={baseUrl}
                 count={count}
                 setCount={setCount}
+                actionId={actionId}
               />
             );
           }}
@@ -92,6 +101,7 @@ const styles = StyleSheet.create({
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
+  rotationStyle: {},
 });
 
-export default PackagesItem;
+export default ServiceItem;

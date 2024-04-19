@@ -8,14 +8,25 @@ import { hp, screen_width, wp } from "../../helper/globalFunction";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getTermsAndCondtition } from "../../actions/profileAction";
 import RenderHtml from "react-native-render-html";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const TermsCondition = () => {
   const dispatch = useAppDispatch();
   const { getalltermsandconditions } = useAppSelector(
     (state) => state?.profile
   );
+
   useEffect(() => {
-    dispatch(getTermsAndCondtition());
+    const getData = async () => {
+      let userInfo = await getAsyncUserInfo();
+
+      let obj = {
+        // id: "661fa6f7f1b6729c33cd4bb1",
+        id: userInfo._id,
+      };
+      dispatch(getTermsAndCondtition(obj));
+    };
+    getData();
   }, []);
 
   const source = {

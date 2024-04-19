@@ -41,14 +41,11 @@ import OfferDetails from "../screen/Offer/OfferDetails";
 import PackgesDetails from "../screen/Package/PackgesDetails";
 import SearchStylistName from "../screen/Search/SearchStylistName";
 import StylistDetails from "../screen/Details/StylistDetails";
+import StylistList from "../screen/Home/StylistList";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
-  animationDuration: 300,
-  animation: "none",
-  // headerStyle: {
-  //   backgroundColor: 'transparent',
-  // },
+  animation: "default",
 };
 
 const Stack = createNativeStackNavigator();
@@ -66,6 +63,8 @@ const StackNavigator: FC = () => {
         component={OtpVerification}
       />
       <Stack.Screen name={screenName.Home} component={DrawerNavigator} />
+      <Stack.Screen name={"StylistList"} component={StylistList} />
+      <Stack.Screen name={"StylistDetails"} component={StylistDetails} />
       <Stack.Screen name={screenName.YourStylist} component={YourStylist} />
       <Stack.Screen name={screenName.Cart} component={Cart} />
       <Stack.Screen name={screenName.Service} component={Service} />

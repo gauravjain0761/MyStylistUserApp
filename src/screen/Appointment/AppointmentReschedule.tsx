@@ -53,8 +53,8 @@ const AppointmentReschedule = () => {
   const { params }: any = useRoute();
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
-  const [selectedDateIndex, setSelectedDate] = useState(null);
-  const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [selectedDateIndex, setSelectedDate] = useState(0);
+  const [selectedTimeIndex, setSelectedTime] = useState(0);
   const [loading, setLoading] = useState(false);
   const [bookTime, setBookTime] = useState({});
   const [date, setDate] = useState("");
@@ -79,7 +79,12 @@ const AppointmentReschedule = () => {
           expertId: userInfo._id,
         },
         onSuccess: (response: any) => {
-          setDates(convertToOutput(response));
+          let data = convertToOutput(response);
+          let time = data[0].value;
+          setDates(data);
+          setDate(data[0].title);
+          setTimes(data[0].value);
+          setBookTime(time[0]);
         },
         onFailure: () => {},
       };
@@ -191,7 +196,7 @@ const AppointmentReschedule = () => {
           />
         </View>
 
-        <View style={styles.left_serviceCard}>
+        {/* <View style={styles.left_serviceCard}>
           <View style={styles.card_upper}>
             <Text style={styles.title}>
               {strings["You have 1 Service Left"]}
@@ -208,7 +213,7 @@ const AppointmentReschedule = () => {
               {strings["Book Again Your Appointment"]}
             </Text>
           </View>
-        </View>
+        </View> */}
 
         <View style={{ ...styles.whiteContainer, marginTop: hp(20) }}>
           <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>

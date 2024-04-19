@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  FlatList,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, ScrollView } from "react-native";
 import {
   BackHeader,
   Barber_Card,
@@ -18,23 +11,19 @@ import {
   UserItemLoader,
 } from "../../components";
 import { strings } from "../../helper/string";
-import { images } from "../../theme/icons";
 import {
   generateTimes,
   generateWeekDates,
   hp,
-  screen_width,
   wp,
 } from "../../helper/globalFunction";
-import { barbers, stylists_filter } from "../../helper/constunts";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { screenName } from "../../helper/routeNames";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getCampaignExpert, getUserItemDetails } from "../../actions";
+import { getCampaignExpert } from "../../actions";
 import FastImage from "react-native-fast-image";
-import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 
 const NewYearOffer = () => {
   const dispatch = useAppDispatch();
@@ -102,10 +91,6 @@ const NewYearOffer = () => {
     navigate(screenName.YourStylist, { id: item._id });
   };
 
-  const onPresstoNavigate = () => {
-    navigate(screenName.Service);
-  };
-
   return (
     <View style={styles.conatiner}>
       <BackHeader isSearch title={params?.item?.campaign?.title} />
@@ -117,7 +102,7 @@ const NewYearOffer = () => {
             priority: FastImage.priority.high,
           }}
         />
-        <View style={styles?.service_filter_conatiner}>
+        {/* <View style={styles?.service_filter_conatiner}>
           <FlatList
             data={stylists_filter}
             horizontal
@@ -137,7 +122,9 @@ const NewYearOffer = () => {
               <View style={styles?.filter_item_separator}></View>
             )}
           />
-        </View>
+        </View> */}
+        <View style={{ height: hp(20) }} />
+        <View />
         <View style={styles?.stylists_title_container}>
           <View style={styles?.title_border}></View>
           <Text style={styles?.your_stylists_title}>
@@ -160,6 +147,7 @@ const NewYearOffer = () => {
               renderItem={({ item, index }) => {
                 return (
                   <Barber_Card
+                    ratingdisabled={true}
                     isOtherWayLocation
                     data={item?.user}
                     isNewYearOffer

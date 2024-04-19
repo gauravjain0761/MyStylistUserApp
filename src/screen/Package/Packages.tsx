@@ -45,6 +45,8 @@ const Packages = ({ navigation }) => {
   const [footerLoading, setFooterLoading] = useState(false);
   const [refreshControl, setRefreshControle] = useState(false);
   const { isLoading } = useAppSelector((state) => state.common);
+  const [discount, setDiscount] = useState<any>(null);
+  const [serviceType, setServiceType] = useState<any>(null);
 
   useEffect(() => {
     getPackagesData(true);
@@ -87,11 +89,33 @@ const Packages = ({ navigation }) => {
       data: {
         city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
-        page: page,
+        page: 1,
         discount: discount,
+        service_for: serviceType,
       },
       onSuccess: () => {
-        setPage(page + 1);
+        setDiscount(discount);
+        setPage(2);
+        setFooterLoading(false);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getAllPackageByLocation(obj));
+  };
+
+  const onPressFilterItem = (item: any) => {
+    let obj = {
+      isLoading: true,
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: 1,
+        discount: discount,
+        service_for: item.title,
+      },
+      onSuccess: () => {
+        setServiceType(item.title);
+        setPage(2);
         setFooterLoading(false);
       },
       onFailure: () => {},
@@ -168,7 +192,7 @@ const Packages = ({ navigation }) => {
             return (
               <Filter_Button
                 type={"simple"}
-                onPress={() => {}}
+                onPress={() => onPressFilterItem(item.title)}
                 containerStyle={
                   offer_filter.length - 1 == index
                     ? { marginRight: wp(10) }

@@ -44,6 +44,7 @@ type props = {
   offerName?: string;
   isOtherWayLocation?: boolean;
   location?: string;
+  ratingdisabled?: boolean;
 };
 const Barber_Card = ({
   data,
@@ -66,6 +67,7 @@ const Barber_Card = ({
   offerName,
   isOtherWayLocation,
   location,
+  ratingdisabled,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -104,12 +106,14 @@ const Barber_Card = ({
                   }}
                   onSnapToItem={onSnapToItem}
                 />
-                <View style={styles.offer_badge}>
-                  <Offer_Badge />
-                  <Text style={styles?.offer_title}>
-                    {strings.Flat} {offers} {strings.OFF}
-                  </Text>
-                </View>
+                {offers ? (
+                  <View style={styles.offer_badge}>
+                    <Offer_Badge />
+                    <Text style={styles?.offer_title}>
+                      {strings.Flat} {offers} {strings.OFF}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
               <Pagination
                 dotsLength={images?.length}
@@ -199,12 +203,14 @@ const Barber_Card = ({
                   }}
                   onSnapToItem={onSnapToItem}
                 />
-                <View style={styles.offer_badge}>
-                  <Offer_Badge />
-                  <Text style={styles?.offer_title}>
-                    {strings.Flat} {offers} {strings.OFF}
-                  </Text>
-                </View>
+                {offers ? (
+                  <View style={styles.offer_badge}>
+                    <Offer_Badge />
+                    <Text style={styles?.offer_title}>
+                      {strings.Flat} {offers} {strings.OFF}
+                    </Text>
+                  </View>
+                ) : null}
               </View>
               <Pagination
                 dotsLength={images?.length}
@@ -233,6 +239,7 @@ const Barber_Card = ({
               </View>
               <View style={styles.barber_job_coantiner}>
                 <TouchableOpacity
+                  disabled={ratingdisabled}
                   onPress={() => onPressRating(true)}
                   style={styles.rating_badge}
                 >
@@ -305,7 +312,7 @@ const styles = StyleSheet.create({
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 23, colors.black),
-    maxWidth: wp(170),
+    maxWidth: wp(160),
   },
   name_container: {
     flexDirection: "row",

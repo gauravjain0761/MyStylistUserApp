@@ -28,6 +28,7 @@ import { strings } from "../../helper/string";
 import {
   Dates,
   Make_Up,
+  ReviewFilter,
   Time,
   Women_Services,
   barbers,
@@ -76,7 +77,7 @@ import {
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
-import { getUserDetails } from "../../actions";
+import { getAllExpertReview, getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -122,6 +123,7 @@ const Home = () => {
   const [selectedTimeIndex, setSelectedTime] = useState(null);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
+  const [ratingItem, setRatingItem] = useState<any>({});
 
   const { getallservices, userList, barberList } = useAppSelector(
     (state) => state.home
@@ -267,8 +269,6 @@ const Home = () => {
     dispatch(getUsersByLocation(obj));
   };
 
-  console.log("-----::BARBER LENGTH::------", barberList?.length);
-
   const onPressBestService = () => {
     setListLoader(true);
     let data = {
@@ -347,6 +347,40 @@ const Home = () => {
   const onPressItem = (item: any) => {
     //@ts-ignore
     navigate(screenName.YourStylist, { id: item._id });
+  };
+
+  const onPressReviewItem = (item: any) => {
+    setReviewModal(true);
+    setRatingItem({
+      averageRating: item?.averageRating,
+      jobDone: item?.jobDone,
+      _id: item?._id,
+    });
+    let obj = {
+      user_id: item?._id,
+      params: {
+        limit: 100,
+        page: 1,
+        sort: "newest",
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAllExpertReview(obj));
+  };
+
+  const onPressRatingFilterItem = (index: number) => {
+    let obj = {
+      user_id: ratingItem?._id,
+      params: {
+        limit: 100,
+        page: 1,
+        sort: ReviewFilter?.[index].type,
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAllExpertReview(obj));
   };
 
   const onPresstoNavigate = (item: any) => {
@@ -500,10 +534,10 @@ const Home = () => {
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <LocationModal
-        onPressAllow={getCurrentLocation}
-        onPressDontAllow={setCityModal}
         isVisible={locationModal}
         close={setLocationModal}
+        onPressDontAllow={setCityModal}
+        onPressAllow={getCurrentLocation}
       />
       {!cityModal ? null : <CityModal LocationAllow={LocationAllow} />}
 
@@ -557,7 +591,7 @@ const Home = () => {
         </View>
         <Pagination
           // @ts-ignore
-          dotsLength={banner}
+          dotsLength={banner?.length}
           activeDotIndex={activeIndex}
           containerStyle={styles?.pagination_container}
           dotStyle={styles?.dotStyle}
@@ -742,6 +776,12 @@ const Home = () => {
             )}
           />
         </View>
+        {/* <TouchableOpacity
+          style={{ alignSelf: "center" }}
+          onPress={() => navigate("StylistList")}
+        >
+          <Text>View All</Text>
+        </TouchableOpacity> */}
         {listLoader ? (
           <View style={styles?.barber_card_container}>
             <FlatList
@@ -767,10 +807,9 @@ const Home = () => {
                     images={item?.user_profile_images}
                     rating={item.averageRating}
                     jobs={item?.jobDone}
-                    // location={item?.addresses[0]?.address}
                     offers={item?.offers[0]?.discount}
                     onPress={() => onPressItem(item)}
-                    onPressRating={setReviewModal}
+                    onPressRating={() => onPressReviewItem(item)}
                     barberdetailscontinerStyle={
                       styles.barberdetailscontinerStyle
                     }
@@ -875,11 +914,16 @@ const Home = () => {
         />
 
         <Modals
-          close={setReviewModal}
-          visible={reviewModal}
-          containStyle={{ maxHeight: "80%" }}
-          contain={<ReviewModal />}
           isIcon
+          visible={reviewModal}
+          close={setReviewModal}
+          contain={
+            <ReviewModal
+              ratingItem={ratingItem}
+              onPressFilterItem={onPressRatingFilterItem}
+            />
+          }
+          containStyle={{ maxHeight: "80%" }}
         />
         {footerLoading && <ActivityIndicator />}
       </ScrollView>

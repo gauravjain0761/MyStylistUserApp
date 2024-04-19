@@ -10,6 +10,16 @@ import { CommonActions } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import moment from "moment";
 import ImagePicker from "react-native-image-crop-picker";
+import {
+  CameraIcon,
+  CardIcon,
+  ElectricityIcon,
+  MusicIcon,
+  PetIcon,
+  ProfileIcon,
+  TreeIcon,
+  WiFiIcon,
+} from "../theme/SvgIcon";
 
 export const screen_width: number = Dimensions.get("window").width;
 export const screen_height: number = Dimensions.get("window").height;
@@ -187,4 +197,27 @@ export const isCloseToBottom = ({
     layoutMeasurement.height + contentOffset.y >=
     contentSize.height - paddingToBottom
   );
+};
+
+export const getAmenitiesIcon = (key: string) => {
+  switch (key) {
+    case "parking_space":
+      return <TreeIcon />;
+    case "music":
+      return <MusicIcon />;
+    case "credit_cards_accepted":
+      return <CardIcon />;
+    case "wi_fi":
+      return <WiFiIcon />;
+    case "pets_friendly":
+      return <PetIcon />;
+    case "selfie_station":
+      return <CameraIcon />;
+    case "child_friendly":
+      return <ProfileIcon />;
+    case "power_backup":
+      return <ElectricityIcon />;
+    default:
+      break;
+  }
 };

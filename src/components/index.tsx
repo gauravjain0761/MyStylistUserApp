@@ -29,6 +29,8 @@ import Loader from "./common/Loader";
 import AddressItem from "./common/AddressItem";
 import FavouriteCard from "./Home/FavouriteCard";
 import AnimatedSearchBars from "./common/AnimatedSearchBars";
+import ServiceItem from "./Details/ServiceItem";
+import ServiceInnerItem from "./Details/ServiceInnerItem";
 
 import CarouselLoader from "./SkeletonPlaceholder/CarouselLoader";
 import AppointmentLoader from "./SkeletonPlaceholder/AppointmentLoader";
@@ -69,6 +71,8 @@ export {
   AddressItem,
   FavouriteCard,
   AnimatedSearchBars,
+  ServiceItem,
+  ServiceInnerItem,
 
   // Loader
   CarouselLoader,

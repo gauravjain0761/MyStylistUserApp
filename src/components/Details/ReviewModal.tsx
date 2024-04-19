@@ -1,11 +1,9 @@
 import {
   FlatList,
   Image,
-  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
-  Touchable,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -15,24 +13,29 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { hp, wp } from "../../helper/globalFunction";
 import { RatingStars, StarIcon } from "../../theme/SvgIcon";
-import { images } from "../../theme/icons";
-import { useNavigation } from "@react-navigation/native";
 import OvalShapView from "../common/OvalShapView";
-import Filter_Button from "../common/Filter_Button";
 import { ReviewFilter } from "../../helper/constunts";
+import { useAppSelector } from "../../redux/hooks";
+import moment from "moment";
 
-const ReviewModal = () => {
+const ReviewModal = ({ ratingItem, onPressFilterItem }: any) => {
   const [selectIndex, SetselectIndex] = useState(0);
+  const { reviewData } = useAppSelector((state) => state.appointment);
+
   return (
     <View style={styles.container}>
       <View style={styles.title_container}>
-        <Text style={styles.title}>{strings.All_Reviews} (5210)</Text>
+        <Text style={styles.title}>
+          {strings.All_Reviews} ({reviewData?.reviews?.length})
+        </Text>
         <View style={styles.rating_conatiner}>
           <View style={styles.rating_badge}>
-            <Text style={styles.rating_title}>4.6</Text>
+            <Text style={styles.rating_title}>{ratingItem?.averageRating}</Text>
             <StarIcon />
           </View>
-          <Text style={styles.rating_counter_title}>(56)</Text>
+          <Text style={styles.rating_counter_title}>
+            ({ratingItem?.jobDone})
+          </Text>
         </View>
       </View>
 
@@ -47,7 +50,10 @@ const ReviewModal = () => {
                 <OvalShapView
                   data={item}
                   selectIndex={selectIndex}
-                  onPress={SetselectIndex}
+                  onPress={() => {
+                    SetselectIndex(index);
+                    onPressFilterItem(index);
+                  }}
                   index={index}
                 />
               </TouchableOpacity>
@@ -60,41 +66,59 @@ const ReviewModal = () => {
         style={styles.review_card_container}
         showsVerticalScrollIndicator={false}
       >
-        <FlatList
-          data={[1, 2, 3, 4]}
-          showsVerticalScrollIndicator={false}
-          renderItem={() => {
-            return (
-              <View style={styles.card_container}>
-                <View style={styles.user_info_container}>
-                  <View style={styles.user_info}>
-                    <Image source={images.review_user} style={styles.image} />
-                    <View style={styles.user_title}>
-                      <Text style={styles.username}>
-                        {strings.Jeffery_Bills}
-                      </Text>
-                      <Text style={styles.date}>21-04-2023</Text>
+        {reviewData?.reviews?.length > 0 ? (
+          <FlatList
+            data={reviewData?.reviews}
+            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              return (
+                <View style={styles.card_container}>
+                  <View style={styles.user_info_container}>
+                    <View style={styles.user_info}>
+                      <Image
+                        resizeMode="cover"
+                        source={{
+                          uri:
+                            reviewData?.featured_image_url +
+                            "/" +
+                            item?.userId?.user_profile_images?.[0]?.image,
+                        }}
+                        style={styles.image}
+                      />
+                      <View style={styles.user_title}>
+                        <Text numberOfLines={1} style={styles.username}>
+                          {item?.userId?.name +
+                            item?.userId?.name +
+                            item?.userId?.name}
+                        </Text>
+                        <Text style={styles.date}>
+                          {moment(item?.createdAt).format("DD-MM-YYYY")}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.star_conatiner}>
+                      {Array.from({ length: item?.star_rating || 0 }).map(
+                        (e, inx) => {
+                          return <RatingStars />;
+                        }
+                      )}
+                      {Array.from({ length: 5 - (item?.star_rating || 0) }).map(
+                        (e, inx) => {
+                          return <RatingStars color={colors.grey_19} />;
+                        }
+                      )}
                     </View>
                   </View>
-                  <View style={styles.star_conatiner}>
-                    <RatingStars />
-                    <RatingStars />
-                    <RatingStars />
-                    <RatingStars />
-                    <RatingStars />
-                  </View>
+                  <Text style={styles.review_contntent}>{item.review}</Text>
                 </View>
-                <Text style={styles.review_contntent}>
-                  {
-                    strings[
-                      "The environment here was quiet aand relaxing.The owner who gets thiings a done was very considerate, calm, and quiet accommodating to people tyukil questions and request."
-                    ]
-                  }
-                </Text>
-              </View>
-            );
-          }}
-        />
+              );
+            }}
+          />
+        ) : (
+          <View style={styles.noTextContainer}>
+            <Text style={styles.noTextStyle}>{"No Review"}</Text>
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -182,6 +206,8 @@ const styles = StyleSheet.create({
   image: {
     width: wp(40),
     height: wp(40),
+    borderRadius: wp(40 / 2),
+    backgroundColor: colors.grey_19,
   },
   user_title: {},
   review_contntent: {
@@ -198,9 +224,18 @@ const styles = StyleSheet.create({
   username: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
     lineHeight: hp(19),
+    maxWidth: wp(120),
   },
   date: {
     ...commonFontStyle(fontFamily.medium, 14, colors.gery_6),
     lineHeight: hp(16),
+  },
+  noTextContainer: {
+    height: hp(300),
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noTextStyle: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.gery_6),
   },
 });

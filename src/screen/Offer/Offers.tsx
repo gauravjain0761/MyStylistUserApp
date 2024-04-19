@@ -50,6 +50,8 @@ const Offers = ({ navigation }) => {
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [refreshControl, setRefreshControle] = useState(false);
+  const [discount, setDiscount] = useState<any>(null);
+  const [serviceType, setServiceType] = useState<any>(null);
 
   useEffect(() => {
     getAllOfferData(true);
@@ -82,11 +84,33 @@ const Offers = ({ navigation }) => {
       data: {
         city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
-        page: page,
+        page: 1,
         discount: discount,
+        service_for: serviceType,
       },
       onSuccess: () => {
-        setPage(page + 1);
+        setDiscount(discount);
+        setPage(2);
+        setFooterLoading(false);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getAllOffersByLocation(obj));
+  };
+
+  const onPressFilterItem = (item: any) => {
+    let obj = {
+      isLoading: true,
+      data: {
+        city_id: profileData?.user?.city?.[0]?.city_id,
+        limit: 10,
+        page: 1,
+        discount: discount,
+        service_for: item.title,
+      },
+      onSuccess: () => {
+        setPage(2);
+        setServiceType(item.title);
         setFooterLoading(false);
       },
       onFailure: () => {},
@@ -105,7 +129,6 @@ const Offers = ({ navigation }) => {
   };
 
   const onPressOfferItem = (item: any) => {
-    console.log("item", item);
     navigation.navigate(screenName.YourStylist, { id: item?.expert_id });
   };
 
@@ -172,7 +195,7 @@ const Offers = ({ navigation }) => {
             return (
               <Filter_Button
                 type={"simple"}
-                onPress={() => {}}
+                onPress={() => onPressFilterItem(item)}
                 containerStyle={
                   offer_filter.length - 1 == index
                     ? { marginRight: wp(10) }

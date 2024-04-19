@@ -9,7 +9,7 @@ import {
   GET_TERMSANDCONDITIONS,
   IS_LOADING,
 } from "./dispatchTypes";
-import { errorToast } from "../helper/globalFunction";
+import { errorToast, infoToast } from "../helper/globalFunction";
 import { getAsyncToken } from "../helper/asyncStorage";
 
 export const getAllFAQ =
@@ -42,23 +42,22 @@ export const getTermsAndCondtition =
     let header = {
       "Content-Type": "application/json",
     };
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: GET,
-      url: api.termsandconditions,
+      url: api.termsandconditions + request.id,
       headers: header,
     })
       .then(async (response: any) => {
-        dispatch({ type: IS_LOADING, payload: false });
         if (response.status === 200) {
           dispatch({
             type: GET_TERMSANDCONDITIONS,
             payload: response?.data?.data,
           });
+        } else {
+          infoToast(response?.data.message);
         }
       })
       .catch((error) => {
-        dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure) request.onFailure(error.response);
       });
   };

@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "column",
     justifyContent: "center",
-    marginBottom: isIos ? hp(10) : -hp(10),
+    marginBottom: isIos ? hp(40) : hp(5),
   },
   itemFocusContainer: {
     backgroundColor: colors.theme_1,

@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import React, { useState } from "react";
-import { BackHeader } from "../../components";
+import { BackHeader, Loader } from "../../components";
 import { strings } from "../../helper/string";
 import AppointmentCancelCard from "../../components/common/AppointmentCancelCard";
 import { images } from "../../theme/icons";
@@ -26,6 +26,7 @@ const AppointmentCancellation = () => {
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
   const { Appointment } = appointmentDetails;
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(false);
 
   const { navigate } = useNavigation();
   const reason = [
@@ -56,17 +57,19 @@ const AppointmentCancellation = () => {
   ];
 
   const onPressCancel = () => {
+    setLoading(true);
     let obj = {
       data: {
         appointmentId: Appointment?._id,
         status: "cancelled",
       },
       onSuccess: (respo) => {
-        console.log("ressss", respo);
+        setLoading(false);
         navigate(screenName.Home);
       },
       onFailure: (err: any) => {
         console.log(err);
+        setLoading(false);
       },
     };
     dispatch(cancelAppointment(obj));
@@ -76,18 +79,19 @@ const AppointmentCancellation = () => {
     navigate(screenName.Home);
   };
   const onPressYes = () => {
-    console.log("hi");
+    setLoading(true);
     let obj = {
       data: {
         appointmentId: Appointment?._id,
         status: "cancelled",
       },
       onSuccess: (resss) => {
+        setLoading(false);
         navigate(screenName.Home);
-        console.log(resss);
       },
       onFailure: (err: any) => {
         console.log(err);
+        setLoading(false);
       },
     };
     dispatch(cancelAppointment(obj));
@@ -96,6 +100,7 @@ const AppointmentCancellation = () => {
   return (
     <View style={styles.conatiner}>
       <BackHeader title={strings.Appointment_Cancellation} />
+      <Loader visible={loading} />
       <ScrollView>
         <View style={styles.card}>
           <AppointmentCancelCard

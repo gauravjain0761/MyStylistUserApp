@@ -180,6 +180,15 @@ const AppointmentReschedule = () => {
             name={expertId?.name}
             rating={expertId?.averageRating}
             jobs={expertId?.jobDone}
+            lat={
+              Appointment?.expertId?.addresses?.[0]?.address?.location
+                ?.coordinates?.[0]
+            }
+            lng={
+              Appointment?.expertId?.addresses?.[0]?.address?.location
+                ?.coordinates?.[1]
+            }
+            phoneNumber={Appointment?.expertId?.phone}
             location={
               expertId?.addresses?.[0].address?.houseNumber +
               "," +

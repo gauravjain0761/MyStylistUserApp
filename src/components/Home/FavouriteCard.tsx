@@ -42,15 +42,11 @@ type props = {
 };
 const FavouriteCard = ({
   data,
-  type,
   name,
   jobs,
-  location,
   offers,
   onPress = () => "",
-  price,
   rating,
-  service,
   images,
   carouselitemHeight = wp(144),
   carouselitemWidth = wp(132),
@@ -94,12 +90,14 @@ const FavouriteCard = ({
               }}
               onSnapToItem={onSnapToItem}
             />
-            <View style={styles.offer_badge}>
-              <Offer_Badge />
-              <Text style={styles?.offer_title}>
-                {strings.Flat} {offers} {strings.OFF}
-              </Text>
-            </View>
+            {offers ? (
+              <View style={styles.offer_badge}>
+                <Offer_Badge />
+                <Text style={styles?.offer_title}>
+                  {strings.Flat} {offers} {strings.OFF}
+                </Text>
+              </View>
+            ) : null}
           </View>
           <Pagination
             dotsLength={images?.length}

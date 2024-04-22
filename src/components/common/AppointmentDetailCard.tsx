@@ -1,5 +1,8 @@
 import {
+  Alert,
   Image,
+  Linking,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -46,6 +49,9 @@ type props = {
   previousBooking?: boolean;
   imgBaseURL?: string;
   onPressChat: () => void;
+  phoneNumber?: string;
+  lat: number;
+  lng: number;
 };
 
 const AppointmentDetailCard = ({
@@ -63,10 +69,37 @@ const AppointmentDetailCard = ({
   previousBooking = false,
   imgBaseURL,
   onPressChat,
+  phoneNumber,
+  lat,
+  lng,
 }: props) => {
   const { navigate } = useNavigation();
 
   const onPressCard = () => {};
+
+  const onPressDirection = () => {
+    const scheme = Platform.select({
+      ios: "maps://0,0?q=",
+      android: "geo:0,0?q=",
+    });
+    const latLng = `${lat},${lng}`;
+    const label = "Address";
+    const url: any = Platform.select({
+      ios: `${scheme}${label}@${latLng}`,
+      android: `${scheme}${latLng}(${label})`,
+    });
+    Linking.openURL(url);
+  };
+
+  const onPressNumber = () => {
+    let phone = "";
+    if (Platform.OS === "android") {
+      phone = `tel:${phoneNumber}`;
+    } else {
+      phone = `telprompt:${phoneNumber}`;
+    }
+    Linking.openURL(phone);
+  };
 
   return (
     <View style={styles.conatiner}>
@@ -113,7 +146,10 @@ const AppointmentDetailCard = ({
           </View>
         </View>
         <View style={styles.facility_conatiner}>
-          <TouchableOpacity style={styles.service_btn}>
+          <TouchableOpacity
+            onPress={onPressDirection}
+            style={styles.service_btn}
+          >
             <DirectionIcon />
             <Text style={styles.btn_title}>{strings.Directions}</Text>
           </TouchableOpacity>
@@ -121,7 +157,7 @@ const AppointmentDetailCard = ({
             <ChatIcon />
             <Text style={styles.btn_title}>{strings.Chat}</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.service_btn}>
+          <TouchableOpacity onPress={onPressNumber} style={styles.service_btn}>
             <CallIcon />
             <Text style={styles.btn_title}>{strings.Call_Stylist}</Text>
           </TouchableOpacity>
@@ -332,9 +368,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   booking_title: {
-    ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),
+    ...commonFontStyle(fontFamily.regular, 14, colors.gery_6),
   },
   booking_time: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 15, colors.black),
   },
 });

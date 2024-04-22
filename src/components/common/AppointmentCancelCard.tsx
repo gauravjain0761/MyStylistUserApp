@@ -87,7 +87,9 @@ const AppointmentCancelCard = ({
         <View style={styles.down_contain}>
           <Text style={styles.info_title}>{strings["Are you sure?"]}</Text>
           <Text style={styles.info_details}>
-            {strings["you want to cancel your appointment with Majid Khan?"]}
+            {"you want to cancel your appointment with "}
+            {name}
+            {"?."}
           </Text>
           <View style={styles.btn_conatiner}>
             <TouchableOpacity onPress={onPressNo}>

@@ -44,6 +44,11 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>LSApplicationQueriesSchemes</key> 
+	<array> 
+  		<string>tel</string> 
+  		<string>telprompt</string> 
+	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>Update your profile picture using the camera</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

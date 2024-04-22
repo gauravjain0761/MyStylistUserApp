@@ -38,6 +38,7 @@ type props = {
   isCompleted?: boolean;
   imgBaseURL?: string;
   onPressFeedBack?: () => void;
+  status: string;
 };
 
 const BarberAppointmentCard = ({
@@ -54,6 +55,7 @@ const BarberAppointmentCard = ({
   rating = 0,
   imgBaseURL,
   onPressFeedBack,
+  status,
 }: props) => {
   return (
     <Pressable style={styles.conatiner} onPress={onPress}>
@@ -79,7 +81,20 @@ const BarberAppointmentCard = ({
             </View>
             <VerifyIcon width={14} height={14} />
           </View>
-          {isCompleted ? (
+          <View style={styles.date_container}>
+            <Text style={styles.time}>
+              {date}
+              {time}
+            </Text>
+            <ImageBackground
+              resizeMode="contain"
+              source={images.completebadge}
+              style={styles.complete_badge}
+            >
+              <Text style={styles.completed_title}>{status}</Text>
+            </ImageBackground>
+          </View>
+          {/* {isCompleted ? (
             <View style={styles.date_container}>
               <Text style={styles.time}>
                 {date}
@@ -97,7 +112,7 @@ const BarberAppointmentCard = ({
             <Text style={styles.time}>
               {time} {date}
             </Text>
-          )}
+          )} */}
           <View style={styles.location_container}>
             <CarIcon color={colors.grey_10} />
             <Text style={styles.location_title}>{location}</Text>
@@ -263,6 +278,7 @@ const styles = StyleSheet.create({
   completed_title: {
     ...commonFontStyle(fontFamily.semi_bold, 11, colors.black_2),
     lineHeight: hp(20),
+    textTransform: "capitalize",
   },
   feedbackTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black_2),

@@ -14,6 +14,7 @@ import { ArrowUp } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useAppSelector } from "../../redux/hooks";
 import FastImage from "react-native-fast-image";
+import ImageModal from "../common/ImageModal";
 
 type Props = {
   data: any;
@@ -50,8 +51,8 @@ const MyWorkItem = ({ data, index }: Props) => {
                   resizeMode="cover"
                   style={styles.imgStyle}
                   source={{
-                    uri: itemDetails?.featured_image_url + "/" + item.image,
                     priority: FastImage.priority.high,
+                    uri: itemDetails?.featured_image_url + "/" + item.image,
                   }}
                 />
               </View>
@@ -59,6 +60,10 @@ const MyWorkItem = ({ data, index }: Props) => {
           }}
         />
       ) : null}
+      <ImageModal
+        data={itemDetails?.user?.user_work_images}
+        baseURL={itemDetails?.featured_image_url}
+      />
     </View>
   );
 };

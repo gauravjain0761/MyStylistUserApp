@@ -82,7 +82,6 @@ import {
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
 import { getAllExpertReview, getCartlist, getUserDetails } from "../../actions";
-import { SearchIcon } from "../../theme/SvgIcon";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import moment from "moment";
@@ -218,6 +217,7 @@ const Home = () => {
     };
     dispatch(getUserDetails(obj));
   };
+
   const getCartData = async () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
@@ -531,6 +531,7 @@ const Home = () => {
     dispatch(getAllBanner(banner));
     setRefreshControle(false);
     getProfileData();
+    getCartData();
   }, [refreshControl]);
 
   async function getDatesList() {

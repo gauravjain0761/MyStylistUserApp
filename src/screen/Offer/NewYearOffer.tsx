@@ -24,6 +24,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getCampaignExpert } from "../../actions";
 import FastImage from "react-native-fast-image";
+import { stylists_filter } from "../../helper/constunts";
 
 const NewYearOffer = () => {
   const dispatch = useAppDispatch();
@@ -102,7 +103,7 @@ const NewYearOffer = () => {
             priority: FastImage.priority.high,
           }}
         />
-        {/* <View style={styles?.service_filter_conatiner}>
+        <View style={styles?.service_filter_conatiner}>
           <FlatList
             data={stylists_filter}
             horizontal
@@ -122,7 +123,7 @@ const NewYearOffer = () => {
               <View style={styles?.filter_item_separator}></View>
             )}
           />
-        </View> */}
+        </View>
         <View style={{ height: hp(20) }} />
         <View />
         <View style={styles?.stylists_title_container}>

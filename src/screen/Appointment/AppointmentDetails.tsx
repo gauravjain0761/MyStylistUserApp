@@ -46,8 +46,6 @@ const AppointmentDetails = () => {
   const { isLoading } = useAppSelector((state) => state.common);
   const [loading, setLoading] = useState(false);
 
-  console.log("appointmentDetails", appointmentDetails);
-
   useEffect(() => {
     let obj = {
       id: params?.id,
@@ -103,11 +101,20 @@ const AppointmentDetails = () => {
         ) : (
           <View style={styles.card_container}>
             <AppointmentDetailCard
+              lat={
+                Appointment?.expertId?.addresses?.[0]?.address?.location
+                  ?.coordinates?.[0]
+              }
+              lng={
+                Appointment?.expertId?.addresses?.[0]?.address?.location
+                  ?.coordinates?.[1]
+              }
               imgBaseURL={appointmentDetails?.featured_image_url}
               userImg={Appointment?.expertId?.user_profile_images?.[0]?.image}
               name={Appointment?.expertId?.name}
               rating={Appointment?.expertId?.averageRating}
               jobs={Appointment?.expertId?.jobDone}
+              phoneNumber={Appointment?.expertId?.phone}
               location={
                 Appointment?.expertId?.addresses?.[0].address?.houseNumber +
                 "," +

@@ -89,10 +89,10 @@ const MyFavorites = () => {
                       data={item}
                       name={item.name}
                       // images={item?.image}
-                      rating={item?.totalReviews}
+                      rating={item?.averageRating}
                       jobs={item?.jobDone}
                       // location={item?.address}
-                      // offers={item?.offers}
+                      offers={item?.offer?.discount}
                       barberdetailscontinerStyle={
                         styles.barberdetailscontinerStyle
                       }

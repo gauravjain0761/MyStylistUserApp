@@ -44,20 +44,16 @@ const Appointments = ({ navigation }) => {
   const [IsModal, setIsModal] = useState(false);
   const [appointmentItem, setAppointmentItem] = useState<any>({});
 
-  useEffect(() => {
-    setPage(1);
-    getList(true);
-  }, []);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     setPage(1);
-  //     getList(false);
-  //   }, [])
-  // );
+  useFocusEffect(
+    useCallback(() => {
+      setPage(1);
+      getList(true);
+    }, [])
+  );
 
   async function getList(isLoading: boolean) {
     const userInfo = await getAsyncUserInfo();
+    console.log("userInfo?._id", userInfo?._id);
     let data = {
       userId: userInfo?._id,
       page: page,
@@ -177,7 +173,7 @@ const Appointments = ({ navigation }) => {
                             .join(", ")}
                           type={item.appointmentType}
                           rating={item?.expertDetails?.averageRating}
-                          isCompleted={false}
+                          status={item?.status}
                           price={item.totalAmount}
                           image={
                             item.expertDetails.user_profile_images?.[0]?.image
@@ -223,6 +219,7 @@ const Appointments = ({ navigation }) => {
                           type={item.appointmentType}
                           rating={item?.expertDetails?.averageRating}
                           isCompleted={true}
+                          status={item?.status}
                           price={item.totalAmount}
                           image={
                             item.expertDetails.user_profile_images?.[0]?.image

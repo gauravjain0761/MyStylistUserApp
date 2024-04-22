@@ -392,13 +392,14 @@ const Cart = () => {
                 />
               )}
 
+              <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
               <RowItemValue title="Payment Method" value="Cash" />
               <View style={styles.lineStyle} />
               <View style={styles.rowSpaceStyle}>
                 <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
                 <Text style={styles.valueTextStyle}>
                   {"₹"}
-                  {cartDetails?.total}
+                  {cartDetails?.cart?.totalPrice}
                 </Text>
               </View>
             </View>

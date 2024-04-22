@@ -12,6 +12,7 @@ import {
 } from "./dispatchTypes";
 import { makeAPIRequest } from "../helper/apiGlobal";
 import { GET, POST, api } from "../helper/apiConstants";
+import { successToast } from "../helper/globalFunction";
 
 export const getUserAppointments =
   (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
@@ -116,6 +117,7 @@ export const cancelAppointment =
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
           dispatch({ type: IS_LOADING, payload: false });
+          successToast("Appointment cancelled successfully");
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })

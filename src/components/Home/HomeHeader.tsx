@@ -47,6 +47,7 @@ const HomeHeader = ({
 }: HomeProps) => {
   const { navigate } = useNavigation();
   const { profileData } = useAppSelector((state) => state.profile);
+  const { cartCount } = useAppSelector((state) => state.cart);
 
   const onPressBell = () => {
     // @ts-ignore
@@ -93,6 +94,11 @@ const HomeHeader = ({
         </TouchableOpacity>
         <TouchableOpacity onPress={onPressCart}>
           <FillCart />
+          {cartCount > 0 ? (
+            <View style={styles.countContainer}>
+              <Text style={styles.countTextStyle}>{cartCount}</Text>
+            </View>
+          ) : null}
         </TouchableOpacity>
         <TouchableOpacity onPress={onPressBell}>
           <FillBell />
@@ -179,5 +185,19 @@ const styles = StyleSheet.create({
     height: wp(25),
     width: wp(25),
     marginRight: wp(5),
+  },
+  countContainer: {
+    height: wp(18),
+    paddingHorizontal: wp(5),
+    position: "absolute",
+    backgroundColor: colors.primary_light_blue,
+    borderRadius: 20,
+    right: -wp(8),
+    top: -wp(8),
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  countTextStyle: {
+    ...commonFontStyle(fontFamily.medium, 12, colors.black),
   },
 });

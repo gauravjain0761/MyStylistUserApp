@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../theme/color";
 import { hp, wp } from "../../helper/globalFunction";
@@ -7,25 +7,38 @@ import { BackIcon, Hamburger, SearchIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { icons } from "../../theme/icons";
 
 type Props = {
   title: string;
   isSearch?: boolean;
   isMenu?: boolean;
+  isDelete?: boolean;
   onPressMenu?: () => void;
   onPressScreenSearch?: () => void;
+  onPressDelete?: () => void;
+  onPressScreenBack?: () => void;
 };
 
 const BackHeader = ({
   title,
   isSearch,
+  isDelete,
   isMenu,
   onPressMenu,
   onPressScreenSearch,
+  onPressDelete,
+  onPressScreenBack,
 }: Props) => {
   const { goBack, navigate } = useNavigation();
 
-  const onPressBack = () => goBack();
+  const onPressBack = () => {
+    if (onPressScreenBack) {
+      onPressScreenBack();
+    } else {
+      goBack();
+    }
+  };
 
   const onPressSearch = () => {
     if (onPressScreenSearch) {
@@ -55,6 +68,11 @@ const BackHeader = ({
           <SearchIcon />
         </TouchableOpacity>
       ) : null}
+      {isDelete ? (
+        <TouchableOpacity onPress={onPressDelete}>
+          <Image source={icons.delete_cart} style={styles.deleteIconStyle} />
+        </TouchableOpacity>
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -79,5 +97,9 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 18, colors?.black),
     marginHorizontal: wp(10),
     flex: 1,
+  },
+  deleteIconStyle: {
+    height: wp(20),
+    width: wp(20),
   },
 });

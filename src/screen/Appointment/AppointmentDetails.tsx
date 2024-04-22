@@ -46,6 +46,8 @@ const AppointmentDetails = () => {
   const { isLoading } = useAppSelector((state) => state.common);
   const [loading, setLoading] = useState(false);
 
+  console.log("appointmentDetails", appointmentDetails);
+
   useEffect(() => {
     let obj = {
       id: params?.id,

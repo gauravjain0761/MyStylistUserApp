@@ -251,7 +251,6 @@ const YourStylist = () => {
 
   const getCart = async () => {
     let userInfo = await getAsyncUserInfo();
-
     let obj = {
       data: {
         userId: userInfo._id,

@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { strings } from "../../helper/string";
 import { PastServices, barbers } from "../../helper/constunts";
@@ -19,13 +20,19 @@ import { screenName } from "../../helper/routeNames";
 import { AppointmentLoader, BackHeader } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { getAppointmentDetails, getUserAppointments } from "../../actions";
+import {
+  getAppointmentDetails,
+  getUserAppointments,
+  writeReview,
+} from "../../actions";
 import moment from "moment";
 import debounce from "lodash.debounce"; // Import debounce from lodash library
+import FeedbackModal from "../../components/common/FeedbackModal";
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
   const dispatch = useAppDispatch();
+
   const { appointmentList, appointment } = useAppSelector(
     (state) => state.appointment
   );
@@ -33,6 +40,9 @@ const Appointments = ({ navigation }) => {
   const [page, setPage] = useState(1);
   const [refreshControl, setRefreshControle] = useState(false);
   const { isLoading } = useAppSelector((state) => state.common);
+
+  const [IsModal, setIsModal] = useState(false);
+  const [appointmentItem, setAppointmentItem] = useState<any>({});
 
   useEffect(() => {
     setPage(1);
@@ -87,6 +97,31 @@ const Appointments = ({ navigation }) => {
   }, [refreshControl]);
 
   const debouncedLoadMoreData = debounce(loadMoreData, 500); // Adjust the delay as needed
+
+  const onPressSubmit = async (rating: number, review: string) => {
+    let userInfo = await getAsyncUserInfo();
+    if (review.trim().length < 0) {
+      Alert.alert("Enter review");
+    } else if (rating < 1) {
+      Alert.alert("Enter rating");
+    } else {
+      let obj = {
+        data: {
+          expertId: appointmentItem.expertId,
+          userId: userInfo._id,
+          star_rating: rating,
+          review: review,
+        },
+        onSuccess: () => {
+          navigate(screenName.Feedback);
+        },
+        onFailure: (Err) => {
+          console.log(Err);
+        },
+      };
+      dispatch(writeReview(obj));
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -194,6 +229,10 @@ const Appointments = ({ navigation }) => {
                           }
                           onPress={() => onPressItem(item)}
                           imgBaseURL={appointmentList?.featured_image_url}
+                          onPressFeedBack={() => {
+                            setAppointmentItem(item);
+                            setIsModal(true);
+                          }}
                         />
                       </View>
                     );
@@ -209,6 +248,17 @@ const Appointments = ({ navigation }) => {
 
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
+      <FeedbackModal
+        userImg={
+          appointmentList?.featured_image_url +
+          "/" +
+          appointmentItem?.expertDetails?.user_profile_images?.[0]?.image
+        }
+        expertInfo={appointmentItem?.expertDetails}
+        close={setIsModal}
+        visible={IsModal}
+        onPresssubmit={(rating, review) => onPressSubmit(rating, review)}
+      />
     </View>
   );
 };

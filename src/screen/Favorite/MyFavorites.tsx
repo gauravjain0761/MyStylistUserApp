@@ -9,7 +9,7 @@ import {
 import { strings } from "../../helper/string";
 import { hp, screen_height, wp } from "../../helper/globalFunction";
 import { barbers } from "../../helper/constunts";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getUsersFavList } from "../../actions";
@@ -25,9 +25,11 @@ const MyFavorites = () => {
   const [refreshControl, setRefreshControle] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getData();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, [])
+  );
 
   const getData = async () => {
     let userInfo = await getAsyncUserInfo();

@@ -77,7 +77,6 @@ const AppointmentCancellation = () => {
   };
   const onPressYes = () => {
     console.log("hi");
-
     let obj = {
       data: {
         appointmentId: Appointment?._id,

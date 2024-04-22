@@ -51,7 +51,11 @@ import {
   UserItemLoader,
 } from "../../components";
 import babelConfig from "../../../babel.config";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
 import { DrawerNavigationProp } from "@react-navigation/drawer";
@@ -77,7 +81,7 @@ import {
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
-import { getAllExpertReview, getUserDetails } from "../../actions";
+import { getAllExpertReview, getCartlist, getUserDetails } from "../../actions";
 import { SearchIcon } from "../../theme/SvgIcon";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -214,6 +218,23 @@ const Home = () => {
     };
     dispatch(getUserDetails(obj));
   };
+  const getCartData = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getCartlist(obj));
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getCartData();
+    }, [])
+  );
 
   const getUserList = async (isLoading: boolean) => {
     await requestLocationPermission(

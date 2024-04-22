@@ -1,7 +1,7 @@
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../helper/Types";
 import { AnyAction } from "redux";
-import { CART_DETAILS, IS_LOADING } from "./dispatchTypes";
+import { CART_COUNT, CART_DETAILS, IS_LOADING } from "./dispatchTypes";
 import { makeAPIRequest } from "../helper/apiGlobal";
 import { POST, api } from "../helper/apiConstants";
 
@@ -21,7 +21,6 @@ export const addToCart =
     })
       .then(async (response: any) => {
         dispatch({ type: IS_LOADING, payload: false });
-        console.log("respone", response.data);
         if (response.status === 200 || response.status === 201) {
           if (request.onSuccess) request.onSuccess(response.data);
         }
@@ -48,7 +47,6 @@ export const removeToCart =
     })
       .then(async (response: any) => {
         dispatch({ type: IS_LOADING, payload: false });
-        console.log("respone", response.data);
         if (response.status === 200 || response.status === 201) {
           if (request.onSuccess) request.onSuccess(response.data);
         }
@@ -74,10 +72,18 @@ export const getCartlist =
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
+          dispatch({
+            type: CART_COUNT,
+            payload: response.data?.data?.cart?.items?.length || 0,
+          });
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })
       .catch((error) => {
+        dispatch({
+          type: CART_COUNT,
+          payload: 0,
+        });
         if (request.onFailure) request.onFailure(error.response);
       });
   };
@@ -88,7 +94,6 @@ export const removeMultipleCartItems =
     let header = {
       "Content-Type": "application/json",
     };
-
     dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,

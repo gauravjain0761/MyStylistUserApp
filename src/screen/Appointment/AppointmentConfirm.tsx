@@ -53,6 +53,9 @@ const AppointmentConfirm = () => {
   const onPressFeedback = () => {
     setIsModal(!IsModal);
   };
+  const onPressCancel = () => {
+    navigate(screenName.AppointmentCancellation);
+  };
 
   const onPressSubmit = (rating: number, review: string) => {
     if (review.trim().length < 0) {
@@ -125,13 +128,22 @@ const AppointmentConfirm = () => {
       </ScrollView>
 
       <View style={styles.elevationStyle}>
-        <TouchableOpacity onPress={() => onPressFeedback()}>
+        {/* <TouchableOpacity onPress={() => onPressFeedback()}>
           <ImageBackground
             resizeMode="stretch"
             style={styles.cartBtnStyle}
             source={images.gery_button}
           >
             <Text style={styles.goTextStyle}>{strings.Give_Feedback}</Text>
+          </ImageBackground>
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={() => onPressCancel()}>
+          <ImageBackground
+            resizeMode="stretch"
+            style={styles.cartBtnStyle}
+            source={images.gery_button}
+          >
+            <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
           </ImageBackground>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => onPressBookagain()}>

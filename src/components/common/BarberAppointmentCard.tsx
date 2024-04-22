@@ -37,6 +37,7 @@ type props = {
   time?: any;
   isCompleted?: boolean;
   imgBaseURL?: string;
+  onPressFeedBack?: () => void;
 };
 
 const BarberAppointmentCard = ({
@@ -52,6 +53,7 @@ const BarberAppointmentCard = ({
   onPress,
   rating = 0,
   imgBaseURL,
+  onPressFeedBack,
 }: props) => {
   return (
     <Pressable style={styles.conatiner} onPress={onPress}>
@@ -131,9 +133,11 @@ const BarberAppointmentCard = ({
                 })}
               </View>
             ) : (
-              <Text style={styles.feedbackTextStyle}>
-                {strings.Give_Feedback}
-              </Text>
+              <TouchableOpacity onPress={onPressFeedBack}>
+                <Text style={styles.feedbackTextStyle}>
+                  {strings.Give_Feedback}
+                </Text>
+              </TouchableOpacity>
             )}
             <Text style={styles.price}> ₹ {price}</Text>
           </View>

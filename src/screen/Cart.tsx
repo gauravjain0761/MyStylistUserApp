@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   FlatList,
+  Alert,
 } from "react-native";
 import {
   BackHeader,
@@ -48,13 +49,30 @@ import FastImage from "react-native-fast-image";
 type RowItemValueProps = {
   title: string;
   value: string;
+  isShowClose?: boolean;
+  onPressClose?: () => void;
 };
 
-const RowItemValue = ({ title, value }: RowItemValueProps) => {
+const RowItemValue = ({
+  title,
+  value,
+  isShowClose,
+  onPressClose,
+}: RowItemValueProps) => {
   return (
     <View style={styles.rowSpaceStyle}>
       <Text style={styles.greyTitleTextStyle}>{title}</Text>
-      <Text style={styles.valueTextStyle}>{value}</Text>
+      <View style={styles.rowItemStyle}>
+        <Text style={styles.valueTextStyle}>{value}</Text>
+        {isShowClose ? (
+          <TouchableOpacity
+            onPress={onPressClose}
+            style={styles.closeContainer}
+          >
+            <Text>X</Text>
+          </TouchableOpacity>
+        ) : null}
+      </View>
     </View>
   );
 };
@@ -130,7 +148,6 @@ const Cart = () => {
         setCartLoading(false);
       },
       onFailure: (Errr: any) => {
-        console.log("Errr", Errr);
         if (Errr?.data?.message === "Cart not found") {
           setCartEmpty(true);
           dispatch({
@@ -209,6 +226,23 @@ const Cart = () => {
     navigate(screenName.YourStylist);
   };
 
+  const onPressRemoveSignalItem = async (item: any) => {
+    let userInfo = await getAsyncUserInfo();
+    let data = {
+      userId: userInfo?._id,
+      itemIds: [item?._id],
+      cartId: cartDetails?.cart?._id,
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        getCart();
+      },
+      onFailure: () => {},
+    };
+    dispatch(removeMultipleCartItems(obj));
+  };
+
   const RemoveItems = async () => {
     let Ids = addtocart.items.map((items) => items?._id);
     let userInfo = await getAsyncUserInfo();
@@ -229,6 +263,7 @@ const Cart = () => {
           type: ADD_TO_CART,
           payload: [],
         });
+        setCartEmpty(true);
       },
       onFailure: (Errr: any) => {
         setLoading(false);
@@ -237,9 +272,28 @@ const Cart = () => {
     dispatch(removeMultipleCartItems(obj));
   };
 
+  const onPressDeleteCart = () => {
+    Alert.alert("Delete Cart", "Are you sure you want delete your cart?.", [
+      {
+        text: "No",
+        onPress: () => console.log("Cancel Pressed"),
+      },
+      {
+        text: "Yes",
+        onPress: () => RemoveItems(),
+        style: "destructive",
+      },
+    ]);
+  };
+
   return (
     <View style={styles.container}>
-      <BackHeader title={strings["Cart"]} />
+      <BackHeader
+        isDelete
+        title={strings["Cart"]}
+        onPressDelete={onPressDeleteCart}
+        onPressScreenBack={() => navigate(screenName.Home)}
+      />
       <Loader visible={loading} />
       {cartEmpty ? (
         <View style={styles.centerContainer}>
@@ -327,8 +381,10 @@ const Cart = () => {
                   renderItem={({ item }) => {
                     return (
                       <RowItemValue
+                        isShowClose={true}
                         title={item?.serviceName}
                         value={"₹" + item?.price}
+                        onPressClose={() => onPressRemoveSignalItem(item)}
                       />
                     );
                   }}
@@ -456,14 +512,22 @@ const styles = StyleSheet.create({
   rowSpaceStyle: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
     marginVertical: hp(10),
+    justifyContent: "space-between",
+  },
+  rowItemStyle: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   greyTitleTextStyle: {
     ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),
   },
   valueTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+  },
+  closeContainer: {
+    marginLeft: wp(10),
+    ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
   lineStyle: {
     borderBottomWidth: 1,

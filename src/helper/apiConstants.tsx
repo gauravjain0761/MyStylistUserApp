@@ -65,6 +65,9 @@ export const api = {
   reschedule: "appointment/rescheduleAppointment",
   get_review: "review/getAllExpertReview/",
 
+  reason: "reason/getReasonList",
+  cancelReason: "reason/cancelReason",
+
   // campaign/getCampaignExpert
   campaignExpert: "campaign/getCampaignExpert",
 

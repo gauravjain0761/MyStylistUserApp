@@ -15,7 +15,6 @@ import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { colors } from "../../theme/color";
 import {
   convertToOutput,
-  generateTimes,
   generateWeekDates,
   hp,
   infoToast,
@@ -23,19 +22,9 @@ import {
   screen_width,
   wp,
 } from "../../helper/globalFunction";
-import { icons, images } from "../../theme/icons";
+import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
-import {
-  Dates,
-  Make_Up,
-  ReviewFilter,
-  Time,
-  Women_Services,
-  barbers,
-  carouselItems,
-  men_Services,
-  stylists_filter,
-} from "../../helper/constunts";
+import { ReviewFilter, stylists_filter } from "../../helper/constunts";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import {
@@ -90,6 +79,7 @@ import { io } from "socket.io-client";
 import { api } from "../../helper/apiConstants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce } from "lodash";
+import FilterHome from "../../components/common/FilterHome";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -133,7 +123,7 @@ const Home = () => {
   );
   const [rating, setRating] = useState(null);
   const [gender, setGender] = useState(null);
-  const [bestService, setBestService] = useState("Yes");
+  const [filter, setFilter] = useState(stylists_filter);
 
   useEffect(() => {
     const socket = io(api.BASE_URL);
@@ -279,6 +269,7 @@ const Home = () => {
       isLoading: isLoading,
       data: data,
       onSuccess: () => {
+        setFilterData(data);
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
@@ -301,10 +292,10 @@ const Home = () => {
       isLoading: isLoading,
       data: data,
       onSuccess: () => {
+        setFilterData(data);
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
-        setBestService("Yes");
       },
       onFailure: () => {
         setListLoader(false);
@@ -430,6 +421,88 @@ const Home = () => {
     }, 600);
   };
 
+  const dateClear = (isLoading: boolean) => {
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      dateTime: null,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const ratingClear = (isLoading: boolean) => {
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      rating: null,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+        setRating(null);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const clearBestService = () => {
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      best_service: null,
+      page: 1,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const updateFilter = (index: number) => {
+    let data = [...filter];
+    data[index - 1].isSelected = true;
+    setFilter([...data]);
+  };
+
+  const clearFilter = (index: number) => {
+    let data = [...filter];
+    data[index - 1].isSelected = false;
+    setFilter([...data]);
+  };
+
   const ModalHendler = (item: any) => {
     if (item == 1) {
       setIsModal(!isModal);
@@ -442,6 +515,22 @@ const Home = () => {
     } else if (item == 5) {
       onPressBestService();
     }
+    updateFilter(item);
+  };
+
+  const onPressClose = (id: any) => {
+    if (id == 1) {
+      dateClear(true);
+    } else if (id == 2) {
+    } else if (id == 3) {
+      // setCostmodal(!costmodal);
+    } else if (id == 4) {
+      ratingClear(true);
+      setRating(null);
+    } else if (id == 5) {
+      clearBestService();
+    }
+    clearFilter(id);
   };
 
   const onPressDateItem = (index: any) => {
@@ -471,10 +560,10 @@ const Home = () => {
       isLoading: isLoading,
       data: data,
       onSuccess: () => {
+        setFilterData(data);
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
-        setBestService("Yes");
       },
       onFailure: () => {
         setListLoader(false);
@@ -765,7 +854,6 @@ const Home = () => {
             <View style={styles?.title_border}></View>
           </View>
         </View>
-
         <View
           style={
             isSticky
@@ -774,19 +862,20 @@ const Home = () => {
           }
         >
           <FlatList
-            data={stylists_filter}
+            data={filter}
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }: any) => {
               return (
                 <Filter_Button
+                  isSeleted={item.isSelected}
+                  onPressClose={() => onPressClose(item.id)}
+                  isCloseIcon={item.isSelected}
                   onPress={() => {
                     ModalHendler(item.id);
                   }}
                   containerStyle={
-                    stylists_filter.length - 1 == index
-                      ? { marginRight: wp(10) }
-                      : null
+                    filter.length - 1 == index ? { marginRight: wp(10) } : null
                   }
                   title={item?.title}
                   type={item?.isIcon == true ? "icon" : "simple"}
@@ -798,12 +887,7 @@ const Home = () => {
             )}
           />
         </View>
-        {/* <TouchableOpacity
-          style={{ alignSelf: "center" }}
-          onPress={() => navigate("StylistList")}
-        >
-          <Text>View All</Text>
-        </TouchableOpacity> */}
+
         {listLoader ? (
           <View style={styles?.barber_card_container}>
             <FlatList

@@ -7,64 +7,80 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BackHeader, Loader } from "../../components";
 import { strings } from "../../helper/string";
 import AppointmentCancelCard from "../../components/common/AppointmentCancelCard";
 import { images } from "../../theme/icons";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, infoToast, successToast, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { cancelAppointment } from "../../actions";
+import { cancelAppointment, cancelReason, getReasonList } from "../../actions";
 import moment from "moment";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const AppointmentCancellation = () => {
-  const [select, SetSelect] = useState(0);
-  const { appointmentDetails } = useAppSelector((state) => state.appointment);
+  const [select, SetSelect] = useState<any>(null);
+  const { appointmentDetails, reasonList } = useAppSelector(
+    (state) => state.appointment
+  );
   const { Appointment } = appointmentDetails;
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(false);
 
-  const { navigate } = useNavigation();
-  const reason = [
-    {
-      id: 1,
-      title: "Order by mistake",
-    },
-    {
-      id: 2,
-      title: "Order by mistake",
-    },
-    {
-      id: 3,
-      title: "Order by mistake",
-    },
-    {
-      id: 4,
-      title: "Order by mistake",
-    },
-    {
-      id: 5,
-      title: "Order by mistake",
-    },
-    {
-      id: 6,
-      title: "Order by mistake",
-    },
-  ];
+  const { navigate, goBack } = useNavigation();
+
+  useEffect(() => {
+    let obj = {
+      params: {
+        reason_type: "Appointments",
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getReasonList(obj));
+  }, []);
 
   const onPressCancel = () => {
-    setLoading(true);
+    if (select === null) {
+      infoToast("Please select cancellation reason");
+    } else {
+      setLoading(true);
+      let obj = {
+        data: {
+          appointmentId: Appointment?._id,
+          status: "cancelled",
+        },
+        onSuccess: (respo) => {
+          setCancelReason();
+        },
+        onFailure: (err: any) => {
+          console.log(err);
+          setLoading(false);
+        },
+      };
+      dispatch(cancelAppointment(obj));
+    }
+  };
+
+  const onPressNo = () => {
+    navigate(screenName.Home);
+  };
+
+  const setCancelReason = async () => {
+    let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        appointmentId: Appointment?._id,
-        status: "cancelled",
+        reason_id: select,
+        appointment_id: Appointment?._id,
+        user_id: userInfo?._id,
       },
-      onSuccess: (respo) => {
+      onSuccess: () => {
         setLoading(false);
+        successToast("Appointment cancelled successfully");
         navigate(screenName.Home);
       },
       onFailure: (err: any) => {
@@ -72,12 +88,9 @@ const AppointmentCancellation = () => {
         setLoading(false);
       },
     };
-    dispatch(cancelAppointment(obj));
+    dispatch(cancelReason(obj));
   };
 
-  const onPressNo = () => {
-    navigate(screenName.Home);
-  };
   const onPressYes = () => {
     setLoading(true);
     let obj = {
@@ -115,7 +128,7 @@ const AppointmentCancellation = () => {
             )}
             time={Appointment?.timeSlot?.[0]?.availableTime}
             onPressNo={onPressNo}
-            onPressYes={onPressYes}
+            onPressYes={onPressCancel}
           />
         </View>
 
@@ -124,20 +137,20 @@ const AppointmentCancellation = () => {
             {strings["What is the reason of cancellation?"]}
           </Text>
           <FlatList
-            data={reason}
+            data={reasonList}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item, index }) => {
               return (
                 <TouchableOpacity
-                  onPress={() => SetSelect(item.id)}
+                  onPress={() => SetSelect(item._id)}
                   style={styles.btn_conatiner}
                 >
                   <View style={styles.radio_btn}>
-                    {select == item.id && (
+                    {select == item._id && (
                       <View style={styles.radio_btn_icon}></View>
                     )}
                   </View>
-                  <Text style={styles.reason_title}>{item.title}</Text>
+                  <Text style={styles.reason_title}>{item.reason_name}</Text>
                 </TouchableOpacity>
               );
             }}

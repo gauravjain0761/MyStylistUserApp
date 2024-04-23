@@ -24,6 +24,8 @@ type Props = {
 const MyWorkItem = ({ data, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { itemDetails } = useAppSelector((state) => state.home);
+  const [isModal, setIsModal] = useState(false);
+  const [image, setImage] = useState("");
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
@@ -46,7 +48,14 @@ const MyWorkItem = ({ data, index }: Props) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
             return (
-              <View key={index} style={styles.itemContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setImage(itemDetails?.featured_image_url + "/" + item.image);
+                  setIsModal(true);
+                }}
+                key={index}
+                style={styles.itemContainer}
+              >
                 <FastImage
                   resizeMode="cover"
                   style={styles.imgStyle}
@@ -55,14 +64,16 @@ const MyWorkItem = ({ data, index }: Props) => {
                     uri: itemDetails?.featured_image_url + "/" + item.image,
                   }}
                 />
-              </View>
+              </TouchableOpacity>
             );
           }}
         />
       ) : null}
       <ImageModal
+        isVisible={isModal}
         data={itemDetails?.user?.user_work_images}
-        baseURL={itemDetails?.featured_image_url}
+        onPressClose={() => setIsModal(false)}
+        image={image}
       />
     </View>
   );

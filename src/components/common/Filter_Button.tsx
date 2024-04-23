@@ -1,4 +1,5 @@
 import {
+  Image,
   ImageBackground,
   StyleSheet,
   Text,
@@ -11,7 +12,7 @@ import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { images } from "../../theme/icons";
+import { icons, images } from "../../theme/icons";
 
 type props = {
   title: string;
@@ -19,6 +20,9 @@ type props = {
   onPress?: (arg?: any) => any;
   containerStyle?: ViewStyle | any;
   btn_bg?: ViewStyle;
+  isCloseIcon?: boolean;
+  onPressClose?: () => void;
+  isSeleted?: boolean;
 };
 
 const Filter_Button = ({
@@ -27,6 +31,9 @@ const Filter_Button = ({
   onPress,
   containerStyle,
   btn_bg,
+  isCloseIcon,
+  onPressClose,
+  isSeleted,
 }: props) => {
   return (
     <>
@@ -37,12 +44,28 @@ const Filter_Button = ({
             onPress={onPress}
           >
             <ImageBackground
-              source={images.oval_grey_button}
+              source={
+                isSeleted
+                  ? images?.black_border_button
+                  : images.oval_grey_button
+              }
               style={styles.oval_bg}
               resizeMode="stretch"
             >
               <Text style={styles.title}>{title}</Text>
               <Dropdown_Down_Arrow />
+              {isCloseIcon ? (
+                <TouchableOpacity
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  onPress={onPressClose}
+                >
+                  <Image
+                    resizeMode="contain"
+                    source={icons.close}
+                    style={styles.closeIconStyle}
+                  />
+                </TouchableOpacity>
+              ) : null}
             </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -53,12 +76,28 @@ const Filter_Button = ({
             onPress={onPress}
           >
             <ImageBackground
-              source={images.oval_grey_button}
+              source={
+                isSeleted
+                  ? images?.black_border_button
+                  : images.oval_grey_button
+              }
               style={[styles.oval_bg, btn_bg]}
               resizeMode="stretch"
               resizeMethod="scale"
             >
               <Text style={styles?.title}>{title}</Text>
+              {isCloseIcon ? (
+                <TouchableOpacity
+                  hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                  onPress={onPressClose}
+                >
+                  <Image
+                    resizeMode="contain"
+                    source={icons.close}
+                    style={styles.closeIconStyle}
+                  />
+                </TouchableOpacity>
+              ) : null}
             </ImageBackground>
           </TouchableOpacity>
         </View>
@@ -87,5 +126,9 @@ const styles = StyleSheet.create({
     paddingVertical: hp(13),
     paddingHorizontal: wp(10),
     gap: wp(6),
+  },
+  closeIconStyle: {
+    height: wp(10),
+    width: wp(10),
   },
 });

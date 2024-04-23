@@ -8,6 +8,7 @@ import {
   GET_APPOINTMENT,
   GET_APPOINTMENTS_LIST,
   IS_LOADING,
+  REASON_LIST,
   REVIEW_LIST,
 } from "./dispatchTypes";
 import { makeAPIRequest } from "../helper/apiGlobal";
@@ -117,7 +118,6 @@ export const cancelAppointment =
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
           dispatch({ type: IS_LOADING, payload: false });
-          successToast("Appointment cancelled successfully");
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })
@@ -202,6 +202,61 @@ export const getAllExpertReview =
         }
       })
       .catch((error) => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getReasonList =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: GET,
+      url: api.reason,
+      headers: headers,
+      params: request.params,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          console.log("response.data", response.data);
+
+          dispatch({
+            type: REASON_LIST,
+            payload: response.data?.reasons || [],
+          });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const cancelReason =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.cancelReason,
+      headers: headers,
+      data: request.data,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200 || response.status === 201) {
+          dispatch({ type: IS_LOADING, payload: false });
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
         if (request.onFailure) request.onFailure(error.response);
       });
   };

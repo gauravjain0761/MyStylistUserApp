@@ -3,7 +3,8 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 import ReactNativeModal from "react-native-modal";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, screen_width, wp } from "../../helper/globalFunction";
+import Carousel, { Pagination } from "react-native-snap-carousel";
 import { ModalCloseIcon } from "../../theme/SvgIcon";
 
 type props = {
@@ -14,7 +15,7 @@ type props = {
   image?: string;
 };
 
-const ImageModal = ({
+const ImageListModal = ({
   data,
   baseURL,
   isVisible,
@@ -40,32 +41,33 @@ const ImageModal = ({
             <ModalCloseIcon />
           </TouchableOpacity>
         </View>
-        {/* <Carousel
+        <Carousel
           layout={"default"}
           data={data}
           sliderWidth={screen_width}
           itemWidth={screen_width}
           inactiveSlideScale={2}
           renderItem={({ item }: any) => {
-            return ( */}
-        <View style={styles?.carousel_img_container}>
-          <FastImage
-            resizeMode="contain"
-            source={{
-              uri: image,
-              priority: FastImage.priority.high,
-            }}
-            style={styles?.carousel_img}
-          />
-        </View>
-        {/* );
+            return (
+              <View style={styles?.carousel_img_container}>
+                <FastImage
+                  resizeMode="contain"
+                  source={{
+                    uri: baseURL + "/" + item.image,
+                    priority: FastImage.priority.high,
+                  }}
+                  style={styles?.carousel_img}
+                />
+              </View>
+            );
           }}
           onSnapToItem={onSnapToItem}
-        /> */}
-        {/* <View
+        />
+        <View
           style={{
             bottom: hp(30),
             position: "absolute",
+            alignSelf: "center",
           }}
         >
           <Pagination
@@ -78,7 +80,7 @@ const ImageModal = ({
             inactiveDotScale={1}
             dotContainerStyle={styles?.dotContainerStyle}
           />
-        </View> */}
+        </View>
       </View>
     </ReactNativeModal>
   );
@@ -122,4 +124,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ImageModal;
+export default ImageListModal;

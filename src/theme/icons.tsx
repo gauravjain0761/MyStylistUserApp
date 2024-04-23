@@ -84,4 +84,5 @@ export const icons = {
   marker_red: require("../assets/icon/marker_red.png"),
   location: require("../assets/icon/location.png"),
   delete_cart: require("../assets/icon/delete_cart.png"),
+  close: require("../assets/icon/close.png"),
 };

@@ -83,6 +83,8 @@ import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
+import ImageListModal from "../../components/common/ImageListModal";
+import { thru } from "lodash";
 
 type TagViewProps = {
   Icon?: any;
@@ -176,6 +178,7 @@ const YourStylist = () => {
   const [like, setLike] = useState(false);
   const [likeID, setLikeID] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isImageModal, setIsImageModal] = useState(false);
   const animatedStyle = useAnimatedStyle(() => {
     return {
       width:
@@ -413,6 +416,11 @@ const YourStylist = () => {
 
   const translateX = useRef(new Animated.Value(100)).current; // Initial translateX value set to -200 (off-screen)
 
+  const onPressSearchBox = () => {
+    // @ts-ignore
+    navigate(screenName.SearchItem);
+  };
+
   useEffect(() => {
     Animated.timing(translateX, {
       toValue: 0, // Animate to translateX 0 (on-screen)
@@ -432,13 +440,11 @@ const YourStylist = () => {
             {"Your Stylist"}
           </Text>
         ) : null}
-        <Animation.View style={[styles.searchContainer, animatedStyle]}>
-          <TextInput
-            style={styles.inputStyle}
-            placeholder="Search Here..."
-            placeholderTextColor={colors.gery_2}
-          />
-        </Animation.View>
+        <TouchableOpacity onPress={onPressSearchBox}>
+          <Animation.View style={[styles.searchContainer, animatedStyle]}>
+            <Text style={styles.inputStyle}>{"Search Here..."}</Text>
+          </Animation.View>
+        </TouchableOpacity>
         <Animated.View style={{ flexDirection: "row", alignItems: "flex-end" }}>
           {animatedValue === 0 ? (
             <TouchableOpacity onPress={onPressLike}>
@@ -470,17 +476,19 @@ const YourStylist = () => {
           </View>
         ) : (
           <View style={styles.rowStyle}>
-            <FastImage
-              resizeMode="cover"
-              style={styles.personStyle}
-              source={{
-                uri:
-                  itemDetails?.featured_image_url +
-                  "/" +
-                  itemDetails?.user?.user_profile_images?.[0]?.image,
-                priority: FastImage.priority.high,
-              }}
-            />
+            <TouchableOpacity onPress={() => setIsImageModal(true)}>
+              <FastImage
+                resizeMode="cover"
+                style={styles.personStyle}
+                source={{
+                  uri:
+                    itemDetails?.featured_image_url +
+                    "/" +
+                    itemDetails?.user?.user_profile_images?.[0]?.image,
+                  priority: FastImage.priority.high,
+                }}
+              />
+            </TouchableOpacity>
             <View style={styles.columStyle}>
               <View
                 style={{
@@ -762,6 +770,12 @@ const YourStylist = () => {
         contain={<ReviewModel />}
         containStyle={{ maxHeight: "80%" }}
       />
+      <ImageListModal
+        baseURL={itemDetails?.featured_image_url}
+        data={itemDetails?.user?.user_profile_images}
+        isVisible={isImageModal}
+        onPressClose={() => setIsImageModal(false)}
+      />
     </Animated.View>
   );
 };
@@ -975,7 +989,7 @@ const styles = StyleSheet.create({
   inputStyle: {
     flex: 1,
     marginHorizontal: wp(10),
-    ...commonFontStyle(fontFamily.regular, 15, colors.black),
+    ...commonFontStyle(fontFamily.regular, 15, colors.gery_6),
   },
   iconContainer: {
     flexDirection: "row",

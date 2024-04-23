@@ -66,6 +66,8 @@ const AppointmentReschedule = () => {
   const { navigate } = useNavigation();
   const dispatch = useAppDispatch();
 
+  console.log("appointmentDetails", appointmentDetails);
+
   useEffect(() => {
     async function getDatesList() {
       let userInfo = await getAsyncUserInfo();
@@ -232,11 +234,18 @@ const AppointmentReschedule = () => {
               value={"₹" + item?.price}
             />
           ))}
+          <RowItemValue
+            title="Discount Applied"
+            value={"-₹" + Appointment?.discount}
+          />
+          <RowItemValue title="Tax" value={"₹" + Appointment?.tax} />
           <RowItemValue title="Payment Method" value="Cash" />
           <View style={styles.lineStyle} />
           <View style={styles.rowSpaceStyle}>
             <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-            <Text style={styles.valueTextStyle}>{"₹" + price}</Text>
+            <Text style={styles.valueTextStyle}>
+              {"₹" + Appointment?.totalAmount}
+            </Text>
           </View>
         </View>
 

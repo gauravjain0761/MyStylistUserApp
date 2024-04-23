@@ -84,6 +84,7 @@ const AppointmentConfirm = () => {
   const onPressBookagain = () => {
     navigate(screenName.Cart);
   };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings.Appointment_Detail} />
@@ -128,7 +129,10 @@ const AppointmentConfirm = () => {
       </ScrollView>
 
       <View style={styles.elevationStyle}>
-        {/* <TouchableOpacity onPress={() => onPressFeedback()}>
+        <TouchableOpacity
+          disabled={Appointment?.status !== "completed"}
+          onPress={() => onPressFeedback()}
+        >
           <ImageBackground
             resizeMode="stretch"
             style={styles.cartBtnStyle}
@@ -136,8 +140,8 @@ const AppointmentConfirm = () => {
           >
             <Text style={styles.goTextStyle}>{strings.Give_Feedback}</Text>
           </ImageBackground>
-        </TouchableOpacity> */}
-        <TouchableOpacity onPress={() => onPressCancel()}>
+        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => onPressCancel()}>
           <ImageBackground
             resizeMode="stretch"
             style={styles.cartBtnStyle}
@@ -145,7 +149,7 @@ const AppointmentConfirm = () => {
           >
             <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
           </ImageBackground>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <TouchableOpacity onPress={() => onPressBookagain()}>
           <ImageBackground
             resizeMode="stretch"

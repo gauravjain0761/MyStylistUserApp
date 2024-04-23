@@ -1,4 +1,8 @@
-import { GET_APPOINTMENT, REVIEW_LIST } from "../actions/dispatchTypes";
+import {
+  GET_APPOINTMENT,
+  REASON_LIST,
+  REVIEW_LIST,
+} from "../actions/dispatchTypes";
 import {
   APPOINTMENTS_DETAILS,
   APPOINTMENTS_RESCHEDULE,
@@ -11,6 +15,7 @@ const initialState = {
   appointment: [],
   appointmentReschedule: {},
   reviewData: {},
+  reasonList: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -36,6 +41,9 @@ export default function (state = initialState, action: any) {
     }
     case REVIEW_LIST: {
       return { ...state, reviewData: action.payload };
+    }
+    case REASON_LIST: {
+      return { ...state, reasonList: action.payload };
     }
     default:
       return state;

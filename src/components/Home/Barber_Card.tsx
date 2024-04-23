@@ -99,7 +99,7 @@ const Barber_Card = ({
                             priority: FastImage.priority.high,
                           }}
                           style={styles?.carousel_img}
-                          resizeMode="stretch"
+                          resizeMode="cover"
                         />
                       </View>
                     );

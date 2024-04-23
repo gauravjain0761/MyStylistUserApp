@@ -395,15 +395,20 @@ const Home = () => {
     dispatch(getAllExpertReview(obj));
   };
 
-  const onPresstoNavigate = (item: any) => {
+  const onPresstoNavigate = async (item: any) => {
+    let coord = await getAsyncCoord();
     setServicesModal(false);
     setTimeout(() => {
+      let data = {
+        page: 1,
+        limit: 100,
+        maxDistance: 50000,
+        sub_service_id: item?._id,
+        latitude: coord.latitude,
+        longitude: coord.longitude,
+      };
       let obj = {
-        data: {
-          sub_service_id: item?._id,
-          limit: 20,
-          page: 1,
-        },
+        data: data,
         onSuccess: () => {
           // @ts-ignore
           navigate(screenName.Service, {
@@ -411,6 +416,7 @@ const Home = () => {
               ...item,
               imageUrl: subServicesModalData?.imageUrl + "/" + item?.fileName,
             },
+            filterData: data,
           });
         },
         onFailure: (err: any) => {

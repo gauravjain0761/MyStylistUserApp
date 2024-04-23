@@ -7,11 +7,23 @@ import {
   Text,
   View,
 } from "react-native";
-import React, { useEffect } from "react";
-import { BackHeader, Barber_Card, Filter_Button } from "../../components";
+import React, { useEffect, useState } from "react";
+import {
+  BackHeader,
+  Barber_Card,
+  Filter_Button,
+  SelectDateModal,
+  UserItemLoader,
+} from "../../components";
 import { strings } from "../../helper/string";
 import { images } from "../../theme/icons";
-import { hp, infoToast, wp } from "../../helper/globalFunction";
+import {
+  convertToOutput,
+  generateWeekDates,
+  hp,
+  infoToast,
+  wp,
+} from "../../helper/globalFunction";
 import { barbers, stylists_filter } from "../../helper/constunts";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
@@ -19,15 +31,61 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FastImage from "react-native-fast-image";
+import { getAllExpertBySubService } from "../../actions";
+import moment from "moment";
+import { getExpertAvailability } from "../../actions/commonActions";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const Service = () => {
   const { navigate } = useNavigation();
   const { params }: any = useRoute();
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState(false);
   const { expertUserList } = useAppSelector((state) => state.home);
+  const [filterList, setFilterList] = useState(stylists_filter);
+  const [filterObj, setFilterObj] = useState({});
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [selectedDateIndex, setSelectedDate] = useState(null);
+  const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [date, setDate] = useState("");
+  const [bookTime, setBookTime] = useState({});
+  const [isModal, setIsModal] = useState(false);
 
-  const onPressCard = () => {
-    navigate(screenName.YourStylist);
+  useEffect(() => {
+    setFilterObj(params?.filterData);
+    async function getDatesList() {
+      let userInfo = await getAsyncUserInfo();
+      let data = generateWeekDates();
+
+      let obj = {
+        data: {
+          startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
+          endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+          timeSlotDuration: 60,
+          expertId: userInfo._id,
+        },
+        onSuccess: (response: any) => {
+          setDates(convertToOutput(response));
+        },
+        onFailure: () => {},
+      };
+      dispatch(getExpertAvailability(obj));
+    }
+    getDatesList();
+  }, []);
+
+  const onPressDateItem = (index: any) => {
+    setSelectedDate(index);
+    setDate(moment(dates[index].title));
+    setTimes(dates[index].value);
+    setSelectedTime(null);
+  };
+
+  const onPressTimeItem = (index: any) => {
+    setSelectedTime(index);
+    let bookDates = times[index];
+    setBookTime(bookDates);
   };
 
   const onPressItem = (item: any) => {
@@ -35,9 +93,172 @@ const Service = () => {
     navigate(screenName.YourStylist, { id: item._id });
   };
 
+  const onPressFilterItem = (index: number) => {
+    if (index === 0) {
+      setIsModal(true);
+    } else if (index == 3) {
+      onPressRating();
+    } else if (index == 4) {
+      onPressBestService();
+    }
+    updateFilter(index);
+  };
+
+  const onCloseItem = (index: number) => {
+    if (index === 0) {
+      clearDates();
+    } else if (index == 3) {
+      clearRating();
+    } else if (index == 4) {
+      clearBestService();
+    }
+    clearFilter(index);
+  };
+
+  const updateFilter = (index: number) => {
+    let data = [...filterList];
+    data[index].isSelected = true;
+    setFilterList([...data]);
+  };
+
+  const clearFilter = (index: number) => {
+    let data = [...filterList];
+    data[index].isSelected = false;
+    setFilterList([...data]);
+  };
+
+  const onPressRating = () => {
+    setIsLoading(true);
+    let data = {
+      ...filterObj,
+      rating: 5,
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setIsLoading(false);
+        setFilterObj(data);
+      },
+      onFailure: (err: any) => {
+        infoToast(err.data?.message);
+        setIsLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
+
+  const onPressBestService = () => {
+    setIsLoading(true);
+    let data = {
+      ...filterObj,
+      best_service: "Yes",
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setIsLoading(false);
+        setFilterObj(data);
+      },
+      onFailure: (err: any) => {
+        infoToast(err.data?.message);
+        setIsLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
+
+  const onPressApplyDate = () => {
+    setIsLoading(true);
+    let data = {
+      ...filterObj,
+      dateTime: {
+        timeSlot_id: bookTime?._id,
+        availableDate: date,
+      },
+    };
+    console.log("data:::", data);
+
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setIsLoading(false);
+        setFilterObj(data);
+      },
+      onFailure: (err: any) => {
+        infoToast(err.data?.message);
+        setIsLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
+
+  const clearDates = () => {
+    setIsLoading(true);
+    let data = {
+      ...filterObj,
+      dateTime: null,
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setIsLoading(false);
+        setFilterObj(data);
+      },
+      onFailure: (err: any) => {
+        infoToast(err.data?.message);
+        setIsLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
+
+  const clearRating = () => {
+    setIsLoading(true);
+    let data = {
+      ...filterObj,
+      rating: null,
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setIsLoading(false);
+        setFilterObj(data);
+      },
+      onFailure: (err: any) => {
+        infoToast(err.data?.message);
+        setIsLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
+
+  const clearBestService = () => {
+    setIsLoading(true);
+    let data = {
+      ...filterObj,
+      best_service: null,
+    };
+    let obj = {
+      data: data,
+      onSuccess: () => {
+        setIsLoading(false);
+        setFilterObj(data);
+      },
+      onFailure: (err: any) => {
+        infoToast(err.data?.message);
+        setIsLoading(false);
+      },
+    };
+    dispatch(getAllExpertBySubService(obj));
+  };
+
   return (
     <View style={styles.container}>
-      <BackHeader isSearch title={params.item?.sub_service_name} />
+      <BackHeader
+        isSearch
+        title={params.item?.sub_service_name}
+        onPressScreenSearch={() => navigate(screenName.SearchStylistName)}
+      />
       <ScrollView
         stickyHeaderIndices={[1]}
         showsVerticalScrollIndicator={false}
@@ -49,18 +270,22 @@ const Service = () => {
           }}
           style={styles.banner}
         />
+
         <View style={styles?.service_filter_conatiner}>
           <FlatList
-            data={stylists_filter}
+            data={filterList}
             horizontal
             showsHorizontalScrollIndicator={false}
             renderItem={({ item, index }: any) => {
               return (
                 <Filter_Button
-                  onPress={() => {}}
+                  isSeleted={item.isSelected}
+                  onPressClose={() => onCloseItem(index)}
+                  isCloseIcon={item.isSelected}
+                  onPress={() => onPressFilterItem(index)}
                   title={item?.title}
                   containerStyle={
-                    stylists_filter.length - 1 == index
+                    filterList.length - 1 == index
                       ? { marginRight: wp(10) }
                       : null
                   }
@@ -80,40 +305,66 @@ const Service = () => {
           </Text>
           <View style={styles?.title_border}></View>
         </View>
+
         <ScrollView style={styles.card_container}>
-          <FlatList
-            data={expertUserList?.users}
-            showsVerticalScrollIndicator={false}
-            renderItem={({ item, index }: any) => {
-              return (
-                <Barber_Card
-                  featured_image_url={expertUserList?.featured_image_url}
-                  name={item.name}
-                  type="with Service"
-                  images={item?.user_profile_images}
-                  rating={item.averageRating}
-                  jobs={item?.jobDone}
-                  location={
-                    item?.city?.[0]?.city_name +
-                    ", " +
-                    item?.district?.[0]?.district_name +
-                    ", " +
-                    item?.state?.[0]?.state_name
-                  }
-                  offers={item?.offers}
-                  service={params.item?.sub_service_name}
-                  carouselitemHeight={hp(157)}
-                  carouselitemWidth={wp(132)}
-                  onPress={() => onPressItem(item)}
-                  data={item}
-                />
-              );
-            }}
-            ItemSeparatorComponent={() => (
-              <View style={styles.card_separator}></View>
-            )}
-          />
+          {isLoading ? (
+            <View style={styles?.barber_card_container}>
+              <FlatList
+                data={[1, 2, 3, 4]}
+                renderItem={({ item, index }) => {
+                  return <UserItemLoader key={index} />;
+                }}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          ) : (
+            <FlatList
+              data={expertUserList?.users}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item, index }: any) => {
+                return (
+                  <Barber_Card
+                    featured_image_url={expertUserList?.featured_image_url}
+                    name={item.name}
+                    type="with Service"
+                    images={item?.user_profile_images}
+                    rating={item.averageRating}
+                    jobs={item?.jobDone}
+                    location={
+                      item?.city?.[0]?.city_name +
+                      ", " +
+                      item?.district?.[0]?.district_name +
+                      ", " +
+                      item?.state?.[0]?.state_name
+                    }
+                    offers={item?.offers}
+                    service={params.item?.sub_service_name}
+                    carouselitemHeight={hp(157)}
+                    carouselitemWidth={wp(132)}
+                    onPress={() => onPressItem(item)}
+                    data={item}
+                  />
+                );
+              }}
+              ItemSeparatorComponent={() => (
+                <View style={styles.card_separator}></View>
+              )}
+            />
+          )}
         </ScrollView>
+
+        <SelectDateModal
+          visible={isModal}
+          close={setIsModal}
+          dates={dates}
+          onPressDateItem={onPressDateItem}
+          onPressTimeItem={onPressTimeItem}
+          setIsModal={setIsModal}
+          times={times}
+          selectedDateIndex={selectedDateIndex}
+          selectedTimeIndex={selectedTimeIndex}
+          onPressApply={onPressApplyDate}
+        />
       </ScrollView>
     </View>
   );
@@ -165,5 +416,10 @@ const styles = StyleSheet.create({
   card_container: {
     marginHorizontal: wp(20),
     marginTop: hp(10),
+  },
+  barber_card_container: {
+    marginHorizontal: wp(20),
+    marginTop: hp(20),
+    flex: 1,
   },
 });

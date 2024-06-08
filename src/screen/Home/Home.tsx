@@ -234,7 +234,7 @@ const Home = () => {
           longitude: response?.longitude,
           maxDistance: 50000,
           page: page,
-          limit: 20,
+          limit: 5,
           rating: rating,
           gender: gender,
         };
@@ -648,6 +648,11 @@ const Home = () => {
     dispatch(getExpertAvailability(obj));
   }
 
+  const onPressViewAll = () => {
+    // @ts-ignore
+    navigate("StylistList");
+  };
+
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <LocationModal
@@ -661,7 +666,7 @@ const Home = () => {
       <ScrollView
         stickyHeaderIndices={[1, 7]}
         showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
+        // onScroll={handleScroll}
         scrollEventThrottle={400}
         refreshControl={
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
@@ -907,7 +912,7 @@ const Home = () => {
         ) : (
           <View style={styles?.barber_card_container}>
             <FlatList
-              data={barberList || []}
+              data={barberList.slice(0, 5) || []}
               showsVerticalScrollIndicator={false}
               renderItem={({ item, index }) => {
                 return (
@@ -931,6 +936,18 @@ const Home = () => {
               ItemSeparatorComponent={() => (
                 <View style={styles.card_separator}></View>
               )}
+              ListFooterComponent={() => {
+                return (
+                  <TouchableOpacity
+                    onPress={onPressViewAll}
+                    style={styles.footerBtnStyle}
+                  >
+                    <Text style={styles.footerBtnTextStyle}>
+                      {"View All Stylist"}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
             />
           </View>
         )}
@@ -1037,7 +1054,7 @@ const Home = () => {
           }
           containStyle={{ maxHeight: "80%" }}
         />
-        {footerLoading && <ActivityIndicator />}
+        {/* {footerLoading && <ActivityIndicator />} */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -1298,5 +1315,16 @@ const styles = StyleSheet.create({
   },
   barberdetailscontinerStyle: {
     // marginTop: hp(20),
+  },
+  footerBtnStyle: {
+    padding: wp(15),
+    backgroundColor: colors.primary_light_blue,
+    alignSelf: "center",
+    marginVertical: hp(10),
+    borderRadius: 10,
+    paddingHorizontal: wp(20),
+  },
+  footerBtnTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.black),
   },
 });

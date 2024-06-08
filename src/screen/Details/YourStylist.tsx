@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Animated,
   FlatList,
   Image,
   ImageBackground,
@@ -85,6 +84,8 @@ import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import ImageListModal from "../../components/common/ImageListModal";
 import { thru } from "lodash";
+import Animated from "react-native-reanimated";
+import DeviceInfo from "react-native-device-info";
 
 type TagViewProps = {
   Icon?: any;
@@ -356,7 +357,7 @@ const YourStylist = () => {
     };
     let obj = {
       data: data,
-      onSuccess: (respone) => {
+      onSuccess: (respone: any) => {
         let id = respone.data?._id;
         setLikeID(id);
         setLike(true);
@@ -370,7 +371,7 @@ const YourStylist = () => {
       data: {
         id: likeID,
       },
-      onSuccess: (respone) => {
+      onSuccess: () => {
         setLike(false);
       },
       onFailure: (err: any) => {},
@@ -414,56 +415,40 @@ const YourStylist = () => {
     }
   };
 
-  const translateX = useRef(new Animated.Value(100)).current; // Initial translateX value set to -200 (off-screen)
-
   const onPressSearchBox = () => {
     // @ts-ignore
     navigate(screenName.SearchItem);
   };
 
-  useEffect(() => {
-    Animated.timing(translateX, {
-      toValue: 0, // Animate to translateX 0 (on-screen)
-      duration: 700, // Adjust the duration as needed
-      useNativeDriver: true, // Add this line for performance
-    }).start();
-  }, [translateX]);
-
   return (
-    <Animated.View style={{ ...styles.container, transform: [{ translateX }] }}>
-      <SafeAreaView style={styles.headerContainer} edges={["top"]}>
-        <TouchableOpacity onPress={onPressBack}>
-          <BackIcon />
-        </TouchableOpacity>
-        {animatedValue === 0 ? (
-          <Text numberOfLines={1} style={styles.headerTextStyle}>
-            {"Your Stylist"}
-          </Text>
-        ) : null}
-        <TouchableOpacity onPress={onPressSearchBox}>
-          <Animation.View style={[styles.searchContainer, animatedStyle]}>
-            <Text style={styles.inputStyle}>{"Search Here..."}</Text>
-          </Animation.View>
-        </TouchableOpacity>
-        <Animated.View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-          {animatedValue === 0 ? (
+    <View style={{ ...styles.container }}>
+      <Animated.Image
+        style={styles.imgStyle}
+        source={{ uri: params.img }}
+        sharedTransitionTag={`sharedTag-${params.index}`}
+      />
+      <View style={styles.mainHeaderContainer}>
+        <View style={{ height: DeviceInfo.hasNotch() ? hp(50) : 0 }} />
+        <View style={styles.headerContainer}>
+          <TouchableOpacity onPress={onPressBack}>
+            <BackIcon />
+          </TouchableOpacity>
+          <Animated.View style={styles.rowEndStyle}>
             <TouchableOpacity onPress={onPressLike}>
               <FillLike fill={like ? "#000" : "none"} />
             </TouchableOpacity>
-          ) : null}
-          {animatedValue === 0 ? (
             <TouchableOpacity
               onPress={onPressShare}
               style={styles.shareContainer}
             >
               <ShareIcon />
             </TouchableOpacity>
-          ) : null}
-          <TouchableOpacity onPress={onPressSearch}>
-            {animatedValue === 0 ? <SearchIcon /> : <CloseIcon />}
-          </TouchableOpacity>
-        </Animated.View>
-      </SafeAreaView>
+            <TouchableOpacity onPress={onPressSearchBox}>
+              <SearchIcon />
+            </TouchableOpacity>
+          </Animated.View>
+        </View>
+      </View>
       <Animation.ScrollView
         stickyHeaderIndices={[2]}
         style={{ flex: 1 }}
@@ -556,13 +541,7 @@ const YourStylist = () => {
           </LinearGradient>
         </View>
 
-        <View
-          style={[
-            isHeaderSticky
-              ? { position: "absolute", top: -130, backgroundColor: "#FAFAFA" }
-              : { position: "absolute", top: -120 },
-          ]}
-        >
+        <View style={styles.rowOfferMainContainer}>
           <View style={styles.rowSpaceStyle}>
             <TagView
               isSelected={isOffers}
@@ -776,7 +755,7 @@ const YourStylist = () => {
         isVisible={isImageModal}
         onPressClose={() => setIsImageModal(false)}
       />
-    </Animated.View>
+    </View>
   );
 };
 
@@ -789,7 +768,7 @@ const styles = StyleSheet.create({
   },
   rowStyle: {
     flexDirection: "row",
-    padding: wp(20),
+    paddingHorizontal: wp(20),
   },
   personStyle: {
     height: hp(111),
@@ -838,7 +817,7 @@ const styles = StyleSheet.create({
   },
   gradinetStyle: {
     width: screen_width,
-    height: hp(210),
+    height: hp(200),
     marginTop: hp(15),
   },
   offerContainer: {
@@ -867,7 +846,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(15),
     marginVertical: hp(0),
     backgroundColor: colors?.review_card_bg,
-    paddingVertical: hp(20),
+    paddingVertical: hp(5),
   },
   buttonStyle: {
     height: hp(40),
@@ -901,7 +880,7 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 15,
     backgroundColor: colors.white,
-    padding: wp(20),
+    padding: wp(15),
     flexDirection: "row",
     alignItems: "center",
     borderTopWidth: 1,
@@ -970,8 +949,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: hp(10),
     paddingHorizontal: wp(20),
-    backgroundColor: colors?.white,
     justifyContent: "space-between",
+  },
+  mainHeaderContainer: {
+    position: "absolute",
+    width: "100%",
   },
   headerTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors?.black),
@@ -1006,5 +988,18 @@ const styles = StyleSheet.create({
   },
   dayValueTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.black),
+  },
+  imgStyle: {
+    width: "100%",
+    height: 250,
+    marginBottom: hp(10),
+  },
+  rowEndStyle: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+  },
+  rowOfferMainContainer: {
+    position: "absolute",
+    top: -120,
   },
 });

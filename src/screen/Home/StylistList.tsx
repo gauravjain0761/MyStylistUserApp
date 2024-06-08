@@ -5,45 +5,97 @@ import {
   FlatList,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { screenName } from "../../helper/routeNames";
 import Animated from "react-native-reanimated";
-import { hp, wp } from "../../helper/globalFunction";
-import { BackHeader, UserItemLoader } from "../../components";
+import {
+  convertToOutput,
+  generateWeekDates,
+  hp,
+  wp,
+} from "../../helper/globalFunction";
+import {
+  BackHeader,
+  Filter_Button,
+  Modals,
+  ReviewModal,
+  SelectDateModal,
+  UserItemLoader,
+} from "../../components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { CarIcon, StarIcon, VerifyIcon } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
-import { getUsersByLocation } from "../../actions";
+import {
+  getAllExpertReview,
+  getUsersByLocation,
+  setLocation,
+} from "../../actions";
 import { requestLocationPermission } from "../../helper/locationHandler";
+import { ReviewFilter, stylists_filter } from "../../helper/constunts";
+import moment from "moment";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getExpertAvailability } from "../../actions/commonActions";
 
 const StylistList = ({ navigation }) => {
   const dispatch = useAppDispatch();
 
   const { userList, barberList } = useAppSelector((state) => state.home);
   const [footerLoading, setFooterLoading] = useState(false);
-  const [refreshControl, setRefreshControle] = useState(false);
+  const [onEndReachedCalled, setOnEndReachedCalled] = useState(true);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [filterData, setFilterData] = useState({});
   const [rating, setRating] = useState(null);
+  const [filter, setFilter] = useState(stylists_filter);
+  const [isModal, setIsModal] = useState(false);
+  const [costmodal, setCostmodal] = useState(false);
+  const [reviewModal, setReviewModal] = useState(false);
+  const [ratingItem, setRatingItem] = useState<any>({});
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [selectedDateIndex, setSelectedDate] = useState(null);
+  const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [date, setDate] = useState("");
+  const [bookTime, setBookTime] = useState({});
 
   const onPressItem = (index: number) => {
     let imgUrl =
       userList?.featured_image_url +
       "/" +
       barberList[index]?.user_profile_images?.[0]?.image;
-    navigation.navigate(screenName.StylistDetails, {
+    navigation.navigate(screenName.YourStylist, {
       index: index,
       img: imgUrl,
       id: barberList[index]._id,
     });
   };
 
+  async function getDatesList() {
+    let userInfo = await getAsyncUserInfo();
+    let data = generateWeekDates();
+
+    let obj = {
+      data: {
+        startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
+        endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+        timeSlotDuration: 60,
+        expertId: userInfo._id,
+      },
+      onSuccess: (response: any) => {
+        setDates(convertToOutput(response));
+      },
+      onFailure: () => {},
+    };
+    dispatch(getExpertAvailability(obj));
+  }
+
   useEffect(() => {
     setLoading(true);
     getUserList(true);
+    getDatesList();
   }, []);
 
   const getUserList = async (isLoading: boolean) => {
@@ -54,7 +106,7 @@ const StylistList = ({ navigation }) => {
           longitude: response?.longitude,
           maxDistance: 50000,
           page: page,
-          limit: 20,
+          limit: 15,
           rating: rating,
           gender: null,
         };
@@ -66,6 +118,7 @@ const StylistList = ({ navigation }) => {
             setPage(page + 1);
             setFooterLoading(false);
             setLoading(false);
+            setOnEndReachedCalled(true);
           },
           onFailure: () => {
             setLoading(false);
@@ -79,13 +132,278 @@ const StylistList = ({ navigation }) => {
     );
   };
 
+  const onPressClose = (id: any) => {
+    if (id == 1) {
+      dateClear(true);
+    } else if (id == 2) {
+    } else if (id == 3) {
+      // setCostmodal(!costmodal);
+    } else if (id == 4) {
+      ratingClear(true);
+      setRating(null);
+    } else if (id == 5) {
+      clearBestService();
+    }
+    clearFilter(id);
+  };
+
+  const ModalHendler = (item: any) => {
+    if (item == 1) {
+      setIsModal(!isModal);
+    } else if (item == 2) {
+    } else if (item == 3) {
+      setCostmodal(!costmodal);
+    } else if (item == 4) {
+      setRating(5);
+      onPressRating(true, 5);
+    } else if (item == 5) {
+      onPressBestService();
+    }
+    updateFilter(item);
+  };
+
+  const updateFilter = (index: number) => {
+    let data = [...filter];
+    data[index - 1].isSelected = true;
+    setFilter([...data]);
+  };
+
+  const clearFilter = (index: number) => {
+    let data = [...filter];
+    data[index - 1].isSelected = false;
+    setFilter([...data]);
+  };
+
+  const onPressRating = (isLoading: boolean, rating: number) => {
+    setLoading(true);
+    let data = {
+      ...filterData,
+      rating: rating,
+      page: 1,
+    };
+
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const onPressBestService = () => {
+    setLoading(true);
+    let data = {
+      ...filterData,
+      best_service: "Yes",
+      page: 1,
+    };
+    let obj = {
+      isLoading: loading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const dateClear = (isLoading: boolean) => {
+    setLoading(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      dateTime: null,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const ratingClear = (isLoading: boolean) => {
+    setLoading(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      rating: null,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setLoading(false);
+        setRating(null);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const clearBestService = () => {
+    setLoading(true);
+    let data = {
+      ...filterData,
+      best_service: null,
+      page: 1,
+    };
+    let obj = {
+      isLoading: loading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+  const onPressReviewItem = (item: any) => {
+    setReviewModal(true);
+    setRatingItem({
+      averageRating: item?.averageRating,
+      jobDone: item?.jobDone,
+      _id: item?._id,
+    });
+    let obj = {
+      user_id: item?._id,
+      params: {
+        limit: 100,
+        page: 1,
+        sort: "newest",
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAllExpertReview(obj));
+  };
+
+  const onPressRatingFilterItem = (index: number) => {
+    let obj = {
+      user_id: ratingItem?._id,
+      params: {
+        limit: 100,
+        page: 1,
+        sort: ReviewFilter?.[index].type,
+      },
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAllExpertReview(obj));
+  };
+
+  const onPressDateItem = (index: any) => {
+    setSelectedDate(index);
+    setDate(moment(dates[index].title));
+    setTimes(dates[index].value);
+    setSelectedTime(null);
+  };
+
+  const onPressTimeItem = (index: any) => {
+    setSelectedTime(index);
+    let bookDates = times[index];
+    setBookTime(bookDates);
+  };
+
+  const onPressApplyDate = () => {
+    setLocation(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      dateTime: {
+        timeSlot_id: bookTime?._id,
+        availableDate: date,
+      },
+    };
+    let obj = {
+      isLoading: loading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setLoading(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const loadMoreData = () => {
+    if (!onEndReachedCalled && !footerLoading) {
+      setFooterLoading(true);
+      getUserList(false);
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
-      <BackHeader title="Stylist" />
+      <BackHeader title="Your Stylist" />
+      <View style={styles.filterStyle}>
+        <FlatList
+          data={filter}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item, index }: any) => {
+            return (
+              <Filter_Button
+                isSeleted={item.isSelected}
+                onPressClose={() => onPressClose(item.id)}
+                isCloseIcon={item.isSelected}
+                onPress={() => {
+                  ModalHendler(item.id);
+                }}
+                containerStyle={
+                  filter.length - 1 == index ? { marginRight: wp(10) } : null
+                }
+                title={item?.title}
+                type={item?.isIcon == true ? "icon" : "simple"}
+              />
+            );
+          }}
+          ItemSeparatorComponent={() => (
+            <View style={styles?.filter_item_separator}></View>
+          )}
+        />
+      </View>
       {loading ? (
         <View style={{ flex: 1, marginHorizontal: wp(20), marginTop: hp(20) }}>
           <FlatList
-            data={[1, 2, 3, 4]}
+            data={[1, 2, 3, 4, 5, 6, 7]}
             renderItem={({ item, index }) => {
               return <UserItemLoader key={index} />;
             }}
@@ -123,7 +441,10 @@ const StylistList = ({ navigation }) => {
                   </View>
                   <View style={styles.marginStyle} />
                   <View style={styles.rowStyle}>
-                    <TouchableOpacity style={styles.rating_badge}>
+                    <TouchableOpacity
+                      onPress={() => onPressReviewItem(item)}
+                      style={styles.rating_badge}
+                    >
                       <Text style={styles.rating_title}>
                         {item.averageRating}
                       </Text>
@@ -152,8 +473,47 @@ const StylistList = ({ navigation }) => {
           ItemSeparatorComponent={() => (
             <View style={styles.card_separator}></View>
           )}
+          onEndReached={loadMoreData}
+          onEndReachedThreshold={0.7}
+          onMomentumScrollBegin={() => setOnEndReachedCalled(false)}
+          ListFooterComponent={() => {
+            if (footerLoading) {
+              return (
+                <ActivityIndicator
+                  color={colors.stylists_title_gray}
+                  size={"large"}
+                />
+              );
+            } else {
+              return null;
+            }
+          }}
         />
       )}
+      <Modals
+        isIcon
+        visible={reviewModal}
+        close={setReviewModal}
+        contain={
+          <ReviewModal
+            ratingItem={ratingItem}
+            onPressFilterItem={onPressRatingFilterItem}
+          />
+        }
+        containStyle={{ maxHeight: "80%" }}
+      />
+      <SelectDateModal
+        visible={isModal}
+        close={setIsModal}
+        dates={dates}
+        onPressDateItem={onPressDateItem}
+        onPressTimeItem={onPressTimeItem}
+        setIsModal={setIsModal}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        onPressApply={onPressApplyDate}
+      />
     </View>
   );
 };
@@ -218,6 +578,13 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     marginTop: hp(20),
+  },
+  filter_item_separator: {
+    width: wp(7),
+  },
+  filterStyle: {
+    paddingLeft: wp(16),
+    paddingTop: hp(16),
   },
 });
 

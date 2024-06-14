@@ -10,6 +10,7 @@ export const asyncKeys = {
   guest: "@guest",
   location: "@location",
   Coord: "@coord",
+  cartId: "@cart_id",
 };
 
 export const clearAsync = async () => {
@@ -54,6 +55,19 @@ export const getAsyncUserInfo = async () => {
   const userInfo = await AsyncStorage.getItem(asyncKeys.user_info);
   if (userInfo) {
     return JSON.parse(userInfo);
+  } else {
+    return null;
+  }
+};
+
+export const setAsyncCartId = async (user: any) => {
+  await AsyncStorage.setItem(asyncKeys.cartId, JSON.stringify(user));
+};
+
+export const getAsyncCartId = async () => {
+  const cartId = await AsyncStorage.getItem(asyncKeys.cartId);
+  if (cartId) {
+    return JSON.parse(cartId);
   } else {
     return null;
   }

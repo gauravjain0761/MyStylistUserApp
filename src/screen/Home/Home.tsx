@@ -311,7 +311,8 @@ const Home = () => {
         await getAddress(
           response,
           async (result: any) => {
-            await setAsyncLocation(result?.results[0]?.formatted_address);
+            // await setAsyncLocation(result?.results[0]?.formatted_address);
+            await setAsyncLocation("Mohali, Punjab");
             await GetStatus();
           },
           (err) => {

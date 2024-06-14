@@ -13,10 +13,19 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import { TrashIcon } from "../../theme/SvgIcon";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import {
+  getAsyncCartId,
+  getAsyncUserInfo,
+  setAsyncCartId,
+} from "../../helper/asyncStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { addToCart, removeToCart } from "../../actions";
-import { ADD_TO_CART } from "../../actions/dispatchTypes";
+import {
+  addToCart,
+  getCartlist,
+  removeMultipleCartItems,
+  removeToCart,
+} from "../../actions";
+import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 
 type Props = {
@@ -29,35 +38,79 @@ type Props = {
 const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
   const { addtocart } = useAppSelector((state) => state.cart);
 
+  const getCart = async () => {
+    console.log("callll");
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: async (response: any) => {
+        await setAsyncCartId(response?.data?.cart?._id);
+        let initialvalue = 0;
+        dispatch({
+          type: ADD_TO_CART,
+          payload: { items: [...response?.data?.cart?.items] },
+        });
+        isInCart(data);
+        if (response.data?.cart?.items?.length > 0) {
+          let total = response.data?.cart?.items?.reduce(
+            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
+            initialvalue
+          );
+          dispatch({
+            type: CART_DETAILS,
+            payload: { ...response?.data, total: total },
+          });
+        } else {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
+      },
+      onFailure: (Errr: any) => {
+        if (Errr?.data?.message === "Cart not found") {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+          dispatch({ type: ADD_TO_CART, payload: [] });
+        }
+      },
+    };
+    dispatch(getCartlist(obj));
+  };
+
   const onPressDelete = useCallback(async () => {
-    let itemId = "";
-    addtocart?.items?.map((item) => {
+    let itemId = addtocart?.items?.map((item) => {
       if (item.serviceId == data.sub_services.sub_service_id) {
-        itemId = item._id;
+        return item._id;
       }
     });
+    let cartId = await getAsyncCartId();
     let userInfo = await getAsyncUserInfo();
     let passData = {
       userId: userInfo?._id,
       itemId: itemId,
+      cartId: cartId,
     };
     let obj = {
       data: passData,
-      onSuccess: (response: any) => {
-        dispatch({ type: ADD_TO_CART, payload: response.data });
-        setCount(false);
-        console.log("ressponce", response);
+      onSuccess: async (response: any) => {
+        await getCart();
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
       },
     };
-    dispatch(removeToCart(obj));
-  }, [count]);
+    dispatch(removeMultipleCartItems(obj));
+  }, []);
 
   const dispatch = useAppDispatch();
 
   const onPressAdd = useCallback(async () => {
+    console.log("onPressAddd", data);
     let userInfo = await getAsyncUserInfo();
     let objs: any = {
       actionId: data?._id,
@@ -74,16 +127,25 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
     };
     let obj = {
       data: passData,
-      onSuccess: (response: any) => {
+      onSuccess: async (response: any) => {
         dispatch({ type: ADD_TO_CART, payload: response.data });
-        setCount(true);
+        await getCart();
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
       },
     };
-    dispatch(addToCart(obj));
-  }, [count]);
+    // dispatch(addToCart(obj));
+  }, []);
+
+  const isInCart = (item) => {
+    // addtocart?.items?.forEach((items) =>
+    //   console.log("addtocartaddtocart", items, item)
+    // );
+    return addtocart?.items?.some(
+      (items) => items?.serviceId == item.sub_service_id
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -94,13 +156,13 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
             {"₹ "}
             {data?.sub_services?.price}
           </Text>
-          {/* {isOffer ? (
-            <Text style={styles.offerPriceStyle}>{"₹ 400"}</Text>
-          ) : null} */}
         </View>
         <View style={{ flex: 1 }} />
-        {count == false ? (
-          <TouchableOpacity onPress={onPressAdd}>
+        {isInCart(data) == false || isInCart(data) == undefined ? (
+          <TouchableOpacity
+            style={{ alignSelf: "flex-start" }}
+            onPress={onPressAdd}
+          >
             <ImageBackground
               resizeMode="contain"
               style={styles.btnStyle}

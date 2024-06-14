@@ -86,6 +86,7 @@ import ImageListModal from "../../components/common/ImageListModal";
 import { thru } from "lodash";
 import Animated from "react-native-reanimated";
 import DeviceInfo from "react-native-device-info";
+import Cart from "../Cart";
 
 type TagViewProps = {
   Icon?: any;
@@ -223,7 +224,7 @@ const YourStylist = () => {
   }, []);
 
   useEffect(() => {
-    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
+    if (addtocart?.length > 0 || Object.keys(addtocart)?.length > 0) {
       Calculate();
     }
   }, [addtocart]);
@@ -274,6 +275,7 @@ const YourStylist = () => {
       },
       onFailure: (Errr: any) => {
         console.log("Errr", Errr);
+        setTotal(0);
       },
     };
     dispatch(getCartlist(obj));

@@ -29,35 +29,11 @@ type Props = {
 
 const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const [expanded, setExpanded] = useState(true);
-  const { addtocart } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(false);
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     setExpanded(!expanded);
   };
-
-  useEffect(() => {
-    getStatus();
-  }, []);
-
-  console.log("addtocart", addtocart);
-
-  const getStatus = useCallback(async () => {
-    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
-      addtocart?.items?.map((item, index) => {
-        service.map((items, indexs) => {
-          if (items?.sub_service_id == item?.serviceId) {
-            setCount(true);
-          } else {
-            setCount(false);
-          }
-        });
-      });
-    } else {
-      setCount(false);
-    }
-  }, [count]);
 
   return (
     <View key={index}>
@@ -77,9 +53,8 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
                 data={item}
                 key={index}
                 baseUrl={baseUrl}
-                count={count}
-                setCount={setCount}
                 actionId={actionId}
+                index={index}
               />
             );
           }}

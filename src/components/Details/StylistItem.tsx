@@ -28,34 +28,11 @@ type Props = {
 const StylistItem = ({ isOffer, data, offers, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(false);
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
     setExpanded(!expanded);
   };
-
-  useEffect(() => {
-    getStatus();
-  }, []);
-
-  const getStatus = useCallback(async () => {
-    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
-      addtocart?.items?.map((item, index) => {
-        offers?.offers.map((items, indexs) => {
-          if (item?.serviceType == "Offer") {
-            if (items?.sub_services?.sub_service_id == item?.serviceId) {
-              setCount(true);
-            } else {
-              setCount(false);
-            }
-          }
-        });
-      });
-    } else {
-      setCount(false);
-    }
-  }, [count]);
 
   return (
     <View key={index}>
@@ -76,8 +53,6 @@ const StylistItem = ({ isOffer, data, offers, index }: Props) => {
                 data={item}
                 key={index}
                 baseUrl={offers?.featured_image_url}
-                count={count}
-                setCount={setCount}
               />
             );
           }}

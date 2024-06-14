@@ -23,29 +23,6 @@ type Props = {
 const PackagesItem = ({ packages, index }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
-  const [count, setCount] = useState(false);
-
-  useEffect(() => {
-    CheckStatus();
-  }, []);
-
-  const CheckStatus = useCallback(() => {
-    if (addtocart.length > 0 || Object.keys(addtocart).length > 0) {
-      packages?.packages.map((item, index) => {
-        addtocart?.items.map((items, index) => {
-          if (items?.serviceType == "Package") {
-            if (item?.service_name[0]?._id == items?.serviceId) {
-              setCount(true);
-            } else {
-              setCount(false);
-            }
-          }
-        });
-      });
-    } else {
-      setCount(false);
-    }
-  }, [count]);
 
   const onPressArrow = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
@@ -65,14 +42,7 @@ const PackagesItem = ({ packages, index }: Props) => {
           data={packages?.packages || []}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => {
-            return (
-              <PackagesInnerItem
-                data={item}
-                key={index}
-                count={count}
-                setCount={setCount}
-              />
-            );
+            return <PackagesInnerItem data={item} key={index} />;
           }}
         />
       ) : null}

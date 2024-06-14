@@ -13,14 +13,23 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { addToCart, removeToCart } from "../../actions";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { ADD_TO_CART } from "../../actions/dispatchTypes";
+import {
+  addToCart,
+  getCartlist,
+  removeMultipleCartItems,
+  removeToCart,
+} from "../../actions";
+import {
+  getAsyncCartId,
+  getAsyncUserInfo,
+  setAsyncCartId,
+} from "../../helper/asyncStorage";
+import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 
 type Props = {
   data: any;
-  count: boolean;
-  setCount: any;
+  count?: boolean;
+  setCount?: any;
 };
 
 const PackagesInnerItem = ({ data, count, setCount }: Props) => {
@@ -28,33 +37,78 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
 
   const dispatch = useAppDispatch();
 
+  const getCart = async () => {
+    console.log("callll");
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo._id,
+      },
+      onSuccess: async (response: any) => {
+        await setAsyncCartId(response?.data?.cart?._id);
+        let initialvalue = 0;
+        dispatch({
+          type: ADD_TO_CART,
+          payload: { items: [...response?.data?.cart?.items] },
+        });
+        isInCart(data);
+        if (response.data?.cart?.items?.length > 0) {
+          let total = response.data?.cart?.items?.reduce(
+            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
+            initialvalue
+          );
+          dispatch({
+            type: CART_DETAILS,
+            payload: { ...response?.data, total: total },
+          });
+        } else {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
+      },
+      onFailure: (Errr: any) => {
+        if (Errr?.data?.message === "Cart not found") {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+          dispatch({ type: ADD_TO_CART, payload: [] });
+        }
+      },
+    };
+    dispatch(getCartlist(obj));
+  };
+
   const onPressDelete = useCallback(async () => {
-    let itemId = "";
-    addtocart?.items?.map((item) => {
-      data.service_name.map((items) => {
+    let cartId = await getAsyncCartId();
+    let selected = [];
+    await addtocart?.items?.forEach((item) => {
+      data.service_name.forEach((items) => {
         if (item.serviceId == items?._id) {
-          itemId = item._id;
+          selected.push(item._id);
         }
       });
     });
     let userInfo = await getAsyncUserInfo();
     let passData = {
       userId: userInfo?._id,
-      itemId: itemId,
+      itemIds: selected,
+      cartId: cartId,
     };
     let obj = {
       data: passData,
-      onSuccess: (response: any) => {
+      onSuccess: async (response: any) => {
         dispatch({ type: ADD_TO_CART, payload: response.data });
-        setCount(false);
+        await getCart();
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
       },
     };
-
-    dispatch(removeToCart(obj));
-  }, [count]);
+    dispatch(removeMultipleCartItems(obj));
+  }, []);
 
   const onPressAdd = useCallback(async () => {
     let userInfo = await getAsyncUserInfo();
@@ -77,9 +131,9 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
     };
     let obj = {
       data: passData,
-      onSuccess: (response: any) => {
+      onSuccess: async (response: any) => {
         dispatch({ type: ADD_TO_CART, payload: response.data });
-        setCount(true);
+        await getCart();
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
@@ -87,6 +141,11 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
     };
     dispatch(addToCart(obj));
   }, [count]);
+
+  const isInCart = (item) => {
+    console.log("okokkok");
+    return addtocart?.items?.some((items) => items?.actionId == item?._id);
+  };
 
   return (
     <View style={styles.container}>
@@ -121,7 +180,7 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
           );
         })}
       </View>
-      {count == false ? (
+      {isInCart(data) == false || isInCart(data) == undefined ? (
         <TouchableOpacity onPress={onPressAdd}>
           <ImageBackground
             resizeMode="contain"

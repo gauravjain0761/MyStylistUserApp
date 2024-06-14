@@ -53,15 +53,15 @@ export const verifyOTP =
       data: request.data,
     })
       .then(async (response: any) => {
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           dispatch({ type: IS_LOADING, payload: false });
           if (response.data.status) {
-            setAsyncToken(response.data.userDetails.token);
+            setAsyncToken(response?.data?.token);
             setAsyncGuest(false);
-            setAsyncUserInfo(response?.data?.userDetails);
+            setAsyncUserInfo(response?.data);
             dispatch({
               type: USER_INFO,
-              payload: { ...response?.data?.userDetails, isGuest: false },
+              payload: { ...response?.data, isGuest: false },
             });
             if (request.onSuccess) request.onSuccess(response.data);
           } else {

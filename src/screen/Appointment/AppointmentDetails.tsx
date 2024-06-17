@@ -55,6 +55,8 @@ const AppointmentDetails = () => {
     dispatch(getAppointmentDetails(obj));
   }, [params?.id]);
 
+  console.log(params?.id);
+
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
   };
@@ -90,7 +92,6 @@ const AppointmentDetails = () => {
     };
     dispatch(createChatRoom(obj));
   };
-
   return (
     <View style={styles.conatiner}>
       <BackHeader title={strings.Appointment_Detail} />
@@ -163,10 +164,15 @@ const AppointmentDetails = () => {
                 />
               );
             })}
-            <RowItemValue
-              title="Discount Applied"
-              value={`-₹ ${Appointment?.discount}`}
-            />
+            {Appointment?.actions?.map((item: any) => {
+              console.log("AAAAAAAAAA", item);
+              return (
+                <RowItemValue
+                  title={`Discount of ${item?.serviceType}`}
+                  value={`-₹ ${Appointment?.discount}`}
+                />
+              );
+            })}
             <RowItemValue title="Tax" value={`₹ ${Appointment?.tax}`} />
             <RowItemValue
               title="Payment Method"

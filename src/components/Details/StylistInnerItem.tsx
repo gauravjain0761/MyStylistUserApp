@@ -82,7 +82,7 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
     dispatch(getCartlist(obj));
   };
 
-  const onPressDelete = useCallback(async () => {
+  const onPressDelete = async () => {
     let itemId = addtocart?.items?.map((item) => {
       if (item.serviceId == data.sub_services.sub_service_id) {
         return item._id;
@@ -92,7 +92,7 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
     let userInfo = await getAsyncUserInfo();
     let passData = {
       userId: userInfo?._id,
-      itemId: itemId,
+      itemIds: itemId,
       cartId: cartId,
     };
     let obj = {
@@ -105,12 +105,11 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
       },
     };
     dispatch(removeMultipleCartItems(obj));
-  }, []);
+  };
 
   const dispatch = useAppDispatch();
 
-  const onPressAdd = useCallback(async () => {
-    console.log("onPressAddd", data);
+  const onPressAdd = async () => {
     let userInfo = await getAsyncUserInfo();
     let objs: any = {
       actionId: data?._id,
@@ -128,23 +127,17 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
-        dispatch({ type: ADD_TO_CART, payload: response.data });
         await getCart();
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
       },
     };
-    // dispatch(addToCart(obj));
-  }, []);
+    dispatch(addToCart(obj));
+  };
 
   const isInCart = (item) => {
-    // addtocart?.items?.forEach((items) =>
-    //   console.log("addtocartaddtocart", items, item)
-    // );
-    return addtocart?.items?.some(
-      (items) => items?.serviceId == item.sub_service_id
-    );
+    return addtocart?.items?.some((items) => items?.actionId == item?._id);
   };
 
   return (

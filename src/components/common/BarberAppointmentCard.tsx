@@ -224,6 +224,8 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.medium, 14, colors.grey_11),
     marginTop: hp(8),
     alignSelf: "flex-start",
+    flexWrap: "wrap",
+    maxWidth: wp(200),
   },
   card_upper: {
     flexDirection: "row",

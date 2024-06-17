@@ -9,6 +9,8 @@ import {
   ImageBackground,
   FlatList,
   Alert,
+  LogBox,
+  TextStyle,
 } from "react-native";
 import {
   BackHeader,
@@ -45,12 +47,14 @@ import {
   removeMultipleCartItems,
 } from "../actions";
 import FastImage from "react-native-fast-image";
+import { set } from "lodash";
 
 type RowItemValueProps = {
   title: string;
   value: string;
   isShowClose?: boolean;
   onPressClose?: () => void;
+  TitleStyle?: TextStyle;
 };
 
 const RowItemValue = ({
@@ -58,10 +62,11 @@ const RowItemValue = ({
   value,
   isShowClose,
   onPressClose,
+  TitleStyle,
 }: RowItemValueProps) => {
   return (
     <View style={styles.rowSpaceStyle}>
-      <Text style={styles.greyTitleTextStyle}>{title}</Text>
+      <Text style={[styles.greyTitleTextStyle, TitleStyle]}>{title}</Text>
       <View style={styles.rowItemStyle}>
         <Text style={styles.valueTextStyle}>{value}</Text>
         {isShowClose ? (
@@ -134,6 +139,7 @@ const Cart = () => {
             (accumulator, curruntvalue) => curruntvalue.price + accumulator,
             initialvalue
           );
+          // console.log("response response", response?.data?.cart);
           dispatch({
             type: CART_DETAILS,
             payload: { ...response?.data, total: total },
@@ -188,7 +194,15 @@ const Cart = () => {
           price: item?.price,
         };
       });
-
+      const serviceTypes = [];
+      const actions = cartDetails?.cart?.items?.map((item, index) => {
+        serviceTypes.push(item?.serviceType);
+        return {
+          actionId: item?.actionId,
+          serviceType: item?.serviceType,
+        };
+      });
+      console.log();
       let userInfo = await getAsyncUserInfo();
       let obj = {
         data: {
@@ -197,6 +211,8 @@ const Cart = () => {
           expertId: cartDetails?.cart?.expertId,
           customerName: cartDetails?.user?.name,
           services: newobj,
+          actions: actions,
+          serviceType: [...new Set(serviceTypes)],
           timeSlot: [
             {
               timeSlot_id: bookTime?._id,
@@ -380,18 +396,31 @@ const Cart = () => {
                   data={cartDetails?.cart?.items}
                   renderItem={({ item }) => {
                     return (
-                      <RowItemValue
-                        isShowClose={true}
-                        title={item?.serviceName}
-                        value={"₹" + item?.price}
-                        onPressClose={() => onPressRemoveSignalItem(item)}
-                      />
+                      <>
+                        <RowItemValue
+                          isShowClose={true}
+                          title={item?.serviceType}
+                          value=""
+                          onPressClose={() => {}}
+                          TitleStyle={{
+                            ...commonFontStyle(
+                              fontFamily.semi_bold,
+                              16,
+                              colors.black
+                            ),
+                          }}
+                        />
+                        <RowItemValue
+                          title={item?.serviceName}
+                          value={"₹" + item?.price}
+                          onPressClose={() => onPressRemoveSignalItem(item)}
+                        />
+                      </>
                     );
                   }}
                   keyExtractor={(item, index) => index.toString()}
                 />
               )}
-
               <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
               <RowItemValue title="Payment Method" value="Cash" />
               <View style={styles.lineStyle} />

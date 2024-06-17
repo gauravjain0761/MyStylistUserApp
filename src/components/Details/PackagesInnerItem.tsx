@@ -81,13 +81,13 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
     dispatch(getCartlist(obj));
   };
 
-  const onPressDelete = useCallback(async () => {
+  const onPressDelete = async () => {
     let cartId = await getAsyncCartId();
     let selected = [];
     await addtocart?.items?.forEach((item) => {
       data.service_name.forEach((items) => {
         if (item.serviceId == items?._id) {
-          selected.push(item._id);
+          selected.push(item?._id);
         }
       });
     });
@@ -100,7 +100,6 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
-        dispatch({ type: ADD_TO_CART, payload: response.data });
         await getCart();
       },
       onFailure: (Err: any) => {
@@ -108,18 +107,18 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
       },
     };
     dispatch(removeMultipleCartItems(obj));
-  }, []);
+  };
 
-  const onPressAdd = useCallback(async () => {
+  const onPressAdd = async () => {
     let userInfo = await getAsyncUserInfo();
     let items: any = [];
-    data?.service_name.map((item: any) => {
+    data?.service_name.forEach((item: any) => {
       let obj: any = {
         actionId: data._id,
-        serviceId: item?._id,
+        serviceId: item?.service_id,
         serviceName: item?.service_name,
         serviceType: "Package",
-        price: data?.rate,
+        price: item?.total,
         quantity: 1,
       };
       items.push(obj);
@@ -132,7 +131,7 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
-        dispatch({ type: ADD_TO_CART, payload: response.data });
+        dispatch({ type: ADD_TO_CART, payload: response?.data });
         await getCart();
       },
       onFailure: (Err: any) => {
@@ -140,10 +139,9 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
       },
     };
     dispatch(addToCart(obj));
-  }, [count]);
+  };
 
   const isInCart = (item) => {
-    console.log("okokkok");
     return addtocart?.items?.some((items) => items?.actionId == item?._id);
   };
 

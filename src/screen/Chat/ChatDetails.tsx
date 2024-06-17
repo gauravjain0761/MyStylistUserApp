@@ -43,7 +43,7 @@ const ChatDetails = () => {
     });
 
     socket.on("user_typing", (data) => {
-      console.log("user_typing", data);
+      console.log("user_typing", data?.username, params?.receiverId);
       if (data?.username === params?.receiverId) {
         setUserTyping(true);
       }

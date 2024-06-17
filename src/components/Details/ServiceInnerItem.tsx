@@ -84,7 +84,7 @@ const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
     dispatch(getCartlist(obj));
   };
 
-  const onPressDelete = useCallback(async (items) => {
+  const onPressDelete = async (items) => {
     let itemId = addtocart?.items?.map((item) => {
       if (item.serviceId == data.sub_service_id) {
         return item._id;
@@ -109,10 +109,10 @@ const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
     };
     console.log("ememememe", passData, itemId);
     dispatch(removeMultipleCartItems(obj));
-  }, []);
+  };
   const dispatch = useAppDispatch();
 
-  const onPressAdd = useCallback(async () => {
+  const onPressAdd = async () => {
     let userInfo = await getAsyncUserInfo();
 
     let objs: any = {
@@ -139,7 +139,7 @@ const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
       },
     };
     dispatch(addToCart(obj));
-  }, []);
+  };
 
   const isInCart = (item) => {
     return addtocart?.items?.some(

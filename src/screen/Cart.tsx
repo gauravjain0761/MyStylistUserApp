@@ -243,6 +243,7 @@ const Cart = () => {
   };
 
   const onPressRemoveSignalItem = async (item: any) => {
+    let dataId = item?.map((item) => item);
     let userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?._id,
@@ -256,7 +257,7 @@ const Cart = () => {
       },
       onFailure: () => {},
     };
-    dispatch(removeMultipleCartItems(obj));
+    // dispatch(removeMultipleCartItems(obj));
   };
 
   const RemoveItems = async () => {
@@ -391,30 +392,132 @@ const Cart = () => {
 
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
               <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
+              {cartLoading
+                ? null
+                : cartDetails?.cart?.items.some(
+                    (item) => item?.serviceType == "Package"
+                  ) && (
+                    <RowItemValue
+                      isShowClose={true}
+                      title={"Package"}
+                      value=""
+                      onPressClose={() =>
+                        onPressRemoveSignalItem(
+                          cartDetails?.cart?.items,
+                          "Package"
+                        )
+                      }
+                      TitleStyle={{
+                        ...commonFontStyle(
+                          fontFamily.semi_bold,
+                          16,
+                          colors.black
+                        ),
+                      }}
+                    />
+                  )}
               {cartLoading ? null : (
                 <FlatList
                   data={cartDetails?.cart?.items}
-                  renderItem={({ item }) => {
+                  renderItem={({ item, index }) => {
                     return (
                       <>
-                        <RowItemValue
-                          isShowClose={true}
-                          title={item?.serviceType}
-                          value=""
-                          onPressClose={() => {}}
-                          TitleStyle={{
-                            ...commonFontStyle(
-                              fontFamily.semi_bold,
-                              16,
-                              colors.black
-                            ),
-                          }}
-                        />
-                        <RowItemValue
-                          title={item?.serviceName}
-                          value={"₹" + item?.price}
-                          onPressClose={() => onPressRemoveSignalItem(item)}
-                        />
+                        {item?.serviceType == "Package" && (
+                          <RowItemValue
+                            title={item?.serviceName}
+                            isShowClose={false}
+                            value={"₹" + item?.price}
+                            onPressClose={() => {}}
+                          />
+                        )}
+                      </>
+                    );
+                  }}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
+              {cartLoading
+                ? null
+                : cartDetails?.cart?.items.some(
+                    (item) => item?.serviceType == "Service"
+                  ) && (
+                    <RowItemValue
+                      isShowClose={false}
+                      title={"Service"}
+                      value=""
+                      onPressClose={() => {}}
+                      TitleStyle={{
+                        ...commonFontStyle(
+                          fontFamily.semi_bold,
+                          16,
+                          colors.black
+                        ),
+                      }}
+                    />
+                  )}
+              {cartLoading ? null : (
+                <FlatList
+                  data={cartDetails?.cart?.items}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <>
+                        {item?.serviceType == "Service" && (
+                          <RowItemValue
+                            isShowClose={true}
+                            title={item?.serviceName}
+                            value={"₹" + item?.price}
+                            onPressClose={() =>
+                              onPressRemoveSignalItem(
+                                cartDetails?.cart?.items,
+                                "Service"
+                              )
+                            }
+                          />
+                        )}
+                      </>
+                    );
+                  }}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
+              {cartLoading
+                ? null
+                : cartDetails?.cart?.items.some(
+                    (item) => item?.serviceType == "Offer"
+                  ) && (
+                    <RowItemValue
+                      isShowClose={true}
+                      title={"Offer"}
+                      value=""
+                      onPressClose={() =>
+                        onPressRemoveSignalItem(
+                          cartDetails?.cart?.items,
+                          "Offer"
+                        )
+                      }
+                      TitleStyle={{
+                        ...commonFontStyle(
+                          fontFamily.semi_bold,
+                          16,
+                          colors.black
+                        ),
+                      }}
+                    />
+                  )}
+              {cartLoading ? null : (
+                <FlatList
+                  data={cartDetails?.cart?.items}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <>
+                        {item?.serviceType == "Offer" && (
+                          <RowItemValue
+                            isShowClose={false}
+                            title={item?.serviceName}
+                            value={"₹" + item?.price}
+                            onPressClose={() => {}}
+                          />
+                        )}
                       </>
                     );
                   }}

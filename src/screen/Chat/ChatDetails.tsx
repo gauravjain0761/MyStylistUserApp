@@ -33,7 +33,6 @@ const ChatDetails = () => {
     socket.emit("fetch_messages", params.roomId);
 
     socket.on("update_online_users", (data) => {
-      console.log("update_online_users", data);
       data.map((data: any) => {
         if (data?.name === params?.receiverId) {
           setUserOnline(true);
@@ -43,14 +42,12 @@ const ChatDetails = () => {
     });
 
     socket.on("user_typing", (data) => {
-      console.log("user_typing", data?.username, params?.receiverId);
       if (data?.username === params?.receiverId) {
         setUserTyping(true);
       }
     });
 
     socket.on("user_stopped_typing", (data) => {
-      console.log("user_stopped_typing", data);
       if (data?.username === params?.receiverId) {
         setUserTyping(false);
       }

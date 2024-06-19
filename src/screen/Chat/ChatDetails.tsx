@@ -11,7 +11,12 @@ import { isIos, wp } from "../../helper/globalFunction";
 import io from "socket.io-client";
 import { api } from "../../helper/apiConstants";
 import { useRoute } from "@react-navigation/native";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import {
+  getAsyncDevice_token,
+  getAsyncUserInfo,
+} from "../../helper/asyncStorage";
+import { createChatRoom, messagesRead } from "../../actions";
 const socket = io(api.BASE_URL);
 
 const ChatDetails = () => {
@@ -22,15 +27,46 @@ const ChatDetails = () => {
   const flatListRef = useRef<any>(null);
   const [userOnline, setUserOnline] = useState<boolean>(false);
   const [userTyping, setUserTyping] = useState<boolean>(false);
+  const [roomId, setroomId] = useState("");
+
+  const { image } = profileData?.user?.user_profile_images?.[0] || [];
+  const { IMG_URL } = api;
+
+  const dispatch = useAppDispatch();
+  const createRoom = async () => {
+    const userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        participants: [params?.receiverId, userInfo?._id],
+      },
+      onSuccess: async (res: any) => {
+        joinRoom(res?.roomId);
+        setroomId(res?.roomId);
+      },
+      onFailure: (Err: any) => {
+        console.log("Err", Err);
+      },
+    };
+    dispatch(createChatRoom(obj));
+  };
+
+  const joinRoom = async (roomId: string) => {
+    const userInfo = await getAsyncUserInfo();
+    if (roomId !== "") {
+      socket.emit("join_room", roomId);
+      socket.emit("user_online", { chatId: roomId, name: userInfo?._id });
+      getoldMessages(roomId);
+    }
+  };
+
+  const getoldMessages = (joinRoom: String) => {
+    socket.emit("fetch_messages", joinRoom);
+    scrollToBottom();
+  };
 
   useEffect(() => {
     // Connect to the socket server
-    socket.emit("join_room", params.roomId);
-    socket.emit("user_online", {
-      chatId: params.roomId,
-      name: profileData?.user?._id,
-    });
-    socket.emit("fetch_messages", params.roomId);
+    createRoom();
 
     socket.on("update_online_users", (data) => {
       data.map((data: any) => {
@@ -54,9 +90,9 @@ const ChatDetails = () => {
     });
 
     socket.on("receive_message", (data: any) => {
+      socket.emit("fetch_messages", roomId);
       console.log("receive_message", data);
-      setMessageList((list) => [...list, data]);
-      socket.emit("fetch_messages", params.roomId);
+      setMessageList((list: any) => [...list, data]);
       scrollToBottom();
     });
 
@@ -76,24 +112,28 @@ const ChatDetails = () => {
         return messageData;
       });
       setMessageList(messages);
+      messagesReads(messages[0]?.chatId);
+      scrollToBottom();
     });
-    scrollToBottom();
   }, []);
 
-  const sendMessage = (message: string) => {
+  const sendMessage = async (message: string) => {
+    let token = await getAsyncDevice_token();
     socket.emit("typing_end", {
-      chatId: params.roomId,
+      chatId: roomId,
       username: profileData?.user?._id,
     });
     // Connect to the socket server
     const messageData = {
-      chatId: params.roomId,
+      chatId: roomId,
       senderId: profileData?.user?._id,
       content: message,
       time: new Date(),
+      user_image: `${IMG_URL}${image}`,
+      device_token: token,
     };
     socket.emit("send_message", messageData);
-    socket.emit("fetch_messages", params.roomId);
+    socket.emit("fetch_messages", roomId);
     setText("");
     scrollToBottom();
   };
@@ -106,12 +146,26 @@ const ChatDetails = () => {
     }
   };
 
+  const messagesReads = async (item: string) => {
+    const obj = {
+      data: {
+        messageId: item,
+      },
+      onSuccess: (Res: any) => {},
+      onFailure: (Err: any) => {
+        console.log("Errr", Err);
+      },
+    };
+    dispatch(messagesRead(obj));
+  };
+
   return (
     <View style={styles.container}>
       <ChatHeader
         name={params?.name}
         isTyping={userTyping}
         status={userOnline ? "Online" : "Offline"}
+        image={params?.receiverImage}
       />
       <FlatList
         ref={flatListRef}

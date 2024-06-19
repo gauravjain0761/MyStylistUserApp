@@ -12,11 +12,11 @@ type props = {
   name: string;
   status: string;
   isTyping: boolean;
+  image: any;
 };
 
-const ChatHeader = ({ name, status, isTyping }: props) => {
+const ChatHeader = ({ name, status, isTyping, image }: props) => {
   const { goBack, navigate } = useNavigation();
-
   const onPressBack = () => goBack();
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
@@ -28,7 +28,7 @@ const ChatHeader = ({ name, status, isTyping }: props) => {
           <FastImage
             style={styles.imgStyle}
             source={{
-              uri: "",
+              uri: image[0]?.image,
               priority: FastImage.priority.high,
             }}
           />

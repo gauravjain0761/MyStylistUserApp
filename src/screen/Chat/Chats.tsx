@@ -19,6 +19,7 @@ import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getChatParticipants } from "../../actions";
 import { useFocusEffect } from "@react-navigation/native";
+import { api } from "../../helper/apiConstants";
 
 const Chats = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -36,11 +37,8 @@ const Chats = ({ navigation }) => {
 
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
-    console.log("userInfo._id", userInfo._id);
     let obj = {
-      data: {
-        userId: userInfo._id,
-      },
+      url: `${api?.chatParticipants}${userInfo?._id}?role=expert`,
       onSuccess: () => {
         setLoading(false);
         setIsRefresh(false);
@@ -55,9 +53,9 @@ const Chats = ({ navigation }) => {
 
   const onPressItem = (item: any) => {
     navigation.navigate(screenName.ChatDetails, {
-      roomId: item.chatId,
-      name: item?.users?.[0]?.name,
-      receiverId: item?.users?.[0]?.userId,
+      name: item?.name,
+      receiverId: item?._id,
+      receiverImage: item?.user_profile_images,
     });
   };
 
@@ -117,10 +115,10 @@ const Chats = ({ navigation }) => {
         />
       ) : (
         <>
-          {chatParticipants?.chatParticipants?.length ? (
+          {chatParticipants?.users?.length ? (
             <FlatList
               style={styles.flatListStyle}
-              data={chatParticipants?.chatParticipants || []}
+              data={chatParticipants?.users || []}
               renderItem={({ item, index }) => {
                 return (
                   <MessageItem

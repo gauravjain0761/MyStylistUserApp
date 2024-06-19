@@ -14,10 +14,9 @@ export const getChatParticipants =
       Authorization: await getAsyncToken(),
     };
     return makeAPIRequest({
-      method: POST,
-      url: api.chatParticipants,
+      method: GET,
+      url: request?.url,
       headers: header,
-      data: request.data,
     })
       .then((result: any) => {
         if (result.status === 200) {
@@ -43,6 +42,29 @@ export const createChatRoom =
     return makeAPIRequest({
       method: POST,
       url: api.room,
+      headers: header,
+      data: request.data,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const messagesRead =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.messagesReads,
       headers: header,
       data: request.data,
     })

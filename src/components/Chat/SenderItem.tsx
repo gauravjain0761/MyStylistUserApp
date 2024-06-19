@@ -6,21 +6,34 @@ import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
 import { api } from "../../helper/apiConstants";
 import moment from "moment";
+import { useAppSelector } from "../../redux/hooks";
 
 const SenderItem = ({ data }: any) => {
+  const { profileData } = useAppSelector((state) => state?.profile);
+  const { image } = profileData?.user?.user_profile_images?.[0] || [];
   return (
     <View style={styles.conatiner}>
       <View style={styles.rowStyle}>
         <Text style={styles.timeTextStyle}>
           {moment(data?.time).format("HH:mm A")}
         </Text>
-        <FastImage
-          style={styles.imgStyle}
-          source={{
-            uri: api.IMG_URL + data?.image,
-            priority: FastImage.priority.high,
-          }}
-        />
+        {data?.image ? (
+          <FastImage
+            style={styles.imgStyle}
+            source={{
+              uri: api.IMG_URL + data?.image,
+              priority: FastImage.priority.high,
+            }}
+          />
+        ) : (
+          <FastImage
+            style={styles.imgStyle}
+            source={{
+              uri: api.IMG_URL + image,
+              priority: FastImage.priority.high,
+            }}
+          />
+        )}
       </View>
       <View style={styles.msgViewStyle}>
         <View style={styles.tirangle} />

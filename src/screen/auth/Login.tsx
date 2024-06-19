@@ -37,6 +37,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import messaging from "@react-native-firebase/messaging";
 import { Loader } from "../../components";
+import { setAsyncDevice_token } from "../../helper/asyncStorage";
 
 const Login: FC = () => {
   const [phoneNum, setphoneNum] = useState<string>("");
@@ -86,10 +87,11 @@ const Login: FC = () => {
   const getFirebaseToken = async () => {
     await messaging()
       .getToken()
-      .then((fcmToken: any) => {
+      .then(async (fcmToken: any) => {
         if (fcmToken) {
           console.log("---fcmToken---:", fcmToken);
           // infoToast(fcmToken.toString());
+          await setAsyncDevice_token(fcmToken.toString());
           setDeviceToken(fcmToken);
         } else {
           infoToast("[FCMService] User does not have a device token");

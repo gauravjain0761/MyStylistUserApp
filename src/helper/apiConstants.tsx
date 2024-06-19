@@ -72,8 +72,9 @@ export const api = {
   campaignExpert: "campaign/getCampaignExpert",
 
   // chat
-  chatParticipants: "chat/getChatParticipants",
+  chatParticipants: "user/getUsersList/",
   room: "user/createRoom",
+  messagesReads: `chat/messagesRead`,
 
   // Address
   userAddresses: "user/getUserAddresses",

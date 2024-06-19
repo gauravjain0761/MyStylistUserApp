@@ -5,6 +5,7 @@ import { MarkReadIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
+import moment from "moment";
 
 type props = {
   index: number;
@@ -13,26 +14,27 @@ type props = {
 };
 
 const MessageItem = ({ index, onPressItem, data }: props) => {
+  const { image } = data?.user_profile_images?.[0];
   return (
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
       <FastImage
         source={{
-          // uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+          uri: image,
           priority: FastImage.priority.high,
         }}
         style={styles.imageStyle}
       />
       <View style={{ marginLeft: wp(10), flex: 1 }}>
         <View style={styles.rowStyle}>
-          <Text style={styles.nameTextStyle}>
-            {data?.users?.[0]?.name || "Dummy Name"}
+          <Text style={styles.nameTextStyle}>{data?.name || "Dummy Name"}</Text>
+          <Text style={styles.timeTextStyle}>
+            {data?.time ? moment(data?.time).format("HH:MM") : "04:43"}
           </Text>
-          <Text style={styles.timeTextStyle}> {"04:43"}</Text>
         </View>
         <View style={{ flex: 1 }} />
         <View style={styles.rowStyle}>
           <Text numberOfLines={2} style={styles.greyTxtStyle}>
-            {data?.lastMessage?.content}
+            {data?.lastMessage}
           </Text>
           {/* {index === 1 ? (
             <View style={styles.circleStyle}>

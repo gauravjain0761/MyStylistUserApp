@@ -11,6 +11,7 @@ export const asyncKeys = {
   location: "@location",
   Coord: "@coord",
   cartId: "@cart_id",
+  device_token: "@device_token",
 };
 
 export const clearAsync = async () => {
@@ -109,5 +110,18 @@ export const getAsyncSearchUserList = async () => {
     return JSON.parse(userList) || [];
   } else {
     return [];
+  }
+};
+
+export const setAsyncDevice_token = async (token: any) => {
+  await AsyncStorage.setItem(asyncKeys.device_token, JSON.stringify(token));
+};
+
+export const getAsyncDevice_token = async () => {
+  const device_token = await AsyncStorage.getItem(asyncKeys.device_token);
+  if (device_token) {
+    return device_token;
+  } else {
+    return null;
   }
 };

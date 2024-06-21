@@ -7,6 +7,7 @@ import { BackIcon, ThreeDotIcon } from "../../theme/SvgIcon";
 import { useNavigation } from "@react-navigation/native";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import FastImage from "react-native-fast-image";
+import { api } from "../../helper/apiConstants";
 
 type props = {
   name: string;
@@ -18,6 +19,9 @@ type props = {
 const ChatHeader = ({ name, status, isTyping, image }: props) => {
   const { goBack, navigate } = useNavigation();
   const onPressBack = () => goBack();
+  const { IMG_URL } = api;
+  console.log("imageeeee", image);
+
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <TouchableOpacity onPress={onPressBack}>
@@ -28,7 +32,7 @@ const ChatHeader = ({ name, status, isTyping, image }: props) => {
           <FastImage
             style={styles.imgStyle}
             source={{
-              uri: image[0]?.image,
+              uri: `${IMG_URL}${image}`,
               priority: FastImage.priority.high,
             }}
           />

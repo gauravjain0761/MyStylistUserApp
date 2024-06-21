@@ -17,7 +17,11 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { screenName } from "../../helper/routeNames";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getChatParticipants } from "../../actions";
+import {
+  createChatRoom,
+  getChatParticipants,
+  messagesRead,
+} from "../../actions";
 import { useFocusEffect } from "@react-navigation/native";
 import { api } from "../../helper/apiConstants";
 
@@ -51,12 +55,40 @@ const Chats = ({ navigation }) => {
     dispatch(getChatParticipants(obj));
   };
 
-  const onPressItem = (item: any) => {
-    navigation.navigate(screenName.ChatDetails, {
-      name: item?.name,
-      receiverId: item?._id,
-      receiverImage: item?.user_profile_images,
-    });
+  const onPressItem = async (item: any) => {
+    const userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        participants: [item?._id, userInfo?._id],
+      },
+      onSuccess: async (res: any) => {
+        messagesReads(res?.roomId);
+        navigation.navigate(screenName.ChatDetails, {
+          roomId: res?.roomId,
+          name: item?.name,
+          receiverId: item?._id,
+          receiverImage: item?.user_profile_images?.[0]?.image,
+          device_token: item?.device_token,
+        });
+      },
+      onFailure: (Err: any) => {
+        console.log("Err", Err);
+      },
+    };
+    dispatch(createChatRoom(obj));
+  };
+
+  const messagesReads = async (item: string) => {
+    const obj = {
+      data: {
+        messageId: item,
+      },
+      onSuccess: (Res: any) => {},
+      onFailure: (Err: any) => {
+        console.log("Errr", Err);
+      },
+    };
+    dispatch(messagesRead(obj));
   };
 
   const onPressMenu = () => {

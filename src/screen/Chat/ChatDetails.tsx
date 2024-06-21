@@ -32,24 +32,6 @@ const ChatDetails = () => {
   const { image } = profileData?.user?.user_profile_images?.[0] || [];
   const { IMG_URL } = api;
 
-  const dispatch = useAppDispatch();
-  const createRoom = async () => {
-    const userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        participants: [params?.receiverId, userInfo?._id],
-      },
-      onSuccess: async (res: any) => {
-        joinRoom(res?.roomId);
-        setroomId(res?.roomId);
-      },
-      onFailure: (Err: any) => {
-        console.log("Err", Err);
-      },
-    };
-    dispatch(createChatRoom(obj));
-  };
-
   const joinRoom = async (roomId: string) => {
     const userInfo = await getAsyncUserInfo();
     if (roomId !== "") {
@@ -66,7 +48,15 @@ const ChatDetails = () => {
 
   useEffect(() => {
     // Connect to the socket server
-    createRoom();
+    joinRoom(params?.roomId);
+    setroomId(params?.roomId);
+
+    socket.on("receive_message", (data: any) => {
+      socket.emit("fetch_messages", roomId);
+      console.log("receive_message", messageList);
+      setMessageList((list: any) => [...list, data]);
+      scrollToBottom();
+    });
 
     socket.on("update_online_users", (data) => {
       data.map((data: any) => {
@@ -75,29 +65,6 @@ const ChatDetails = () => {
           return;
         }
       });
-    });
-
-    socket.on("user_typing", (data) => {
-      if (data?.username === params?.receiverId) {
-        setUserTyping(true);
-      }
-    });
-
-    socket.on("user_stopped_typing", (data) => {
-      if (data?.username === params?.receiverId) {
-        setUserTyping(false);
-      }
-    });
-
-    socket.on("receive_message", (data: any) => {
-      socket.emit("fetch_messages", roomId);
-      console.log("receive_message", data);
-      setMessageList((list: any) => [...list, data]);
-      scrollToBottom();
-    });
-
-    socket.on("disconnect", (data) => {
-      console.log("disconnect", data);
     });
 
     socket.on("past_messages", (data: any) => {
@@ -112,13 +79,27 @@ const ChatDetails = () => {
         return messageData;
       });
       setMessageList(messages);
-      messagesReads(messages[0]?.chatId);
       scrollToBottom();
     });
+
+    socket.on("user_typing", (data) => {
+      if (data?.username === params?.receiverId) {
+        setUserTyping(true);
+      }
+    });
+
+    socket.on("user_stopped_typing", (data) => {
+      if (data?.username === params?.receiverId) {
+        setUserTyping(false);
+      }
+    });
+
+    // socket.on("disconnect", (data) => {
+    //   console.log("disconnect", data);
+    // });
   }, []);
 
   const sendMessage = async (message: string) => {
-    let token = await getAsyncDevice_token();
     socket.emit("typing_end", {
       chatId: roomId,
       username: profileData?.user?._id,
@@ -130,7 +111,8 @@ const ChatDetails = () => {
       content: message,
       time: new Date(),
       user_image: `${IMG_URL}${image}`,
-      device_token: token,
+      device_token: params?.token,
+      name: profileData?.user?.name,
     };
     socket.emit("send_message", messageData);
     socket.emit("fetch_messages", roomId);
@@ -145,27 +127,13 @@ const ChatDetails = () => {
       }, 600);
     }
   };
-
-  const messagesReads = async (item: string) => {
-    const obj = {
-      data: {
-        messageId: item,
-      },
-      onSuccess: (Res: any) => {},
-      onFailure: (Err: any) => {
-        console.log("Errr", Err);
-      },
-    };
-    dispatch(messagesRead(obj));
-  };
-
   return (
     <View style={styles.container}>
       <ChatHeader
         name={params?.name}
         isTyping={userTyping}
         status={userOnline ? "Online" : "Offline"}
-        image={params?.receiverImage}
+        image={params?.receiverImage || {}}
       />
       <FlatList
         ref={flatListRef}

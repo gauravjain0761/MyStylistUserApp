@@ -42,6 +42,8 @@ import PackgesDetails from "../screen/Package/PackgesDetails";
 import SearchStylistName from "../screen/Search/SearchStylistName";
 import StylistDetails from "../screen/Details/StylistDetails";
 import StylistList from "../screen/Home/StylistList";
+import messaging from "@react-native-firebase/messaging";
+import { useNavigation } from "@react-navigation/native";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -51,6 +53,39 @@ const options: NativeStackNavigationOptions = {
 const Stack = createNativeStackNavigator();
 
 const StackNavigator: FC = () => {
+  const navigation = useNavigation();
+  useEffect(() => {
+    getNotification();
+  }, []);
+
+  const getNotification = async () => {
+    await messaging()
+      .getInitialNotification()
+      .then(async (remoteMessage) => {
+        if (remoteMessage) {
+          CheckNotification(remoteMessage);
+        }
+      });
+    messaging().onNotificationOpenedApp((remoteMessage) => {
+      if (remoteMessage) {
+        CheckNotification(remoteMessage);
+      }
+    });
+  };
+
+  const CheckNotification = (remoteMessage: any) => {
+    let type = remoteMessage?.data?.action;
+    if (type == "CHAT_DETAILS") {
+      navigation.navigate(screenName.ChatDetails, {
+        roomId: remoteMessage?.data?.value,
+        receiverId: remoteMessage?.data?.user_id,
+        receiverImage: remoteMessage?.data?.user_image,
+        device_token: remoteMessage?.data?.device_token,
+        name: remoteMessage?.data?.name,
+      });
+    }
+  };
+
   return (
     <Stack.Navigator
       screenOptions={options}

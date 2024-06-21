@@ -132,7 +132,9 @@ const Home = () => {
       console.log("connect", socket.id);
     });
     return () => {
-      socket.on("disconnect", () => {});
+      socket.on("disconnect", () => {
+        console.log("disconnect", socket.id);
+      });
     };
   }, []);
 

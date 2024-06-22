@@ -48,6 +48,7 @@ import {
 } from "../actions";
 import FastImage from "react-native-fast-image";
 import { set } from "lodash";
+import { err } from "react-native-svg";
 
 type RowItemValueProps = {
   title: string;
@@ -105,17 +106,18 @@ const Cart = () => {
 
       let obj = {
         data: {
-          startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
-          endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+          startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
+          endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: userInfo._id,
+          expertId: userInfo?._id,
         },
         onSuccess: (response: any) => {
+          console.log("response", response);
           let data = convertToOutput(response);
           let time = data[0].value;
           setDates(data);
-          setDate(data[0].title);
-          setTimes(data[0].value);
+          setDate(data[0]?.title);
+          setTimes(data[0]?.value);
           setBookTime(time[0]);
         },
         onFailure: () => {},
@@ -139,7 +141,7 @@ const Cart = () => {
             (accumulator, curruntvalue) => curruntvalue.price + accumulator,
             initialvalue
           );
-          // console.log("response response", response?.data?.cart);
+
           dispatch({
             type: CART_DETAILS,
             payload: { ...response?.data, total: total },
@@ -243,7 +245,6 @@ const Cart = () => {
   };
 
   const onPressRemoveSignalItem = async (item: any) => {
-    let dataId = item?.map((item) => item);
     let userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?._id,
@@ -257,11 +258,11 @@ const Cart = () => {
       },
       onFailure: () => {},
     };
-    // dispatch(removeMultipleCartItems(obj));
+    dispatch(removeMultipleCartItems(obj));
   };
 
   const RemoveItems = async () => {
-    let Ids = addtocart.items.map((items) => items?._id);
+    let Ids = cartDetails?.cart?.items?.map((items) => items?._id);
     let userInfo = await getAsyncUserInfo();
     let data = {
       cartId: cartDetails?.cart?._id,
@@ -283,6 +284,7 @@ const Cart = () => {
         setCartEmpty(true);
       },
       onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
         setLoading(false);
       },
     };
@@ -392,7 +394,25 @@ const Cart = () => {
 
             <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
               <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-              {cartLoading
+              {cartLoading ? null : (
+                <FlatList
+                  data={cartDetails?.cart?.items}
+                  renderItem={({ item, index }) => {
+                    return (
+                      <RowItemValue
+                        title={item?.serviceName}
+                        isShowClose={true}
+                        value={"₹" + item?.price}
+                        onPressClose={() =>
+                          onPressRemoveSignalItem(cartDetails?.cart?.items)
+                        }
+                      />
+                    );
+                  }}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+              )}
+              {/* {cartLoading
                 ? null
                 : cartDetails?.cart?.items.some(
                     (item) => item?.serviceType == "Package"
@@ -523,7 +543,7 @@ const Cart = () => {
                   }}
                   keyExtractor={(item, index) => index.toString()}
                 />
-              )}
+              )} */}
               <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
               <RowItemValue title="Payment Method" value="Cash" />
               <View style={styles.lineStyle} />

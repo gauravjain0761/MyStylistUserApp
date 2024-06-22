@@ -20,8 +20,6 @@ const ChatHeader = ({ name, status, isTyping, image }: props) => {
   const { goBack, navigate } = useNavigation();
   const onPressBack = () => goBack();
   const { IMG_URL } = api;
-  console.log("imageeeee", image);
-
   return (
     <SafeAreaView edges={["top"]} style={styles.container}>
       <TouchableOpacity onPress={onPressBack}>

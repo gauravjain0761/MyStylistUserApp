@@ -56,7 +56,7 @@
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Location is required to find out where you are</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Bastah is requires to show your current location it on the map</string>
+	<string>Barber is requires to show your current location it on the map</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Update your profile picture using the photo library</string>
 	<key>UIAppFonts</key>

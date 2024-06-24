@@ -100,7 +100,9 @@ const Chats = ({ navigation }) => {
     getChatsUserList();
   };
 
-  const count = chatParticipants?.users.filter((user) => user?.isRead == false);
+  const count = chatParticipants?.users?.filter(
+    (user) => user?.isRead == false
+  );
 
   return (
     <View style={styles.container}>

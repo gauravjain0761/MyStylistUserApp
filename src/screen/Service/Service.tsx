@@ -60,8 +60,8 @@ const Service = () => {
 
       let obj = {
         data: {
-          startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
-          endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
+          startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
+          endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
           expertId: userInfo._id,
         },
@@ -77,8 +77,8 @@ const Service = () => {
 
   const onPressDateItem = (index: any) => {
     setSelectedDate(index);
-    setDate(moment(dates[index].title));
-    setTimes(dates[index].value);
+    setDate(moment(dates[index]?.title));
+    setTimes(dates[index]?.value);
     setSelectedTime(null);
   };
 

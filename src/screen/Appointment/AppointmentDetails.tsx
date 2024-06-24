@@ -68,7 +68,6 @@ const AppointmentDetails = () => {
   const onPressChat = () => {
     setLoading(true);
     let data = {
-      // participants: ["65eed0259e6593d24b2a5210", profileData?.user?._id],
       participants: [params?.id, profileData?.user?._id],
     };
     let obj = {
@@ -146,7 +145,7 @@ const AppointmentDetails = () => {
               <Text style={styles.otp_title}>
                 {strings["OTP to start the service"]}
               </Text>
-              <Text style={styles.otp_number}>4 4 2 5 2 5</Text>
+              <Text style={styles.otp_number}>{Appointment?.otp}</Text>
             </View>
           )}
         </View>
@@ -165,11 +164,10 @@ const AppointmentDetails = () => {
               );
             })}
             {Appointment?.actions?.map((item: any) => {
-              console.log("AAAAAAAAAA", item);
               return (
                 <RowItemValue
                   title={`Discount of ${item?.serviceType}`}
-                  value={`-₹ ${Appointment?.discount}`}
+                  value={`₹ ${Appointment?.discount}`}
                 />
               );
             })}
@@ -234,6 +232,7 @@ const styles = StyleSheet.create({
   },
   otp_number: {
     ...commonFontStyle(fontFamily.medium, 20, colors.green_3),
+    letterSpacing: wp(5),
   },
   otp_detail_container: {
     flexDirection: "row",

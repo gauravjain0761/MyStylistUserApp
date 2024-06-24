@@ -100,6 +100,8 @@ const Chats = ({ navigation }) => {
     getChatsUserList();
   };
 
+  const count = chatParticipants?.users.filter((user) => user?.isRead == false);
+
   return (
     <View style={styles.container}>
       <BackHeader isMenu title={strings.Messages} onPressMenu={onPressMenu} />
@@ -132,9 +134,11 @@ const Chats = ({ navigation }) => {
             style={styles.oval_bg}
           >
             <Text style={styles.labelTextStyle}>{strings.Unread}</Text>
-            {/* <View style={styles.circleStyle}>
-              <Text style={styles.countTextStyle}>{"1"}</Text>
-            </View> */}
+            {count?.length > 0 && (
+              <View style={styles.circleStyle}>
+                <Text style={styles.countTextStyle}>{count.length}</Text>
+              </View>
+            )}
           </ImageBackground>
         </TouchableOpacity>
       </View>
@@ -148,24 +152,58 @@ const Chats = ({ navigation }) => {
       ) : (
         <>
           {chatParticipants?.users?.length ? (
-            <FlatList
-              style={styles.flatListStyle}
-              data={chatParticipants?.users || []}
-              renderItem={({ item, index }) => {
-                return (
-                  <MessageItem
-                    index={index}
-                    data={item}
-                    onPressItem={() => onPressItem(item)}
+            type == "All" ? (
+              <FlatList
+                style={styles.flatListStyle}
+                data={chatParticipants?.users || []}
+                renderItem={({ item, index }) => {
+                  return (
+                    <MessageItem
+                      index={index}
+                      data={item}
+                      onPressItem={() => onPressItem(item)}
+                    />
+                  );
+                }}
+                keyExtractor={(item, index) => index.toString()}
+                ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isRefresh}
+                    onRefresh={onRefresh}
                   />
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-              ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
-              refreshControl={
-                <RefreshControl refreshing={isRefresh} onRefresh={onRefresh} />
-              }
-            />
+                }
+              />
+            ) : (
+              <FlatList
+                style={styles.flatListStyle}
+                data={chatParticipants?.users || []}
+                renderItem={({ item, index }) => {
+                  return (
+                    !item?.isRead && (
+                      <MessageItem
+                        index={index}
+                        data={item}
+                        onPressItem={() => onPressItem(item)}
+                        unreadMessageCount={item?.unreadMessageCount}
+                      />
+                    )
+                  );
+                }}
+                keyExtractor={(item, index) => index.toString()}
+                ItemSeparatorComponent={(item) =>
+                  !item?.leadingItem?.isRead && (
+                    <View style={styles.lineStyle} />
+                  )
+                }
+                refreshControl={
+                  <RefreshControl
+                    refreshing={isRefresh}
+                    onRefresh={onRefresh}
+                  />
+                }
+              />
+            )
           ) : (
             <View style={styles.center}>
               <Text style={styles.noDataTextStyle}>{"No Data"}</Text>

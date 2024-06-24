@@ -480,7 +480,6 @@ const YourStylist = () => {
               <View
                 style={{
                   ...styles.rowNameStyle,
-                  justifyContent: "space-between",
                 }}
               >
                 <Text numberOfLines={1} style={styles.nameTextStyle}>
@@ -781,7 +780,6 @@ const styles = StyleSheet.create({
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 26, colors.black),
     marginRight: wp(5),
-    width: wp(170),
   },
   columStyle: {
     marginLeft: wp(15),

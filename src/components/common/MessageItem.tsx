@@ -6,43 +6,64 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
 import moment from "moment";
+import { api } from "../../helper/apiConstants";
 
 type props = {
   index: number;
   onPressItem?: () => void;
   data: any;
+  unreadMessageCount: number;
 };
 
-const MessageItem = ({ index, onPressItem, data }: props) => {
-  const { image } = data?.user_profile_images?.[0];
+const MessageItem = ({
+  index,
+  onPressItem,
+  data,
+  unreadMessageCount = 0,
+}: props) => {
+  const { image } = data?.user_profile_images?.[0] || {};
+  const { IMG_URL } = api;
+  const { lastMessage, name, time, user_profile_images } = data || {};
   return (
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
       <FastImage
         source={{
-          uri: image,
+          uri: `${IMG_URL}${image}`,
           priority: FastImage.priority.high,
         }}
         style={styles.imageStyle}
       />
-      <View style={{ marginLeft: wp(10), flex: 1 }}>
-        <View style={styles.rowStyle}>
-          <Text style={styles.nameTextStyle}>{data?.name || "Dummy Name"}</Text>
-          <Text style={styles.timeTextStyle}>
-            {data?.time ? moment(data?.time).format("HH:MM") : "04:43"}
-          </Text>
+      <View
+        style={{
+          marginLeft: wp(10),
+          flexDirection: "row",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        <View style={styles.nameView}>
+          <Text style={styles.nameTextStyle}>{name || "Unknown User"}</Text>
+          {lastMessage && (
+            <Text numberOfLines={2} style={styles.greyTxtStyle}>
+              {lastMessage}
+            </Text>
+          )}
         </View>
         <View style={{ flex: 1 }} />
-        <View style={styles.rowStyle}>
-          <Text numberOfLines={2} style={styles.greyTxtStyle}>
-            {data?.lastMessage}
-          </Text>
-          {/* {index === 1 ? (
-            <View style={styles.circleStyle}>
-              <Text style={styles.countTextStyle}>{"5"}</Text>
-            </View>
-          ) : (
+        <View style={styles.timeview}>
+          {time && (
+            <Text style={styles.timeTextStyle}>
+              {time ? moment(time).format("hh:mm") : ""}
+            </Text>
+          )}
+          {lastMessage && unreadMessageCount == 0 && (
             <MarkReadIcon color="#2BE8D9" />
-          )} */}
+          )}
+          {unreadMessageCount > 0 && (
+            <View style={styles.circleStyle}>
+              <Text style={styles.countTextStyle}>{unreadMessageCount}</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -87,6 +108,14 @@ const styles = StyleSheet.create({
   },
   countTextStyle: {
     ...commonFontStyle(fontFamily.regular, 12, colors.black_2),
+  },
+  nameView: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  timeview: {
+    alignItems: "center",
+    gap: hp(5),
   },
 });
 

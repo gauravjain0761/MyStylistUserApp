@@ -8,7 +8,12 @@ import {
 } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
-import { PackagesIcon, PackagesText, TrashIcon } from "../../theme/SvgIcon";
+import {
+  PackagesIcon,
+  PackagesText,
+  TimingIcon,
+  TrashIcon,
+} from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
@@ -25,15 +30,38 @@ import {
   setAsyncCartId,
 } from "../../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
+import SelectDateModal from "../common/SelectDateModal";
+import moment from "moment";
 
 type Props = {
   data: any;
   count?: boolean;
   setCount?: any;
+  onPressTimeItem?: (index: any) => void;
+  onPressDateItem?: (index: any) => void;
+  dates?: any;
+  times?: any;
+  selectedDateIndex?: number;
+  selectedTimeIndex?: number;
+  selectedTime?: any;
+  selectedDate?: any;
 };
 
-const PackagesInnerItem = ({ data, count, setCount }: Props) => {
+const PackagesInnerItem = ({
+  data,
+  count,
+  setCount,
+  dates,
+  onPressDateItem,
+  onPressTimeItem,
+  selectedDate,
+  selectedDateIndex,
+  selectedTimeIndex,
+  selectedTime,
+  times,
+}: Props) => {
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
+  const [visible, setVisible] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -110,6 +138,10 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
   };
 
   const onPressAdd = async () => {
+    setVisible(!visible);
+  };
+
+  const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
     let items: any = [];
     data?.service_name.forEach((item: any) => {
@@ -179,32 +211,63 @@ const PackagesInnerItem = ({ data, count, setCount }: Props) => {
         })}
       </View>
       {isInCart(data) == false || isInCart(data) == undefined ? (
-        <TouchableOpacity onPress={onPressAdd}>
-          <ImageBackground
-            resizeMode="contain"
-            style={styles.btnStyle}
-            source={images.green_button}
-          >
-            <Text style={styles.addTextStyle}>{strings["Add"]}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
+        <View style={styles.buttonBar}>
+          <TouchableOpacity onPress={onPressAdd}>
+            <ImageBackground
+              resizeMode="contain"
+              style={styles.btnStyle}
+              source={images.green_button}
+            >
+              <Text style={styles.addTextStyle}>{strings["Add"]}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+          <View style={styles.time}>
+            <TimingIcon />
+            <Text style={styles.timeTitle}>{"30 Min."}</Text>
+          </View>
+        </View>
       ) : (
         <View>
-          <ImageBackground
-            resizeMode="contain"
-            style={styles.btnStyle}
-            source={images.green_button}
-          >
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center" }}
-              onPress={onPressDelete}
+          <View style={styles.buttonBar}>
+            <ImageBackground
+              resizeMode="contain"
+              style={styles.btnStyle}
+              source={images.green_button}
             >
-              <TrashIcon />
-              <Text style={styles.countTextStyle}>ADDED</Text>
-            </TouchableOpacity>
-          </ImageBackground>
+              <TouchableOpacity
+                style={{ flexDirection: "row", alignItems: "center" }}
+                onPress={onPressDelete}
+              >
+                <TrashIcon />
+                <Text style={styles.countTextStyle}>ADDED</Text>
+              </TouchableOpacity>
+            </ImageBackground>
+            <View style={styles.time}>
+              <TimingIcon />
+              <Text style={styles.timeTitle}>{"30 Min."}</Text>
+            </View>
+            <Text style={styles.selectedTime}>{`${selectedTime?.time}, ${moment(
+              selectedDate
+            )?.format("DD MMM, YYYY")}`}</Text>
+          </View>
         </View>
       )}
+      <SelectDateModal
+        visible={visible}
+        close={setVisible}
+        dates={dates}
+        onPressDateItem={(index) => onPressDateItem(index)}
+        onPressTimeItem={(index) => onPressTimeItem(index)}
+        setIsModal={setVisible}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        title={
+          "Please select Date and Time for this Service from available slots"
+        }
+        withOutDisable={false}
+        onPressApply={onPressApply}
+      />
     </View>
   );
 };
@@ -262,6 +325,19 @@ const styles = StyleSheet.create({
   },
   plusTexStyke: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.green_2),
+  },
+  time: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(3),
+  },
+  timeTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.green_2),
+  },
+  buttonBar: {
+    // flexDirection: "row",
+    alignItems: "center",
+    gap: wp(13),
   },
 });
 

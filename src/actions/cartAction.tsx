@@ -74,7 +74,12 @@ export const getCartlist =
         if (response.status === 200 || response.status === 201) {
           dispatch({
             type: CART_COUNT,
-            payload: response.data?.data?.cart?.items?.length || 0,
+            payload:
+              [
+                ...response?.data?.data?.cart?.services,
+                ...response?.data?.data?.cart?.packages,
+                ...response?.data?.data?.cart?.offers,
+              ]?.length || 0,
           });
           if (request.onSuccess) request.onSuccess(response.data);
         }

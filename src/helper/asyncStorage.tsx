@@ -19,6 +19,8 @@ export const clearAsync = async () => {
     asyncKeys.token,
     asyncKeys.user_info,
     asyncKeys.notifiaction_data,
+    asyncKeys.location,
+    asyncKeys.cartId,
   ]);
 };
 

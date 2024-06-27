@@ -14,7 +14,6 @@ export const getUsersFavList =
       "Content-Type": "application/json",
       // Authorization: await getAsyncToken(),
     };
-    dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
       url: api.getUsersFavList,

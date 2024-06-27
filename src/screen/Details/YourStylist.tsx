@@ -78,7 +78,7 @@ import {
   removeAsfavourite,
   saveAsfavourite,
 } from "../../actions";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getAsyncUserInfo, setAsyncCartId } from "../../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -163,10 +163,10 @@ const getAmenitiesIcon = (key: string) => {
 
 const YourStylist = () => {
   const { params }: any = useRoute();
+  const { itemDetails } = params || {};
   const { cartDetails, addtocart } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
-  const { itemDetails } = useAppSelector((state) => state.home);
   const { userOfferList } = useAppSelector((state) => state.offers);
   const { userPackageList } = useAppSelector((state) => state.package);
   const [isOffers, setIsOffers] = useState(false);
@@ -177,8 +177,8 @@ const YourStylist = () => {
   const [isHeaderSticky, setIsHeaderSticky] = useState(false);
   const animated = useSharedValue(0);
   const [animatedValue, setAnimatedValue] = useState(0);
-  const [like, setLike] = useState(false);
-  const [likeID, setLikeID] = useState("");
+  const [like, setLike] = useState(params?.like);
+  const [likeID, setLikeID] = useState(params?.likeID);
   const [loading, setLoading] = useState(true);
   const [isImageModal, setIsImageModal] = useState(false);
   const animatedStyle = useAnimatedStyle(() => {
@@ -190,32 +190,13 @@ const YourStylist = () => {
     };
   });
 
-  const getDetails = () => {
-    setLoading(true);
-    let userid = params?.id;
-    let obj = {
-      isLoading: true,
-      data: {
-        userid: userid,
-      },
-      onSuccess: () => {
-        setLoading(false);
-        getFavUser();
-      },
-      onFailure: () => {
-        setLoading(false);
-      },
-    };
-    dispatch(getUserItemDetails(obj));
-  };
-
   useEffect(() => {
     if (Platform.OS === "android") {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
       }
     }
-    getDetails();
+    getCart();
     if (params?.isPackages) {
       setIsOffers(false);
       setIsPackages(true);
@@ -226,55 +207,36 @@ const YourStylist = () => {
   useEffect(() => {
     if (addtocart?.length > 0 || Object.keys(addtocart)?.length > 0) {
       Calculate();
+    } else {
+      setTotal(0);
     }
   }, [addtocart]);
 
-  const getFavUser = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-      },
-      onSuccess: (response: any) => {
-        getCart();
-        response?.data.map((item) => {
-          if (item._id == itemDetails?.user._id) {
-            setLikeID(item?.favouriteId);
-            setLike(true);
-          } else {
-            setLike(false);
-          }
-        });
-        setLoading(false);
-      },
-      onFailure: (Errr: any) => {
-        console.log("Errr", Errr);
-      },
-    };
-    dispatch(getUsersFavList(obj));
-  };
-
   const getCart = async () => {
+    setLoading(true);
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
         userId: userInfo._id,
       },
       onSuccess: async (response: any) => {
+        await setAsyncCartId(response?.data?.cart?.cart_id);
+        setLoading(false);
         dispatch({ type: CART_DETAILS, payload: response?.data });
         dispatch({
           type: ADD_TO_CART,
-          payload: { items: [...response?.data?.cart?.items] },
+          payload: response?.data?.cart,
         });
-        let initialvalue = 0;
-        let total = response?.data?.cart?.items.reduce(
-          (acc, item) => acc + item?.price,
-          initialvalue
-        );
+        let total = response?.data?.cart?.totalPrice;
         setTotal(total);
       },
       onFailure: (Errr: any) => {
+        dispatch({
+          type: ADD_TO_CART,
+          payload: [],
+        });
         console.log("Errr", Errr);
+        setLoading(false);
         setTotal(0);
       },
     };
@@ -282,11 +244,7 @@ const YourStylist = () => {
   };
 
   const Calculate = useCallback(() => {
-    let initialvalue = 0;
-    let total = addtocart?.items.reduce(
-      (acc, item) => acc + item?.price,
-      initialvalue
-    );
+    let total = addtocart?.totalPrice;
     setTotal(total);
   }, [addtocart]);
 

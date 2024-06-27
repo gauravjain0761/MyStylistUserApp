@@ -12,7 +12,7 @@ import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
-import { TrashIcon } from "../../theme/SvgIcon";
+import { TimingIcon, TrashIcon } from "../../theme/SvgIcon";
 import {
   getAsyncCartId,
   getAsyncUserInfo,
@@ -27,6 +27,8 @@ import {
 } from "../../actions";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
+import SelectDateModal from "../common/SelectDateModal";
+import moment from "moment";
 
 type Props = {
   isOffer?: boolean;
@@ -34,40 +36,48 @@ type Props = {
   baseUrl?: string;
   count?: boolean;
   setCount?: any;
+  onPressTimeItem?: (index: any) => void;
+  onPressDateItem?: (index: any) => void;
+  dates?: any;
+  times?: any;
+  selectedDateIndex?: number;
+  selectedTimeIndex?: number;
+  selectedTime?: any;
+  selectedDate?: any;
 };
-const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
+const StylistInnerItem = ({
+  data,
+  baseUrl,
+  count,
+  setCount,
+  dates,
+  isOffer,
+  onPressDateItem,
+  onPressTimeItem,
+  selectedDate,
+  selectedDateIndex,
+  selectedTimeIndex,
+  selectedTime,
+  times,
+}: Props) => {
   const { addtocart } = useAppSelector((state) => state.cart);
+  const [visible, setVisible] = useState(false);
 
   const getCart = async () => {
     console.log("callll");
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo?._id,
       },
       onSuccess: async (response: any) => {
-        await setAsyncCartId(response?.data?.cart?._id);
-        let initialvalue = 0;
+        await setAsyncCartId(response?.data?.cart?.cart_id);
         dispatch({
           type: ADD_TO_CART,
-          payload: { items: [...response?.data?.cart?.items] },
+          payload: response?.data?.cart,
         });
         isInCart(data);
-        if (response.data?.cart?.items?.length > 0) {
-          let total = response.data?.cart?.items?.reduce(
-            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
-            initialvalue
-          );
-          dispatch({
-            type: CART_DETAILS,
-            payload: { ...response?.data, total: total },
-          });
-        } else {
-          dispatch({
-            type: CART_DETAILS,
-            payload: {},
-          });
-        }
+        timeCounter(data);
       },
       onFailure: (Errr: any) => {
         if (Errr?.data?.message === "Cart not found") {
@@ -82,17 +92,21 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
     dispatch(getCartlist(obj));
   };
 
-  const onPressDelete = async () => {
-    let itemId = addtocart?.items?.map((item) => {
-      if (item.serviceId == data.sub_services.sub_service_id) {
-        return item._id;
-      }
+  const onPressDelete = async (items) => {
+    let serviceId = "";
+    addtocart?.offers?.forEach((item) => {
+      item?.subServices?.forEach((service) => {
+        if (item?.actionId == items?._id) {
+          serviceId = service?._id;
+        }
+      });
     });
+
     let cartId = await getAsyncCartId();
     let userInfo = await getAsyncUserInfo();
     let passData = {
       userId: userInfo?._id,
-      itemIds: itemId,
+      itemIds: [serviceId],
       cartId: cartId,
     };
     let obj = {
@@ -104,25 +118,48 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
         console.log("Errrr", Err);
       },
     };
+
     dispatch(removeMultipleCartItems(obj));
   };
 
   const dispatch = useAppDispatch();
 
   const onPressAdd = async () => {
+    setVisible(!visible);
+  };
+
+  const isInCart = (item) => {
+    return addtocart?.offers?.some((items) => items?.actionId == item?._id);
+  };
+
+  const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
+    let DateString = `${selectedDate} ${selectedTime?.time}`;
+    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
     let objs: any = {
       actionId: data?._id,
-      serviceId: data?.sub_services?.sub_service_id,
-      serviceName: data?.sub_services?.sub_service_name,
-      serviceType: "Offer",
-      price: data?.sub_services?.price,
+      serviceId: data?.sub_services?.service_id,
+      serviceName: data?.offer_name,
+      originalPrice: data?.sub_services?.price,
+      discountedPrice: data?.sub_services?.discounted_price,
+      timeSlot: momentDate,
       quantity: 1,
+      packageDetails: data?.additional_information,
+      subServices: [
+        {
+          subServiceId: data?.sub_services?.sub_service_id,
+          subServiceName: data?.sub_services?.sub_service_name,
+          originalPrice: data?.sub_services?.price,
+          discountedPrice: data?.sub_services?.discounted_price,
+        },
+      ],
     };
     let passData = {
       userId: userInfo._id,
       expertId: data?.expert_id,
-      items: [objs],
+      services: [],
+      packages: [],
+      offers: [objs],
     };
     let obj = {
       data: passData,
@@ -136,8 +173,12 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
     dispatch(addToCart(obj));
   };
 
-  const isInCart = (item) => {
-    return addtocart?.items?.some((items) => items?.actionId == item?._id);
+  const timeCounter = (item) => {
+    return addtocart?.offers?.map(
+      (items) =>
+        items?.actionId == item?._id &&
+        moment(items?.timeSlot)?.format("hh:mmA, DD MMM, YYYY")
+    );
   };
 
   return (
@@ -152,36 +193,65 @@ const StylistInnerItem = ({ data, baseUrl, count, setCount }: Props) => {
         </View>
         <View style={{ flex: 1 }} />
         {isInCart(data) == false || isInCart(data) == undefined ? (
-          <TouchableOpacity
-            style={{ alignSelf: "flex-start" }}
-            onPress={onPressAdd}
-          >
-            <ImageBackground
-              resizeMode="contain"
-              style={styles.btnStyle}
-              source={images.green_button}
+          <View style={styles.buttonBar}>
+            <TouchableOpacity
+              style={{ alignSelf: "flex-start" }}
+              onPress={onPressAdd}
             >
-              <Text style={styles.addTextStyle}>{strings["Add"]}</Text>
-            </ImageBackground>
-          </TouchableOpacity>
+              <ImageBackground
+                resizeMode="contain"
+                style={styles.btnStyle}
+                source={images.green_button}
+              >
+                <Text style={styles.addTextStyle}>{strings["Add"]}</Text>
+              </ImageBackground>
+            </TouchableOpacity>
+            <View style={styles.time}>
+              <TimingIcon />
+              <Text style={styles.timeTitle}>{"30 Min."}</Text>
+            </View>
+          </View>
         ) : (
           <View>
-            <ImageBackground
-              resizeMode="contain"
-              style={styles.btnStyle}
-              source={images.green_button}
-            >
-              <TouchableOpacity
-                style={{ flexDirection: "row", alignItems: "center" }}
-                onPress={onPressDelete}
+            <View style={styles.buttonBar}>
+              <ImageBackground
+                resizeMode="contain"
+                style={styles.btnStyle}
+                source={images.green_button}
               >
-                <TrashIcon />
-                <Text style={styles.countTextStyle}>ADDED</Text>
-              </TouchableOpacity>
-            </ImageBackground>
+                <TouchableOpacity
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                  onPress={() => onPressDelete(data)}
+                >
+                  <TrashIcon />
+                  <Text style={styles.countTextStyle}>ADDED</Text>
+                </TouchableOpacity>
+              </ImageBackground>
+              <View style={styles.time}>
+                <TimingIcon />
+                <Text style={styles.timeTitle}>{"30 Min."}</Text>
+              </View>
+            </View>
+            <Text style={styles.selectedTime}>{timeCounter(data)}</Text>
           </View>
         )}
       </View>
+      <SelectDateModal
+        visible={visible}
+        close={setVisible}
+        dates={dates}
+        onPressDateItem={(index) => onPressDateItem(index)}
+        onPressTimeItem={(index) => onPressTimeItem(index)}
+        setIsModal={setVisible}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        title={
+          "Please select Date and Time for this Service from available slots"
+        }
+        withOutDisable={false}
+        onPressApply={onPressApply}
+      />
       <FastImage
         resizeMode="cover"
         style={styles.imgStyle}
@@ -243,6 +313,23 @@ const styles = StyleSheet.create({
   },
   plusTexStyke: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.green_2),
+  },
+  buttonBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(13),
+  },
+  time: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(3),
+  },
+  timeTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.green_2),
+  },
+  selectedTime: {
+    ...commonFontStyle(fontFamily.medium, 10, colors.grey_21),
+    marginTop: hp(8),
   },
 });
 

@@ -28,7 +28,7 @@ import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import FastImage from "react-native-fast-image";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { clearAsync, getAsyncUserInfo } from "../../helper/asyncStorage";
 import { deleteAccount } from "../../actions";
 
 const CustomDrawer = () => {
@@ -43,8 +43,10 @@ const CustomDrawer = () => {
     return navigate(screenName.FaQ);
   };
 
-  const onPressLogOut = () => {
-    return dispatchNavigation(screenName.Login);
+  const onPressLogOut = async () => {
+    await clearAsync().then(() => {
+      return dispatchNavigation(screenName.Login);
+    });
   };
 
   const onPressFavorite = () => {

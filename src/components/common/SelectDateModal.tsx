@@ -26,6 +26,8 @@ type props = {
   selectedDateIndex: number;
   selectedTimeIndex: number;
   onPressApply: () => void;
+  title?: string;
+  withOutDisable?: boolean;
 };
 
 const SelectDateModal = ({
@@ -39,6 +41,8 @@ const SelectDateModal = ({
   selectedDateIndex,
   selectedTimeIndex,
   onPressApply,
+  title,
+  withOutDisable = true,
 }: props) => {
   return (
     <Modals
@@ -46,6 +50,7 @@ const SelectDateModal = ({
       close={close}
       contain={
         <View style={styles.select_date_container}>
+          {title && <Text style={styles.modalTitle}>{title}</Text>}
           <Text style={styles.select_date_title}>{strings.Select_Date}</Text>
           <View style={styles.week_container}>
             <WeekDateSelector
@@ -61,10 +66,11 @@ const SelectDateModal = ({
             <View style={styles.timeselect_container}>
               <TimeSelector
                 data={times}
-                withOutDisable={true}
+                withOutDisable={withOutDisable}
                 onPressTime={(index) => onPressTimeItem(index)}
                 itemStyle={styles.timeslot_style}
                 selectIndex={selectedTimeIndex}
+                containerStyle={{ justifyContent: "space-between" }}
               />
             </View>
           </View>
@@ -92,7 +98,9 @@ const SelectDateModal = ({
               }
               onPress={() => {
                 setIsModal(!visible);
-                if (onPressApply) onPressApply();
+                setTimeout(() => {
+                  if (onPressApply) onPressApply();
+                }, 800);
               }}
             >
               <ImageBackground
@@ -170,7 +178,11 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 13.3, colors.info_grey),
     alignSelf: "center",
     marginTop: hp(25),
-    // marginHorizontal: wp(15),
+  },
+  modalTitle: {
+    ...commonFontStyle(fontFamily.bold, 16, colors.grey_20),
+    textAlign: "center",
+    lineHeight: hp(24),
   },
 });
 

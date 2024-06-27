@@ -32,7 +32,12 @@ import {
 } from "../helper/globalFunction";
 import { colors } from "../theme/color";
 import { commonFontStyle, fontFamily } from "../theme/fonts";
-import { CarIcon, StarIcon, VerifyIcon } from "../theme/SvgIcon";
+import {
+  CarIcon,
+  StarIcon,
+  TrashSqureIcon,
+  VerifyIcon,
+} from "../theme/SvgIcon";
 import { images } from "../theme/icons";
 import moment from "moment";
 import { screenName } from "../helper/routeNames";
@@ -75,7 +80,7 @@ const RowItemValue = ({
             onPress={onPressClose}
             style={styles.closeContainer}
           >
-            <Text>X</Text>
+            <TrashSqureIcon />
           </TouchableOpacity>
         ) : null}
       </View>
@@ -135,16 +140,10 @@ const Cart = () => {
         userId: userInfo._id,
       },
       onSuccess: (response: any) => {
-        let initialvalue = 0;
-        if (response.data?.cart?.items?.length > 0) {
-          let total = response.data?.cart?.items?.reduce(
-            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
-            initialvalue
-          );
-
+        if (Object.values(response.data?.cart)?.length > 0) {
           dispatch({
             type: CART_DETAILS,
-            payload: { ...response?.data, total: total },
+            payload: response?.data,
           });
         } else {
           setCartEmpty(true);
@@ -391,185 +390,95 @@ const Cart = () => {
                 </View>
               </View>
             )}
-
-            <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-              <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-              {cartLoading ? null : (
-                <FlatList
-                  data={cartDetails?.cart?.items}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <RowItemValue
-                        title={item?.serviceName}
-                        isShowClose={true}
-                        value={"₹" + item?.price}
-                        onPressClose={() =>
-                          onPressRemoveSignalItem(cartDetails?.cart?.items)
-                        }
-                      />
-                    );
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              )}
-              {/* {cartLoading
-                ? null
-                : cartDetails?.cart?.items.some(
-                    (item) => item?.serviceType == "Package"
-                  ) && (
-                    <RowItemValue
-                      isShowClose={true}
-                      title={"Package"}
-                      value=""
-                      onPressClose={() =>
-                        onPressRemoveSignalItem(
-                          cartDetails?.cart?.items,
-                          "Package"
-                        )
-                      }
-                      TitleStyle={{
-                        ...commonFontStyle(
-                          fontFamily.semi_bold,
-                          16,
-                          colors.black
-                        ),
-                      }}
-                    />
-                  )}
-              {cartLoading ? null : (
-                <FlatList
-                  data={cartDetails?.cart?.items}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <>
-                        {item?.serviceType == "Package" && (
+            <View style={styles.cardbg}>
+              <View style={styles?.topComponent}>
+                <Text style={styles.titleStyle}>{"Payment Details"}</Text>
+                <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
+                <RowItemValue title="Payment Method" value="Cash" />
+                {cartLoading ? null : (
+                  <>
+                    <FlatList
+                      data={cartDetails?.cart?.services}
+                      renderItem={({ item, index }) => {
+                        return (
                           <RowItemValue
                             title={item?.serviceName}
-                            isShowClose={false}
-                            value={"₹" + item?.price}
-                            onPressClose={() => {}}
-                          />
-                        )}
-                      </>
-                    );
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              )}
-              {cartLoading
-                ? null
-                : cartDetails?.cart?.items.some(
-                    (item) => item?.serviceType == "Service"
-                  ) && (
-                    <RowItemValue
-                      isShowClose={false}
-                      title={"Service"}
-                      value=""
-                      onPressClose={() => {}}
-                      TitleStyle={{
-                        ...commonFontStyle(
-                          fontFamily.semi_bold,
-                          16,
-                          colors.black
-                        ),
-                      }}
-                    />
-                  )}
-              {cartLoading ? null : (
-                <FlatList
-                  data={cartDetails?.cart?.items}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <>
-                        {item?.serviceType == "Service" && (
-                          <RowItemValue
                             isShowClose={true}
-                            title={item?.serviceName}
                             value={"₹" + item?.price}
                             onPressClose={() =>
-                              onPressRemoveSignalItem(
-                                cartDetails?.cart?.items,
-                                "Service"
-                              )
+                              onPressRemoveSignalItem(cartDetails?.cart?.items)
                             }
                           />
-                        )}
-                      </>
-                    );
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              )}
-              {cartLoading
-                ? null
-                : cartDetails?.cart?.items.some(
-                    (item) => item?.serviceType == "Offer"
-                  ) && (
-                    <RowItemValue
-                      isShowClose={true}
-                      title={"Offer"}
-                      value=""
-                      onPressClose={() =>
-                        onPressRemoveSignalItem(
-                          cartDetails?.cart?.items,
-                          "Offer"
-                        )
-                      }
-                      TitleStyle={{
-                        ...commonFontStyle(
-                          fontFamily.semi_bold,
-                          16,
-                          colors.black
-                        ),
+                        );
                       }}
+                      keyExtractor={(item, index) => index.toString()}
                     />
-                  )}
-              {cartLoading ? null : (
-                <FlatList
-                  data={cartDetails?.cart?.items}
-                  renderItem={({ item, index }) => {
-                    return (
-                      <>
-                        {item?.serviceType == "Offer" && (
+                    <FlatList
+                      data={cartDetails?.cart?.packages}
+                      renderItem={({ item, index }) => {
+                        return (
                           <RowItemValue
-                            isShowClose={false}
                             title={item?.serviceName}
+                            isShowClose={true}
                             value={"₹" + item?.price}
-                            onPressClose={() => {}}
+                            onPressClose={() =>
+                              onPressRemoveSignalItem(cartDetails?.cart?.items)
+                            }
                           />
-                        )}
-                      </>
-                    );
-                  }}
-                  keyExtractor={(item, index) => index.toString()}
+                        );
+                      }}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
+                    <FlatList
+                      data={cartDetails?.cart?.offers}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <View style={styles.offerCard}>
+                            <RowItemValue
+                              title={item?.serviceName}
+                              isShowClose={true}
+                              value={"₹" + item?.price}
+                              onPressClose={() =>
+                                onPressRemoveSignalItem(
+                                  cartDetails?.cart?.items
+                                )
+                              }
+                            />
+                          </View>
+                        );
+                      }}
+                      keyExtractor={(item, index) => index.toString()}
+                    />
+                  </>
+                )}
+                <View style={styles.TotalrowSpaceStyle}>
+                  <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
+                  <Text style={styles.valueTextStyle}>
+                    {"₹"}
+                    {cartDetails?.cart?.totalPrice}
+                  </Text>
+                </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View style={styles.subtract_left}></View>
+                <Image
+                  resizeMode="stretch"
+                  style={styles.cardlineStyle}
+                  source={images.dashline}
                 />
-              )} */}
-              <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
-              <RowItemValue title="Payment Method" value="Cash" />
-              <View style={styles.lineStyle} />
-              <View style={styles.rowSpaceStyle}>
-                <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-                <Text style={styles.valueTextStyle}>
-                  {"₹"}
-                  {cartDetails?.cart?.totalPrice}
+                <View style={styles.subtract_right}></View>
+              </View>
+              <View style={styles.bottomPart}>
+                <Text style={styles.saveTitle}>
+                  {"🎉 You saved ₹1000 on this order"}
                 </Text>
               </View>
-            </View>
-            <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-              <Text style={styles.titleStyle}>{strings["Select Date"]}</Text>
-              <WeekDateSelector
-                list={dates}
-                selectIndex={selectedDateIndex}
-                onPressDate={(index) => onPressDateItem(index)}
-              />
-            </View>
-            <View style={{ ...styles.whiteContainer, marginTop: 0 }}>
-              <Text style={styles.titleStyle}>{strings["Select Time"]}</Text>
-              <TimeSelector
-                data={times}
-                onPressTime={(index) => onPressTimeItem(index)}
-                selectIndex={selectedTimeIndex}
-              />
             </View>
             <CongratulationModal
               isVisible={isShowCongrestModal}
@@ -604,10 +513,11 @@ const Cart = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F3F3F3",
   },
   whiteContainer: {
     margin: 20,
-    borderRadius: 8,
+    borderRadius: wp(10),
     padding: wp(13),
     backgroundColor: colors.white,
   },
@@ -661,6 +571,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
     marginBottom: hp(10),
+    paddingTop: hp(23),
   },
   rowSpaceStyle: {
     flexDirection: "row",
@@ -676,16 +587,15 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),
   },
   valueTextStyle: {
-    ...commonFontStyle(fontFamily.semi_bold, 16, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 16, colors.grey_22),
   },
   closeContainer: {
     marginLeft: wp(10),
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
-  lineStyle: {
-    borderBottomWidth: 1,
-    borderColor: colors.gery_7,
-    marginVertical: hp(10),
+  cardlineStyle: {
+    width: "90%",
+    tintColor: colors.green_3,
   },
   bottomStyle: {
     shadowColor: "#000",
@@ -734,6 +644,55 @@ const styles = StyleSheet.create({
     marginHorizontal: wp(20),
     marginVertical: hp(20),
   },
+  cardbg: {
+    backgroundColor: colors.white,
+    margin: wp(20),
+    borderRadius: wp(10),
+    overflow: "hidden",
+  },
+  topComponent: {
+    paddingHorizontal: wp(20),
+  },
+  bottomPart: {
+    paddingHorizontal: wp(20),
+    backgroundColor: colors.primary_light_blue_4,
+  },
+  saveTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors?.green_5),
+    paddingVertical: hp(12),
+    alignSelf: "center",
+  },
+  subtract_left: {
+    width: wp(16),
+    height: wp(16),
+    backgroundColor: "#F3F3F3",
+    borderRadius: wp(50),
+    position: "absolute",
+    left: wp(-8),
+    bottom: hp(-8),
+    zIndex: 1,
+  },
+  subtract_right: {
+    width: wp(16),
+    height: wp(16),
+    borderRadius: wp(50),
+    position: "absolute",
+    right: wp(-8),
+    bottom: hp(-8),
+    backgroundColor: "#F3F3F3",
+    zIndex: 1,
+  },
+  TotalrowSpaceStyle: {
+    paddingTop: hp(16),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingBottom: hp(20),
+    borderTopWidth: 1,
+    borderColor: colors.gery_7,
+    marginTop: hp(18),
+  },
+  offerCard: {},
 });
 
 export default Cart;

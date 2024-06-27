@@ -32,6 +32,8 @@ import {
 } from "../../actions/offerAction";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getUserItemDetails, getUsersFavList } from "../../actions";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -46,16 +48,31 @@ const Offers = ({ navigation }) => {
   const { profileData } = useAppSelector((state) => state.profile);
   const { allOffers, offerList } = useAppSelector((state) => state.offers);
   const { isLoading } = useAppSelector((state) => state.common);
+  const { itemDetails } = useAppSelector((state) => state.home);
 
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [refreshControl, setRefreshControle] = useState(false);
   const [discount, setDiscount] = useState<any>(null);
   const [serviceType, setServiceType] = useState<any>(null);
+  const [like, setLike] = useState(false);
+  const [likeID, setLikeID] = useState("");
 
   useEffect(() => {
     getAllOfferData(true);
   }, []);
+
+  useEffect(() => {
+    if (offerList.length > 0) {
+      getDetails();
+    }
+  }, [offerList]);
+
+  useEffect(() => {
+    if (Object.values(itemDetails).length > 0 || itemDetails.length) {
+      getFavUser();
+    }
+  }, [itemDetails]);
 
   const getAllOfferData = (isLoading: boolean) => {
     let obj = {
@@ -65,13 +82,48 @@ const Offers = ({ navigation }) => {
         limit: 10,
         page: page,
       },
-      onSuccess: () => {
+      onSuccess: (res: any) => {
         setPage(page + 1);
         setFooterLoading(false);
       },
       onFailure: () => {},
     };
     dispatch(getAllOffersByLocation(obj));
+  };
+
+  const getDetails = () => {
+    let userid = offerList?.[0]?.expert_id;
+    let obj = {
+      data: {
+        userid: userid,
+      },
+      onSuccess: (res) => {},
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
+  };
+
+  const getFavUser = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+      },
+      onSuccess: (response: any) => {
+        response?.data.forEach((item) => {
+          if (item?._id == itemDetails?.user?._id) {
+            setLikeID(item?.favouriteId);
+            setLike(true);
+          } else {
+            setLike(false);
+          }
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("getFavUser Errr", Errr);
+      },
+    };
+    dispatch(getUsersFavList(obj));
   };
 
   const onPressMenu = () => {
@@ -129,7 +181,12 @@ const Offers = ({ navigation }) => {
   };
 
   const onPressOfferItem = (item: any) => {
-    navigation.navigate(screenName.YourStylist, { id: item?.expert_id });
+    navigation.navigate(screenName.YourStylist, {
+      id: item?.expert_id,
+      like: like,
+      likeID: likeID,
+      itemDetails: itemDetails,
+    });
   };
 
   const loadMoreData = () => {

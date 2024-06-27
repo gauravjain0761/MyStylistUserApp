@@ -40,7 +40,7 @@ const HomeHeader = ({
   onPresslocation,
   onPressCart,
   onPressProfile,
-  location = null,
+  location,
   onPressLike,
   edges,
   containerStyle,
@@ -78,13 +78,11 @@ const HomeHeader = ({
                 <RightArrow />
               </View>
             </TouchableOpacity>
-            {location ? (
+            {location?.length > 0 ? (
               <Text numberOfLines={1} style={styles.addrs}>
                 {location}
               </Text>
-            ) : (
-              <Text></Text>
-            )}
+            ) : null}
           </View>
         </View>
       </View>

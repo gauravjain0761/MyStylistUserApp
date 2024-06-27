@@ -34,6 +34,9 @@ export const colors = {
   grey_17: "#949495",
   grey_18: "#949494",
   grey_19: "#E8E8E8",
+  grey_20: "#343434",
+  grey_21: "#424242",
+  grey_22: "#565656",
 
   black_2: "#444444",
   green_1: "#1BA041",
@@ -42,6 +45,7 @@ export const colors = {
   green_opacity: "#E2F3F2",
   green_3: "#2F7973",
   green_4: "#40c9bf",
+  green_5: "#2F7973",
 
   info_grey: "#8D8D8D",
   info_grey_2: "#373737",

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
-import { TrashIcon } from "../../theme/SvgIcon";
+import { TimingIcon, TrashIcon } from "../../theme/SvgIcon";
 import {
   getAsyncCartId,
   getAsyncUserInfo,
@@ -27,6 +27,11 @@ import {
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import { useIsFocused } from "@react-navigation/native";
+import Modals from "../common/Modals";
+import WeekDateSelector from "../common/WeekDateSelector";
+import TimeSelector from "../common/TimeSelector";
+import SelectDateModal from "../common/SelectDateModal";
+import moment from "moment";
 
 type Props = {
   isOffer?: boolean;
@@ -36,42 +41,51 @@ type Props = {
   setCount?: any;
   actionId?: string;
   index?: number;
+  onPressTimeItem?: (index: any) => void;
+  onPressDateItem?: (index: any) => void;
+  dates?: any;
+  times?: any;
+  selectedDateIndex?: number;
+  selectedTimeIndex?: number;
+  selectedTime?: any;
+  selectedDate?: any;
 };
-const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
+const ServiceInnerItem = ({
+  data,
+  baseUrl,
+  actionId,
+  index,
+  onPressDateItem,
+  onPressTimeItem,
+  selectedDateIndex,
+  selectedTimeIndex,
+  dates,
+  times,
+  selectedTime,
+  selectedDate,
+}: Props) => {
   const { addtocart } = useAppSelector((state) => state.cart);
+  const [visible, setVisible] = useState(false);
+  const dispatch = useAppDispatch();
 
   const getCart = async () => {
-    console.log("callll");
+    console.log("carrrtttcalllllll");
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo?._id,
       },
       onSuccess: async (response: any) => {
-        await setAsyncCartId(response?.data?.cart?._id);
-        let initialvalue = 0;
+        await setAsyncCartId(response?.data?.cart?.cart_id);
         dispatch({
           type: ADD_TO_CART,
-          payload: { items: [...response?.data?.cart?.items] },
+          payload: response?.data?.cart,
         });
         isInCart(data);
-        if (response.data?.cart?.items?.length > 0) {
-          let total = response.data?.cart?.items?.reduce(
-            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
-            initialvalue
-          );
-          dispatch({
-            type: CART_DETAILS,
-            payload: { ...response?.data, total: total },
-          });
-        } else {
-          dispatch({
-            type: CART_DETAILS,
-            payload: {},
-          });
-        }
+        timeCounter(data);
       },
       onFailure: (Errr: any) => {
+        console.log("Errrr", Errr);
         if (Errr?.data?.message === "Cart not found") {
           dispatch({
             type: CART_DETAILS,
@@ -85,17 +99,20 @@ const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
   };
 
   const onPressDelete = async (items) => {
-    let itemId = addtocart?.items?.map((item) => {
-      if (item.serviceId == data.sub_service_id) {
-        return item._id;
-      }
+    let serviceId = "";
+    addtocart?.services?.forEach((item) => {
+      item?.subServices?.forEach((service) => {
+        if (service?.subServiceId == items?.sub_service_id?._id) {
+          serviceId = service?._id;
+        }
+      });
     });
 
     let cartId = await getAsyncCartId();
     let userInfo = await getAsyncUserInfo();
     let passData = {
       userId: userInfo?._id,
-      itemIds: itemId,
+      itemIds: [serviceId],
       cartId: cartId,
     };
     let obj = {
@@ -107,50 +124,79 @@ const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
         console.log("Errrr", Err);
       },
     };
-    console.log("ememememe", passData, itemId);
     dispatch(removeMultipleCartItems(obj));
   };
-  const dispatch = useAppDispatch();
 
-  const onPressAdd = async () => {
+  const onPressAdd = useCallback(async () => {
+    setVisible(!visible);
+  }, [visible]);
+
+  const isInCart = (item) => {
+    return addtocart?.services?.some((items) =>
+      items?.subServices?.some(
+        (service) => service?.subServiceId == item?.sub_service_id?._id
+      )
+    );
+  };
+
+  const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
+    let DateString = `${selectedDate} ${selectedTime?.time}`;
+    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
 
     let objs: any = {
-      actionId: data?.sub_service_id,
-      serviceId: data?.sub_service_id,
-      serviceName: data?.sub_service_name,
-      serviceType: "Service",
-      price: data?.price,
+      actionId: data?.service_id?._id,
+      serviceId: data?.service_id?._id,
+      serviceName: data?.service_id?.service_name,
       quantity: 1,
+      timeSlot: momentDate,
+      packageDetails: null,
+      subServices: [
+        {
+          subServiceId: data?.sub_service_id?._id,
+          subServiceName: data?.sub_service_id?.sub_service_name,
+          originalPrice: data?.price,
+          discountedPrice: 0,
+        },
+      ],
     };
     let passData = {
       userId: userInfo._id,
       expertId: actionId,
-      items: [objs],
+      services: [objs],
+      packages: [],
+      offers: [],
     };
+    console.log(objs?.subServices?.[0]);
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
-        dispatch({ type: ADD_TO_CART, payload: response.data });
         await getCart();
       },
       onFailure: (Err: any) => {
-        console.log("Errrr", Err);
+        console.log("ServiceInner Err", Err);
       },
     };
+
     dispatch(addToCart(obj));
   };
 
-  const isInCart = (item) => {
-    return addtocart?.items?.some(
-      (items) => items?.serviceId == item.sub_service_id
+  const timeCounter = (item) => {
+    return addtocart?.services?.map((items) =>
+      items?.subServices?.map(
+        (service) =>
+          service?.subServiceId == item?.sub_service_id?._id &&
+          moment(items?.timeSlot)?.format("hh:mmA, DD MMM, YYYY")
+      )
     );
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.cloumStyle}>
-        <Text style={styles.labelTextStyle}>{data?.sub_service_name}</Text>
+        <Text style={styles.labelTextStyle}>
+          {data?.sub_service_id?.sub_service_name}
+        </Text>
         <View style={styles.rowStyle}>
           <Text style={styles.priceStyle}>
             {"₹ "}
@@ -159,41 +205,70 @@ const ServiceInnerItem = ({ data, baseUrl, actionId, index }: Props) => {
         </View>
         <View style={{ flex: 1 }} />
         {isInCart(data) == false || isInCart(data) == undefined ? (
-          <TouchableOpacity
-            style={{ alignSelf: "flex-start" }}
-            onPress={onPressAdd}
-          >
-            <ImageBackground
-              resizeMode="contain"
-              style={[styles.btnStyle]}
-              source={images.green_button}
+          <View style={styles.buttonBar}>
+            <TouchableOpacity
+              style={{ alignSelf: "flex-start" }}
+              onPress={onPressAdd}
             >
-              <Text style={styles.addTextStyle}>{strings["Add"]}</Text>
-            </ImageBackground>
-          </TouchableOpacity>
+              <ImageBackground
+                resizeMode="contain"
+                style={[styles.btnStyle]}
+                source={images.green_button}
+              >
+                <Text style={styles.addTextStyle}>{strings["Add"]}</Text>
+              </ImageBackground>
+            </TouchableOpacity>
+            <View style={styles.time}>
+              <TimingIcon />
+              <Text style={styles.timeTitle}>{"30 Min."}</Text>
+            </View>
+          </View>
         ) : (
           <View>
-            <ImageBackground
-              resizeMode="contain"
-              style={styles.btnStyle}
-              source={images.green_button}
-            >
-              <TouchableOpacity
-                style={{ flexDirection: "row", alignItems: "center" }}
-                onPress={onPressDelete}
+            <View style={styles.buttonBar}>
+              <ImageBackground
+                resizeMode="contain"
+                style={styles.btnStyle}
+                source={images.green_button}
               >
-                <TrashIcon />
-                <Text style={styles.countTextStyle}>ADDED</Text>
-              </TouchableOpacity>
-            </ImageBackground>
+                <TouchableOpacity
+                  style={{ flexDirection: "row", alignItems: "center" }}
+                  onPress={() => onPressDelete(data)}
+                >
+                  <TrashIcon />
+                  <Text style={styles.countTextStyle}>ADDED</Text>
+                </TouchableOpacity>
+              </ImageBackground>
+              <View style={styles.time}>
+                <TimingIcon />
+                <Text style={styles.timeTitle}>{"30 Min."}</Text>
+              </View>
+            </View>
+            <Text style={styles.selectedTime}>{timeCounter(data)}</Text>
           </View>
         )}
       </View>
+      <SelectDateModal
+        visible={visible}
+        close={setVisible}
+        dates={dates}
+        onPressDateItem={(index) => onPressDateItem(index)}
+        onPressTimeItem={(index) => onPressTimeItem(index)}
+        setIsModal={setVisible}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        title={
+          "Please select Date and Time for this Service from available slots"
+        }
+        withOutDisable={false}
+        onPressApply={onPressApply}
+      />
       <FastImage
         resizeMode="cover"
         style={styles.imgStyle}
         source={{
-          uri: baseUrl + "/" + data?.fileName,
+          uri: baseUrl + "/" + data?.sub_service_id?.fileName,
           priority: FastImage.priority.high,
         }}
       />
@@ -251,6 +326,37 @@ const styles = StyleSheet.create({
   },
   plusTexStyke: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.green_2),
+  },
+  buttonBar: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(13),
+  },
+  time: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(3),
+  },
+  timeTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.green_2),
+  },
+  whiteContainer: {
+    borderRadius: 8,
+    backgroundColor: colors.white,
+  },
+  titleStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+    marginBottom: hp(10),
+  },
+  info: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.gery_4),
+    alignSelf: "center",
+    lineHeight: hp(24),
+    marginTop: hp(24),
+  },
+  selectedTime: {
+    ...commonFontStyle(fontFamily.medium, 10, colors.grey_21),
+    marginTop: hp(8),
   },
 });
 

@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     marginBottom: wp(12),
     alignItems: "center",
     justifyContent: "center",
-    marginRight: wp(5),
+    // marginRight: wp(5),
   },
   timeTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.black),

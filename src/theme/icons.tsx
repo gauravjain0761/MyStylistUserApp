@@ -61,9 +61,11 @@ export const images = {
   label_grey: require("../assets/image/label_grey.png"),
   label_black: require("../assets/image/label_black.png"),
   dashline: require("../assets/image/dashline.png"),
+  yellowOffer: require("../assets/icon/yellowOffer.png"),
 
   //cart
   cartCard: require("../assets/image/cartCard.png"),
+  editIcon: require("../assets/icon/EditIcon.png"),
 };
 
 export const icons = {

@@ -1840,3 +1840,25 @@ export const TrashSqureIcon = () => {
     </Svg>
   );
 };
+
+export const EditCartIcon = () => {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" fill="none">
+      <G
+        stroke="#2F7973"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        clipPath="url(#a)"
+      >
+        <Path d="M5.75 5.25H5a1.5 1.5 0 0 0-1.5 1.5v6.75A1.5 1.5 0 0 0 5 15h6.75a1.5 1.5 0 0 0 1.5-1.5v-.75" />
+        <Path d="M15.789 4.939A1.575 1.575 0 0 0 13.56 2.71L7.25 9.001v2.25H9.5l6.289-6.312ZM12.5 3.75 14.75 6" />
+      </G>
+      <Defs>
+        <ClipPath id="a">
+          <Path fill="#fff" d="M.5 0h18v18H.5z" />
+        </ClipPath>
+      </Defs>
+    </Svg>
+  );
+};

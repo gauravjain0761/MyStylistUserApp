@@ -34,6 +34,10 @@ import { colors } from "../theme/color";
 import { commonFontStyle, fontFamily } from "../theme/fonts";
 import {
   CarIcon,
+  EditCartIcon,
+  OfferIcon,
+  OfferYellowIcon,
+  PackagesIcon,
   StarIcon,
   TrashSqureIcon,
   VerifyIcon,
@@ -137,7 +141,7 @@ const Cart = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo?._id,
       },
       onSuccess: (response: any) => {
         if (Object.values(response.data?.cart)?.length > 0) {
@@ -203,7 +207,6 @@ const Cart = () => {
           serviceType: item?.serviceType,
         };
       });
-      console.log();
       let userInfo = await getAsyncUserInfo();
       let obj = {
         data: {
@@ -243,12 +246,24 @@ const Cart = () => {
     navigate(screenName.YourStylist);
   };
 
-  const onPressRemoveSignalItem = async (item: any) => {
+  const onPressRemoveSignalItem = async (item: any, type: string) => {
     let userInfo = await getAsyncUserInfo();
+    let itemIdes: any = [];
+    if (type == "Service") {
+      itemIdes.push(item?._id);
+    } else if (type == "Package") {
+      item?.subServices?.forEach((service) => {
+        itemIdes.push(service?._id);
+      });
+    } else if (type == "Offer") {
+      item?.subServices?.forEach((service) => {
+        itemIdes.push(service?._id);
+      });
+    }
     let data = {
       userId: userInfo?._id,
-      itemIds: [item?._id],
-      cartId: cartDetails?.cart?._id,
+      itemIds: itemIdes,
+      cartId: cartDetails?.cart?.cart_id,
     };
     let obj = {
       data: data,
@@ -261,10 +276,25 @@ const Cart = () => {
   };
 
   const RemoveItems = async () => {
-    let Ids = cartDetails?.cart?.items?.map((items) => items?._id);
+    let Ids = [];
+    cartDetails?.cart?.services?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.cart?.packages?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.cart?.offers?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
     let userInfo = await getAsyncUserInfo();
     let data = {
-      cartId: cartDetails?.cart?._id,
+      cartId: cartDetails?.cart?.cart_id,
       userId: userInfo?._id,
       itemIds: Ids,
     };
@@ -390,67 +420,213 @@ const Cart = () => {
                 </View>
               </View>
             )}
+            <View style={styles.orderContainer}>
+              {cartLoading ? null : (
+                <>
+                  {cartDetails?.cart?.services?.length > 0 && (
+                    <>
+                      <FlatList
+                        data={cartDetails?.cart?.services}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <FlatList
+                              data={item?.subServices}
+                              renderItem={({ item: data, index }) => {
+                                return (
+                                  <RowItemValue
+                                    title={data?.subServiceName}
+                                    isShowClose={true}
+                                    value={"₹" + data?.originalPrice}
+                                    onPressClose={() =>
+                                      onPressRemoveSignalItem(data, "Service")
+                                    }
+                                  />
+                                );
+                              }}
+                            />
+                          );
+                        }}
+                        keyExtractor={(item, index) => index.toString()}
+                      />
+                      <View style={styles.timeContainer}>
+                        <Text style={styles.timeTitle}>
+                          {moment(
+                            cartDetails?.cart?.services?.[0]?.timeSlot
+                          )?.format("hh:mm:A, DD MMM, YYYY")}
+                        </Text>
+                        <TouchableOpacity style={styles.changebtn}>
+                          <Image
+                            source={images.editIcon}
+                            resizeMode="contain"
+                            style={styles.editIcon}
+                          />
+                          <Text style={styles.btnTitle}>{"Change"}</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <Image
+                        resizeMode="stretch"
+                        style={styles.cardline}
+                        source={images.dashline}
+                      />
+                    </>
+                  )}
+                  {cartDetails?.cart?.packages?.length > 0 && (
+                    <>
+                      <FlatList
+                        data={cartDetails?.cart?.packages}
+                        ItemSeparatorComponent={() => (
+                          <View style={{ height: hp(23) }}></View>
+                        )}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <View style={styles.packageCard}>
+                              <View style={styles.packageLabelContainer}>
+                                <PackagesIcon />
+                                <Text style={styles?.packageLabel}>
+                                  {"PACKAGE"}
+                                </Text>
+                              </View>
+                              <View style={styles.topContainer}>
+                                <Text style={styles.packageTitle}>
+                                  {item?.packageName}
+                                </Text>
+                                <View style={styles.rightContainer}>
+                                  <Text style={styles?.valueTextStyle}>
+                                    {`₹ ${item?.packageTotal}`}
+                                  </Text>
+                                  <TouchableOpacity
+                                    onPress={() =>
+                                      onPressRemoveSignalItem(item, "Package")
+                                    }
+                                    style={styles.closeContainer}
+                                  >
+                                    <TrashSqureIcon />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                              <FlatList
+                                data={item?.subServices}
+                                renderItem={({ item: data, index }) => {
+                                  return (
+                                    <View
+                                      style={{
+                                        ...styles.rowStyle,
+                                        paddingTop: hp(10),
+                                      }}
+                                    >
+                                      <View
+                                        style={{
+                                          ...styles.dotStyle,
+                                          backgroundColor: colors?.black,
+                                          marginHorizontal: 0,
+                                          marginRight: wp(10),
+                                        }}
+                                      />
+                                      <Text style={styles.boldTextStyle}>
+                                        {data?.subServiceName}:{" "}
+                                        <Text
+                                          style={styles.greyTextStyle}
+                                        ></Text>
+                                      </Text>
+                                    </View>
+                                  );
+                                }}
+                              />
+                            </View>
+                          );
+                        }}
+                        keyExtractor={(item, index) => index.toString()}
+                      />
+                      <View style={styles.timeContainer}>
+                        <Text style={styles.timeTitle}>
+                          {moment(
+                            cartDetails?.cart?.packages?.[0]?.timeSlot
+                          )?.format("hh:mm:A, DD MMM, YYYY")}
+                        </Text>
+                        <TouchableOpacity style={styles.changebtn}>
+                          <Image
+                            source={images.editIcon}
+                            resizeMode="contain"
+                            style={styles.editIcon}
+                          />
+                          <Text style={styles.btnTitle}>{"Change"}</Text>
+                        </TouchableOpacity>
+                      </View>
+                      <Image
+                        resizeMode="stretch"
+                        style={styles.cardline}
+                        source={images.dashline}
+                      />
+                    </>
+                  )}
+                  {cartDetails?.cart?.offers?.length > 0 && (
+                    <>
+                      <FlatList
+                        data={cartDetails?.cart?.offers}
+                        ItemSeparatorComponent={() => (
+                          <View style={{ height: hp(23) }}></View>
+                        )}
+                        renderItem={({ item, index }) => {
+                          return (
+                            <View style={styles.offerCard}>
+                              <View style={styles.packageLabelContainer}>
+                                <Image
+                                  resizeMode="contain"
+                                  style={styles?.offerImage}
+                                  source={images.yellowOffer}
+                                />
+                                <Text style={styles?.packageLabel}>
+                                  {"OFFER"}
+                                </Text>
+                              </View>
+                              <View style={styles.topContainer}>
+                                <Text style={styles?.offerTitle}>
+                                  {item?.offerName}
+                                </Text>
+                                <View style={styles.topRight}>
+                                  <Text
+                                    style={styles.valueTextStyle}
+                                  >{`₹ ${item?.offerTotal}`}</Text>
+                                  <TouchableOpacity
+                                    onPress={() =>
+                                      onPressRemoveSignalItem(item, "Offer")
+                                    }
+                                    style={styles.closeContainer}
+                                  >
+                                    <TrashSqureIcon />
+                                  </TouchableOpacity>
+                                </View>
+                              </View>
+                            </View>
+                          );
+                        }}
+                        keyExtractor={(item, index) => index.toString()}
+                      />
+                      <View style={styles.timeContainer}>
+                        <Text style={styles.timeTitle}>
+                          {moment(
+                            cartDetails?.cart?.offers?.[0]?.timeSlot
+                          )?.format("hh:mm:A, DD MMM, YYYY")}
+                        </Text>
+                        <TouchableOpacity style={styles.changebtn}>
+                          <Image
+                            source={images.editIcon}
+                            resizeMode="contain"
+                            style={styles.editIcon}
+                          />
+                          <Text style={styles.btnTitle}>{"Change"}</Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  )}
+                </>
+              )}
+            </View>
             <View style={styles.cardbg}>
               <View style={styles?.topComponent}>
                 <Text style={styles.titleStyle}>{"Payment Details"}</Text>
                 <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
                 <RowItemValue title="Payment Method" value="Cash" />
-                {cartLoading ? null : (
-                  <>
-                    <FlatList
-                      data={cartDetails?.cart?.services}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <RowItemValue
-                            title={item?.serviceName}
-                            isShowClose={true}
-                            value={"₹" + item?.price}
-                            onPressClose={() =>
-                              onPressRemoveSignalItem(cartDetails?.cart?.items)
-                            }
-                          />
-                        );
-                      }}
-                      keyExtractor={(item, index) => index.toString()}
-                    />
-                    <FlatList
-                      data={cartDetails?.cart?.packages}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <RowItemValue
-                            title={item?.serviceName}
-                            isShowClose={true}
-                            value={"₹" + item?.price}
-                            onPressClose={() =>
-                              onPressRemoveSignalItem(cartDetails?.cart?.items)
-                            }
-                          />
-                        );
-                      }}
-                      keyExtractor={(item, index) => index.toString()}
-                    />
-                    <FlatList
-                      data={cartDetails?.cart?.offers}
-                      renderItem={({ item, index }) => {
-                        return (
-                          <View style={styles.offerCard}>
-                            <RowItemValue
-                              title={item?.serviceName}
-                              isShowClose={true}
-                              value={"₹" + item?.price}
-                              onPressClose={() =>
-                                onPressRemoveSignalItem(
-                                  cartDetails?.cart?.items
-                                )
-                              }
-                            />
-                          </View>
-                        );
-                      }}
-                      keyExtractor={(item, index) => index.toString()}
-                    />
-                  </>
-                )}
                 <View style={styles.TotalrowSpaceStyle}>
                   <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
                   <Text style={styles.valueTextStyle}>
@@ -523,6 +699,7 @@ const styles = StyleSheet.create({
   },
   rowStyle: {
     flexDirection: "row",
+    alignItems: "center",
   },
   personStyle: {
     height: hp(111),
@@ -555,8 +732,8 @@ const styles = StyleSheet.create({
     marginRight: wp(2),
   },
   dotStyle: {
-    height: 4,
-    width: 4,
+    height: wp(4),
+    width: wp(4),
     borderRadius: 4,
     marginHorizontal: wp(10),
     backgroundColor: colors.gery_2,
@@ -693,6 +870,89 @@ const styles = StyleSheet.create({
     marginTop: hp(18),
   },
   offerCard: {},
+  timeContainer: {
+    marginTop: hp(13),
+    backgroundColor: colors?.primary_light_blue_4,
+    borderRadius: wp(5),
+    paddingVertical: hp(5),
+    paddingHorizontal: wp(16),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  timeTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 15, colors?.green_5),
+  },
+  changebtn: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(6),
+  },
+  btnTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 14, colors?.green_5),
+  },
+  editIcon: {
+    width: wp(18),
+    height: wp(18),
+  },
+  cardline: {
+    alignSelf: "center",
+    width: "100%",
+    marginTop: hp(28),
+    marginBottom: hp(20),
+  },
+  packageCard: {},
+  packageLabel: {
+    ...commonFontStyle(fontFamily.medium, 10, colors.black),
+  },
+  packageLabelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: wp(4),
+    marginBottom: hp(6),
+  },
+  leftContainer: {},
+  packageTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+    lineHeight: hp(22),
+  },
+  packageContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+  },
+  rightContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+  boldTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.black),
+  },
+  offerImage: {
+    width: wp(13),
+    height: wp(13),
+  },
+  offerTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+  },
+  topContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  topRight: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  orderContainer: {
+    backgroundColor: colors.white,
+    margin: wp(20),
+    borderRadius: wp(10),
+    overflow: "hidden",
+    paddingHorizontal: wp(20),
+    paddingVertical: hp(20),
+  },
 });
 
 export default Cart;

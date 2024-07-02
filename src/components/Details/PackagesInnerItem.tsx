@@ -73,28 +73,13 @@ const PackagesInnerItem = ({
         userId: userInfo._id,
       },
       onSuccess: async (response: any) => {
-        await setAsyncCartId(response?.data?.cart?._id);
-        let initialvalue = 0;
+        await setAsyncCartId(response?.data?.cart?.cart_id);
         dispatch({
           type: ADD_TO_CART,
-          payload: { items: [...response?.data?.cart?.items] },
+          payload: response?.data?.cart,
         });
         isInCart(data);
-        if (response.data?.cart?.items?.length > 0) {
-          let total = response.data?.cart?.items?.reduce(
-            (accumulator, curruntvalue) => curruntvalue.price + accumulator,
-            initialvalue
-          );
-          dispatch({
-            type: CART_DETAILS,
-            payload: { ...response?.data, total: total },
-          });
-        } else {
-          dispatch({
-            type: CART_DETAILS,
-            payload: {},
-          });
-        }
+        timeCounter(data);
       },
       onFailure: (Errr: any) => {
         if (Errr?.data?.message === "Cart not found") {
@@ -111,18 +96,18 @@ const PackagesInnerItem = ({
 
   const onPressDelete = async () => {
     let cartId = await getAsyncCartId();
-    let selected = [];
-    await addtocart?.items?.forEach((item) => {
-      data.service_name.forEach((items) => {
-        if (item.serviceId == items?._id) {
-          selected.push(item?._id);
+    let serviceId = [];
+    addtocart?.packages?.forEach((item: any) => {
+      item?.subServices?.forEach((service: any) => {
+        if (data?._id == item?.actionId) {
+          serviceId.push(service?._id);
         }
       });
     });
     let userInfo = await getAsyncUserInfo();
     let passData = {
       userId: userInfo?._id,
-      itemIds: selected,
+      itemIds: serviceId,
       cartId: cartId,
     };
     let obj = {
@@ -143,27 +128,37 @@ const PackagesInnerItem = ({
 
   const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
-    let items: any = [];
-    data?.service_name.forEach((item: any) => {
-      let obj: any = {
-        actionId: data._id,
-        serviceId: item?.service_id,
-        serviceName: item?.service_name,
-        serviceType: "Package",
-        price: item?.total,
-        quantity: 1,
+    let DateString = `${selectedDate} ${selectedTime?.time}`;
+    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+    let subServiceData = data?.service_name?.map((items) => {
+      return {
+        subServiceId: items?.service_id,
+        subServiceName: items?.service_name,
+        originalPrice: items?.total,
+        discountedPrice: 0,
       };
-      items.push(obj);
     });
+    let datas = {
+      actionId: data?._id,
+      serviceId: data?._id,
+      serviceName: data?.package_name,
+      originalPrice: data?.totalPrice,
+      discountedPrice: data?.discountedPrice,
+      timeSlot: momentDate,
+      packageDetails: data?.additional_information,
+      subServices: subServiceData,
+      quantity: 1,
+    };
     let passData = {
       userId: userInfo._id,
       expertId: data?.expert_id,
-      items: items,
+      services: [],
+      offers: [],
+      packages: [datas],
     };
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
-        dispatch({ type: ADD_TO_CART, payload: response?.data });
         await getCart();
       },
       onFailure: (Err: any) => {
@@ -173,8 +168,16 @@ const PackagesInnerItem = ({
     dispatch(addToCart(obj));
   };
 
-  const isInCart = (item) => {
-    return addtocart?.items?.some((items) => items?.actionId == item?._id);
+  const isInCart = (item: any) => {
+    return addtocart?.packages?.some((items) => items?.actionId == item?._id);
+  };
+
+  const timeCounter = (item: any) => {
+    return addtocart?.packages?.map(
+      (items) =>
+        items?.actionId == item?._id &&
+        moment(items?.timeSlot)?.format("hh:mmA, DD MMM, YYYY")
+    );
   };
 
   return (
@@ -242,13 +245,11 @@ const PackagesInnerItem = ({
                 <Text style={styles.countTextStyle}>ADDED</Text>
               </TouchableOpacity>
             </ImageBackground>
+            <Text style={styles.selectedTime}>{timeCounter(data)}</Text>
             <View style={styles.time}>
               <TimingIcon />
               <Text style={styles.timeTitle}>{"30 Min."}</Text>
             </View>
-            <Text style={styles.selectedTime}>{`${selectedTime?.time}, ${moment(
-              selectedDate
-            )?.format("DD MMM, YYYY")}`}</Text>
           </View>
         </View>
       )}
@@ -338,6 +339,9 @@ const styles = StyleSheet.create({
     // flexDirection: "row",
     alignItems: "center",
     gap: wp(13),
+  },
+  selectedTime: {
+    ...commonFontStyle(fontFamily.medium, 10, colors.grey_21),
   },
 });
 

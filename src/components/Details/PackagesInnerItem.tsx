@@ -215,7 +215,14 @@ const PackagesInnerItem = ({
       </View>
       {isInCart(data) == false || isInCart(data) == undefined ? (
         <View style={styles.buttonBar}>
-          <TouchableOpacity onPress={onPressAdd}>
+          <TouchableOpacity
+            disabled={
+              isInCart(data) == false && addtocart?.packages?.length >= 1
+                ? true
+                : false
+            }
+            onPress={onPressAdd}
+          >
             <ImageBackground
               resizeMode="contain"
               style={styles.btnStyle}

@@ -197,6 +197,11 @@ const StylistInnerItem = ({
             <TouchableOpacity
               style={{ alignSelf: "flex-start" }}
               onPress={onPressAdd}
+              disabled={
+                isInCart(data) == false && addtocart?.offers?.length >= 1
+                  ? true
+                  : false
+              }
             >
               <ImageBackground
                 resizeMode="contain"

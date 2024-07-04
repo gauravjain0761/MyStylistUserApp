@@ -3,6 +3,7 @@ import {
   FlatList,
   // FlatList,
   Image,
+  ImageBackground,
   Linking,
   RefreshControl,
   ScrollView,
@@ -19,6 +20,7 @@ import {
   hp,
   infoToast,
   isCloseToBottom,
+  screen_height,
   screen_width,
   wp,
 } from "../../helper/globalFunction";
@@ -80,6 +82,8 @@ import { api } from "../../helper/apiConstants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce } from "lodash";
 import FilterHome from "../../components/common/FilterHome";
+import ServiceSelect from "../../components/common/ServiceSelect";
+import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -117,6 +121,8 @@ const Home = () => {
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
   const [ratingItem, setRatingItem] = useState<any>({});
+  const [selectedService, setSelectedService] = useState<any>([]);
+  const [selectedServiceModal, setSelectedServiceModal] = useState(false);
 
   const { getallservices, userList, barberList } = useAppSelector(
     (state) => state.home
@@ -618,6 +624,7 @@ const Home = () => {
         setSubServicesModalData(response);
         setModalTitle(item.service_name);
         setServicesModal(!servicesModal);
+        CheckSelected(response);
       },
       onFailure: () => {},
     };
@@ -654,6 +661,55 @@ const Home = () => {
   const onPressViewAll = () => {
     // @ts-ignore
     navigate("StylistList");
+  };
+
+  const onPressSelect = (serivce: any) => {
+    let services = [...subServicesModalData?.subServices];
+    const selectedServices = services?.map((item) => {
+      if (item?._id == serivce?._id) {
+        if (item?.isSelected == true) {
+          return { ...item, isSelected: false };
+        } else {
+          return { ...item, isSelected: true };
+        }
+      } else {
+        if (item?.isSelected == true) {
+          return { ...item, isSelected: true };
+        } else {
+          return { ...item, isSelected: false };
+        }
+      }
+    });
+    setSubServicesModalData({ subServices: selectedServices });
+  };
+
+  const onPressAddservice = () => {
+    let services = [...subServicesModalData?.subServices];
+    let selectedServices = services?.filter((item) => item?.isSelected == true);
+    setSelectedService([...selectedService, ...selectedServices]);
+    setServicesModal(!servicesModal);
+  };
+
+  const CheckSelected = (response: any) => {
+    let selectedServices = response?.subServices?.map((item) => {
+      let filteritem = selectedService?.filter(
+        (items) => items?._id == item?._id
+      );
+      if (filteritem?.length) {
+        return filteritem[0];
+      } else {
+        return item;
+      }
+    });
+    setSubServicesModalData({ subServices: selectedServices });
+  };
+
+  const onPressRemoveService = (service: any) => {
+    const selectedServices = selectedService?.filter(
+      (services) => services?._id != service?._id
+    );
+    setSelectedService(selectedServices);
+    setSubServicesModalData({ subServices: selectedServices });
   };
 
   return (
@@ -913,7 +969,12 @@ const Home = () => {
             />
           </View>
         ) : (
-          <View style={styles?.barber_card_container}>
+          <View
+            style={[
+              styles?.barber_card_container,
+              { paddingBottom: selectedService?.length && hp(50) },
+            ]}
+          >
             <FlatList
               data={barberList.slice(0, 5) || []}
               showsVerticalScrollIndicator={false}
@@ -955,6 +1016,60 @@ const Home = () => {
           </View>
         )}
 
+        <Modals
+          visible={selectedServiceModal}
+          close={setSelectedServiceModal}
+          backdropColor="transparent"
+          containStyle={styles.selectedmodalstyle}
+          IsBackdropPress={false}
+          contain={
+            <View>
+              <View style={styles.makeup_modal_container}>
+                <View style={styles.card_conatiner}>
+                  {selectedService?.map((service) => {
+                    return (
+                      <ServiceSelect
+                        onPress={() => onPressRemoveService(service)}
+                        type="delete"
+                        service={service?.sub_service_name}
+                      />
+                    );
+                  })}
+                </View>
+              </View>
+              <View style={styles.selectedmodalFooter}>
+                <View style={styles.footerbar}>
+                  <Text style={styles.filterTitle}>{"Apply filters"}</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      setSelectedServiceModal(!selectedServiceModal)
+                    }
+                    style={styles?.service}
+                  >
+                    <Text
+                      style={styles.servicecount}
+                    >{`${selectedService?.length} Services`}</Text>
+                    <View
+                      style={[
+                        styles.downIcon,
+                        {
+                          transform: [
+                            {
+                              rotate: selectedServiceModal ? "180deg" : "0deg",
+                            },
+                          ],
+                        },
+                      ]}
+                    >
+                      <Dropdown_Down_Arrow width={10} height={8} />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          }
+        />
+
         <SelectDateModal
           visible={isModal}
           close={setIsModal}
@@ -977,36 +1092,52 @@ const Home = () => {
         <Modals
           visible={servicesModal}
           close={setServicesModal}
+          containStyle={{ paddingHorizontal: 0 }}
           isIcon
           contain={
-            <View style={styles.makeup_modal_container}>
-              <Text style={styles.modal_title}>{modalTitle}</Text>
-              <View style={styles.card_conatiner}>
-                {subServicesModalData?.subServices?.map(
-                  (subServices: any, index: number) => {
-                    return (
-                      <TouchableOpacity
-                        onPress={() => onPresstoNavigate(subServices)}
-                        style={styles?.makeup_card_container}
-                      >
-                        <Text style={styles?.makeup_title}>
-                          {subServices?.sub_service_name}
-                        </Text>
-                        <FastImage
-                          resizeMode="contain"
-                          source={{
-                            uri:
-                              subServicesModalData?.imageUrl +
-                              "/" +
-                              subServices?.fileName,
-                            priority: FastImage.priority.high,
-                          }}
-                          style={styles?.makeup_images}
+            <View>
+              <View style={styles.makeup_modal_container}>
+                <Text style={styles.modal_title}>{modalTitle}</Text>
+                <View style={styles.card_conatiner}>
+                  {subServicesModalData?.subServices?.map(
+                    (subServices: any, index: number) => {
+                      return (
+                        <ServiceSelect
+                          onPress={() => onPressSelect(subServices)}
+                          type="select"
+                          service={subServices?.sub_service_name}
+                          selected={subServices?.isSelected}
                         />
-                      </TouchableOpacity>
-                    );
-                  }
-                )}
+                      );
+                    }
+                  )}
+                </View>
+              </View>
+              <View style={styles.btn_container}>
+                <TouchableOpacity
+                  onPress={() => setServicesModal(!servicesModal)}
+                  style={{ flex: 1 }}
+                >
+                  <ImageBackground
+                    resizeMode="stretch"
+                    source={images?.gery_button}
+                    style={styles.buttonStyle}
+                  >
+                    <Text style={styles.btnTitle}>{"Cancel"}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onPressAddservice()}
+                  style={{ flex: 1 }}
+                >
+                  <ImageBackground
+                    resizeMode="stretch"
+                    source={images?.blue_button}
+                    style={styles.buttonStyle}
+                  >
+                    <Text style={styles.btnTitle}>{"Add Service"}</Text>
+                  </ImageBackground>
+                </TouchableOpacity>
               </View>
             </View>
           }
@@ -1024,18 +1155,10 @@ const Home = () => {
                   item.service_for == "Male"
                     ? item?.subServices?.map((subServices, indes) => {
                         return (
-                          <TouchableOpacity
-                            onPress={() => onPresstoNavigate()}
-                            style={styles?.makeup_card_container}
-                          >
-                            <Text style={styles?.makeup_title}>
-                              {subServices?.sub_service_name}
-                            </Text>
-                            <Image
-                              style={styles?.makeup_images}
-                              source={images?.men_1}
-                            />
-                          </TouchableOpacity>
+                          // onPress={() => onPresstoNavigate()}
+                          <ServiceSelect
+                            service={subServices?.sub_service_name}
+                          />
                         );
                       })
                     : null
@@ -1057,8 +1180,34 @@ const Home = () => {
           }
           containStyle={{ maxHeight: "80%" }}
         />
-        {/* {footerLoading && <ActivityIndicator />} */}
       </ScrollView>
+      {selectedService?.length && !selectedServiceModal ? (
+        <View style={styles.selectedFooter}>
+          <View style={styles.footerbar}>
+            <Text style={styles.filterTitle}>{"Apply filters"}</Text>
+            <TouchableOpacity
+              onPress={() => setSelectedServiceModal(!selectedServiceModal)}
+              style={styles?.service}
+            >
+              <Text
+                style={styles.servicecount}
+              >{`${selectedService?.length} Services`}</Text>
+              <View
+                style={[
+                  styles.downIcon,
+                  {
+                    transform: [
+                      { rotate: selectedServiceModal ? "180deg" : "0deg" },
+                    ],
+                  },
+                ]}
+              >
+                <Dropdown_Down_Arrow width={10} height={8} />
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 };
@@ -1207,6 +1356,7 @@ const styles = StyleSheet.create({
     paddingLeft: wp(20),
     paddingBottom: hp(10),
     backgroundColor: colors.background_grey,
+    marginTop: hp(40),
   },
   filter_item_separator: {
     width: wp(7),
@@ -1246,10 +1396,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginVertical: hp(10),
+    paddingVertical: hp(27),
     marginTop: hp(41),
-    marginHorizontal: wp(10),
+    paddingHorizontal: wp(25),
+    gap: wp(13),
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 1,
+    shadowRadius: 5.84,
+    elevation: 10,
+    backgroundColor: colors?.white,
   },
+
   btn_style: {
     height: hp(60),
     width: wp(150),
@@ -1282,7 +1443,8 @@ const styles = StyleSheet.create({
   },
   service_modal_container: {},
   modal_title: {
-    ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 24, colors.black),
+    marginBottom: hp(11),
   },
   makeup_card_container: {
     borderWidth: 1,
@@ -1305,13 +1467,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: hp(7),
   },
-  makeup_modal_container: {},
+  makeup_modal_container: {
+    paddingHorizontal: wp(22),
+  },
   card_conatiner: {
-    flexDirection: "row",
     flexWrap: "wrap",
-    gap: wp(17),
+    gap: wp(30),
     justifyContent: "flex-start",
-    marginTop: hp(11),
+    marginTop: hp(10),
   },
   searchTextStyle: {
     ...commonFontStyle(fontFamily.medium, 12, "#949495"),
@@ -1329,5 +1492,61 @@ const styles = StyleSheet.create({
   },
   footerBtnTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 12, colors.black),
+  },
+  buttonStyle: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  btnTitle: {
+    ...commonFontStyle(fontFamily?.semi_bold, 18, colors?.stylists_title_gray),
+    paddingVertical: hp(20),
+  },
+  selectedFooter: {
+    backgroundColor: colors?.white,
+    flex: 1,
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    zIndex: 11,
+  },
+  footerbar: {
+    backgroundColor: colors?.primary_light_blue,
+    marginHorizontal: wp(20),
+    marginBottom: hp(10),
+    marginTop: hp(4),
+    paddingVertical: hp(10),
+    paddingHorizontal: wp(16),
+    justifyContent: "space-between",
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  filterTitle: {
+    ...commonFontStyle(fontFamily?.medium, 12, colors?.stylists_title_gray),
+  },
+  service: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: wp(9),
+  },
+  servicecount: {
+    ...commonFontStyle(fontFamily?.medium, 14, colors?.stylists_title_gray),
+  },
+  downIcon: {
+    top: 1,
+  },
+  selectedmodalFooter: {
+    backgroundColor: colors?.white,
+    flex: 1,
+    width: "100%",
+    marginTop: hp(20),
+  },
+  selectedmodalstyle: {
+    paddingVertical: 0,
+    paddingTop: hp(24),
+    marginBottom: hp(screen_height * 0.08),
+    paddingHorizontal: 0,
   },
 });

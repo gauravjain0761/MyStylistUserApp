@@ -18,11 +18,15 @@ type RatingStarsProps = {
   height?: number | string;
 };
 
-export const Dropdown_Down_Arrow = ({ color = "#444444" }) => {
+export const Dropdown_Down_Arrow = ({
+  color = "#444444",
+  width = 9,
+  height = 6,
+}) => {
   return (
     <Svg
-      width="9"
-      height="6"
+      width={width}
+      height={height}
       viewBox="0 0 9 6"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -1859,6 +1863,54 @@ export const EditCartIcon = () => {
           <Path fill="#fff" d="M.5 0h18v18H.5z" />
         </ClipPath>
       </Defs>
+    </Svg>
+  );
+};
+
+export const GreenClock = () => {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width={14} height={14} fill="none">
+      <Path
+        stroke="#4E9F99"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M7 4.667V7l1.167 1.167M12.25 7a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z"
+      />
+    </Svg>
+  );
+};
+
+export const Checkmark = () => {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width={12} height={9} fill="none">
+      <Path
+        stroke="#2D2D2D"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M11 1 4 8 1 5"
+      />
+    </Svg>
+  );
+};
+
+export const SquareTresh = () => {
+  return (
+    <Svg xmlns="http://www.w3.org/2000/svg" width={27} height={27} fill="none">
+      <Path
+        fill="#E2F3F2"
+        stroke="#61C0B9"
+        strokeWidth={1.5}
+        d="M8.2.846C9.76.788 11.535.75 13.5.75c1.966 0 3.74.038 5.3.096 4.203.155 7.356 3.467 7.417 7.699.02 1.42.033 3.063.033 4.955 0 1.909-.013 3.565-.034 4.993-.06 4.216-3.192 7.51-7.378 7.663-1.561.057-3.345.094-5.338.094-1.993 0-3.777-.037-5.338-.095C3.976 26.003.845 22.71.784 18.494A346.2 346.2 0 0 1 .75 13.5c0-1.892.013-3.536.033-4.955C.843 4.313 3.997 1 8.201.845Z"
+      />
+      <Path
+        stroke="#39938C"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+        d="M12.25 12.25V16m2.5-3.75V16m2.5-6.25v7.5c0 .69-.56 1.25-1.25 1.25h-5c-.69 0-1.25-.56-1.25-1.25v-7.5m-1.25 0h10m-3.125 0v-.625c0-.69-.56-1.25-1.25-1.25h-1.25c-.69 0-1.25.56-1.25 1.25v.625"
+      />
     </Svg>
   );
 };

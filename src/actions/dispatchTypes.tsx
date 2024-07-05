@@ -53,6 +53,7 @@ export const REASON_LIST = "REASON_LIST";
 export const ADD_TO_CART = "ADD_TO_CART";
 export const CART_DETAILS = "CAR_TDETAILS";
 export const CART_COUNT = "CART_COUNT";
+export const SELECTED_SERVICE = "SELECTED_SERVICE";
 
 // chat
 export const GET_CHATS_PARTICIPANTS = "GET_CHATS_PARTICIPANTS";

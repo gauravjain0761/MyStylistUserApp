@@ -30,7 +30,9 @@ import { CarIcon, StarIcon, VerifyIcon } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import {
   getAllExpertReview,
+  getUserItemDetails,
   getUsersByLocation,
+  getUsersFavList,
   setLocation,
 } from "../../actions";
 import { requestLocationPermission } from "../../helper/locationHandler";
@@ -60,22 +62,17 @@ const StylistList = ({ navigation }) => {
   const [selectedTimeIndex, setSelectedTime] = useState(null);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
+  const [like, setLike] = useState(false);
+  const [likeID, setLikeID] = useState("");
+  const { itemDetails } = useAppSelector((state) => state.home);
 
-  const onPressItem = (index: number) => {
-    let imgUrl =
-      userList?.featured_image_url +
-      "/" +
-      barberList[index]?.user_profile_images?.[0]?.image;
-    navigation.navigate(screenName.YourStylist, {
-      index: index,
-      img: imgUrl,
-      id: barberList[index]._id,
-    });
+  const onPressItem = (item: number) => {
+    getDetails(item);
   };
 
   async function getDatesList() {
     let userInfo = await getAsyncUserInfo();
-    let data = generateWeekDates();
+    let data = generateWeekDates(5);
 
     let obj = {
       data: {
@@ -85,7 +82,18 @@ const StylistList = ({ navigation }) => {
         expertId: userInfo._id,
       },
       onSuccess: (response: any) => {
-        setDates(convertToOutput(response));
+        let data = convertToOutput(response);
+        setDates(data);
+        let time = data?.[0]?.value;
+        setDate(data[0]?.title);
+        setTimes(data[0]?.value);
+        let indexes = time
+          ?.map((time: any, index: number) =>
+            time?.isPast == false ? index : null
+          )
+          ?.filter((item) => item);
+        setBookTime(time[indexes[0]]);
+        setSelectedTime(indexes[0]);
       },
       onFailure: () => {},
     };
@@ -95,8 +103,51 @@ const StylistList = ({ navigation }) => {
   useEffect(() => {
     setLoading(true);
     getUserList(true);
+    getFavUser();
     getDatesList();
   }, []);
+
+  const getDetails = (item: any) => {
+    let userid = item?._id;
+    let obj = {
+      data: {
+        userid: userid,
+      },
+      onSuccess: (res) => {
+        navigation.navigate(screenName.YourStylist, {
+          id: item?._id,
+          like: like,
+          likeID: likeID,
+          itemDetails: itemDetails,
+        });
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
+  };
+
+  const getFavUser = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+      },
+      onSuccess: (response: any) => {
+        response?.data.forEach((item) => {
+          if (item?._id == itemDetails?.user?._id) {
+            setLikeID(item?.favouriteId);
+            setLike(true);
+          } else {
+            setLike(false);
+          }
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("getFavUser Errr", Errr);
+      },
+    };
+    dispatch(getUsersFavList(obj));
+  };
 
   const getUserList = async (isLoading: boolean) => {
     await requestLocationPermission(
@@ -408,6 +459,7 @@ const StylistList = ({ navigation }) => {
               return <UserItemLoader key={index} />;
             }}
             keyExtractor={(item, index) => index.toString()}
+            showsVerticalScrollIndicator={false}
           />
         </View>
       ) : (
@@ -419,7 +471,7 @@ const StylistList = ({ navigation }) => {
               <TouchableOpacity
                 style={styles.container}
                 key={index}
-                onPress={() => onPressItem(index)}
+                onPress={() => onPressItem(item)}
               >
                 <Animated.Image
                   source={{
@@ -429,7 +481,6 @@ const StylistList = ({ navigation }) => {
                       item?.user_profile_images?.[0]?.image,
                   }}
                   style={styles.imgStyle}
-                  sharedTransitionTag={`sharedTag-${index}`}
                 />
 
                 <View style={styles.rightContainer}>
@@ -512,6 +563,8 @@ const StylistList = ({ navigation }) => {
         times={times}
         selectedDateIndex={selectedDateIndex}
         selectedTimeIndex={selectedTimeIndex}
+        withOutDisable={false}
+        DateItem_style={styles.dateStyle}
         onPressApply={onPressApplyDate}
       />
     </View>
@@ -585,6 +638,10 @@ const styles = StyleSheet.create({
   filterStyle: {
     paddingLeft: wp(16),
     paddingTop: hp(16),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });
 

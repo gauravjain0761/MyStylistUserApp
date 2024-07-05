@@ -69,11 +69,11 @@ export function validPhonenumber(inputtxt: any) {
   }
 }
 
-export const generateWeekDates = () => {
+export const generateWeekDates = (maxDate = 1) => {
   const currentDate = moment();
   const datesArray = [];
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < maxDate; i++) {
     datesArray.push({ id: i + 1, date: currentDate.clone().format() }); // You can format the date as needed
     currentDate.add(1, "day");
   }

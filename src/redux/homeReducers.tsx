@@ -37,7 +37,7 @@ export default function (state = initialState, action: any) {
       }
     }
     case ITEM_DETAILS: {
-      return { ...state, itemDetails: action.payload };
+      return { ...state, itemDetails: action?.payload };
     }
     case EXPERT_USER_LIST: {
       return { ...state, expertUserList: action.payload };

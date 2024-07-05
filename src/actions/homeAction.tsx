@@ -169,7 +169,7 @@ export const getUserItemDetails =
             type: ITEM_DETAILS,
             payload: response?.data,
           });
-          if (request.onSuccess) request.onSuccess(response.data);
+          if (request.onSuccess) request.onSuccess(response?.data);
         }
       })
       .catch((error) => {

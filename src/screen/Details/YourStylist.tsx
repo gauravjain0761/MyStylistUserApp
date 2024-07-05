@@ -382,18 +382,13 @@ const YourStylist = () => {
 
   return (
     <View style={{ ...styles.container }}>
-      <Animated.Image
-        style={styles.imgStyle}
-        source={{ uri: params.img }}
-        sharedTransitionTag={`sharedTag-${params.index}`}
-      />
       <View style={styles.mainHeaderContainer}>
         <View style={{ height: DeviceInfo.hasNotch() ? hp(50) : 0 }} />
         <View style={styles.headerContainer}>
           <TouchableOpacity onPress={onPressBack}>
             <BackIcon />
           </TouchableOpacity>
-          <Animated.View style={styles.rowEndStyle}>
+          <View style={styles.rowEndStyle}>
             <TouchableOpacity onPress={onPressLike}>
               <FillLike fill={like ? "#000" : "none"} />
             </TouchableOpacity>
@@ -406,9 +401,18 @@ const YourStylist = () => {
             <TouchableOpacity onPress={onPressSearchBox}>
               <SearchIcon />
             </TouchableOpacity>
-          </Animated.View>
+          </View>
         </View>
       </View>
+      <Image
+        style={styles.imgStyle}
+        source={{
+          uri:
+            itemDetails?.featured_image_url +
+            "/" +
+            itemDetails?.user?.user_profile_images?.[0]?.image,
+        }}
+      />
       <Animation.ScrollView
         stickyHeaderIndices={[2]}
         style={{ flex: 1 }}
@@ -910,7 +914,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   mainHeaderContainer: {
-    position: "absolute",
+    // position: "absolute",
     width: "100%",
   },
   headerTextStyle: {

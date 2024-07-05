@@ -3,6 +3,7 @@ import {
   CART_COUNT,
   CART_DETAILS,
   GETALLSERVICES,
+  SELECTED_SERVICE,
 } from "../actions/dispatchTypes";
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   addtocart: [],
   cartDetails: [],
   cartCount: 0,
+  selectedService: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -25,6 +27,9 @@ export default function (state = initialState, action: any) {
     }
     case CART_COUNT: {
       return { ...state, cartCount: action.payload };
+    }
+    case SELECTED_SERVICE: {
+      return { ...state, selectedService: action.payload };
     }
     default:
       return state;

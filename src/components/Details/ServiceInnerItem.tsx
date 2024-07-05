@@ -69,7 +69,6 @@ const ServiceInnerItem = ({
   const dispatch = useAppDispatch();
 
   const getCart = async () => {
-    console.log("carrrtttcalllllll");
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {

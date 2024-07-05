@@ -22,8 +22,9 @@ type props = {
   onPressDate: (number: number) => void;
   containerStyle?: ViewStyle;
   itemSeparator?: ViewStyle;
-  itemStyle?: ViewStyle;
+  itemStyle?: [ViewStyle] | any;
   selectIndex: any;
+  scrollEnabled?: boolean;
 };
 
 const WeekDateSelector = ({
@@ -33,6 +34,7 @@ const WeekDateSelector = ({
   itemSeparator,
   itemStyle,
   selectIndex,
+  scrollEnabled = true,
 }: props) => {
   return (
     <View style={[styles.container, containerStyle]}>
@@ -40,6 +42,7 @@ const WeekDateSelector = ({
         horizontal
         data={list}
         showsHorizontalScrollIndicator={false}
+        scrollEnabled={scrollEnabled}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item, index }) => {
           return (

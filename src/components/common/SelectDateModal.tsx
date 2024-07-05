@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ImageBackground,
+  ViewStyle,
 } from "react-native";
 import Modals from "./Modals";
 import { hp, wp } from "../../helper/globalFunction";
@@ -28,6 +29,8 @@ type props = {
   onPressApply: () => void;
   title?: string;
   withOutDisable?: boolean;
+  DateItem_style?: ViewStyle;
+  scrollEnabled?: boolean;
 };
 
 const SelectDateModal = ({
@@ -43,6 +46,8 @@ const SelectDateModal = ({
   onPressApply,
   title,
   withOutDisable = true,
+  DateItem_style,
+  scrollEnabled = true,
 }: props) => {
   return (
     <Modals
@@ -57,8 +62,9 @@ const SelectDateModal = ({
               list={dates}
               onPressDate={(index) => onPressDateItem(index)}
               containerStyle={styles.date_container}
-              itemStyle={styles.item_style}
+              itemStyle={[styles.item_style, DateItem_style]}
               selectIndex={selectedDateIndex}
+              scrollEnabled={scrollEnabled}
             />
           </View>
           <View style={styles.time_container}>

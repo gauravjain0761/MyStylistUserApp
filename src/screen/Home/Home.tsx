@@ -61,9 +61,14 @@ import {
   getAllExpertBySubService,
   getAllServicesForMaleAndFemale,
   getAllSubServicesForMobile,
+  getUserItemDetails,
   getUsersByLocation,
 } from "../../actions/homeAction";
-import { COORD, IS_LOADING } from "../../actions/dispatchTypes";
+import {
+  COORD,
+  IS_LOADING,
+  SELECTED_SERVICE,
+} from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
   getAsyncLocation,
@@ -72,7 +77,12 @@ import {
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
-import { getAllExpertReview, getCartlist, getUserDetails } from "../../actions";
+import {
+  addToCart,
+  getAllExpertReview,
+  getCartlist,
+  getUserDetails,
+} from "../../actions";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import moment from "moment";
@@ -84,6 +94,8 @@ import { debounce } from "lodash";
 import FilterHome from "../../components/common/FilterHome";
 import ServiceSelect from "../../components/common/ServiceSelect";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
+
+// 7 to 11
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -116,13 +128,14 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [filterData, setFilterData] = useState({});
   const [listLoader, setListLoader] = useState(false);
-  const [selectedDateIndex, setSelectedDate] = useState(null);
-  const [selectedTimeIndex, setSelectedTime] = useState(null);
+  const [selectedDateIndex, setSelectedDate] = useState(Number);
+  const [selectedTimeIndex, setSelectedTime] = useState(Number);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
   const [ratingItem, setRatingItem] = useState<any>({});
   const [selectedService, setSelectedService] = useState<any>([]);
   const [selectedServiceModal, setSelectedServiceModal] = useState(false);
+  const { itemDetails } = useAppSelector((state) => state.home);
 
   const { getallservices, userList, barberList } = useAppSelector(
     (state) => state.home
@@ -312,6 +325,28 @@ const Home = () => {
     dispatch(getUsersByLocation(obj));
   };
 
+  const getDetails = (item: any) => {
+    let userid = item?._id;
+    let obj = {
+      data: {
+        userid: userid,
+      },
+      onSuccess: (res: any) => {
+        // if (selectedService?.length > 0) {
+        //   onPressStylist();
+        // } else {
+
+        // }
+        navigate(screenName.YourStylist, {
+          id: item?._id,
+          itemDetails: res,
+        });
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
+  };
+
   const getCurrentLocation = async () => {
     dispatch({ type: IS_LOADING, payload: true });
     await requestLocationPermission(
@@ -366,8 +401,8 @@ const Home = () => {
   };
 
   const onPressItem = (item: any) => {
+    getDetails(item);
     //@ts-ignore
-    navigate(screenName.YourStylist, { id: item._id });
   };
 
   const onPressReviewItem = (item: any) => {
@@ -550,9 +585,9 @@ const Home = () => {
 
   const onPressDateItem = (index: any) => {
     setSelectedDate(index);
-    setDate(moment(dates[index].title));
+    setDate(dates[index].title);
     setTimes(dates[index].value);
-    setSelectedTime(null);
+    setSelectedTime(0);
   };
 
   const onPressTimeItem = (index: any) => {
@@ -631,6 +666,49 @@ const Home = () => {
     dispatch(getAllSubServicesForMobile(obj));
   };
 
+  const onPressStylist = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let DateString = `${date} ${bookTime}`;
+    console.log("okokokokk", bookTime);
+    // let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+
+    let objs: any = {
+      // actionId: data?.service_id?._id,
+      // serviceId: data?.service_id?._id,
+      // serviceName: data?.service_id?.service_name,
+      // quantity: 1,
+      // timeSlot: momentDate,
+      // packageDetails: null,
+      // subServices: [
+      //   {
+      //     subServiceId: data?.sub_service_id?._id,
+      //     subServiceName: data?.sub_service_id?.sub_service_name,
+      //     originalPrice: data?.price,
+      //     discountedPrice: 0,
+      //   },
+      // ],
+    };
+    let passData = {
+      userId: userInfo._id,
+      // expertId: actionId,
+      services: [objs],
+      packages: [],
+      offers: [],
+    };
+    console.log(objs?.subServices?.[0]);
+    let obj = {
+      data: passData,
+      onSuccess: async (response: any) => {
+        await getCartData();
+      },
+      onFailure: (Err: any) => {
+        console.log("ServiceInner Err", Err);
+      },
+    };
+
+    // dispatch(addToCart(obj));
+  };
+
   const onRefresh = useCallback(async () => {
     setRefreshControle(true);
     dispatch(getAllBanner(banner));
@@ -641,17 +719,29 @@ const Home = () => {
 
   async function getDatesList() {
     let userInfo = await getAsyncUserInfo();
-    let data = generateWeekDates();
+    let data = generateWeekDates(5);
 
     let obj = {
       data: {
-        startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
-        endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
-        timeSlotDuration: 60,
+        startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
+        endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
+        timeSlotDuration: 15,
         expertId: userInfo._id,
       },
       onSuccess: (response: any) => {
-        setDates(convertToOutput(response));
+        let data = convertToOutput(response);
+        setDates(data);
+        let time = data?.[0]?.value;
+        setDate(data[0]?.title);
+        setTimes(data[0]?.value);
+
+        let indexes = time
+          ?.map((time: any, index: number) =>
+            time?.isPast == false ? index : null
+          )
+          ?.filter((item) => item);
+        setBookTime(time[indexes[0]]);
+        setSelectedTime(indexes[0]);
       },
       onFailure: () => {},
     };
@@ -681,11 +771,20 @@ const Home = () => {
       }
     });
     setSubServicesModalData({ subServices: selectedServices });
+    dispatch({ type: SELECTED_SERVICE, payload: selectedServices });
   };
 
   const onPressAddservice = () => {
     let services = [...subServicesModalData?.subServices];
     let selectedServices = services?.filter((item) => item?.isSelected == true);
+    // let selected = services?.map((item) => {
+    //   if (item.isSelected == true) {
+    //     let selecteds = selectedService?.filter(
+    //       (items) => items?._id != item?._id
+    //     );
+    //     console.log("selected", selecteds);
+    //   }
+    // });
     setSelectedService([...selectedService, ...selectedServices]);
     setServicesModal(!servicesModal);
   };
@@ -701,6 +800,7 @@ const Home = () => {
         return item;
       }
     });
+    dispatch({ type: SELECTED_SERVICE, payload: selectedServices });
     setSubServicesModalData({ subServices: selectedServices });
   };
 
@@ -710,6 +810,9 @@ const Home = () => {
     );
     setSelectedService(selectedServices);
     setSubServicesModalData({ subServices: selectedServices });
+    if (selectedService?.length == 0) {
+      setSelectedServiceModal(!selectedServiceModal);
+    }
   };
 
   return (
@@ -1074,13 +1177,16 @@ const Home = () => {
           visible={isModal}
           close={setIsModal}
           dates={dates}
-          onPressDateItem={onPressDateItem}
-          onPressTimeItem={onPressTimeItem}
+          onPressDateItem={(index: any) => onPressDateItem(index)}
+          onPressTimeItem={(index: any) => onPressTimeItem(index)}
           setIsModal={setIsModal}
           times={times}
           selectedDateIndex={selectedDateIndex}
           selectedTimeIndex={selectedTimeIndex}
           onPressApply={onPressApplyDate}
+          DateItem_style={styles.dateStyle}
+          scrollEnabled={false}
+          withOutDisable={false}
         />
 
         <Modals
@@ -1548,5 +1654,9 @@ const styles = StyleSheet.create({
     paddingTop: hp(24),
     marginBottom: hp(screen_height * 0.08),
     paddingHorizontal: 0,
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });

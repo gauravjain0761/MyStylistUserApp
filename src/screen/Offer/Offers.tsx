@@ -22,7 +22,7 @@ import {
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
-import { VerifyIcon } from "../../theme/SvgIcon";
+import { StarIcon, VerifyIcon } from "../../theme/SvgIcon";
 import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -211,9 +211,11 @@ const Offers = ({ navigation }) => {
       <BackHeader
         isMenu
         isSearch
-        title={strings.Offers}
+        title={"My Stylist Offers"}
         onPressMenu={onPressMenu}
         onPressScreenSearch={onPressSearch}
+        containerStyle={styles?.containerStyle}
+        titleTextStyle={{ flex: 0 }}
       />
       <ScrollView
         onScroll={({ nativeEvent }) => {
@@ -269,7 +271,7 @@ const Offers = ({ navigation }) => {
         />
         {/* </View> */}
         <View>
-          <FlatList
+          {/* <FlatList
             style={styles.flatListStyle}
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -295,7 +297,7 @@ const Offers = ({ navigation }) => {
                 </TouchableOpacity>
               );
             }}
-          />
+          /> */}
 
           {isLoading ? (
             <CarouselLoader marginTop={hp(10)} height={hp(280)} />
@@ -357,23 +359,15 @@ const Offers = ({ navigation }) => {
                       }}
                       style={styles.barberImgStyle}
                     />
-                    <View style={{ marginLeft: wp(10), flex: 1 }}>
-                      <View style={styles.rowStyle}>
-                        <Text style={styles.nameTextStyle}>
-                          {item?.expertDetails?.name}
-                        </Text>
-                        <VerifyIcon width={15} height={15} />
-                      </View>
-                      <Text style={styles.addressTextStyle}>
-                        {item?.city[0]?.city_name},
-                        {item?.district[0]?.district_name},{" "}
-                        {item?.state[0]?.state_name}
+                    <View style={styles.rowStyle}>
+                      <Text style={styles.nameTextStyle}>
+                        {item?.expertDetails?.name}
                       </Text>
+                      <View style={styles.rating_badge}>
+                        <Text style={styles.rating_title}>{"3.2"}</Text>
+                        <StarIcon height={8} width={8} />
+                      </View>
                     </View>
-                    <Text style={styles.dateTextStyle}>
-                      Offer Till:{" "}
-                      {moment(item?.end_date).format("DD MMM, YYYY")}
-                    </Text>
                   </View>
                 </TouchableOpacity>
               );
@@ -426,9 +420,9 @@ const styles = StyleSheet.create({
     marginBottom: hp(20),
   },
   offerContainer: {
-    height: hp(366),
+    height: hp(290),
     marginHorizontal: wp(20),
-    marginBottom: hp(15),
+    marginBottom: hp(26),
   },
   manImgStyle: {
     height: hp(290),
@@ -439,28 +433,39 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   infoContainer: {
-    borderWidth: 1,
-    padding: wp(13),
-    borderColor: colors.gery_7,
-    backgroundColor: colors.white,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    position: "absolute",
+    bottom: hp(-10),
+    left: screen_width * 0.35,
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: colors?.white,
+    borderRadius: 5,
+    paddingRight: wp(7),
+    elevation: 3,
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
   },
   barberImgStyle: {
-    height: wp(48),
-    width: wp(48),
-    borderRadius: 10,
+    height: wp(30),
+    width: wp(30),
+    borderRadius: 100,
     backgroundColor: colors.grey_19,
+    position: "absolute",
+    zIndex: 999,
+    left: wp(-11),
+    elevation: 3,
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
   },
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),
     marginRight: wp(5),
+    paddingVertical: hp(6),
   },
   rowStyle: {
     flexDirection: "row",
     alignItems: "center",
+    paddingLeft: wp(24),
   },
   addressTextStyle: {
     ...commonFontStyle(fontFamily.regular, 12, colors.gery_9),
@@ -475,6 +480,21 @@ const styles = StyleSheet.create({
     paddingLeft: wp(20),
     paddingVertical: hp(10),
     backgroundColor: colors.background_grey,
+  },
+  containerStyle: {
+    justifyContent: "space-between",
+  },
+  rating_badge: {
+    backgroundColor: colors.light_green,
+    borderRadius: wp(3),
+    padding: hp(2),
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: wp(4),
+    gap: wp(3),
+  },
+  rating_title: {
+    ...commonFontStyle(fontFamily.semi_bold, 10, colors.white),
   },
 });
 

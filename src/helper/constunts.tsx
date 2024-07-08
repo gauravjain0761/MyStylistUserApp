@@ -475,16 +475,16 @@ export const Make_Up = [
 export const offer_filter = [
   {
     id: 1,
-    title: "Female",
+    title: "Date & Time",
   },
   {
     id: 2,
-    title: "Male",
+    title: "Nearest",
   },
-  // {
-  //   id: 3,
-  //   title: "Nearest",
-  // },
+  {
+    id: 3,
+    title: "Rating 4.0+",
+  },
   // {
   //   id: 4,
   //   title: "Waxing",

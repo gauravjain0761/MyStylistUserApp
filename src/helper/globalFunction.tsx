@@ -69,7 +69,7 @@ export function validPhonenumber(inputtxt: any) {
   }
 }
 
-export const generateWeekDates = (maxDate = 1) => {
+export const generateWeekDates = (maxDate = 5) => {
   const currentDate = moment();
   const datesArray = [];
 

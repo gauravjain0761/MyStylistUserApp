@@ -143,6 +143,8 @@ const ServiceInnerItem = ({
     let DateString = `${selectedDate} ${selectedTime?.time}`;
     let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
 
+    console.log("datatatataa", data);
+
     let objs: any = {
       actionId: data?.service_id?._id,
       serviceId: data?.service_id?._id,
@@ -177,7 +179,7 @@ const ServiceInnerItem = ({
       },
     };
 
-    dispatch(addToCart(obj));
+    // dispatch(addToCart(obj));
   };
 
   const timeCounter = (item) => {

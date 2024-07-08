@@ -90,7 +90,7 @@ import { getExpertAvailability } from "../../actions/commonActions";
 import { io } from "socket.io-client";
 import { api } from "../../helper/apiConstants";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { debounce } from "lodash";
+import { debounce, lowerFirst } from "lodash";
 import FilterHome from "../../components/common/FilterHome";
 import ServiceSelect from "../../components/common/ServiceSelect";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
@@ -135,6 +135,7 @@ const Home = () => {
   const [ratingItem, setRatingItem] = useState<any>({});
   const [selectedService, setSelectedService] = useState<any>([]);
   const [selectedServiceModal, setSelectedServiceModal] = useState(false);
+  const [mainService, setMainService] = useState([]);
   const { itemDetails } = useAppSelector((state) => state.home);
 
   const { getallservices, userList, barberList } = useAppSelector(
@@ -332,15 +333,14 @@ const Home = () => {
         userid: userid,
       },
       onSuccess: (res: any) => {
-        // if (selectedService?.length > 0) {
-        //   onPressStylist();
-        // } else {
-
-        // }
-        navigate(screenName.YourStylist, {
-          id: item?._id,
-          itemDetails: res,
-        });
+        if (selectedService?.length > 0) {
+          onPressStylist(item?._id);
+        } else {
+          navigate(screenName.YourStylist, {
+            id: item?._id,
+            itemDetails: res,
+          });
+        }
       },
       onFailure: () => {},
     };
@@ -482,6 +482,7 @@ const Home = () => {
       isLoading: isLoading,
       data: data,
       onSuccess: () => {
+        console.log("setfilter adatatata", data);
         setFilterData(data);
         setPage(page + 1);
         setFooterLoading(false);
@@ -656,6 +657,7 @@ const Home = () => {
     let obj = {
       data: data,
       onSuccess: (response: any) => {
+        setMainService(item);
         setSubServicesModalData(response);
         setModalTitle(item.service_name);
         setServicesModal(!servicesModal);
@@ -666,18 +668,21 @@ const Home = () => {
     dispatch(getAllSubServicesForMobile(obj));
   };
 
-  const onPressStylist = async () => {
+  const onPressStylist = async (expertId: any) => {
     let userInfo = await getAsyncUserInfo();
-    let DateString = `${date} ${bookTime}`;
-    console.log("okokokokk", bookTime);
-    // let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+    let DateString = `${date} ${bookTime?.time}`;
+    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+
+    // let selectedData=selectedService?.map((data)=>)
 
     let objs: any = {
       // actionId: data?.service_id?._id,
       // serviceId: data?.service_id?._id,
       // serviceName: data?.service_id?.service_name,
       // quantity: 1,
-      // timeSlot: momentDate,
+      // timeSlot:
+      //   !filterData?.hasOwnProperty("dateTime") ||
+      //   filterData?.dateTime == null ?'':momentDate,
       // packageDetails: null,
       // subServices: [
       //   {
@@ -776,24 +781,45 @@ const Home = () => {
 
   const onPressAddservice = () => {
     let services = [...subServicesModalData?.subServices];
-    let selectedServices = services?.filter((item) => item?.isSelected == true);
-    // let selected = services?.map((item) => {
-    //   if (item.isSelected == true) {
-    //     let selecteds = selectedService?.filter(
-    //       (items) => items?._id != item?._id
-    //     );
-    //     console.log("selected", selecteds);
-    //   }
-    // });
-    setSelectedService([...selectedService, ...selectedServices]);
+    let serviceselected = services
+      ?.filter((item) => item.isSelected)
+      ?.filter((item) => {
+        let duplicate = selectedService?.map((items) =>
+          items?.subServices?.some(
+            (selectedItem) => selectedItem?._id === item?._id
+          )
+        );
+        if (duplicate[0]) {
+          return false;
+        }
+        return true;
+      });
+    if (serviceselected?.length) {
+      setSelectedService([
+        ...selectedService,
+        { ...mainService, subServices: serviceselected },
+      ]);
+      dispatch({
+        type: SELECTED_SERVICE,
+        payload: [
+          ...selectedService,
+          { ...mainService, subServices: serviceselected },
+        ],
+      });
+    }
+
     setServicesModal(!servicesModal);
   };
 
   const CheckSelected = (response: any) => {
-    let selectedServices = response?.subServices?.map((item) => {
-      let filteritem = selectedService?.filter(
-        (items) => items?._id == item?._id
-      );
+    let selectedServices = response?.services?.[0]?.subServices?.map((item) => {
+      let filteritem = selectedService
+        ?.map((selectedItem) => {
+          return selectedItem?.subServices?.filter(
+            (items) => items?._id == item?._id
+          );
+        })
+        ?.flat();
       if (filteritem?.length) {
         return filteritem[0];
       } else {
@@ -805,14 +831,22 @@ const Home = () => {
   };
 
   const onPressRemoveService = (service: any) => {
-    const selectedServices = selectedService?.filter(
-      (services) => services?._id != service?._id
-    );
+    let serviceclone = [...selectedService];
+    const selectedServices = serviceclone?.map((item) => {
+      let sevices = item?.subServices?.filter(
+        (services) => services?._id != service?._id
+      );
+      return sevices;
+    });
+
     setSelectedService(selectedServices);
     setSubServicesModalData({ subServices: selectedServices });
-    if (selectedService?.length == 0) {
+    if (selectedServices?.length == 0) {
+      setSelectedService([]);
       setSelectedServiceModal(!selectedServiceModal);
+      dispatch({ type: SELECTED_SERVICE, payload: [] });
     }
+    dispatch({ type: SELECTED_SERVICE, payload: selectedServices });
   };
 
   return (
@@ -828,7 +862,7 @@ const Home = () => {
       <ScrollView
         stickyHeaderIndices={[1, 7]}
         showsVerticalScrollIndicator={false}
-        // onScroll={handleScroll}
+        onScroll={handleScroll}
         scrollEventThrottle={400}
         refreshControl={
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
@@ -1079,7 +1113,7 @@ const Home = () => {
             ]}
           >
             <FlatList
-              data={barberList.slice(0, 5) || []}
+              data={barberList || []}
               showsVerticalScrollIndicator={false}
               renderItem={({ item, index }) => {
                 return (
@@ -1103,22 +1137,22 @@ const Home = () => {
               ItemSeparatorComponent={() => (
                 <View style={styles.card_separator}></View>
               )}
-              ListFooterComponent={() => {
-                return (
-                  <TouchableOpacity
-                    onPress={onPressViewAll}
-                    style={styles.footerBtnStyle}
-                  >
-                    <Text style={styles.footerBtnTextStyle}>
-                      {"View All Stylist"}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
+              // ListFooterComponent={() => {
+              //   return (
+              //     <TouchableOpacity
+              //       onPress={onPressViewAll}
+              //       style={styles.footerBtnStyle}
+              //     >
+              //       <Text style={styles.footerBtnTextStyle}>
+              //         {"View All Stylist"}
+              //       </Text>
+              //     </TouchableOpacity>
+              //   );
+              // }}
             />
           </View>
         )}
-
+        {footerLoading && <ActivityIndicator />}
         <Modals
           visible={selectedServiceModal}
           close={setSelectedServiceModal}
@@ -1130,13 +1164,15 @@ const Home = () => {
               <View style={styles.makeup_modal_container}>
                 <View style={styles.card_conatiner}>
                   {selectedService?.map((service) => {
-                    return (
-                      <ServiceSelect
-                        onPress={() => onPressRemoveService(service)}
-                        type="delete"
-                        service={service?.sub_service_name}
-                      />
-                    );
+                    return service?.subServices?.map((subService) => {
+                      return (
+                        <ServiceSelect
+                          onPress={() => onPressRemoveService(subService)}
+                          type="delete"
+                          service={subService?.sub_service_name}
+                        />
+                      );
+                    });
                   })}
                 </View>
               </View>
@@ -1158,7 +1194,7 @@ const Home = () => {
                         {
                           transform: [
                             {
-                              rotate: selectedServiceModal ? "180deg" : "0deg",
+                              rotate: !selectedServiceModal ? "180deg" : "0deg",
                             },
                           ],
                         },
@@ -1303,7 +1339,7 @@ const Home = () => {
                   styles.downIcon,
                   {
                     transform: [
-                      { rotate: selectedServiceModal ? "180deg" : "0deg" },
+                      { rotate: !selectedServiceModal ? "180deg" : "0deg" },
                     ],
                   },
                 ]}
@@ -1457,7 +1493,7 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
-    elevation: 5,
+    elevation: 3,
     zIndex: 10,
     paddingLeft: wp(20),
     paddingBottom: hp(10),
@@ -1525,10 +1561,6 @@ const styles = StyleSheet.create({
   },
   btn_tite: {
     ...commonFontStyle(fontFamily.medium, 18, colors.black),
-  },
-  timeselect_container: {
-    alignItems: "center",
-    marginTop: hp(10),
   },
   date_container: {
     width: "100%",

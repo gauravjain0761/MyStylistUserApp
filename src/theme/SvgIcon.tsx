@@ -115,10 +115,13 @@ export const VerifyIcon: FC<{ width?: number; height?: number }> = ({
   </Svg>
 );
 
-export const StarIcon = () => (
+export const StarIcon: FC<{ width?: number; height?: number }> = ({
+  width = 9,
+  height = 9,
+}) => (
   <Svg
-    width="9"
-    height="9"
+    width={width}
+    height={height}
     viewBox="0 0 9 9"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

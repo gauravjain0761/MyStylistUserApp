@@ -1,5 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "../../theme/color";
 import { hp, wp } from "../../helper/globalFunction";
@@ -18,6 +26,8 @@ type Props = {
   onPressScreenSearch?: () => void;
   onPressDelete?: () => void;
   onPressScreenBack?: () => void;
+  containerStyle?: ViewStyle;
+  titleTextStyle?: TextStyle;
 };
 
 const BackHeader = ({
@@ -29,6 +39,8 @@ const BackHeader = ({
   onPressScreenSearch,
   onPressDelete,
   onPressScreenBack,
+  containerStyle,
+  titleTextStyle,
 }: Props) => {
   const { goBack, navigate } = useNavigation();
 
@@ -49,7 +61,7 @@ const BackHeader = ({
     }
   };
   return (
-    <SafeAreaView style={styles.container} edges={["top"]}>
+    <SafeAreaView style={[styles.container, containerStyle]} edges={["top"]}>
       {isMenu ? (
         <TouchableOpacity onPress={onPressMenu}>
           <Hamburger />
@@ -60,7 +72,7 @@ const BackHeader = ({
         </TouchableOpacity>
       )}
 
-      <Text numberOfLines={1} style={styles.titleTextStyle}>
+      <Text numberOfLines={1} style={[styles.titleTextStyle, titleTextStyle]}>
         {title}
       </Text>
       {isSearch ? (

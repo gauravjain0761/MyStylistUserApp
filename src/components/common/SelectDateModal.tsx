@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
   ViewStyle,
+  ScrollView,
 } from "react-native";
 import Modals from "./Modals";
 import { hp, wp } from "../../helper/globalFunction";
@@ -31,6 +32,7 @@ type props = {
   withOutDisable?: boolean;
   DateItem_style?: ViewStyle;
   scrollEnabled?: boolean;
+  timeselect_container?: ViewStyle;
 };
 
 const SelectDateModal = ({
@@ -48,6 +50,7 @@ const SelectDateModal = ({
   withOutDisable = true,
   DateItem_style,
   scrollEnabled = true,
+  timeselect_container,
 }: props) => {
   return (
     <Modals
@@ -69,7 +72,9 @@ const SelectDateModal = ({
           </View>
           <View style={styles.time_container}>
             <Text style={styles.time_title}>{strings.Select_Time}</Text>
-            <View style={styles.timeselect_container}>
+            <ScrollView
+              style={[styles.timeselect_container, timeselect_container]}
+            >
               <TimeSelector
                 data={times}
                 withOutDisable={withOutDisable}
@@ -78,7 +83,7 @@ const SelectDateModal = ({
                 selectIndex={selectedTimeIndex}
                 containerStyle={{ justifyContent: "space-between" }}
               />
-            </View>
+            </ScrollView>
           </View>
           <Text style={styles.info}>
             {
@@ -156,8 +161,9 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
   },
   timeselect_container: {
-    alignItems: "center",
     marginTop: hp(10),
+    flex: 1,
+    maxHeight: hp(160),
   },
   date_container: {
     width: "100%",

@@ -476,6 +476,7 @@ export const offer_filter = [
   {
     id: 1,
     title: "Date & Time",
+    isIcon: true,
   },
   {
     id: 2,

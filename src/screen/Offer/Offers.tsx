@@ -11,9 +11,16 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { BackHeader, CarouselLoader, Filter_Button } from "../../components";
+import {
+  BackHeader,
+  CarouselLoader,
+  Filter_Button,
+  SelectDateModal,
+} from "../../components";
 import { strings } from "../../helper/string";
 import {
+  convertToOutput,
+  generateWeekDates,
   hp,
   isCloseToBottom,
   screen_width,
@@ -34,6 +41,7 @@ import moment from "moment";
 import FastImage from "react-native-fast-image";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { getUserItemDetails, getUsersFavList } from "../../actions";
+import { getExpertAvailability } from "../../actions/commonActions";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -57,9 +65,17 @@ const Offers = ({ navigation }) => {
   const [serviceType, setServiceType] = useState<any>(null);
   const [like, setLike] = useState(false);
   const [likeID, setLikeID] = useState("");
+  const [isModal, setIsModal] = useState(false);
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [selectedDateIndex, setSelectedDate] = useState(Number);
+  const [selectedTimeIndex, setSelectedTime] = useState(Number);
+  const [date, setDate] = useState("");
+  const [bookTime, setBookTime] = useState({});
 
   useEffect(() => {
     getAllOfferData(true);
+    getDatesList();
   }, []);
 
   useEffect(() => {
@@ -130,6 +146,37 @@ const Offers = ({ navigation }) => {
     navigation.openDrawer();
   };
 
+  async function getDatesList() {
+    let userInfo = await getAsyncUserInfo();
+    let data = generateWeekDates(5);
+
+    let obj = {
+      data: {
+        startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
+        endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
+        timeSlotDuration: 15,
+        expertId: userInfo._id,
+      },
+      onSuccess: (response: any) => {
+        let data = convertToOutput(response);
+        setDates(data);
+        let time = data?.[0]?.value;
+        setDate(data[0]?.title);
+        setTimes(data[0]?.value);
+
+        let indexes = time
+          ?.map((time: any, index: number) =>
+            time?.isPast == false ? index : null
+          )
+          ?.filter((item) => item);
+        setBookTime(time[indexes[0]]);
+        setSelectedTime(indexes[0]);
+      },
+      onFailure: () => {},
+    };
+    dispatch(getExpertAvailability(obj));
+  }
+
   const onPressPercetageItem = (discount: number) => {
     let obj = {
       isLoading: true,
@@ -151,6 +198,12 @@ const Offers = ({ navigation }) => {
   };
 
   const onPressFilterItem = (item: any) => {
+    if (item == 1) {
+      setIsModal(!isModal);
+    }
+  };
+
+  const nearest = (item) => {
     let obj = {
       isLoading: true,
       data: {
@@ -206,6 +259,8 @@ const Offers = ({ navigation }) => {
     navigation.navigate(screenName.SearchStylistName);
   };
 
+  const onPressApplyDate = () => {};
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -253,14 +308,14 @@ const Offers = ({ navigation }) => {
           renderItem={({ item, index }: any) => {
             return (
               <Filter_Button
-                type={"simple"}
-                onPress={() => onPressFilterItem(item)}
+                onPress={() => onPressFilterItem(item?.id)}
                 containerStyle={
                   offer_filter.length - 1 == index
                     ? { marginRight: wp(10) }
                     : null
                 }
                 title={item?.title}
+                type={item?.isIcon == true ? "icon" : "simple"}
                 btn_bg={{ paddingHorizontal: wp(17) }}
               />
             );
@@ -376,6 +431,21 @@ const Offers = ({ navigation }) => {
         </View>
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
+      <SelectDateModal
+        visible={isModal}
+        close={setIsModal}
+        dates={dates}
+        onPressDateItem={(index: any) => onPressDateItem(index)}
+        onPressTimeItem={(index: any) => onPressTimeItem(index)}
+        setIsModal={setIsModal}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        onPressApply={onPressApplyDate}
+        DateItem_style={styles.dateStyle}
+        scrollEnabled={false}
+        withOutDisable={false}
+      />
     </View>
   );
 };
@@ -495,6 +565,10 @@ const styles = StyleSheet.create({
   },
   rating_title: {
     ...commonFontStyle(fontFamily.semi_bold, 10, colors.white),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });
 

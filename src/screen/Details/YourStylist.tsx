@@ -163,7 +163,7 @@ const getAmenitiesIcon = (key: string) => {
 
 const YourStylist = () => {
   const { params }: any = useRoute();
-  const { itemDetails } = params || {};
+  const { itemDetails, id } = params || {};
   const { cartDetails, addtocart } = useAppSelector((state) => state.cart);
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
@@ -250,7 +250,7 @@ const YourStylist = () => {
 
   useEffect(() => {
     let obj = {
-      id: itemDetails?.user?._id,
+      id: id,
     };
     dispatch(getAllOffersByUser(obj));
     dispatch(getAllPackageByUser(obj));

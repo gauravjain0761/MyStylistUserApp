@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, infoToast, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
@@ -26,7 +26,7 @@ import {
 } from "../../actions";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 import Modals from "../common/Modals";
 import WeekDateSelector from "../common/WeekDateSelector";
 import TimeSelector from "../common/TimeSelector";
@@ -64,9 +64,17 @@ const ServiceInnerItem = ({
   selectedTime,
   selectedDate,
 }: Props) => {
-  const { addtocart } = useAppSelector((state) => state.cart);
+  const { addtocart, selectedService } = useAppSelector((state) => state.cart);
   const [visible, setVisible] = useState(false);
   const dispatch = useAppDispatch();
+  const { params } = useRoute();
+  const expertId = params?.id || "";
+
+  useEffect(() => {
+    if (selectedService?.length) {
+      onPressApply();
+    }
+  }, []);
 
   const getCart = async () => {
     let userInfo = await getAsyncUserInfo();
@@ -142,44 +150,49 @@ const ServiceInnerItem = ({
     let userInfo = await getAsyncUserInfo();
     let DateString = `${selectedDate} ${selectedTime?.time}`;
     let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+    let subServiceStartTime = moment(momentDate);
+    let updatedTimeSlot = subServiceStartTime.toISOString();
 
-    console.log("datatatataa", data);
-
-    let objs: any = {
-      actionId: data?.service_id?._id,
-      serviceId: data?.service_id?._id,
-      serviceName: data?.service_id?.service_name,
-      quantity: 1,
-      timeSlot: momentDate,
-      packageDetails: null,
-      subServices: [
-        {
-          subServiceId: data?.sub_service_id?._id,
-          subServiceName: data?.sub_service_id?.sub_service_name,
-          originalPrice: data?.price,
-          discountedPrice: 0,
-        },
-      ],
-    };
+    let selectedData = selectedService
+      ?.map((datas) => {
+        subServiceStartTime.add(15, "minutes");
+        return {
+          actionId: datas?.service_id,
+          serviceId: datas?.service_id,
+          serviceName: datas?.service_name,
+          quantity: 1,
+          timeSlot: updatedTimeSlot,
+          packageDetails: null,
+          subServices: [
+            {
+              subServiceId: datas?._id,
+              subServiceName: datas?.sub_service_name,
+              originalPrice:
+                datas?._id == data?.sub_service_id?._id ? data?.price : 0,
+              discountedPrice: 0,
+            },
+          ],
+        };
+      })
+      ?.flat();
     let passData = {
-      userId: userInfo._id,
-      expertId: actionId,
-      services: [objs],
+      userId: userInfo?._id,
+      expertId: expertId || actionId,
+      services: selectedData,
       packages: [],
       offers: [],
     };
-    console.log(objs?.subServices?.[0]);
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
         await getCart();
+        infoToast("Service added successfully");
       },
       onFailure: (Err: any) => {
         console.log("ServiceInner Err", Err);
       },
     };
-
-    // dispatch(addToCart(obj));
+    dispatch(addToCart(obj));
   };
 
   const timeCounter = (item) => {

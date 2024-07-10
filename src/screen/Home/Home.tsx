@@ -68,6 +68,7 @@ import {
   COORD,
   IS_LOADING,
   SELECTED_SERVICE,
+  TIME_SLOT,
 } from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
@@ -135,9 +136,11 @@ const Home = () => {
   const [ratingItem, setRatingItem] = useState<any>({});
   const [selectedService, setSelectedService] = useState<any>([]);
   const [selectedServiceModal, setSelectedServiceModal] = useState(false);
-  const { itemDetails } = useAppSelector((state) => state.home);
+  const { selectedService: cartSelectedService } = useAppSelector(
+    (state) => state?.cart
+  );
 
-  const { getallservices, userList, barberList } = useAppSelector(
+  const { getallservices, userList, barberList, itemDetails } = useAppSelector(
     (state) => state.home
   );
   const [rating, setRating] = useState(null);
@@ -170,6 +173,12 @@ const Home = () => {
     //   console.log('CAALALA hELO', url);
     // });
   }, []);
+
+  useEffect(() => {
+    if (cartSelectedService?.length == 0) {
+      setSelectedService([]);
+    }
+  }, [cartSelectedService]);
 
   useEffect(() => {
     let banner = {
@@ -337,7 +346,6 @@ const Home = () => {
         } else {
           navigate(screenName.YourStylist, {
             id: item?._id,
-            itemDetails: res,
           });
         }
       },
@@ -485,6 +493,7 @@ const Home = () => {
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
+        dispatch({ type: TIME_SLOT, payload: "" });
       },
       onFailure: () => {
         setListLoader(false);
@@ -596,6 +605,7 @@ const Home = () => {
   };
 
   const onPressApplyDate = () => {
+    let DateString = `${date} ${bookTime?.time}`;
     setListLoader(true);
     let data = {
       ...filterData,
@@ -613,6 +623,7 @@ const Home = () => {
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
+        dispatch({ type: TIME_SLOT, payload: DateString || "" });
       },
       onFailure: () => {
         setListLoader(false);
@@ -838,10 +849,6 @@ const Home = () => {
       } else {
         return item;
       }
-    });
-    dispatch({
-      type: SELECTED_SERVICE,
-      payload: selectedServices,
     });
     setSubServicesModalData({ subServices: selectedServices });
   };
@@ -1254,7 +1261,6 @@ const Home = () => {
           visible={servicesModal}
           close={setServicesModal}
           containStyle={{ paddingHorizontal: 0 }}
-          isIcon
           contain={
             <View>
               <View style={styles.makeup_modal_container}>
@@ -1307,7 +1313,6 @@ const Home = () => {
         <Modals
           visible={menservicesModal}
           close={setmenservicesModal}
-          isIcon
           contain={
             <View>
               <View style={styles.makeup_modal_container}>
@@ -1593,14 +1598,6 @@ const styles = StyleSheet.create({
     marginTop: hp(41),
     paddingHorizontal: wp(25),
     gap: wp(13),
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 1,
-    shadowRadius: 5.84,
-    elevation: 10,
     backgroundColor: colors?.white,
   },
 

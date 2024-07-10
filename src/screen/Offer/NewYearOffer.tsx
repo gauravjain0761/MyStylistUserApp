@@ -94,7 +94,12 @@ const NewYearOffer = () => {
 
   return (
     <View style={styles.conatiner}>
-      <BackHeader isSearch title={params?.item?.campaign?.title} />
+      <BackHeader
+        isSearch
+        title={"My Stylist Offers"}
+        titleTextStyle={{ flex: 0 }}
+        containerStyle={styles?.containerStyle}
+      />
       <ScrollView stickyHeaderIndices={[1]}>
         <FastImage
           style={styles.bannerImgStyle}
@@ -249,6 +254,9 @@ const styles = StyleSheet.create({
   },
   card_separator: {
     height: hp(24),
+  },
+  containerStyle: {
+    justifyContent: "space-between",
   },
 });
 

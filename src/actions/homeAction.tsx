@@ -167,7 +167,7 @@ export const getUserItemDetails =
         if (response.status === 200) {
           dispatch({
             type: ITEM_DETAILS,
-            payload: response?.data,
+            payload: { ...response?.data },
           });
           if (request.onSuccess) request.onSuccess(response?.data);
         }

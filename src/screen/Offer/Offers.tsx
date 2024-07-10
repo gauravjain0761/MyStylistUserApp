@@ -282,7 +282,6 @@ const Offers = ({ navigation }) => {
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
         scrollEventThrottle={400}
-        stickyHeaderIndices={[1]}
       >
         {isLoading ? (
           <CarouselLoader marginTop={hp(10)} height={hp(290)} />
@@ -300,7 +299,7 @@ const Offers = ({ navigation }) => {
           />
         )}
 
-        <FlatList
+        {/* <FlatList
           style={styles.filterStyle}
           data={offer_filter}
           horizontal
@@ -323,7 +322,7 @@ const Offers = ({ navigation }) => {
           ItemSeparatorComponent={() => (
             <View style={styles.filter_item_separator}></View>
           )}
-        />
+        /> */}
         {/* </View> */}
         <View>
           {/* <FlatList
@@ -419,7 +418,9 @@ const Offers = ({ navigation }) => {
                         {item?.expertDetails?.name}
                       </Text>
                       <View style={styles.rating_badge}>
-                        <Text style={styles.rating_title}>{"3.2"}</Text>
+                        <Text style={styles.rating_title}>
+                          {item?.expertDetails?.rating}
+                        </Text>
                         <StarIcon height={8} width={8} />
                       </View>
                     </View>
@@ -459,8 +460,7 @@ const styles = StyleSheet.create({
     width: screen_width,
     height: hp(280),
     borderRadius: 15,
-    marginVertical: hp(15),
-    marginTop: hp(10),
+    marginBottom: hp(15),
   },
   offersContainer: {
     height: hp(83),

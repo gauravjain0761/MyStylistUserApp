@@ -5,6 +5,7 @@ import {
   ITEM_DETAILS,
   SEARCH_LIST,
   SEARCH_STYLIST_LIST,
+  TIME_SLOT,
   USER_LIST,
 } from "../actions/dispatchTypes";
 
@@ -16,6 +17,7 @@ const initialState = {
   barberList: [],
   searchList: [],
   searchStylistList: {},
+  timeSlot: "",
 };
 
 export default function (state = initialState, action: any) {
@@ -47,6 +49,9 @@ export default function (state = initialState, action: any) {
     }
     case SEARCH_STYLIST_LIST: {
       return { ...state, searchStylistList: action.payload };
+    }
+    case TIME_SLOT: {
+      return { ...state, timeSlot: action.payload };
     }
     default:
       return state;

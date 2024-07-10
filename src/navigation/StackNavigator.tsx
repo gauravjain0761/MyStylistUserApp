@@ -47,7 +47,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
-  animation: "default",
+  animation: "none",
 };
 
 const Stack = createNativeStackNavigator();

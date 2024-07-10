@@ -12,6 +12,7 @@ import {
   convertToOutput,
   generateWeekDates,
   hp,
+  infoToast,
   wp,
 } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
@@ -25,8 +26,17 @@ import {
   setAsyncCartId,
 } from "../../helper/asyncStorage";
 import { addToCart, getCartlist, removeMultipleCartItems } from "../../actions";
-import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {
+  ADD_TO_CART,
+  CART_DETAILS,
+  SELECTED_SERVICE,
+  TIME_SLOT,
+} from "../../actions/dispatchTypes";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import moment from "moment";
 import { getExpertAvailability } from "../../actions/commonActions";
 import FastImage from "react-native-fast-image";
@@ -44,12 +54,18 @@ type Props = {
 
 const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const [expanded, setExpanded] = useState(true);
-  const [dates, setDates] = useState([]);
-  const [times, setTimes] = useState([]);
-  const [bookTime, setBookTime] = useState({});
+  const [bookTime, setBookTime] = useState("");
   const [date, setDate] = useState("");
   const [selectedDateIndex, setSelectedDate] = useState(0);
   const [selectedTimeIndex, setSelectedTime] = useState(0);
+  const [dates, setDates] = useState([]);
+  const [times, setTimes] = useState([]);
+  const [visible, setVisible] = useState(false);
+  const [selectService, setSelectService] = useState({});
+  const { params } = useRoute();
+  const expertId = params?.id || "";
+  const { addtocart, selectedService } = useAppSelector((state) => state.cart);
+  const { timeSlot } = useAppSelector((state) => state?.home);
 
   const dispatch = useAppDispatch();
 
@@ -70,11 +86,11 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
           timeSlotDuration: 60,
           expertId: userInfo?._id,
         },
-        onSuccess: (response: any) => {
-          let data = convertToOutput(response);
+        onSuccess: async (response: any) => {
+          let data = await convertToOutput(response);
           let time = data?.[0]?.value;
           setDates(data);
-          let indexes = time
+          let indexes = await time
             ?.map((time: any, index: number) =>
               time?.isPast == false ? index : null
             )
@@ -89,7 +105,152 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
       dispatch(getExpertAvailability(obj));
     }
     getDatesList();
+    getCart();
   }, []);
+
+  useEffect(() => {
+    if (selectedService?.length) {
+      if (timeSlot?.length == 0) {
+        setTimeout(() => {
+          setVisible(!visible);
+        }, 800);
+      } else {
+        onPressApply();
+      }
+    }
+  }, []);
+
+  const getCart = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+      },
+      onSuccess: async (response: any) => {
+        await setAsyncCartId(response?.data?.cart?.cart_id);
+        dispatch({
+          type: ADD_TO_CART,
+          payload: response?.data?.cart,
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errrr", Errr);
+        if (Errr?.data?.message === "Cart not found") {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+          dispatch({ type: ADD_TO_CART, payload: [] });
+        }
+      },
+    };
+    dispatch(getCartlist(obj));
+  };
+
+  const onPressApply = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let DateString = `${date} ${bookTime?.time}`;
+    let momentDate = moment(
+      timeSlot || DateString,
+      "YYYY-MM-DD hh:mm A"
+    ).toISOString();
+    let subServiceStartTime = moment(momentDate);
+    let selectedData = selectedService?.flatMap((datas) => {
+      let updatedTimeSlot = subServiceStartTime.toISOString();
+      let selcted = service
+        ?.map((item) => {
+          if (item?.sub_service_id?._id == datas?._id) {
+            subServiceStartTime.add(15, "minutes");
+            return {
+              actionId: datas?.service_id,
+              serviceId: datas?.service_id,
+              serviceName: datas?.service_name,
+              quantity: 1,
+              timeSlot: updatedTimeSlot,
+              packageDetails: null,
+              subServices: [
+                {
+                  subServiceId: datas?._id,
+                  subServiceName: datas?.sub_service_name,
+                  originalPrice: item?.price,
+                  discountedPrice: 0,
+                },
+              ],
+            };
+          }
+        })
+        ?.filter((service) => service);
+      return selcted;
+    });
+    let timeforcustom = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+    let customSelect = {
+      actionId: selectService?.service_id?._id,
+      serviceId: selectService?.service_id?._id,
+      serviceName: selectService?.service_id?.service_name,
+      quantity: 1,
+      timeSlot: timeforcustom,
+      packageDetails: null,
+      subServices: [
+        {
+          subServiceId: selectService?.sub_service_id?._id,
+          subServiceName: selectService?.sub_service_id?.sub_service_name,
+          originalPrice: selectService?.price,
+          discountedPrice: 0,
+        },
+      ],
+    };
+    let passData = {
+      userId: userInfo?._id,
+      expertId: expertId || actionId,
+      services: Object?.values(selectService)?.length
+        ? customSelect
+        : selectedData,
+      packages: [],
+      offers: [],
+    };
+    let obj = {
+      data: passData,
+      onSuccess: async (response: any) => {
+        await getCart();
+        infoToast("Service added successfully");
+        dispatch({ type: SELECTED_SERVICE, payload: [] });
+        dispatch({ type: TIME_SLOT, payload: "" });
+      },
+      onFailure: (Err: any) => {
+        console.log("ServiceInner Err", Err);
+      },
+    };
+    dispatch(addToCart(obj));
+  };
+
+  const onPressDelete = async (items) => {
+    let serviceId = "";
+    addtocart?.services?.forEach((item) => {
+      item?.subServices?.forEach((service) => {
+        if (service?.subServiceId == items?.sub_service_id?._id) {
+          serviceId = service?._id;
+        }
+      });
+    });
+
+    let cartId = await getAsyncCartId();
+    let userInfo = await getAsyncUserInfo();
+    let passData = {
+      userId: userInfo?._id,
+      itemIds: [serviceId],
+      cartId: cartId,
+    };
+    let obj = {
+      data: passData,
+      onSuccess: async (response: any) => {
+        await getCart();
+      },
+      onFailure: (Err: any) => {
+        console.log("Errrr", Err);
+      },
+    };
+    dispatch(removeMultipleCartItems(obj));
+  };
 
   const onPressDateItem = (index: any) => {
     setSelectedDate(index);
@@ -102,6 +263,11 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     setSelectedTime(index);
     let bookDates = times[index];
     setBookTime(bookDates);
+  };
+
+  const onPressAddService = (item) => {
+    setSelectService(item);
+    setVisible(!visible);
   };
 
   return (
@@ -124,19 +290,29 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
                 baseUrl={baseUrl}
                 actionId={actionId}
                 index={index}
-                onPressDateItem={(index: any) => onPressDateItem(index)}
-                onPressTimeItem={(index: any) => onPressTimeItem(index)}
-                dates={dates}
-                times={times}
-                selectedDateIndex={selectedDateIndex}
-                selectedTimeIndex={selectedTimeIndex}
-                selectedTime={bookTime}
-                selectedDate={date}
+                onPressApply={(item) => onPressAddService(item)}
+                onPressDelete={(item) => onPressDelete(item)}
               />
             );
           }}
         />
       ) : null}
+      <SelectDateModal
+        visible={visible}
+        close={setVisible}
+        dates={dates}
+        onPressDateItem={(index) => onPressDateItem(index)}
+        onPressTimeItem={(index) => onPressTimeItem(index)}
+        setIsModal={setVisible}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        title={
+          "Please select Date and Time for this Service from available slots"
+        }
+        withOutDisable={false}
+        onPressApply={() => onPressApply()}
+      />
     </View>
   );
 };

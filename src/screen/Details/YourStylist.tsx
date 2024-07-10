@@ -163,8 +163,9 @@ const getAmenitiesIcon = (key: string) => {
 
 const YourStylist = () => {
   const { params }: any = useRoute();
-  const { itemDetails, id } = params || {};
+  const { id } = params || {};
   const { cartDetails, addtocart } = useAppSelector((state) => state.cart);
+  const { itemDetails } = useAppSelector((state) => state.home);
   const dispatch = useAppDispatch();
   const { navigate, goBack } = useNavigation();
   const { userOfferList } = useAppSelector((state) => state.offers);
@@ -174,13 +175,13 @@ const YourStylist = () => {
   const [isMyWork, setIsMyWork] = useState(false);
   const [isModal, setIsModal] = useState(false);
   const [total, setTotal] = useState(0);
-  const [isHeaderSticky, setIsHeaderSticky] = useState(false);
   const animated = useSharedValue(0);
   const [animatedValue, setAnimatedValue] = useState(0);
   const [like, setLike] = useState(params?.like);
   const [likeID, setLikeID] = useState(params?.likeID);
   const [loading, setLoading] = useState(true);
   const [isImageModal, setIsImageModal] = useState(false);
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       width:
@@ -191,6 +192,7 @@ const YourStylist = () => {
   });
 
   useEffect(() => {
+    getDetails();
     if (Platform.OS === "android") {
       if (UIManager.setLayoutAnimationEnabledExperimental) {
         UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -203,6 +205,35 @@ const YourStylist = () => {
       setIsMyWork(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (Object.values(itemDetails).length > 0 || itemDetails.length) {
+      getFavUser();
+    }
+  }, [itemDetails]);
+
+  const getFavUser = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+      },
+      onSuccess: (response: any) => {
+        response?.data.forEach((item) => {
+          if (item?._id == itemDetails?.user?._id) {
+            setLikeID(item?.favouriteId);
+            setLike(true);
+          } else {
+            setLike(false);
+          }
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("getFavUser Errr", Errr);
+      },
+    };
+    dispatch(getUsersFavList(obj));
+  };
 
   useEffect(() => {
     if (addtocart?.length > 0 || Object.keys(addtocart)?.length > 0) {
@@ -249,12 +280,13 @@ const YourStylist = () => {
   }, [addtocart]);
 
   useEffect(() => {
+    console.log();
     let obj = {
       id: id,
     };
     dispatch(getAllOffersByUser(obj));
     dispatch(getAllPackageByUser(obj));
-  }, [itemDetails]);
+  }, [itemDetails, id]);
 
   const onPressOffers = () => {
     setIsOffers(true);
@@ -313,7 +345,7 @@ const YourStylist = () => {
     let userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo._id,
-      expertId: itemDetails?.user?._id,
+      expertId: id,
     };
     let obj = {
       data: data,
@@ -340,6 +372,18 @@ const YourStylist = () => {
     like
       ? dispatch(removeAsfavourite(unlikeData))
       : dispatch(saveAsfavourite(obj));
+  };
+
+  const getDetails = () => {
+    let userid = id;
+    let obj = {
+      data: {
+        userid: userid,
+      },
+      onSuccess: (res: any) => {},
+      onFailure: () => {},
+    };
+    dispatch(getUserItemDetails(obj));
   };
 
   const onPressShare = () => {
@@ -382,6 +426,15 @@ const YourStylist = () => {
 
   return (
     <View style={{ ...styles.container }}>
+      <Image
+        style={styles.imgStyle}
+        source={{
+          uri:
+            itemDetails?.featured_image_url +
+            "/" +
+            itemDetails?.user?.user_profile_images?.[0]?.image,
+        }}
+      />
       <View style={styles.mainHeaderContainer}>
         <View style={{ height: DeviceInfo.hasNotch() ? hp(50) : 0 }} />
         <View style={styles.headerContainer}>
@@ -404,15 +457,6 @@ const YourStylist = () => {
           </View>
         </View>
       </View>
-      <Image
-        style={styles.imgStyle}
-        source={{
-          uri:
-            itemDetails?.featured_image_url +
-            "/" +
-            itemDetails?.user?.user_profile_images?.[0]?.image,
-        }}
-      />
       <Animation.ScrollView
         stickyHeaderIndices={[2]}
         style={{ flex: 1 }}
@@ -914,7 +958,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   mainHeaderContainer: {
-    // position: "absolute",
+    position: "absolute",
     width: "100%",
   },
   headerTextStyle: {

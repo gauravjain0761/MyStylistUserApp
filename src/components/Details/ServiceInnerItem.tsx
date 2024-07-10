@@ -49,94 +49,18 @@ type Props = {
   selectedTimeIndex?: number;
   selectedTime?: any;
   selectedDate?: any;
+  onPressApply?: (data: any) => void;
+  onPressDelete?: (data: any) => void;
 };
 const ServiceInnerItem = ({
   data,
   baseUrl,
-  actionId,
-  index,
-  onPressDateItem,
-  onPressTimeItem,
-  selectedDateIndex,
-  selectedTimeIndex,
-  dates,
-  times,
-  selectedTime,
-  selectedDate,
+  onPressApply,
+  onPressDelete,
 }: Props) => {
   const { addtocart, selectedService } = useAppSelector((state) => state.cart);
-  const [visible, setVisible] = useState(false);
   const dispatch = useAppDispatch();
-  const { params } = useRoute();
-  const expertId = params?.id || "";
-
-  useEffect(() => {
-    if (selectedService?.length) {
-      onPressApply();
-    }
-  }, []);
-
-  const getCart = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-      },
-      onSuccess: async (response: any) => {
-        await setAsyncCartId(response?.data?.cart?.cart_id);
-        dispatch({
-          type: ADD_TO_CART,
-          payload: response?.data?.cart,
-        });
-        isInCart(data);
-        timeCounter(data);
-      },
-      onFailure: (Errr: any) => {
-        console.log("Errrr", Errr);
-        if (Errr?.data?.message === "Cart not found") {
-          dispatch({
-            type: CART_DETAILS,
-            payload: {},
-          });
-          dispatch({ type: ADD_TO_CART, payload: [] });
-        }
-      },
-    };
-    dispatch(getCartlist(obj));
-  };
-
-  const onPressDelete = async (items) => {
-    let serviceId = "";
-    addtocart?.services?.forEach((item) => {
-      item?.subServices?.forEach((service) => {
-        if (service?.subServiceId == items?.sub_service_id?._id) {
-          serviceId = service?._id;
-        }
-      });
-    });
-
-    let cartId = await getAsyncCartId();
-    let userInfo = await getAsyncUserInfo();
-    let passData = {
-      userId: userInfo?._id,
-      itemIds: [serviceId],
-      cartId: cartId,
-    };
-    let obj = {
-      data: passData,
-      onSuccess: async (response: any) => {
-        await getCart();
-      },
-      onFailure: (Err: any) => {
-        console.log("Errrr", Err);
-      },
-    };
-    dispatch(removeMultipleCartItems(obj));
-  };
-
-  const onPressAdd = useCallback(async () => {
-    setVisible(!visible);
-  }, [visible]);
+  const [visible, setVisible] = useState(false);
 
   const isInCart = (item) => {
     return addtocart?.services?.some((items) =>
@@ -144,55 +68,6 @@ const ServiceInnerItem = ({
         (service) => service?.subServiceId == item?.sub_service_id?._id
       )
     );
-  };
-
-  const onPressApply = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let DateString = `${selectedDate} ${selectedTime?.time}`;
-    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
-    let subServiceStartTime = moment(momentDate);
-    let updatedTimeSlot = subServiceStartTime.toISOString();
-
-    let selectedData = selectedService
-      ?.map((datas) => {
-        subServiceStartTime.add(15, "minutes");
-        return {
-          actionId: datas?.service_id,
-          serviceId: datas?.service_id,
-          serviceName: datas?.service_name,
-          quantity: 1,
-          timeSlot: updatedTimeSlot,
-          packageDetails: null,
-          subServices: [
-            {
-              subServiceId: datas?._id,
-              subServiceName: datas?.sub_service_name,
-              originalPrice:
-                datas?._id == data?.sub_service_id?._id ? data?.price : 0,
-              discountedPrice: 0,
-            },
-          ],
-        };
-      })
-      ?.flat();
-    let passData = {
-      userId: userInfo?._id,
-      expertId: expertId || actionId,
-      services: selectedData,
-      packages: [],
-      offers: [],
-    };
-    let obj = {
-      data: passData,
-      onSuccess: async (response: any) => {
-        await getCart();
-        infoToast("Service added successfully");
-      },
-      onFailure: (Err: any) => {
-        console.log("ServiceInner Err", Err);
-      },
-    };
-    dispatch(addToCart(obj));
   };
 
   const timeCounter = (item) => {
@@ -222,7 +97,7 @@ const ServiceInnerItem = ({
           <View style={styles.buttonBar}>
             <TouchableOpacity
               style={{ alignSelf: "flex-start" }}
-              onPress={onPressAdd}
+              onPress={() => onPressApply?.(data)}
             >
               <ImageBackground
                 resizeMode="contain"
@@ -247,7 +122,7 @@ const ServiceInnerItem = ({
               >
                 <TouchableOpacity
                   style={{ flexDirection: "row", alignItems: "center" }}
-                  onPress={() => onPressDelete(data)}
+                  onPress={() => onPressDelete?.(data)}
                 >
                   <TrashIcon />
                   <Text style={styles.countTextStyle}>ADDED</Text>
@@ -262,22 +137,6 @@ const ServiceInnerItem = ({
           </View>
         )}
       </View>
-      <SelectDateModal
-        visible={visible}
-        close={setVisible}
-        dates={dates}
-        onPressDateItem={(index) => onPressDateItem(index)}
-        onPressTimeItem={(index) => onPressTimeItem(index)}
-        setIsModal={setVisible}
-        times={times}
-        selectedDateIndex={selectedDateIndex}
-        selectedTimeIndex={selectedTimeIndex}
-        title={
-          "Please select Date and Time for this Service from available slots"
-        }
-        withOutDisable={false}
-        onPressApply={onPressApply}
-      />
       <FastImage
         resizeMode="cover"
         style={styles.imgStyle}

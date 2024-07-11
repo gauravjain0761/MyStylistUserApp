@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,6 +10,7 @@ import {
   ScrollView,
   ActivityIndicator,
   RefreshControl,
+  LayoutAnimation,
 } from "react-native";
 import {
   BackHeader,
@@ -29,7 +30,7 @@ import {
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { images } from "../../theme/icons";
-import { StarIcon, VerifyIcon } from "../../theme/SvgIcon";
+import { ArrowUp, StarIcon, VerifyIcon } from "../../theme/SvgIcon";
 import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -40,8 +41,14 @@ import {
 import moment from "moment";
 import FastImage from "react-native-fast-image";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { getUserItemDetails, getUsersFavList } from "../../actions";
+import {
+  getMainServices,
+  getUserItemDetails,
+  getUsersFavList,
+} from "../../actions";
 import { getExpertAvailability } from "../../actions/commonActions";
+import { err } from "react-native-svg";
+import { LayoutAnimationConfig } from "react-native-reanimated";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -56,7 +63,7 @@ const Offers = ({ navigation }) => {
   const { profileData } = useAppSelector((state) => state.profile);
   const { allOffers, offerList } = useAppSelector((state) => state.offers);
   const { isLoading } = useAppSelector((state) => state.common);
-  const { itemDetails } = useAppSelector((state) => state.home);
+  const { itemDetails, mainService } = useAppSelector((state) => state.home);
 
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
@@ -72,11 +79,20 @@ const Offers = ({ navigation }) => {
   const [selectedTimeIndex, setSelectedTime] = useState(Number);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
+  const [expanded, setExpanded] = useState(null);
+  const flatListRef = useRef(null);
 
   useEffect(() => {
+    getMainService();
     getAllOfferData(true);
     getDatesList();
   }, []);
+
+  useEffect(() => {
+    if (expanded == null) {
+      setExpanded(mainService[0]?.service_name);
+    }
+  }, [mainService]);
 
   useEffect(() => {
     if (offerList.length > 0) {
@@ -259,7 +275,20 @@ const Offers = ({ navigation }) => {
     navigation.navigate(screenName.SearchStylistName);
   };
 
-  const onPressApplyDate = () => {};
+  const getMainService = async () => {
+    let obj = {
+      onSuccess: () => {},
+      onFailure: (Err) => {
+        console.log("Errr in Offer", err);
+      },
+    };
+    dispatch(getMainServices(obj));
+  };
+
+  const onPressArrow = (item) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    setExpanded(expanded === item?.service_name ? null : item?.service_name);
+  };
 
   return (
     <View style={styles.container}>
@@ -278,6 +307,7 @@ const Offers = ({ navigation }) => {
             loadMoreData();
           }
         }}
+        ref={flatListRef}
         refreshControl={
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
@@ -298,155 +328,122 @@ const Offers = ({ navigation }) => {
             }}
           />
         )}
-
-        {/* <FlatList
-          style={styles.filterStyle}
-          data={offer_filter}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item, index }: any) => {
-            return (
-              <Filter_Button
-                onPress={() => onPressFilterItem(item?.id)}
-                containerStyle={
-                  offer_filter.length - 1 == index
-                    ? { marginRight: wp(10) }
-                    : null
-                }
-                title={item?.title}
-                type={item?.isIcon == true ? "icon" : "simple"}
-                btn_bg={{ paddingHorizontal: wp(17) }}
-              />
-            );
-          }}
-          ItemSeparatorComponent={() => (
-            <View style={styles.filter_item_separator}></View>
-          )}
-        /> */}
-        {/* </View> */}
         <View>
-          {/* <FlatList
-            style={styles.flatListStyle}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={offersOffList}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => {
-              return (
-                <TouchableOpacity
-                  onPress={() => onPressPercetageItem(item.discount)}
-                >
-                  <ImageBackground
-                    borderRadius={10}
-                    resizeMode="cover"
-                    style={styles.offersContainer}
-                    source={images.offers_view}
-                  >
-                    <Text style={styles.smallTextStyle}>{"Minimum"}</Text>
-                    <Text style={styles.boldTextStyle}>
-                      {item?.off}
-                      {" Off"}
-                    </Text>
-                  </ImageBackground>
-                </TouchableOpacity>
-              );
-            }}
-          /> */}
-
-          {isLoading ? (
-            <CarouselLoader marginTop={hp(10)} height={hp(280)} />
-          ) : (
-            <FlatList
-              data={allOffers.campaigns}
-              renderItem={({ item, index }) => {
-                return (
-                  <TouchableOpacity onPress={() => onPressCampaignItem(item)}>
-                    <FastImage
-                      resizeMode="cover"
-                      style={styles.imgStyle}
-                      source={{
-                        uri:
-                          allOffers?.featured_image_url +
-                          "/" +
-                          item?.campaign.fileName,
-                        priority: FastImage.priority.high,
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              }}
-              keyExtractor={(item, index) => index.toString()}
-            />
-          )}
-
           <FlatList
-            style={{ marginTop: hp(15) }}
-            data={offerList || []}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({ item, index }) => {
+            data={mainService || []}
+            renderItem={({ item }) => {
+              const isExpanded = expanded === item?.service_name;
               return (
-                <TouchableOpacity
-                  onPress={() => onPressOfferItem(item)}
-                  style={styles.offerContainer}
-                >
-                  <FastImage
-                    borderTopLeftRadius={10}
-                    borderTopRightRadius={10}
-                    source={{
-                      uri:
-                        allOffers?.featured_image_url +
-                        "/" +
-                        item?.featured_image,
-                      priority: FastImage.priority.high,
-                    }}
-                    style={styles.manImgStyle}
-                  />
-                  <View style={styles.infoContainer}>
-                    <FastImage
-                      resizeMode="cover"
-                      source={{
-                        uri:
-                          allOffers?.featured_image_url +
-                          "/" +
-                          item?.expertDetails?.user_profile_images?.[0].image,
-                        priority: FastImage.priority.high,
+                <>
+                  <TouchableOpacity
+                    onPress={() => onPressArrow(item)}
+                    style={styles.headerRowStyle}
+                  >
+                    <Text style={styles.titleTextStyle}>
+                      {item?.service_name}
+                    </Text>
+                    <View
+                      style={{
+                        transform: [{ rotate: isExpanded ? "0deg" : "180deg" }],
                       }}
-                      style={styles.barberImgStyle}
-                    />
-                    <View style={styles.rowStyle}>
-                      <Text style={styles.nameTextStyle}>
-                        {item?.expertDetails?.name}
-                      </Text>
-                      <View style={styles.rating_badge}>
-                        <Text style={styles.rating_title}>
-                          {item?.expertDetails?.rating}
-                        </Text>
-                        <StarIcon height={8} width={8} />
-                      </View>
+                    >
+                      <ArrowUp />
                     </View>
-                  </View>
-                </TouchableOpacity>
+                  </TouchableOpacity>
+                  {isExpanded ? (
+                    isLoading ? (
+                      <CarouselLoader marginTop={hp(10)} height={hp(280)} />
+                    ) : (
+                      <>
+                        <FlatList
+                          data={allOffers?.campaigns}
+                          renderItem={({ item, index }) => {
+                            return (
+                              <TouchableOpacity
+                                onPress={() => onPressCampaignItem(item)}
+                              >
+                                <FastImage
+                                  resizeMode="cover"
+                                  style={styles.imgStyle}
+                                  source={{
+                                    uri:
+                                      allOffers?.featured_image_url +
+                                      "/" +
+                                      item?.campaign.fileName,
+                                    priority: FastImage.priority.high,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            );
+                          }}
+                          keyExtractor={(item, index) => index.toString()}
+                        />
+                        <FlatList
+                          style={{ marginTop: hp(15) }}
+                          data={offerList || []}
+                          keyExtractor={(item, index) => index.toString()}
+                          renderItem={({ item, index }) => {
+                            return (
+                              <TouchableOpacity
+                                onPress={() => onPressOfferItem(item)}
+                                style={styles.offerContainer}
+                              >
+                                <FastImage
+                                  borderTopLeftRadius={10}
+                                  borderTopRightRadius={10}
+                                  source={{
+                                    uri:
+                                      allOffers?.featured_image_url +
+                                      "/" +
+                                      item?.featured_image,
+                                    priority: FastImage.priority.high,
+                                  }}
+                                  style={styles.manImgStyle}
+                                />
+                                <View style={styles.infoContainer}>
+                                  <View style={styles.offerFooter}>
+                                    <View style={styles.rowStyle}>
+                                      <FastImage
+                                        resizeMode="cover"
+                                        source={{
+                                          uri:
+                                            allOffers?.featured_image_url +
+                                            "/" +
+                                            item?.expertDetails
+                                              ?.user_profile_images?.[0].image,
+                                          priority: FastImage.priority.high,
+                                        }}
+                                        style={styles.barberImgStyle}
+                                      />
+                                      <Text style={styles.nameTextStyle}>
+                                        {item?.expertDetails?.name}
+                                      </Text>
+                                      <View style={styles.rating_badge}>
+                                        <Text style={styles.rating_title}>
+                                          {item?.expertDetails?.rating}
+                                        </Text>
+                                        <StarIcon height={8} width={8} />
+                                      </View>
+                                    </View>
+                                    <Text style={styles?.distanceTitle}>
+                                      {"4 km away"}
+                                    </Text>
+                                  </View>
+                                </View>
+                              </TouchableOpacity>
+                            );
+                          }}
+                        />
+                      </>
+                    )
+                  ) : null}
+                </>
               );
             }}
           />
         </View>
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
-      <SelectDateModal
-        visible={isModal}
-        close={setIsModal}
-        dates={dates}
-        onPressDateItem={(index: any) => onPressDateItem(index)}
-        onPressTimeItem={(index: any) => onPressTimeItem(index)}
-        setIsModal={setIsModal}
-        times={times}
-        selectedDateIndex={selectedDateIndex}
-        selectedTimeIndex={selectedTimeIndex}
-        onPressApply={onPressApplyDate}
-        DateItem_style={styles.dateStyle}
-        scrollEnabled={false}
-        withOutDisable={false}
-      />
     </View>
   );
 };
@@ -482,7 +479,7 @@ const styles = StyleSheet.create({
   },
   imgStyle: {
     height: hp(290),
-    width: screen_width - wp(30),
+    width: screen_width - wp(40),
     marginTop: hp(15),
     backgroundColor: colors.grey_19,
     alignSelf: "center",
@@ -493,6 +490,7 @@ const styles = StyleSheet.create({
     height: hp(290),
     marginHorizontal: wp(20),
     marginBottom: hp(26),
+    overflow: "hidden",
   },
   manImgStyle: {
     height: hp(290),
@@ -504,38 +502,29 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     position: "absolute",
-    bottom: hp(-10),
-    left: screen_width * 0.35,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors?.white,
-    borderRadius: 5,
-    paddingRight: wp(7),
-    elevation: 3,
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
+    borderBottomLeftRadius: 5,
+    borderBottomRightRadius: 5,
+    bottom: 0,
+    width: "100%",
+    paddingVertical: hp(6),
+    paddingHorizontal: wp(8),
   },
   barberImgStyle: {
-    height: wp(30),
-    width: wp(30),
+    height: wp(24),
+    width: wp(24),
     borderRadius: 100,
     backgroundColor: colors.grey_19,
-    position: "absolute",
-    zIndex: 999,
-    left: wp(-11),
-    elevation: 3,
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
   },
   nameTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 14, colors.black),
-    marginRight: wp(5),
-    paddingVertical: hp(6),
   },
   rowStyle: {
     flexDirection: "row",
     alignItems: "center",
-    paddingLeft: wp(24),
+    gap: wp(6),
   },
   addressTextStyle: {
     ...commonFontStyle(fontFamily.regular, 12, colors.gery_9),
@@ -557,7 +546,7 @@ const styles = StyleSheet.create({
   rating_badge: {
     backgroundColor: colors.light_green,
     borderRadius: wp(3),
-    padding: hp(2),
+    padding: hp(3),
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: wp(4),
@@ -569,6 +558,26 @@ const styles = StyleSheet.create({
   dateStyle: {
     width: wp(50),
     height: hp(60),
+  },
+  headerRowStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: hp(10),
+    alignItems: "center",
+    paddingHorizontal: wp(20),
+    marginTop: hp(30),
+  },
+  titleTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
+  },
+  distanceTitle: {
+    ...commonFontStyle(fontFamily.semi_bold, 12, colors.black),
+  },
+  offerFooter: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flex: 1,
   },
 });
 

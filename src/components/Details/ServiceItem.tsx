@@ -203,7 +203,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
       userId: userInfo?._id,
       expertId: expertId || actionId,
       services: Object?.values(selectService)?.length
-        ? customSelect
+        ? [customSelect]
         : selectedData,
       packages: [],
       offers: [],

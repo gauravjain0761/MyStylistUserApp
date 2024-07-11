@@ -3,6 +3,7 @@ import {
   GETALLSERVICES,
   GET_BARBER_LIST,
   ITEM_DETAILS,
+  MAIN_SERVICE,
   SEARCH_LIST,
   SEARCH_STYLIST_LIST,
   TIME_SLOT,
@@ -18,6 +19,7 @@ const initialState = {
   searchList: [],
   searchStylistList: {},
   timeSlot: "",
+  mainService: [],
 };
 
 export default function (state = initialState, action: any) {
@@ -52,6 +54,9 @@ export default function (state = initialState, action: any) {
     }
     case TIME_SLOT: {
       return { ...state, timeSlot: action.payload };
+    }
+    case MAIN_SERVICE: {
+      return { ...state, mainService: action?.payload };
     }
     default:
       return state;

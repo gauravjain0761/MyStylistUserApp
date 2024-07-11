@@ -280,7 +280,6 @@ const YourStylist = () => {
   }, [addtocart]);
 
   useEffect(() => {
-    console.log();
     let obj = {
       id: id,
     };
@@ -426,15 +425,6 @@ const YourStylist = () => {
 
   return (
     <View style={{ ...styles.container }}>
-      <Image
-        style={styles.imgStyle}
-        source={{
-          uri:
-            itemDetails?.featured_image_url +
-            "/" +
-            itemDetails?.user?.user_profile_images?.[0]?.image,
-        }}
-      />
       <View style={styles.mainHeaderContainer}>
         <View style={{ height: DeviceInfo.hasNotch() ? hp(50) : 0 }} />
         <View style={styles.headerContainer}>
@@ -958,8 +948,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   mainHeaderContainer: {
-    position: "absolute",
     width: "100%",
+    paddingBottom: hp(20),
   },
   headerTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors?.black),

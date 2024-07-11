@@ -681,57 +681,6 @@ const Home = () => {
       id: expertId,
       itemDetails: itemDetails,
     });
-    // let userInfo = await getAsyncUserInfo();
-    // let DateString = `${date} ${bookTime?.time}`;
-    // let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
-    // let subServiceStartTime = moment(momentDate);
-    // let selectedData = selectedService
-    //   ?.map((item) => {
-    //     return item?.subServices?.map((data) => {
-    //       let updatedTimeSlot = subServiceStartTime.toISOString();
-    //       subServiceStartTime.add(15, "minutes");
-    //       return {
-    //         actionId: data?.service_id,
-    //         serviceId: data?.service_id,
-    //         serviceName: data?.service_name,
-    //         quantity: 1,
-    //         timeSlot: updatedTimeSlot,
-    //         packageDetails: null,
-    //         subServices: [
-    //           {
-    //             subServiceId: data?._id,
-    //             subServiceName: data?.sub_service_name,
-    //             originalPrice: 0,
-    //             discountedPrice: 0,
-    //           },
-    //         ],
-    //       };
-    //     });
-    //   })
-    //   ?.flat();
-    // let passData = {
-    //   userId: userInfo?._id,
-    //   expertId: expertId,
-    //   services: selectedData,
-    //   packages: [],
-    //   offers: [],
-    // };
-    // let obj = {
-    //   data: passData,
-    //   onSuccess: async (response: any) => {
-    //     await getCartData();
-    //     infoToast("Service added successfully");
-    //     getDatesList();
-    //     navigate(screenName.YourStylist, {
-    //       id: expertId,
-    //       itemDetails: itemDetails,
-    //     });
-    //   },
-    //   onFailure: (Err: any) => {
-    //     console.log("ServiceInner Err", Err);
-    //   },
-    // };
-    // dispatch(addToCart(obj));
   };
 
   const onRefresh = useCallback(async () => {
@@ -832,6 +781,7 @@ const Home = () => {
         { subServices: uniqueSelectedServices },
       ]);
     }
+    SelectedServiceExpert();
     setServicesModal(!servicesModal);
   };
 
@@ -875,6 +825,30 @@ const Home = () => {
       setSelectedServiceModal(!selectedServiceModal);
       dispatch({ type: SELECTED_SERVICE, payload: [] });
     }
+    SelectedServiceExpert();
+  };
+
+  const SelectedServiceExpert = async () => {
+    let data = {
+      ...filterData,
+      rating: rating,
+      service_id: [],
+      page: 1,
+    };
+
+    let obj = {
+      isLoading: false,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    // dispatch(getUsersByLocation(obj));
   };
 
   return (
@@ -1322,9 +1296,7 @@ const Home = () => {
                     item.service_for == "Male"
                       ? item?.subServices?.map((subServices, indes) => {
                           return (
-                            // onPress={() => onPresstoNavigate()}
                             <ServiceSelect
-                              // onPress={() => onPressSelect(subServices)}
                               onPress={() => onPresstoNavigate(subServices)}
                               type="select"
                               service={subServices?.sub_service_name}

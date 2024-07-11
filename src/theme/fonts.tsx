@@ -15,13 +15,13 @@ export function commonFontStyle(
 }
 
 export const fontFamily = {
-  regular: "Inter-Regular",
-  black: "Inter-Black",
-  bold: "Inter-Bold",
-  extra_bold: "Inter-ExtraBold",
-  extra_light: "Inter-ExtraLight",
-  light: "Inter-Light",
-  medium: "Inter-Medium",
-  semi_bold: "Inter-SemiBold",
-  thin: "Inter-Thin",
+  regular: "clarika_pro_geometric_demi",
+  black: "clarika_pro_geometric_demi",
+  bold: "clarika_pro_geometric_demi",
+  extra_bold: "clarika_pro_geometric_demi",
+  extra_light: "clarika_pro_geometric_demi",
+  light: "clarika_pro_geometric_demi",
+  medium: "clarika_pro_geometric_demi",
+  semi_bold: "clarika_pro_geometric_demi",
+  thin: "clarika_pro_geometric_demi",
 };

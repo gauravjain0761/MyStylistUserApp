@@ -44,10 +44,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>LSApplicationQueriesSchemes</key> 
-	<array> 
-  		<string>tel</string> 
-  		<string>telprompt</string> 
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>tel</string>
+		<string>telprompt</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>Update your profile picture using the camera</string>
@@ -61,15 +61,7 @@
 	<string>Update your profile picture using the photo library</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Inter-Black.ttf</string>
-		<string>Inter-Bold.ttf</string>
-		<string>Inter-ExtraBold.ttf</string>
-		<string>Inter-ExtraLight.ttf</string>
-		<string>Inter-Light.ttf</string>
-		<string>Inter-Medium.ttf</string>
-		<string>Inter-Regular.ttf</string>
-		<string>Inter-SemiBold.ttf</string>
-		<string>Inter-Thin.ttf</string>
+		<string>clarika_pro_geometric_demi.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

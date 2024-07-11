@@ -7,6 +7,7 @@ import {
   GET_BARBER_LIST,
   IS_LOADING,
   ITEM_DETAILS,
+  MAIN_SERVICE,
   SEARCH_LIST,
   SEARCH_STYLIST_LIST,
   USER_LIST,
@@ -274,6 +275,31 @@ export const getDeeplink =
     })
       .then(async (response: any) => {
         if (response.status === 200) {
+          if (request.onSuccess) request.onSuccess(response.data);
+        }
+      })
+      .catch((error) => {
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };
+
+export const getMainServices =
+  (request?: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+    };
+    return makeAPIRequest({
+      method: GET,
+      url: api?.getAllServicesForMobile,
+      headers: header,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          dispatch({
+            type: MAIN_SERVICE,
+            payload: response?.data?.services,
+          });
           if (request.onSuccess) request.onSuccess(response.data);
         }
       })

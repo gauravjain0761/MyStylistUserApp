@@ -66,6 +66,7 @@ const Offers = ({ navigation }) => {
   const { itemDetails, mainService } = useAppSelector((state) => state.home);
 
   const [footerLoading, setFooterLoading] = useState(false);
+  const [services, setServices] = useState([]);
   const [page, setPage] = useState(1);
   const [refreshControl, setRefreshControle] = useState(false);
   const [discount, setDiscount] = useState<any>(null);
@@ -79,7 +80,7 @@ const Offers = ({ navigation }) => {
   const [selectedTimeIndex, setSelectedTime] = useState(Number);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
-  const [expanded, setExpanded] = useState(null);
+  const [expanded, setExpanded] = useState({});
   const flatListRef = useRef(null);
 
   useEffect(() => {
@@ -89,8 +90,9 @@ const Offers = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (expanded == null) {
-      setExpanded(mainService[0]?.service_name);
+    setServices(mainService);
+    if (Object?.values(expanded)?.length == 0 && mainService?.length) {
+      setExpanded({ [mainService[0]?.service_name]: true });
     }
   }, [mainService]);
 
@@ -287,7 +289,10 @@ const Offers = ({ navigation }) => {
 
   const onPressArrow = (item) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setExpanded(expanded === item?.service_name ? null : item?.service_name);
+    setExpanded((prevExpandedItems) => ({
+      ...prevExpandedItems,
+      [item.service_name]: !prevExpandedItems[item.service_name],
+    }));
   };
 
   return (
@@ -330,9 +335,9 @@ const Offers = ({ navigation }) => {
         )}
         <View>
           <FlatList
-            data={mainService || []}
+            data={services}
             renderItem={({ item }) => {
-              const isExpanded = expanded === item?.service_name;
+              const isExpanded = expanded[item?.service_name];
               return (
                 <>
                   <TouchableOpacity

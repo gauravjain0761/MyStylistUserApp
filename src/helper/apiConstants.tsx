@@ -2,6 +2,7 @@ export const api = {
   BASE_URL: "https://api.mystylist.in/",
   IMG_URL: "https://mystylist-media.s3.amazonaws.com/",
   IMG_URL_2: "https://mystylist-media.s3.amazonaws.com",
+  MAP_KEY: "ZaOomNd4Sw75MeonHoR4UAAC5I5KiqeW0bL2uYv6",
 
   // Auth
   login: "login",

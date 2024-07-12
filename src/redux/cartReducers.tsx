@@ -29,7 +29,7 @@ export default function (state = initialState, action: any) {
       return { ...state, cartCount: action.payload };
     }
     case SELECTED_SERVICE: {
-      return { ...state, selectedService: action.payload };
+      return { ...state, selectedService: action?.payload };
     }
     default:
       return state;

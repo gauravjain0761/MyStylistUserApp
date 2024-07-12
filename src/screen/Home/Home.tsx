@@ -12,7 +12,14 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { FC, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  FC,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { colors } from "../../theme/color";
 import {
   convertToOutput,
@@ -146,6 +153,7 @@ const Home = () => {
   const [rating, setRating] = useState(null);
   const [gender, setGender] = useState(null);
   const [filter, setFilter] = useState(stylists_filter);
+  const isInitialRender = useRef(true);
 
   useEffect(() => {
     const socket = io(api.BASE_URL);
@@ -242,7 +250,7 @@ const Home = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo?._id,
       },
       onSuccess: () => {},
       onFailure: () => {},
@@ -260,15 +268,14 @@ const Home = () => {
     await requestLocationPermission(
       async (response) => {
         let data = {
-          // latitude: response?.latitude,
-          // longitude: response?.longitude,
-          latitude: 30.7076,
-          longitude: 76.715126,
+          latitude: response?.latitude,
+          longitude: response?.longitude,
           maxDistance: 50000,
           page: page,
           limit: 5,
           rating: rating,
           gender: gender,
+          service_id: [],
         };
         let obj = {
           isLoading: isLoading,
@@ -290,11 +297,13 @@ const Home = () => {
   };
 
   const onPressRating = (isLoading: boolean, rating: number) => {
+    let selected = cartSelectedService?.map((item) => item?._id);
     setListLoader(true);
     let data = {
       ...filterData,
       rating: rating,
       page: 1,
+      service_id: selected,
     };
 
     let obj = {
@@ -314,11 +323,13 @@ const Home = () => {
   };
 
   const onPressBestService = () => {
+    let selected = cartSelectedService?.map((item) => item?._id);
     setListLoader(true);
     let data = {
       ...filterData,
       best_service: "Yes",
       page: 1,
+      service_id: selected,
     };
     let obj = {
       isLoading: isLoading,
@@ -363,8 +374,9 @@ const Home = () => {
         await getAddress(
           response,
           async (result: any) => {
-            // await setAsyncLocation(result?.results[0]?.formatted_address);
-            await setAsyncLocation("Mohali, Punjab");
+            result?.results?.length
+              ? await setAsyncLocation(result?.results?.[0]?.formatted_address)
+              : await setAsyncLocation("Mohali,Punjab");
             await GetStatus();
           },
           (err) => {
@@ -372,10 +384,8 @@ const Home = () => {
           }
         ).then(async (res) => {
           const coord = {
-            // latitude: Number(response?.latitude),
-            // longitude: Number(response?.longitude),
-            latitude: Number(30.7076),
-            longitude: Number(76.715126),
+            latitude: Number(response?.latitude),
+            longitude: Number(response?.longitude),
             maxDistance: 50000,
           };
           await setAsyncCoord(coord);
@@ -390,6 +400,10 @@ const Home = () => {
       }
     );
   };
+
+  useEffect(() => {
+    getCurrentLocation();
+  }, []);
 
   const SetLocation = async () => {
     const coord = await getAsyncCoord();
@@ -483,11 +497,13 @@ const Home = () => {
   };
 
   const dateClear = (isLoading: boolean) => {
+    let selected = cartSelectedService?.map((item) => item?._id);
     setListLoader(true);
     let data = {
       ...filterData,
       page: 1,
       dateTime: null,
+      service_id: selected,
     };
     let obj = {
       isLoading: isLoading,
@@ -507,11 +523,13 @@ const Home = () => {
   };
 
   const ratingClear = (isLoading: boolean) => {
+    let selected = cartSelectedService?.map((item) => item?._id);
     setListLoader(true);
     let data = {
       ...filterData,
       page: 1,
       rating: null,
+      service_id: selected,
     };
     let obj = {
       isLoading: isLoading,
@@ -531,11 +549,13 @@ const Home = () => {
   };
 
   const clearBestService = () => {
+    let selected = cartSelectedService?.map((item) => item?._id);
     setListLoader(true);
     let data = {
       ...filterData,
       best_service: null,
       page: 1,
+      service_id: selected,
     };
     let obj = {
       isLoading: isLoading,
@@ -609,15 +629,34 @@ const Home = () => {
   };
 
   const onPressApplyDate = () => {
+    let selected = cartSelectedService?.map((item) => item?._id);
     let DateString = `${date} ${bookTime?.time}`;
+    let time = {};
+    let dates = cartSelectedService
+      ?.map((item, index) => {
+        if (index == 0) {
+          time = {
+            time: times[selectedTimeIndex + index]?.time,
+            start_time_id: times[selectedTimeIndex + index]?._id,
+          };
+        } else if (cartSelectedService?.length - 1 == index) {
+          time = {
+            time: times[selectedTimeIndex + index]?.time,
+            end_time_id: times[selectedTimeIndex + index]?._id,
+          };
+        }
+        return time;
+      })
+      ?.filter((item) => Object?.values(item)?.length);
     setListLoader(true);
     let data = {
       ...filterData,
       page: 1,
       dateTime: {
-        timeSlot_id: bookTime?._id,
+        timeSlot_id: dates,
         availableDate: date,
       },
+      service_id: selected,
     };
     let obj = {
       isLoading: isLoading,
@@ -765,7 +804,12 @@ const Home = () => {
         selectedServiceIDs.add(item?._id);
         return item;
       });
+
     if (uniqueSelectedServices?.length) {
+      setSelectedService([
+        ...selectedService,
+        { subServices: uniqueSelectedServices },
+      ]);
       if (selectedService?.length) {
         dispatch({
           type: SELECTED_SERVICE,
@@ -780,13 +824,7 @@ const Home = () => {
           payload: [...selectedService, ...uniqueSelectedServices],
         });
       }
-      setSelectedService([
-        ...selectedService,
-        { subServices: uniqueSelectedServices },
-      ]);
     }
-    SelectedServiceExpert();
-    setServicesModal(!servicesModal);
   };
 
   const CheckSelected = (response: any) => {
@@ -823,20 +861,37 @@ const Home = () => {
     setSubServicesModalData({
       subServices: updatedSelectedServices.flatMap((item) => item.subServices),
     });
+    dispatch({
+      type: SELECTED_SERVICE,
+      payload: updatedSelectedServices.flatMap((item) => item.subServices),
+    });
     if (updatedSelectedServices?.length == 0) {
-      dispatch({ type: SELECTED_SERVICE, payload: updatedSelectedServices });
       setSelectedService([]);
-      setSelectedServiceModal(!selectedServiceModal);
       dispatch({ type: SELECTED_SERVICE, payload: [] });
     }
-    SelectedServiceExpert();
   };
 
+  useEffect(() => {
+    setServicesModal(false);
+    setSelectedServiceModal(false);
+    if (isInitialRender?.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    if (cartSelectedService?.length) {
+      SelectedServiceExpert();
+    } else {
+      SelectedServiceExpert();
+    }
+  }, [cartSelectedService]);
+
   const SelectedServiceExpert = async () => {
+    setListLoader(true);
+    let selected = cartSelectedService?.map((item) => item?._id);
     let data = {
       ...filterData,
       rating: rating,
-      service_id: [],
+      service_id: selected,
       page: 1,
     };
 
@@ -848,11 +903,12 @@ const Home = () => {
         setFooterLoading(false);
         setListLoader(false);
       },
-      onFailure: () => {
+      onFailure: (Err: any) => {
+        console.log("Err", Err);
         setListLoader(false);
       },
     };
-    // dispatch(getUsersByLocation(obj));
+    dispatch(getUsersByLocation(obj));
   };
 
   return (

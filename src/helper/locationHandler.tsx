@@ -4,6 +4,7 @@ import {
   isLocationEnabled,
   promptForEnableLocationIfNeeded,
 } from "react-native-android-location-enabler";
+import { api } from "./apiConstants";
 
 export const requestLocationPermission = async (
   onSucess: (res: any) => void,
@@ -140,9 +141,11 @@ export const getAddress = async (
   onFailure?: any
 ) => {
   const headersList = {};
-
+  console.log(
+    `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${region?.latitude},${region?.longitude}&api_key=${api?.MAP_KEY}`
+  );
   fetch(
-    `https://maps.googleapis.com/maps/api/geocode/json?address=${region.latitude},${region.longitude}&key=AIzaSyAtgC47qVsVhvtu_GgKNQfSIEtq1a9hPAU`,
+    `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${region?.latitude},${region?.longitude}&api_key=${api?.MAP_KEY}`,
     {
       method: "GET",
       headers: headersList,

@@ -15,13 +15,9 @@ export function commonFontStyle(
 }
 
 export const fontFamily = {
-  regular: "clarika_pro_geometric_demi",
-  black: "clarika_pro_geometric_demi",
-  bold: "clarika_pro_geometric_demi",
-  extra_bold: "clarika_pro_geometric_demi",
-  extra_light: "clarika_pro_geometric_demi",
-  light: "clarika_pro_geometric_demi",
-  medium: "clarika_pro_geometric_demi",
-  semi_bold: "clarika_pro_geometric_demi",
-  thin: "clarika_pro_geometric_demi",
+  regular: "clarika-pro-geometric-regular",
+  bold: "clarika_pro-geometric_bold",
+  extra_bold: "clarika_pro_geometric_extraBold",
+  medium: "clarika_pro_geometric_medium",
+  semi_bold: "clarika_pro_geo_metric_semi_bold",
 };

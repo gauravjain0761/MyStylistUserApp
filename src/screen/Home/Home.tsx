@@ -260,8 +260,10 @@ const Home = () => {
     await requestLocationPermission(
       async (response) => {
         let data = {
-          latitude: response?.latitude,
-          longitude: response?.longitude,
+          // latitude: response?.latitude,
+          // longitude: response?.longitude,
+          latitude: 30.7076,
+          longitude: 76.715126,
           maxDistance: 50000,
           page: page,
           limit: 5,
@@ -370,8 +372,10 @@ const Home = () => {
           }
         ).then(async (res) => {
           const coord = {
-            latitude: Number(response?.latitude),
-            longitude: Number(response?.longitude),
+            // latitude: Number(response?.latitude),
+            // longitude: Number(response?.longitude),
+            latitude: Number(30.7076),
+            longitude: Number(76.715126),
             maxDistance: 50000,
           };
           await setAsyncCoord(coord);

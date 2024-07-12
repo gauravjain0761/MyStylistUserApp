@@ -61,7 +61,11 @@
 	<string>Update your profile picture using the photo library</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>clarika_pro_geometric_demi.ttf</string>
+		<string>clarika-pro-geometric-regular.ttf</string>
+		<string>clarika_pro-geometric_bold.ttf</string>
+		<string>clarika_pro_geometric_extraBold.ttf</string>
+		<string>clarika_pro_geometric_medium.ttf</string>
+		<string>clarika_pro_geo_metric_semi_bold.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

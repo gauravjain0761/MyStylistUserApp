@@ -357,7 +357,7 @@ export const PackagesText = () => (
     />
   </Svg>
 );
-export const FillLike: FC<{ fill: any }> = ({ fill = "none" }) => {
+export const FillLike: FC<{ fill?: any }> = ({ fill = "none" }) => {
   return (
     <Svg
       width="26"

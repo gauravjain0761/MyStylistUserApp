@@ -631,9 +631,9 @@ const Home = () => {
   const onPressApplyDate = () => {
     let selected = cartSelectedService?.map((item) => item?._id);
     let DateString = `${date} ${bookTime?.time}`;
-    let time = {};
     let dates = cartSelectedService
       ?.map((item, index) => {
+        let time = {};
         if (index == 0) {
           time = {
             time: times[selectedTimeIndex + index]?.time,

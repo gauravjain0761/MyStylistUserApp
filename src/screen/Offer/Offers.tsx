@@ -23,6 +23,7 @@ import {
   convertToOutput,
   generateWeekDates,
   hp,
+  infoToast,
   isCloseToBottom,
   screen_width,
   wp,
@@ -42,6 +43,7 @@ import moment from "moment";
 import FastImage from "react-native-fast-image";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import {
+  addToCart,
   getMainServices,
   getUserItemDetails,
   getUsersFavList,
@@ -71,8 +73,6 @@ const Offers = ({ navigation }) => {
   const [refreshControl, setRefreshControle] = useState(false);
   const [discount, setDiscount] = useState<any>(null);
   const [serviceType, setServiceType] = useState<any>(null);
-  const [like, setLike] = useState(false);
-  const [likeID, setLikeID] = useState("");
   const [isModal, setIsModal] = useState(false);
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
@@ -81,7 +81,8 @@ const Offers = ({ navigation }) => {
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
   const [expanded, setExpanded] = useState({});
-  const flatListRef = useRef(null);
+  const [visible, setVisible] = useState(false);
+  const [selectOffer, setSelectOffer] = useState({});
 
   useEffect(() => {
     getMainService();
@@ -101,12 +102,6 @@ const Offers = ({ navigation }) => {
       getDetails();
     }
   }, [offerList]);
-
-  useEffect(() => {
-    if (Object.values(itemDetails).length > 0 || itemDetails.length) {
-      getFavUser();
-    }
-  }, [itemDetails]);
 
   const getAllOfferData = (isLoading: boolean) => {
     let obj = {
@@ -135,29 +130,6 @@ const Offers = ({ navigation }) => {
       onFailure: () => {},
     };
     dispatch(getUserItemDetails(obj));
-  };
-
-  const getFavUser = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-      },
-      onSuccess: (response: any) => {
-        response?.data.forEach((item) => {
-          if (item?._id == itemDetails?.user?._id) {
-            setLikeID(item?.favouriteId);
-            setLike(true);
-          } else {
-            setLike(false);
-          }
-        });
-      },
-      onFailure: (Errr: any) => {
-        console.log("getFavUser Errr", Errr);
-      },
-    };
-    dispatch(getUsersFavList(obj));
   };
 
   const onPressMenu = () => {
@@ -252,12 +224,8 @@ const Offers = ({ navigation }) => {
   };
 
   const onPressOfferItem = (item: any) => {
-    navigation.navigate(screenName.YourStylist, {
-      id: item?.expert_id,
-      like: like,
-      likeID: likeID,
-      itemDetails: itemDetails,
-    });
+    setSelectOffer(item);
+    setVisible(!visible);
   };
 
   const loadMoreData = () => {
@@ -294,6 +262,59 @@ const Offers = ({ navigation }) => {
       [item.service_name]: !prevExpandedItems[item.service_name],
     }));
   };
+  const onPressApply = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let DateString = `${date} ${bookTime?.time}`;
+    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
+    let objs: any = {
+      actionId: selectOffer?._id,
+      serviceId: selectOffer?.service?.service_id,
+      serviceName: selectOffer?.offer_name,
+      originalPrice: selectOffer?.sub_services?.price,
+      discountedPrice: selectOffer?.sub_services?.discounted_price || 0,
+      timeSlot: momentDate,
+      quantity: 1,
+      packageDetails: selectOffer?.additional_information,
+      subServices: [
+        {
+          subServiceId: selectOffer?.sub_services?.sub_service_id,
+          subServiceName: selectOffer?.sub_services?.sub_service_name,
+          originalPrice: selectOffer?.sub_services?.price,
+          discountedPrice: selectOffer?.sub_services?.discounted_price || 0,
+        },
+      ],
+    };
+    let passData = {
+      userId: userInfo?._id,
+      expertId: selectOffer?.expert_id,
+      services: [],
+      packages: [],
+      offers: [objs],
+    };
+    let obj = {
+      data: passData,
+      onSuccess: async (response: any) => {
+        infoToast("Offer added successfully");
+      },
+      onFailure: (Err: any) => {
+        console.log("Errrr", Err);
+      },
+    };
+    dispatch(addToCart(obj));
+  };
+
+  const onPressDateItem = (index: any) => {
+    setSelectedDate(index);
+    setDate(dates[index]?.title);
+    setTimes(dates[index]?.value);
+    setSelectedTime(0);
+  };
+
+  const onPressTimeItem = (index: any) => {
+    setSelectedTime(index);
+    let bookDates = times[index];
+    setBookTime(bookDates);
+  };
 
   return (
     <View style={styles.container}>
@@ -312,7 +333,6 @@ const Offers = ({ navigation }) => {
             loadMoreData();
           }
         }}
-        ref={flatListRef}
         refreshControl={
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
@@ -336,16 +356,16 @@ const Offers = ({ navigation }) => {
         <View>
           <FlatList
             data={services}
-            renderItem={({ item }) => {
-              const isExpanded = expanded[item?.service_name];
+            renderItem={({ item: items }) => {
+              const isExpanded = expanded[items?.service_name];
               return (
                 <>
                   <TouchableOpacity
-                    onPress={() => onPressArrow(item)}
+                    onPress={() => onPressArrow(items)}
                     style={styles.headerRowStyle}
                   >
                     <Text style={styles.titleTextStyle}>
-                      {item?.service_name}
+                      {items?.service_name}
                     </Text>
                     <View
                       style={{
@@ -366,6 +386,7 @@ const Offers = ({ navigation }) => {
                             return (
                               <TouchableOpacity
                                 onPress={() => onPressCampaignItem(item)}
+                                style={styles?.campaignsbtn}
                               >
                                 <FastImage
                                   resizeMode="cover"
@@ -388,7 +409,8 @@ const Offers = ({ navigation }) => {
                           data={offerList || []}
                           keyExtractor={(item, index) => index.toString()}
                           renderItem={({ item, index }) => {
-                            return (
+                            return items?.service_name ==
+                              item?.service?.service_name ? (
                               <TouchableOpacity
                                 onPress={() => onPressOfferItem(item)}
                                 style={styles.offerContainer}
@@ -425,7 +447,7 @@ const Offers = ({ navigation }) => {
                                       </Text>
                                       <View style={styles.rating_badge}>
                                         <Text style={styles.rating_title}>
-                                          {item?.expertDetails?.rating}
+                                          {item?.expertDetails?.rating || 0}
                                         </Text>
                                         <StarIcon height={8} width={8} />
                                       </View>
@@ -436,7 +458,7 @@ const Offers = ({ navigation }) => {
                                   </View>
                                 </View>
                               </TouchableOpacity>
-                            );
+                            ) : null;
                           }}
                         />
                       </>
@@ -449,6 +471,24 @@ const Offers = ({ navigation }) => {
         </View>
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
+      <SelectDateModal
+        visible={visible}
+        close={setVisible}
+        dates={dates}
+        onPressDateItem={(index) => onPressDateItem(index)}
+        onPressTimeItem={(index) => onPressTimeItem(index)}
+        setIsModal={setVisible}
+        times={times}
+        selectedDateIndex={selectedDateIndex}
+        selectedTimeIndex={selectedTimeIndex}
+        title={
+          "Please select Date and Time for this Service from available slots"
+        }
+        withOutDisable={false}
+        onPressApply={onPressApply}
+        DateItem_style={styles.dateStyle}
+        scrollEnabled={false}
+      />
     </View>
   );
 };
@@ -485,11 +525,9 @@ const styles = StyleSheet.create({
   imgStyle: {
     height: hp(290),
     width: screen_width - wp(40),
-    marginTop: hp(15),
     backgroundColor: colors.grey_19,
     alignSelf: "center",
     borderRadius: wp(10),
-    marginBottom: hp(20),
   },
   offerContainer: {
     height: hp(290),
@@ -559,6 +597,7 @@ const styles = StyleSheet.create({
   },
   rating_title: {
     ...commonFontStyle(fontFamily.semi_bold, 10, colors.white),
+    top: 1,
   },
   dateStyle: {
     width: wp(50),
@@ -583,6 +622,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flex: 1,
+  },
+  campaignsbtn: {
+    marginVertical: hp(11),
   },
 });
 

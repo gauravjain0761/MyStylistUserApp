@@ -64,7 +64,6 @@ const StylistInnerItem = ({
   const [visible, setVisible] = useState(false);
 
   const getCart = async () => {
-    console.log("callll");
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
@@ -251,6 +250,8 @@ const StylistInnerItem = ({
         times={times}
         selectedDateIndex={selectedDateIndex}
         selectedTimeIndex={selectedTimeIndex}
+        DateItem_style={styles.dateStyle}
+        scrollEnabled={false}
         title={
           "Please select Date and Time for this Service from available slots"
         }
@@ -335,6 +336,10 @@ const styles = StyleSheet.create({
   selectedTime: {
     ...commonFontStyle(fontFamily.medium, 10, colors.grey_21),
     marginTop: hp(8),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });
 

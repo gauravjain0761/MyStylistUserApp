@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
-  rotationStyle: {},
 });
 
 export default StylistItem;

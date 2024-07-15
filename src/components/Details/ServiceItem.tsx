@@ -25,7 +25,12 @@ import {
   getAsyncUserInfo,
   setAsyncCartId,
 } from "../../helper/asyncStorage";
-import { addToCart, getCartlist, removeMultipleCartItems } from "../../actions";
+import {
+  addToCart,
+  getCartlist,
+  getMainServices,
+  removeMultipleCartItems,
+} from "../../actions";
 import {
   ADD_TO_CART,
   CART_DETAILS,
@@ -53,7 +58,7 @@ type Props = {
 };
 
 const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
-  const [expanded, setExpanded] = useState(true);
+  const [expanded, setExpanded] = useState({});
   const [bookTime, setBookTime] = useState("");
   const [date, setDate] = useState("");
   const [selectedDateIndex, setSelectedDate] = useState(0);
@@ -65,14 +70,18 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const { params } = useRoute();
   const expertId = params?.id || "";
   const { addtocart, selectedService } = useAppSelector((state) => state.cart);
+  const { mainService } = useAppSelector((state) => state.home);
   const { timeSlot } = useAppSelector((state) => state?.home);
+  const [services, setServices] = useState([]);
 
   const dispatch = useAppDispatch();
 
-  const onPressArrow = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setExpanded(!expanded);
-  };
+  useEffect(() => {
+    setServices(mainService);
+    if (Object?.values(expanded)?.length == 0 && mainService?.length) {
+      setExpanded({ [mainService[0]?.service_name]: true });
+    }
+  }, [mainService]);
 
   useEffect(() => {
     async function getDatesList() {
@@ -104,9 +113,20 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
       };
       dispatch(getExpertAvailability(obj));
     }
+    getMainService();
     getDatesList();
     getCart();
   }, []);
+
+  const getMainService = async () => {
+    let obj = {
+      onSuccess: () => {},
+      onFailure: (Err) => {
+        console.log("Errr in Offer", Err);
+      },
+    };
+    dispatch(getMainServices(obj));
+  };
 
   useEffect(() => {
     if (selectedService?.length) {
@@ -265,6 +285,14 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     setBookTime(bookDates);
   };
 
+  const onPressArrow = (item) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    setExpanded((prevExpandedItems) => ({
+      ...prevExpandedItems,
+      [item.service_name]: !prevExpandedItems[item.service_name],
+    }));
+  };
+
   const onPressAddService = (item) => {
     setSelectService(item);
     setVisible(!visible);
@@ -272,31 +300,49 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
 
   return (
     <View key={index}>
-      <TouchableOpacity onPress={onPressArrow} style={styles.headerRowStyle}>
-        <Text style={styles.titleTextStyle}>{"Services"}</Text>
-        <View style={{ transform: [{ rotate: expanded ? "0deg" : "180deg" }] }}>
-          <ArrowUp />
-        </View>
-      </TouchableOpacity>
-      {expanded ? (
-        <FlatList
-          data={service}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => {
-            return (
-              <ServiceInnerItem
-                data={item}
-                key={index}
-                baseUrl={baseUrl}
-                actionId={actionId}
-                index={index}
-                onPressApply={(item) => onPressAddService(item)}
-                onPressDelete={(item) => onPressDelete(item)}
-              />
-            );
-          }}
-        />
-      ) : null}
+      <FlatList
+        data={services}
+        renderItem={({ item: items, index }) => {
+          const isExpanded = expanded[items?.service_name];
+          return (
+            <>
+              <TouchableOpacity
+                onPress={() => onPressArrow(items)}
+                style={styles.headerRowStyle}
+              >
+                <Text style={styles.titleTextStyle}>{items?.service_name}</Text>
+                <View
+                  style={{
+                    transform: [{ rotate: isExpanded ? "0deg" : "180deg" }],
+                  }}
+                >
+                  <ArrowUp />
+                </View>
+              </TouchableOpacity>
+              {isExpanded ? (
+                <FlatList
+                  data={service}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => {
+                    return items?.service_name ==
+                      item?.service_id?.service_name ? (
+                      <ServiceInnerItem
+                        data={item}
+                        key={index}
+                        baseUrl={baseUrl}
+                        actionId={actionId}
+                        index={index}
+                        onPressApply={(item) => onPressAddService(item)}
+                        onPressDelete={(item) => onPressDelete(item)}
+                      />
+                    ) : null;
+                  }}
+                />
+              ) : null}
+            </>
+          );
+        }}
+      />
       <SelectDateModal
         visible={visible}
         close={setVisible}
@@ -307,6 +353,8 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         times={times}
         selectedDateIndex={selectedDateIndex}
         selectedTimeIndex={selectedTimeIndex}
+        DateItem_style={styles.dateStyle}
+        scrollEnabled={false}
         title={
           "Please select Date and Time for this Service from available slots"
         }
@@ -410,6 +458,10 @@ const styles = StyleSheet.create({
   selectedTime: {
     ...commonFontStyle(fontFamily.medium, 10, colors.grey_21),
     marginTop: hp(8),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });
 

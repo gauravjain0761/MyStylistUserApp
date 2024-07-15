@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 14, colors.black),
   },
   dayTextStyle: {
-    ...commonFontStyle(fontFamily.bold, 22, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 22, colors.black),
   },
   items_separators: {
     width: wp(13),

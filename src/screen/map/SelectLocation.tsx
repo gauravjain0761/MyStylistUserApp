@@ -57,8 +57,7 @@ const SelectLocation = ({}) => {
     let obj = {
       isLoading: true,
       data: {
-        userId: userInfo._id,
-        // userId: "65eed0259e6593d24b2a5210",
+        userId: userInfo?._id,
       },
       onSuccess: (responce) => {
         // getLocation();

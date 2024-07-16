@@ -74,6 +74,7 @@ import {
 import {
   COORD,
   IS_LOADING,
+  LOCATION,
   SELECTED_SERVICE,
   TIME_SLOT,
 } from "../../actions/dispatchTypes";
@@ -143,6 +144,8 @@ const Home = () => {
   const [ratingItem, setRatingItem] = useState<any>({});
   const [selectedService, setSelectedService] = useState<any>([]);
   const [selectedServiceModal, setSelectedServiceModal] = useState(false);
+  const [imageModal, setImageModal] = useState(false);
+  const [image, setImage] = useState([]);
   const { selectedService: cartSelectedService } = useAppSelector(
     (state) => state?.cart
   );
@@ -418,6 +421,7 @@ const Home = () => {
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
     Status ? setLocationModal(false) : setLocationModal(true);
+    dispatch({ type: LOCATION, payload: Status });
     setValue(Status);
   };
 
@@ -911,6 +915,11 @@ const Home = () => {
     dispatch(getUsersByLocation(obj));
   };
 
+  const onPressImages = (item: any) => {
+    setImage(item?.user_profile_images);
+    setImageModal(!imageModal);
+  };
+
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
       <LocationModal
@@ -953,7 +962,7 @@ const Home = () => {
               inactiveSlideScale={2}
               renderItem={({ item }: any) => {
                 return (
-                  <View style={styles?.carousel_img_container}>
+                  <View>
                     <FastImage
                       source={{
                         uri: item?.imageUrl + "/" + item?.fileName,
@@ -1196,6 +1205,7 @@ const Home = () => {
                     barberdetailscontinerStyle={
                       styles.barberdetailscontinerStyle
                     }
+                    onPressImages={() => onPressImages(item)}
                   />
                 );
               }}
@@ -1399,6 +1409,58 @@ const Home = () => {
         />
 
         <Modals
+          visible={imageModal}
+          close={setImageModal}
+          containStyle={styles.imgmodalcontainStyle}
+          containerStyle={styles.imgcontainer_style}
+          contain={
+            <View>
+              <View style={styles.modal_carousel_img}>
+                <Carousel
+                  layout={"default"}
+                  data={image}
+                  sliderWidth={wp(320)}
+                  itemWidth={wp(320)}
+                  itemHeight={hp(573)}
+                  sliderHeight={hp(573)}
+                  inactiveSlideScale={1}
+                  autoplay={false}
+                  renderItem={({ item }: any) => {
+                    return (
+                      <View style={styles?.carousel_img_container}>
+                        <FastImage
+                          source={{
+                            uri: api?.IMG_URL_2 + "/" + item?.image,
+                            priority: FastImage.priority.high,
+                          }}
+                          style={[
+                            {
+                              height: hp(573),
+                              width: wp(320),
+                            },
+                          ]}
+                          resizeMode="cover"
+                        />
+                      </View>
+                    );
+                  }}
+                  onSnapToItem={onSnapToItem}
+                />
+              </View>
+              <Pagination
+                dotsLength={images?.length}
+                activeDotIndex={activeIndex}
+                containerStyle={styles?.pagination_container}
+                dotStyle={styles?.dotStyle}
+                inactiveDotStyle={styles?.inactiveDotStyle}
+                inactiveDotScale={1}
+                dotContainerStyle={styles?.dotContainerStyle}
+              />
+            </View>
+          }
+        />
+
+        <Modals
           isIcon
           visible={reviewModal}
           close={setReviewModal}
@@ -1477,8 +1539,14 @@ const styles = StyleSheet.create({
   carousel_img: {
     width: "100%",
     height: hp(467),
+    backgroundColor: colors.grey_19,
   },
-  carousel_img_container: {},
+  carousel_img_container: {
+    overflow: "hidden",
+    backgroundColor: colors.grey_19,
+    height: hp(573),
+    width: wp(320),
+  },
   pagination_container: {
     justifyContent: "center",
     alignSelf: "center",
@@ -1770,5 +1838,22 @@ const styles = StyleSheet.create({
   dateStyle: {
     width: wp(50),
     height: hp(60),
+  },
+  modal_carousel_img: {
+    width: wp(320),
+    borderRadius: 10,
+    overflow: "hidden",
+    alignSelf: "center",
+  },
+  imgmodalcontainStyle: {
+    paddingHorizontal: 0,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    paddingVertical: 0,
+    backgroundColor: "transparent",
+  },
+  imgcontainer_style: {
+    justifyContent: "center",
+    alignSelf: "center",
   },
 });

@@ -62,3 +62,4 @@ export const GET_CHATS_PARTICIPANTS = "GET_CHATS_PARTICIPANTS";
 
 // Address
 export const GET_ADDRESS_LIST = "GET_ADDRESS_LIST";
+export const LOCATION = "LOCATION";

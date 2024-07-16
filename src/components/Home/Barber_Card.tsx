@@ -45,6 +45,7 @@ type props = {
   isOtherWayLocation?: boolean;
   location?: string;
   ratingdisabled?: boolean;
+  onPressImages?: () => void;
 };
 const Barber_Card = ({
   data,
@@ -68,6 +69,7 @@ const Barber_Card = ({
   isOtherWayLocation,
   location,
   ratingdisabled,
+  onPressImages = () => {},
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -92,7 +94,10 @@ const Barber_Card = ({
                   inactiveSlideScale={1}
                   renderItem={({ item }: any) => {
                     return (
-                      <View style={styles?.carousel_img_container}>
+                      <TouchableOpacity
+                        onPress={onPressImages}
+                        style={styles?.carousel_img_container}
+                      >
                         <FastImage
                           source={{
                             uri: featured_image_url + "/" + item?.image,
@@ -101,7 +106,7 @@ const Barber_Card = ({
                           style={styles?.carousel_img}
                           resizeMode="cover"
                         />
-                      </View>
+                      </TouchableOpacity>
                     );
                   }}
                   onSnapToItem={onSnapToItem}
@@ -189,7 +194,10 @@ const Barber_Card = ({
                   inactiveSlideScale={1}
                   renderItem={({ item }: any) => {
                     return (
-                      <View style={styles?.carousel_img_container}>
+                      <TouchableOpacity
+                        onPress={onPressImages}
+                        style={styles?.carousel_img_container}
+                      >
                         <FastImage
                           source={{
                             uri: featured_image_url + "/" + item?.image,
@@ -198,7 +206,7 @@ const Barber_Card = ({
                           style={[styles?.carousel_img, carouselitemHeight]}
                           resizeMode="cover"
                         />
-                      </View>
+                      </TouchableOpacity>
                     );
                   }}
                   onSnapToItem={onSnapToItem}

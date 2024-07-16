@@ -2,24 +2,24 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "assets/fonts/clarika-pro-geometric-regular.ttf",
-      "sha1": "830349530602a0e2a0be32deeeee1197cd61cc40"
+      "path": "assets/fonts/clarika-pro-geo-metric-semi-bold.ttf",
+      "sha1": "387e2fa49795db310f80499b52d8148ab866073d"
     },
     {
-      "path": "assets/fonts/clarika_pro-geometric_bold.ttf",
+      "path": "assets/fonts/clarika-pro-geometric-bold.ttf",
       "sha1": "cb387b869469b6940f1c0a664763049a44fdd5ea"
     },
     {
-      "path": "assets/fonts/clarika_pro_geometric_extraBold.ttf",
+      "path": "assets/fonts/clarika-pro-geometric-extraBold.ttf",
       "sha1": "41380b865f807a33bbf3c1fa794b0b11b0bf0af6"
     },
     {
-      "path": "assets/fonts/clarika_pro_geometric_medium.ttf",
+      "path": "assets/fonts/clarika-pro-geometric-medium.ttf",
       "sha1": "a1a149f3139a5803839837c1c9ace903380669d2"
     },
     {
-      "path": "assets/fonts/clarika_pro_geo_metric_semi_bold.ttf",
-      "sha1": "387e2fa49795db310f80499b52d8148ab866073d"
+      "path": "assets/fonts/clarika-pro-geometric-regular.ttf",
+      "sha1": "830349530602a0e2a0be32deeeee1197cd61cc40"
     }
   ]
 }

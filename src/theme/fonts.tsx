@@ -16,8 +16,8 @@ export function commonFontStyle(
 
 export const fontFamily = {
   regular: "clarika-pro-geometric-regular",
-  bold: "clarika_pro-geometric_bold",
-  extra_bold: "clarika_pro_geometric_extraBold",
-  medium: "clarika_pro_geometric_medium",
-  semi_bold: "clarika_pro_geo_metric_semi_bold",
+  bold: "clarika-pro-geometric-bold",
+  extra_bold: "clarika-pro-geometric-extraBold",
+  medium: "clarika-pro-geometric-medium",
+  semi_bold: "clarika-pro-geo-metric-semi-bold",
 };

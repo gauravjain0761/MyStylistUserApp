@@ -279,8 +279,7 @@ const styles = StyleSheet.create({
   search_icon: {
     width: wp(24),
     height: wp(24),
-    // marginLeft: wp(16),
-    top: hp(10),
+    top: Platform.OS === "ios" ? hp(5) : hp(10),
   },
   input: {
     marginLeft: wp(5),

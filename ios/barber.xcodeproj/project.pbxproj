@@ -8,18 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* BarberTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BarberTests.m */; };
+		0A1EA316A3754C53A82E5A8C /* clarika-pro-geo-metric-semi-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-Barber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */; };
+		0EF3AF067DB040BE90174EA6 /* clarika-pro-geometric-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BB3648A92B94D5A94EE16B1 /* clarika-pro-geometric-regular.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		159D214093174FE68ED7C001 /* clarika-pro-geometric-extraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */; };
 		1F06D3552BBD8C1A00D05DC7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F06D3542BBD8C1A00D05DC7 /* GoogleService-Info.plist */; };
 		7699B88040F8A987B510C191 /* libPods-Barber-BarberTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */; };
-		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		0EF3AF067DB040BE90174EA6 /* clarika-pro-geometric-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3BB3648A92B94D5A94EE16B1 /* clarika-pro-geometric-regular.ttf */; };
-		0A1EA316A3754C53A82E5A8C /* clarika-pro-geo-metric-semi-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */; };
-		CFE4E0B9D6634249817B8162 /* clarika-pro-geometric-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */; };
-		159D214093174FE68ED7C001 /* clarika-pro-geometric-extraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */; };
 		7EC2B584C252407DBFB4F888 /* clarika-pro-geometric-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 62A48E81EBC74C8AA901CEAE /* clarika-pro-geometric-medium.ttf */; };
+		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		CFE4E0B9D6634249817B8162 /* clarika-pro-geometric-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,27 +36,27 @@
 		00E356EE1AD99517003FC87E /* BarberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BarberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* BarberTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BarberTests.m; sourceTree = "<group>"; };
+		0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geo-metric-semi-bold.ttf"; path = "../assets/fonts/clarika-pro-geo-metric-semi-bold.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Barber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Barber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Barber/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Barber/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Barber/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Barber/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Barber/main.m; sourceTree = "<group>"; };
+		13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-extraBold.ttf"; path = "../assets/fonts/clarika-pro-geometric-extraBold.ttf"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Barber-BarberTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F06D3542BBD8C1A00D05DC7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F06D3562BBD8E2F00D05DC7 /* Barber.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Barber.entitlements; path = Barber/Barber.entitlements; sourceTree = "<group>"; };
+		2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-bold.ttf"; path = "../assets/fonts/clarika-pro-geometric-bold.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Barber.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber.debug.xcconfig"; path = "Target Support Files/Pods-Barber/Pods-Barber.debug.xcconfig"; sourceTree = "<group>"; };
+		3BB3648A92B94D5A94EE16B1 /* clarika-pro-geometric-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-regular.ttf"; path = "../assets/fonts/clarika-pro-geometric-regular.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Barber.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber.release.xcconfig"; path = "Target Support Files/Pods-Barber/Pods-Barber.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Barber-BarberTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber-BarberTests.debug.xcconfig"; path = "Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Barber.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		62A48E81EBC74C8AA901CEAE /* clarika-pro-geometric-medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-medium.ttf"; path = "../assets/fonts/clarika-pro-geometric-medium.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Barber/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Barber-BarberTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber-BarberTests.release.xcconfig"; path = "Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		3BB3648A92B94D5A94EE16B1 /* clarika-pro-geometric-regular.ttf */ = {isa = PBXFileReference; name = "clarika-pro-geometric-regular.ttf"; path = "../assets/fonts/clarika-pro-geometric-regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */ = {isa = PBXFileReference; name = "clarika-pro-geo-metric-semi-bold.ttf"; path = "../assets/fonts/clarika-pro-geo-metric-semi-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */ = {isa = PBXFileReference; name = "clarika-pro-geometric-bold.ttf"; path = "../assets/fonts/clarika-pro-geometric-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */ = {isa = PBXFileReference; name = "clarika-pro-geometric-extraBold.ttf"; path = "../assets/fonts/clarika-pro-geometric-extraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		62A48E81EBC74C8AA901CEAE /* clarika-pro-geometric-medium.ttf */ = {isa = PBXFileReference; name = "clarika-pro-geometric-medium.ttf"; path = "../assets/fonts/clarika-pro-geometric-medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */

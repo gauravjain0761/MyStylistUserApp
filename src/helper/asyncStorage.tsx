@@ -12,6 +12,7 @@ export const asyncKeys = {
   Coord: "@coord",
   cartId: "@cart_id",
   device_token: "@device_token",
+  isAddressed: "@is_addressed",
 };
 
 export const clearAsync = async () => {
@@ -21,6 +22,7 @@ export const clearAsync = async () => {
     asyncKeys.notifiaction_data,
     asyncKeys.location,
     asyncKeys.cartId,
+    asyncKeys.isAddressed,
   ]);
 };
 
@@ -123,6 +125,19 @@ export const getAsyncDevice_token = async () => {
   const device_token = await AsyncStorage.getItem(asyncKeys.device_token);
   if (device_token) {
     return device_token;
+  } else {
+    return null;
+  }
+};
+
+export const setAsyncIsAddressed = async (data: any) => {
+  await AsyncStorage.setItem(asyncKeys.isAddressed, JSON.stringify(data));
+};
+
+export const getAsyncIsAddressed = async () => {
+  const isAddressed = await AsyncStorage.getItem(asyncKeys.isAddressed);
+  if (isAddressed) {
+    return JSON.parse(isAddressed);
   } else {
     return null;
   }

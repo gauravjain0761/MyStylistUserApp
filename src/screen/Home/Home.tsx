@@ -80,9 +80,11 @@ import {
 } from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
+  getAsyncIsAddressed,
   getAsyncLocation,
   getAsyncUserInfo,
   setAsyncCoord,
+  setAsyncIsAddressed,
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
@@ -103,6 +105,7 @@ import { debounce, lowerFirst } from "lodash";
 import FilterHome from "../../components/common/FilterHome";
 import ServiceSelect from "../../components/common/ServiceSelect";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // 7 to 11
 
@@ -377,6 +380,7 @@ const Home = () => {
         await getAddress(
           response,
           async (result: any) => {
+            SetLocation(result, response);
             result?.results?.length
               ? await setAsyncLocation(result?.results?.[0]?.formatted_address)
               : await setAsyncLocation("Mohali,Punjab");
@@ -394,7 +398,6 @@ const Home = () => {
           await setAsyncCoord(coord);
           dispatch({ type: COORD, payload: coord });
           dispatch({ type: IS_LOADING, payload: false });
-          SetLocation();
           setLocationModal(false);
         });
       },
@@ -408,9 +411,38 @@ const Home = () => {
     getCurrentLocation();
   }, []);
 
-  const SetLocation = async () => {
-    const coord = await getAsyncCoord();
-    dispatch(setLocation(coord));
+  const SetLocation = async (item, responce: any) => {
+    let userInfo = await getAsyncUserInfo();
+    let addres = item?.results?.[0]?.address_components?.filter(
+      (items) =>
+        items?.types[0] == "sublocality" || items?.types[0] == "postal_code"
+    );
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+        addressData: {
+          addressType: "Home",
+          houseNumber: item?.results?.[0]?.formatted_address,
+          sector: addres?.[0]?.short_name,
+          pinCode: addres?.[1]?.short_name,
+          landmark: "",
+          location: {
+            type: "Point",
+            coordinates: [responce?.latitude, responce?.longitude],
+          },
+          isDefault: true,
+        },
+      },
+      onSuccess: async (res) => {
+        await setAsyncIsAddressed(false);
+      },
+      onFailure: async (Err: any) => {
+        await setAsyncIsAddressed(true);
+        console.log("Errr", Err);
+      },
+    };
+    let address = await getAsyncIsAddressed();
+    address && item?.results?.length ? dispatch(setLocation(obj)) : null;
   };
 
   const LocationAllow = async (city: any) => {

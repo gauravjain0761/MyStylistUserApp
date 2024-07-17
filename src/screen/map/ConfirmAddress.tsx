@@ -10,6 +10,7 @@ import {
   Platform,
   ActivityIndicator,
   FlatList,
+  ScrollView,
 } from "react-native";
 import { colors } from "../../theme/color";
 import { BackHeader } from "../../components";
@@ -19,69 +20,39 @@ import { icons, images } from "../../theme/icons";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { hp, wp } from "../../helper/globalFunction";
 import { SearchIcon2 } from "../../theme/SvgIcon";
-import { useAppSelector } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { api } from "../../helper/apiConstants";
 import {
   getAddress,
   requestLocationPermission,
 } from "../../helper/locationHandler";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { setLocation } from "../../actions";
+import { useNavigation } from "@react-navigation/native";
 
 const ConfirmAddress = () => {
   const { location } = useAppSelector((state) => state?.address);
   const { coord } = useAppSelector((state) => state?.location);
   const [coords, setcoords] = useState(coord);
   const [value, setValue] = useState("");
-
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [region, setRegion] = useState({
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
+  const [address, setAddress] = useState([]);
+  const dispatch = useAppDispatch();
+  const { goBack } = useNavigation();
 
   const OLA_API_KEY = api?.MAP_KEY;
   const OLA_API_URL = "https://api.olamaps.io/places/v1/autocomplete";
 
-  const fetchSuggestions = async (input) => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `${OLA_API_URL}?input=${input}&api_key=${OLA_API_KEY}`
-      );
-      const data = await response.json();
-      setSuggestions(data.predictions);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSelectSuggestion = (suggestion) => {
-    // Here you would update the map region and marker based on the selected suggestion
-    // For demonstration purposes, we're using hardcoded coordinates
-    setRegion({
-      latitude: suggestion.geometry.location.lat,
-      longitude: suggestion.geometry.location.lng,
-      latitudeDelta: 0.0922,
-      longitudeDelta: 0.0421,
-    });
-    setSuggestions([]);
-    setQuery(suggestion.description);
-  };
-
   const locations = {
     latitude: Number(coords?.latitude || 37.4220936),
-    latitudeDelta: 0.0922,
+    latitudeDelta: 0.0822,
     longitude: Number(coords?.longitude || -122.083922),
-    longitudeDelta: 0.0421,
+    longitudeDelta: 0.0821,
   };
   const [position, setPostion] = useState(locations);
-  const onPressEdit = () => {};
 
   useEffect(() => {
     getCurreentLocation();
@@ -103,6 +74,7 @@ const ConfirmAddress = () => {
         locations,
         (response: any) => {
           setPostion(locations);
+          setAddress(response);
           setValue(response?.results[0]?.formatted_address);
         },
         (err) => {
@@ -112,19 +84,100 @@ const ConfirmAddress = () => {
     });
   };
 
+  const onPressEdit = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let addres = address?.results?.[0]?.address_components?.filter(
+      (items) =>
+        items?.types[0] == "sublocality" || items?.types[0] == "postal_code"
+    );
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+        addressData: {
+          addressType: "Home",
+          houseNumber: address?.results?.[0]?.formatted_address,
+          sector: addres?.[0]?.short_name,
+          pinCode: addres?.[1]?.short_name,
+          landmark: "",
+          location: {
+            type: "Point",
+            coordinates: [coords?.latitude, coords?.longitude],
+          },
+          isDefault: true,
+        },
+      },
+      onSuccess: () => {
+        goBack();
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errrr", Errr);
+      },
+    };
+    dispatch(setLocation(obj));
+  };
+
+  const fetchSuggestions = async (input) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${OLA_API_URL}?location=${coords?.latitude},${coords?.longitude}&input=${input}&api_key=${OLA_API_KEY}`
+      );
+      const data = await response.json();
+      setSuggestions(data.predictions);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSelectSuggestion = async (suggestion) => {
+    setPostion({
+      latitude: suggestion?.geometry?.location?.lat,
+      longitude: suggestion?.geometry?.location?.lng,
+      latitudeDelta: 0.0822,
+      longitudeDelta: 0.0821,
+    });
+    setcoords({
+      latitude: suggestion?.geometry?.location?.lat,
+      longitude: suggestion?.geometry?.location?.lng,
+    });
+    setSuggestions([]);
+    await getAddress(
+      {
+        latitude: suggestion?.geometry?.location?.lat,
+        longitude: suggestion?.geometry?.location?.lng,
+        latitudeDelta: 0.0822,
+        longitudeDelta: 0.0821,
+      },
+      (response: any) => {
+        setAddress(response);
+      },
+      (err) => {
+        console.log("map", err);
+      }
+    );
+    setValue(suggestion.description);
+    setQuery(suggestion.description);
+  };
+
   const handleMapPress = async (event: MapPressEvent) => {
     event.persist();
     await getAddress(
       event.nativeEvent.coordinate,
       (response: any) => {
+        setAddress(response);
+
         setValue(response?.results[0]?.formatted_address);
         const newlocations = {
-          latitude: Number(event.nativeEvent.coordinate.latitude || 37.4220936),
-          latitudeDelta: 0.0922,
-          longitude: Number(
-            event.nativeEvent.coordinate.longitude || -122.083922
+          latitude: Number(
+            event?.nativeEvent?.coordinate?.latitude || 37.4220936
           ),
-          longitudeDelta: 0.0421,
+          latitudeDelta: 0.0822,
+          longitude: Number(
+            event?.nativeEvent?.coordinate?.longitude || -122.083922
+          ),
+          longitudeDelta: 0.0821,
         };
         setPostion(newlocations);
         setcoords({
@@ -151,51 +204,46 @@ const ConfirmAddress = () => {
           followsUserLocation={true}
           style={styles.mapContainer}
           zoomEnabled
+          toolbarEnabled={true}
           loadingEnabled={true}
+          showsUserLocation
           onPress={handleMapPress}
         >
           <Marker flat={false} coordinate={position} />
         </MapView>
-        <GooglePlacesAutocomplete
-          placeholder={strings["Search for area, street name..."]}
-          fetchDetails={true}
-          styles={{
-            textInput: {
-              width: "100%",
-              backgroundColor: colors?.white,
-              height: "100%",
-            },
-            container: {
-              backgroundColor: colors?.white,
-              borderWidth: 1,
-              borderColor: colors?.gray_border,
-              borderRadius: wp(8),
-              justifyContent: "center",
-              paddingHorizontal: wp(10),
-              marginVertical: hp(15),
-              position: "absolute",
-              width: "90%",
-              alignSelf: "center",
-              alignItems: "center",
-            },
-          }}
-          textInputProps={styles?.searchTextStyle}
-          onPress={(data, details = null) => {
-            console.log(data, details);
-          }}
-          renderLeftButton={() => (
-            <View style={styles?.search_icon}>
-              <SearchIcon2 />
+        <View style={styles.autoSearch}>
+          <View style={styles?.search_box}>
+            <SearchIcon2 />
+            <View style={styles?.input}>
+              <TextInput
+                style={styles.searchTextStyle}
+                value={query}
+                onChangeText={(text) => {
+                  setQuery(text);
+                  if (text.length > 1) {
+                    fetchSuggestions(text);
+                  } else {
+                    setSuggestions([]);
+                  }
+                }}
+                placeholderTextColor={colors.grey_17}
+                placeholder={strings["Search for area, street name..."]}
+              />
             </View>
-          )}
-          query={{
-            key: api?.MAP_KEY,
-            language: "en",
-            type: "establishment",
-            components: "country:in",
-            radius: 50000,
-          }}
-        />
+          </View>
+          <FlatList
+            data={suggestions}
+            style={styles.listContainerStyle}
+            keyboardShouldPersistTaps={"handled"}
+            renderItem={({ item, index }: any) => {
+              return (
+                <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
+                  <Text style={styles.suggestionItem}>{item?.description}</Text>
+                </TouchableOpacity>
+              );
+            }}
+          />
+        </View>
       </View>
 
       <View style={styles.bottomStyle}>
@@ -279,10 +327,11 @@ const styles = StyleSheet.create({
   search_icon: {
     width: wp(24),
     height: wp(24),
-    top: Platform.OS === "ios" ? hp(5) : hp(10),
+    marginLeft: wp(16),
   },
   input: {
     marginLeft: wp(5),
+    width: "100%",
   },
   search_box: {
     backgroundColor: colors?.white,
@@ -294,14 +343,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     paddingHorizontal: wp(10),
-    marginHorizontal: wp(20),
-    marginVertical: hp(15),
-    position: "absolute",
-    width: "90%",
-    alignSelf: "center",
+    marginTop: hp(15),
+    width: "100%",
   },
   searchTextStyle: {
     ...commonFontStyle(fontFamily.regular, 15, colors.grey_17),
+    top: 1,
+    height: hp(41),
+    width: "90%",
   },
   mapViewContainer: {
     flex: 1,
@@ -317,6 +366,20 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    ...commonFontStyle(fontFamily.regular, 15, colors.grey_17),
+  },
+  autoSearch: {
+    position: "absolute",
+    width: "90%",
+    alignSelf: "center",
+  },
+  listContainerStyle: {
+    backgroundColor: colors?.white,
+    marginTop: hp(10),
+    maxHeight: hp(250),
+    zIndex: 1,
+    borderRadius: wp(8),
+    overflow: "hidden",
   },
 });
 

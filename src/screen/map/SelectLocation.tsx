@@ -19,7 +19,7 @@ import {
   RightArrowIcon,
   SearchIcon2,
 } from "../../theme/SvgIcon";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { images } from "../../theme/icons";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -31,8 +31,6 @@ import {
   updateLocation,
 } from "../../actions";
 import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
-import { requestLocationPermission } from "../../helper/locationHandler";
-import { err } from "react-native-svg";
 
 const SelectLocation = ({}) => {
   const dispatch = useAppDispatch();
@@ -46,11 +44,11 @@ const SelectLocation = ({}) => {
   const [pincode, setPincode] = useState("");
   const [type, setType] = useState("Add");
   const [editData, seteditData] = useState({});
+  const isFocused = useIsFocused()
 
   useEffect(() => {
     getList();
-    console.log("ji");
-  }, []);
+  }, [isFocused]);
 
   const getList = async () => {
     let userInfo = await getAsyncUserInfo();

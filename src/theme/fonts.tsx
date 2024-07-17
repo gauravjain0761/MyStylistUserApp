@@ -1,4 +1,4 @@
-import { TextStyle } from "react-native";
+import { Platform, TextStyle } from "react-native";
 import { fontSize } from "../helper/globalFunction";
 
 export function commonFontStyle(
@@ -15,9 +15,24 @@ export function commonFontStyle(
 }
 
 export const fontFamily = {
-  regular: "Clarika Pro Geometric Medium",
-  bold: "Clarika Pro Geometric Heavy",
-  extra_bold: "Clarika Pro Geometric Black",
-  medium: "Clarika Pro Geometric Demi",
-  semi_bold: "Clarika Pro Geometric Bold",
+  regular:
+    Platform?.OS === "ios"
+      ? "Clarika Pro Geometric Medium"
+      : "clarika-pro-geometric-regular",
+  bold:
+    Platform?.OS === "ios"
+      ? "Clarika Pro Geometric Heavy"
+      : "clarika-pro-geometric-bold",
+  extra_bold:
+    Platform?.OS === "ios"
+      ? "Clarika Pro Geometric Black"
+      : "clarika-pro-geometric-extraBold",
+  medium:
+    Platform?.OS === "ios"
+      ? "Clarika Pro Geometric Demi"
+      : "clarika-pro-geometric-medium",
+  semi_bold:
+    Platform?.OS === "ios"
+      ? "Clarika Pro Geometric Bold"
+      : "clarika-pro-geo-metric-semi-bold",
 };

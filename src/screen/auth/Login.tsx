@@ -37,7 +37,10 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import messaging from "@react-native-firebase/messaging";
 import { Loader } from "../../components";
-import { setAsyncDevice_token } from "../../helper/asyncStorage";
+import {
+  setAsyncDevice_token,
+  setAsyncIsAddressed,
+} from "../../helper/asyncStorage";
 
 const Login: FC = () => {
   const [phoneNum, setphoneNum] = useState<string>("");
@@ -49,6 +52,14 @@ const Login: FC = () => {
   const [selectedCity, setSelectedCity] = useState<any>({});
   const [deviceToken, setDeviceToken] = useState<string>("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setAddress();
+  }, []);
+
+  const setAddress = async () => {
+    await setAsyncIsAddressed(true);
+  };
 
   async function requestNotificationUserPermission() {
     if (Platform.OS === "android") {

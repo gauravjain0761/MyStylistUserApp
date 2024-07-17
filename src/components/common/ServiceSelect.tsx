@@ -28,10 +28,6 @@ const ServiceSelect = ({
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View>
         <Text style={styles.title}>{service}</Text>
-        <View style={styles.timecomponent}>
-          <GreenClock />
-          <Text style={styles.time}>{"30-40 Min."}</Text>
-        </View>
       </View>
       {type == "delete" ? (
         <TouchableOpacity onPress={onPress}>

@@ -174,10 +174,10 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
       timeSlot || DateString,
       "YYYY-MM-DD hh:mm A"
     ).toISOString();
-    let subServiceStartTime = moment(momentDate);
+
     let timeEntries = [];
+    let updatedTimeSlot = [];
     let selectedData = selectedService?.flatMap((datas) => {
-      let updatedTimeSlot = subServiceStartTime.toISOString();
       let selcted = service
         ?.map((item) => {
           if (item?.sub_service_id?._id == datas?._id) {
@@ -206,14 +206,6 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         ?.filter((service) => service);
       return selcted;
     });
-    const calculateTotalMinutes = (entries) => {
-      return entries.reduce((total, entry) => {
-        return total + entry.hours * 60 + entry.minutes;
-      }, 0);
-    };
-    const totalMinutes = calculateTotalMinutes(timeEntries);
-    const slotsOf15Minutes = Math.floor(totalMinutes / 15);
-    console.log("slotsOf15Minutes slotsOf15Minutes", slotsOf15Minutes);
     let timeforcustom = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
     let customSelect = {
       actionId: selectService?.service_id?._id,

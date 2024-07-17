@@ -141,9 +141,6 @@ export const getAddress = async (
   onFailure?: any
 ) => {
   const headersList = {};
-  console.log(
-    `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${region?.latitude},${region?.longitude}&api_key=${api?.MAP_KEY}`
-  );
   fetch(
     `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${region?.latitude},${region?.longitude}&api_key=${api?.MAP_KEY}`,
     {

@@ -17,16 +17,15 @@ export const setLocation =
     dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,
-      url: api.location,
+      url: api.adduserAddress,
       headers: headers,
-      data: request,
+      data: request?.data,
     })
       .then(async (response: any) => {
         if (response?.status == 200) {
-          const coord = await getAsyncCoord();
-          console.log("Post Location API RES", response?.data);
           dispatch({ type: IS_LOADING, payload: false });
         }
+        if (request.onSuccess) request.onSuccess(response);
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });

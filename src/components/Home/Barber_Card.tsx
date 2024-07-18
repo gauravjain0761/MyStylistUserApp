@@ -310,7 +310,13 @@ const Barber_Card = ({
                     resizeMode="contain"
                     style={{ width: "100%" }}
                   />
-                  <View style={{ ...styles.rowSpaceStyle, gap: wp(15) }}>
+                  <View
+                    style={{
+                      ...styles.rowSpaceStyle,
+                      justifyContent: "space-between",
+                      gap: wp(5),
+                    }}
+                  >
                     <View style={styles.totalcontaier}>
                       <Text style={styles.label}>{"Time"}</Text>
                       <Text
@@ -358,7 +364,6 @@ const styles = StyleSheet.create({
   barber_details_continer: {
     paddingLeft: wp(20),
     justifyContent: "center",
-    width: "100%",
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 23, colors.black),
@@ -474,10 +479,10 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 14, colors.black),
   },
   label: {
-    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 12, colors.dark_grey),
   },
   total: {
-    ...commonFontStyle(fontFamily.regular, 14, colors.black),
+    ...commonFontStyle(fontFamily.regular, 12, colors.black),
   },
   totalcontaier: {
     flexDirection: "row",

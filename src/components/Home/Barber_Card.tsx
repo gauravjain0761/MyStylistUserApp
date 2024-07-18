@@ -21,6 +21,8 @@ import {
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import FastImage from "react-native-fast-image";
+import { images as icons } from "../../theme/icons";
+import moment from "moment";
 
 type props = {
   type: "with Service" | "Without Service";
@@ -46,6 +48,9 @@ type props = {
   location?: string;
   ratingdisabled?: boolean;
   onPressImages?: () => void;
+  Is_show_Price_Time?: boolean;
+  time?: number;
+  total?: number;
 };
 const Barber_Card = ({
   data,
@@ -70,12 +75,19 @@ const Barber_Card = ({
   location,
   ratingdisabled,
   onPressImages = () => {},
+  Is_show_Price_Time = false,
+  time,
+  total,
 }: props) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const onSnapToItem = (index: React.SetStateAction<number>) => {
     setActiveIndex(index);
   };
+
+  const duration = moment.duration(time, "minutes");
+  const hours = Math.floor(duration.asHours());
+  const mins = duration.minutes();
 
   return (
     <>
@@ -172,6 +184,11 @@ const Barber_Card = ({
                   </Text>
                 )}
               </View>
+              <Image
+                source={icons?.dashline}
+                resizeMode="contain"
+                style={{ width: "100%" }}
+              />
               <View style={styles.price_container}>
                 <Text style={styles.price_title}>{service}</Text>
                 <Text style={styles.price_title}>{price}</Text>
@@ -265,20 +282,45 @@ const Barber_Card = ({
                   <Text style={styles.location_title}>{location}</Text>
                 ) : (
                   <Text style={styles.location_title}>
-                    {data?.offers?.[0]?.city?.[0]?.city_name}
-                    {","}
-                    {data?.offers?.[0]?.district?.[0]?.district_name}
-                    {","}
-                    {data?.offers?.[0]?.state?.[0]?.state_name}
+                    {data?.city?.[0]?.city_name}
+                    {", "}
+                    {data?.district?.[0]?.district_name}
+                    {", "}
+                    {data?.state?.[0]?.state_name}
                   </Text>
                 )}
               </View>
               {isNewYearOffer ? (
                 <>
-                  <View style={styles.dashlineStyle} />
+                  <Image
+                    source={icons?.dashline}
+                    resizeMode="contain"
+                    style={{ width: "100%" }}
+                  />
                   <View style={styles.rowSpaceStyle}>
                     <Text style={styles.newofferTextStyle}>{offerName}</Text>
                     <Text style={styles.newofferTextStyle}>{"₹1299"}</Text>
+                  </View>
+                </>
+              ) : null}
+              {Is_show_Price_Time ? (
+                <>
+                  <Image
+                    source={icons?.dashline}
+                    resizeMode="contain"
+                    style={{ width: "100%" }}
+                  />
+                  <View style={{ ...styles.rowSpaceStyle, gap: wp(15) }}>
+                    <View style={styles.totalcontaier}>
+                      <Text style={styles.label}>{"Time"}</Text>
+                      <Text
+                        style={styles.total}
+                      >{`${hours} hr ${mins} min`}</Text>
+                    </View>
+                    <View style={styles.totalcontaier}>
+                      <Text style={styles.label}>{"Total"}</Text>
+                      <Text style={styles.total}>{`₹ ${total}`}</Text>
+                    </View>
                   </View>
                 </>
               ) : null}
@@ -360,6 +402,7 @@ const styles = StyleSheet.create({
     gap: wp(5),
     marginTop: hp(8),
     alignItems: "center",
+    marginBottom: hp(5),
   },
   location_title: {
     ...commonFontStyle(fontFamily.medium, 12, colors.dark_grey),
@@ -409,10 +452,7 @@ const styles = StyleSheet.create({
     paddingTop: hp(10),
     justifyContent: "space-between",
     flexDirection: "row",
-    borderTopWidth: 1,
     marginTop: hp(10),
-    borderTopColor: colors.dashed_boredr,
-    borderStyle: "dashed",
   },
   price_title: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors.dark_grey_1),
@@ -426,10 +466,23 @@ const styles = StyleSheet.create({
   rowSpaceStyle: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     marginTop: hp(3),
+    flexWrap: "wrap",
   },
   newofferTextStyle: {
     ...commonFontStyle(fontFamily.regular, 14, colors.black),
+  },
+  label: {
+    ...commonFontStyle(fontFamily.medium, 14, colors.dark_grey),
+  },
+  total: {
+    ...commonFontStyle(fontFamily.regular, 14, colors.black),
+  },
+  totalcontaier: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: hp(10),
+    gap: wp(5),
   },
 });

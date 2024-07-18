@@ -174,23 +174,16 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
       timeSlot || DateString,
       "YYYY-MM-DD hh:mm A"
     ).toISOString();
-
-    let timeEntries = [];
-    let updatedTimeSlot = [];
     let selectedData = selectedService?.flatMap((datas) => {
       let selcted = service
         ?.map((item) => {
           if (item?.sub_service_id?._id == datas?._id) {
-            timeEntries?.push({
-              hours: item?.time_taken?.hours,
-              minutes: item?.time_taken?.minutes,
-            });
             return {
               actionId: datas?.service_id,
               serviceId: datas?.service_id,
               serviceName: datas?.service_name,
               quantity: 1,
-              timeSlot: updatedTimeSlot,
+              timeSlot: momentDate,
               packageDetails: null,
               subServices: [
                 {
@@ -244,7 +237,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         console.log("ServiceInner Err", Err);
       },
     };
-    // dispatch(addToCart(obj));
+    dispatch(addToCart(obj));
   };
 
   const onPressDelete = async (items) => {

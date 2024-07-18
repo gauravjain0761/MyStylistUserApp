@@ -24,8 +24,8 @@ export const setLocation =
       .then(async (response: any) => {
         if (response?.status == 200) {
           dispatch({ type: IS_LOADING, payload: false });
+          if (request.onSuccess) request.onSuccess(response);
         }
-        if (request.onSuccess) request.onSuccess(response);
       })
       .catch((error) => {
         dispatch({ type: IS_LOADING, payload: false });

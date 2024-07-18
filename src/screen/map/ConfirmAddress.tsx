@@ -30,6 +30,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions";
 import { useNavigation } from "@react-navigation/native";
+import { debounce } from "lodash";
 
 const ConfirmAddress = () => {
   const { location } = useAppSelector((state) => state?.address);
@@ -152,12 +153,12 @@ const ConfirmAddress = () => {
       },
       (response: any) => {
         setAddress(response);
+        setValue(response?.results[0]?.formatted_address);
       },
       (err) => {
-        console.log("map", err);
+        console.log("map Screen", err);
       }
     );
-    setValue(suggestion.description);
     setQuery(suggestion.description);
   };
 
@@ -191,6 +192,15 @@ const ConfirmAddress = () => {
     );
   };
 
+  const textChange = (text: any) => {
+    setQuery(text);
+    if (text.length > 1) {
+      fetchSuggestions(text?.toLowerCase());
+    } else {
+      setSuggestions([]);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Confirm your address"]} />
@@ -219,12 +229,7 @@ const ConfirmAddress = () => {
                 style={styles.searchTextStyle}
                 value={query}
                 onChangeText={(text) => {
-                  setQuery(text);
-                  if (text.length > 1) {
-                    fetchSuggestions(text);
-                  } else {
-                    setSuggestions([]);
-                  }
+                  textChange(text);
                 }}
                 placeholderTextColor={colors.grey_17}
                 placeholder={strings["Search for area, street name..."]}

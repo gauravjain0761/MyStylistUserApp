@@ -121,7 +121,6 @@ const Cart = () => {
           expertId: userInfo?._id,
         },
         onSuccess: (response: any) => {
-          console.log("response", response);
           let data = convertToOutput(response);
           let time = data[0].value;
           setDates(data);
@@ -186,60 +185,73 @@ const Cart = () => {
   };
 
   const onPressBook = async () => {
-    if (selectedDateIndex === null) {
-      infoToast("Please select a date");
-    } else if (selectedTimeIndex === null) {
-      infoToast("Please select a time");
-    } else {
-      setLoading(true);
-      let newobj = cartDetails?.cart?.items.map((item, index) => {
+    setLoading(true);
+    let Service = cartDetails?.cart?.services.flatMap((item, index) => {
+      return item?.subServices?.flatMap((subService, index) => {
         return {
-          service_id: item?.serviceId,
-          service_name: item?.serviceName,
-          price: item?.price,
+          service_id: subService?.subServiceId,
+          service_name: subService?.subServiceName,
+          price: subService?.originalPrice,
         };
       });
-      const serviceTypes = [];
-      const actions = cartDetails?.cart?.items?.map((item, index) => {
-        serviceTypes.push(item?.serviceType);
+    });
+    let Offer = cartDetails?.cart?.offers.flatMap((item, index) => {
+      return item?.subServices?.flatMap((subService, index) => {
         return {
-          actionId: item?.actionId,
-          serviceType: item?.serviceType,
+          service_id: subService?.subServiceId,
+          service_name: subService?.subServiceName,
+          price: subService?.originalPrice,
         };
       });
-      let userInfo = await getAsyncUserInfo();
-      let obj = {
-        data: {
-          bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
-          userId: userInfo?._id,
-          expertId: cartDetails?.cart?.expertId,
-          customerName: cartDetails?.user?.name,
-          services: newobj,
-          actions: actions,
-          serviceType: [...new Set(serviceTypes)],
-          timeSlot: [
-            {
-              timeSlot_id: bookTime?._id,
-              availableDate: date,
-              availableTime: bookTime?.time,
-            },
-          ],
-          paymentType: "COD",
-          notes: "Special requests or notes for the appointment",
-        },
-        onSuccess: (response: any) => {
-          setLoading(false);
-          setTimeout(() => {
-            setIsShowCongrestModal(true);
-          }, 500);
-        },
-        onFailure: (Errr: any) => {
-          infoToast(Errr?.data?.error);
-          setLoading(false);
-        },
+    });
+    let Package = cartDetails?.cart?.packages.map((item, index) => {
+      return {
+        service_id: item?.serviceId,
+        service_name: item?.serviceName,
+        price: item?.price,
       };
-      dispatch(bookAppointment(obj));
-    }
+    });
+    const serviceTypes = [];
+    const actions = cartDetails?.cart?.services?.map((item, index) => {
+      serviceTypes.push("service");
+      return {
+        actionId: item?.actionId,
+        serviceType: "service",
+      };
+    });
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
+        userId: userInfo?._id,
+        expertId: cartDetails?.cart?.expertId,
+        customerName: cartDetails?.user?.name,
+        services: [...Service],
+        actions: actions,
+        serviceType: [...new Set(serviceTypes)],
+        timeSlot: [
+          {
+            timeSlot_id: bookTime?._id,
+            availableDate: date,
+            availableTime: bookTime?.time,
+          },
+        ],
+        paymentType: "COD",
+        notes: "Special requests or notes for the appointment",
+      },
+      onSuccess: (response: any) => {
+        setLoading(false);
+        setTimeout(() => {
+          setIsShowCongrestModal(true);
+        }, 500);
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr Errr", Errr);
+        infoToast(Errr?.data?.error);
+        setLoading(false);
+      },
+    };
+    dispatch(bookAppointment(obj));
   };
 
   const onPressCard = () => {
@@ -625,7 +637,10 @@ const Cart = () => {
             <View style={styles.cardbg}>
               <View style={styles?.topComponent}>
                 <Text style={styles.titleStyle}>{"Payment Details"}</Text>
-                <RowItemValue title="Tax" value={cartDetails?.cart?.tax} />
+                <RowItemValue
+                  title="Tax"
+                  value={cartDetails?.cart?.tax?.toFixed(2)}
+                />
                 <RowItemValue title="Payment Method" value="Cash" />
                 <View style={styles.TotalrowSpaceStyle}>
                   <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>

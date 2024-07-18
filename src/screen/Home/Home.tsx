@@ -102,12 +102,8 @@ import { io } from "socket.io-client";
 import { api } from "../../helper/apiConstants";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce, lowerFirst } from "lodash";
-import FilterHome from "../../components/common/FilterHome";
 import ServiceSelect from "../../components/common/ServiceSelect";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-// 7 to 11
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -850,7 +846,7 @@ const Home = () => {
         dispatch({
           type: SELECTED_SERVICE,
           payload: [
-            ...selectedService[0]?.subServices,
+            ...selectedService?.flatMap((service) => service?.subServices),
             ...uniqueSelectedServices,
           ],
         });
@@ -1222,6 +1218,21 @@ const Home = () => {
               data={barberList || []}
               showsVerticalScrollIndicator={false}
               renderItem={({ item, index }) => {
+                let total = 0;
+                let time = 0;
+                cartSelectedService?.forEach((items) => {
+                  item?.user_service_assignments?.forEach((service) => {
+                    if (items?._id == service?.sub_service_id) {
+                      {
+                        total += service?.price;
+                        time +=
+                          service?.time_taken?.hours * 60 +
+                          service?.time_taken?.minutes;
+                      }
+                    }
+                  });
+                });
+
                 return (
                   <Barber_Card
                     data={item}
@@ -1230,9 +1241,12 @@ const Home = () => {
                     type="Without Service"
                     images={item?.user_profile_images}
                     rating={item.averageRating}
+                    Is_show_Price_Time={selectedService?.length ? true : false}
                     jobs={item?.jobDone}
                     offers={item?.offers[0]?.discount}
                     onPress={() => onPressItem(item)}
+                    time={time}
+                    total={total}
                     onPressRating={() => onPressReviewItem(item)}
                     barberdetailscontinerStyle={
                       styles.barberdetailscontinerStyle

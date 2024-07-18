@@ -44,7 +44,9 @@ const SelectLocation = ({}) => {
   const [pincode, setPincode] = useState("");
   const [type, setType] = useState("Add");
   const [editData, seteditData] = useState({});
-  const isFocused = useIsFocused()
+  const [address, setAddress] = useState(addressList?.addresses);
+  const isFocused = useIsFocused();
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getList();
@@ -192,6 +194,20 @@ const SelectLocation = ({}) => {
     dispatch(deleteAddress(obj));
   };
 
+  const fillterAddress = (data) => {
+    setSearchQuery(data);
+    if (data) {
+      let newdata = address?.filter((item) => {
+        return item?.address?.houseNumber
+          ?.toLowerCase()
+          ?.includes(data?.toLowerCase());
+      });
+      setAddress(newdata);
+    } else {
+      setAddress(addressList?.addresses);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Select a location"]} />
@@ -201,6 +217,8 @@ const SelectLocation = ({}) => {
           <TextInput
             style={styles.searchTextStyle}
             placeholderTextColor={colors.grey_17}
+            value={searchQuery}
+            onChangeText={(e) => fillterAddress(e)}
             placeholder={strings["Search for area, street name..."]}
           />
         </View>
@@ -228,7 +246,7 @@ const SelectLocation = ({}) => {
       </View>
       {addressList?.addresses?.length ? (
         <FlatList
-          data={addressList?.addresses || []}
+          data={address || []}
           renderItem={({ item, index }) => {
             return (
               <AddressItem

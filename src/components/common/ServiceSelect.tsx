@@ -26,9 +26,7 @@ const ServiceSelect = ({
 }: service) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <View>
-        <Text style={styles.title}>{service}</Text>
-      </View>
+      <Text style={styles.title}>{service}</Text>
       {type == "delete" ? (
         <TouchableOpacity onPress={onPress}>
           <SquareTresh />
@@ -62,7 +60,6 @@ const styles = StyleSheet.create({
   },
   title: {
     ...commonFontStyle(fontFamily.semi_bold, 16, colors?.black),
-    marginBottom: hp(9),
   },
   radiobtn: {
     width: wp(22),

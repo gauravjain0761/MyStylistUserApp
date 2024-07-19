@@ -56,6 +56,7 @@ export const ADD_TO_CART = "ADD_TO_CART";
 export const CART_DETAILS = "CAR_TDETAILS";
 export const CART_COUNT = "CART_COUNT";
 export const SELECTED_SERVICE = "SELECTED_SERVICE";
+export const SELECTED_TIME_SLOT = "SELECTED_TIME_SLOT";
 
 // chat
 export const GET_CHATS_PARTICIPANTS = "GET_CHATS_PARTICIPANTS";

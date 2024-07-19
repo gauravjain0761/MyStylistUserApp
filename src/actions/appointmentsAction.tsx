@@ -160,7 +160,6 @@ export const bookAppointment =
     let header = {
       "Content-Type": "application/json",
     };
-
     dispatch({ type: IS_LOADING, payload: true });
     return makeAPIRequest({
       method: POST,

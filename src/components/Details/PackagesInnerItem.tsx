@@ -29,7 +29,11 @@ import {
   getAsyncUserInfo,
   setAsyncCartId,
 } from "../../helper/asyncStorage";
-import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
+import {
+  ADD_TO_CART,
+  CART_DETAILS,
+  SELECTED_TIME_SLOT,
+} from "../../actions/dispatchTypes";
 import SelectDateModal from "../common/SelectDateModal";
 import moment from "moment";
 
@@ -128,23 +132,22 @@ const PackagesInnerItem = ({
 
   const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
-    let DateString = `${selectedDate} ${selectedTime?.time}`;
-    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
-    let subServiceData = data?.service_name?.map((items) => {
-      return {
-        subServiceId: items?.service_id,
-        subServiceName: items?.service_name,
-        originalPrice: items?.total,
-        discountedPrice: 0,
-      };
+    let subServiceData = data?.service_name?.flatMap((items) => {
+      return items?.sub_services?.flatMap((item) => {
+        return {
+          subServiceId: item?.sub_service_id,
+          subServiceName: item?.sub_service_name,
+          originalPrice: item?.price,
+          discountedPrice: 0,
+        };
+      });
     });
     let datas = {
       actionId: data?._id,
       serviceId: data?._id,
       serviceName: data?.package_name,
       originalPrice: data?.totalPrice,
-      discountedPrice: data?.discountedPrice,
-      timeSlot: momentDate,
+      discountedPrice: data?.discountedPrice || 0,
       packageDetails: data?.additional_information,
       subServices: subServiceData,
       quantity: 1,
@@ -152,10 +155,26 @@ const PackagesInnerItem = ({
     let passData = {
       userId: userInfo._id,
       expertId: data?.expert_id,
+      timeSlot: [
+        {
+          timeSlot_id: times[selectedTimeIndex]?._id,
+          availableTime: times[selectedTimeIndex]?.time,
+          availableDate: selectedDate,
+        },
+      ],
       services: [],
       offers: [],
       packages: [datas],
     };
+    dispatch({
+      type: SELECTED_TIME_SLOT,
+      payload: {
+        timeSlot_id: times[selectedTimeIndex]?._id,
+        availableTime: times[selectedTimeIndex]?.time,
+        availableDate: selectedDate,
+        expertId: data?.expert_id,
+      },
+    });
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
@@ -274,6 +293,8 @@ const PackagesInnerItem = ({
           "Please select Date and Time for this Service from available slots"
         }
         withOutDisable={false}
+        scrollEnabled={false}
+        DateItem_style={styles.dateStyle}
         onPressApply={onPressApply}
       />
     </View>
@@ -349,6 +370,10 @@ const styles = StyleSheet.create({
   },
   selectedTime: {
     ...commonFontStyle(fontFamily.medium, 10, colors.grey_21),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });
 

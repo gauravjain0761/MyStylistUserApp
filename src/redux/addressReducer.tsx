@@ -6,7 +6,7 @@ import {
 } from "../actions/dispatchTypes";
 
 const initialState = {
-  addressList: {},
+  addressList: [],
   location: {},
   defaultAddress: "",
 };

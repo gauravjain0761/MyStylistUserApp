@@ -4,6 +4,7 @@ import {
   CART_DETAILS,
   GETALLSERVICES,
   SELECTED_SERVICE,
+  SELECTED_TIME_SLOT,
 } from "../actions/dispatchTypes";
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
   cartDetails: [],
   cartCount: 0,
   selectedService: [],
+  selected_time_slot: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -30,6 +32,9 @@ export default function (state = initialState, action: any) {
     }
     case SELECTED_SERVICE: {
       return { ...state, selectedService: action?.payload };
+    }
+    case SELECTED_TIME_SLOT: {
+      return { ...state, selected_time_slot: action?.payload };
     }
     default:
       return state;

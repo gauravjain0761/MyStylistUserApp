@@ -41,6 +41,7 @@ export const api = {
   updatelocation: "user/updateUserLocation",
   adduserAddress: "user/updateUserAddress",
   edituserAddress: "user/updateUserAddress",
+  searchAddress: "user/searchAddress",
 
   //Offers
   getAllOffersByUser: "generateOffer/getAllOffersByUser/",

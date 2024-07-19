@@ -35,6 +35,7 @@ import {
   ADD_TO_CART,
   CART_DETAILS,
   SELECTED_SERVICE,
+  SELECTED_TIME_SLOT,
   TIME_SLOT,
 } from "../../actions/dispatchTypes";
 import {
@@ -169,21 +170,15 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
 
   const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
-    let DateString = `${date} ${bookTime?.time}`;
-    let momentDate = moment(
-      timeSlot || DateString,
-      "YYYY-MM-DD hh:mm A"
-    ).toISOString();
     let selectedData = selectedService?.flatMap((datas) => {
       let selcted = service
-        ?.map((item) => {
+        ?.flatMap((item) => {
           if (item?.sub_service_id?._id == datas?._id) {
             return {
               actionId: datas?.service_id,
               serviceId: datas?.service_id,
               serviceName: datas?.service_name,
               quantity: 1,
-              timeSlot: momentDate,
               packageDetails: null,
               subServices: [
                 {
@@ -199,13 +194,11 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         ?.filter((service) => service);
       return selcted;
     });
-    let timeforcustom = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
     let customSelect = {
       actionId: selectService?.service_id?._id,
       serviceId: selectService?.service_id?._id,
       serviceName: selectService?.service_id?.service_name,
       quantity: 1,
-      timeSlot: timeforcustom,
       packageDetails: null,
       subServices: [
         {
@@ -219,12 +212,28 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     let passData = {
       userId: userInfo?._id,
       expertId: expertId || actionId,
+      timeSlot: [
+        {
+          timeSlot_id: times[selectedTimeIndex]?._id,
+          availableTime: times[selectedTimeIndex]?.time,
+          availableDate: date,
+        },
+      ],
       services: Object?.values(selectService)?.length
         ? [customSelect]
         : selectedData,
       packages: [],
       offers: [],
     };
+    dispatch({
+      type: SELECTED_TIME_SLOT,
+      payload: {
+        timeSlot_id: times[selectedTimeIndex]?._id,
+        availableTime: times[selectedTimeIndex]?.time,
+        availableDate: date,
+        expertId: expertId || actionId,
+      },
+    });
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {

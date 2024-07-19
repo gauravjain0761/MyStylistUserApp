@@ -56,7 +56,7 @@ import {
   removeMultipleCartItems,
 } from "../actions";
 import FastImage from "react-native-fast-image";
-import { set } from "lodash";
+import { set, truncate } from "lodash";
 import { err } from "react-native-svg";
 
 type RowItemValueProps = {
@@ -106,13 +106,13 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(true);
   const [cartEmpty, setCartEmpty] = useState(false);
+  const { selected_time_slot } = useAppSelector((state) => state?.cart);
 
   useEffect(() => {
     getCart();
     async function getDatesList() {
       let userInfo = await getAsyncUserInfo();
       let data = generateWeekDates();
-
       let obj = {
         data: {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
@@ -196,44 +196,79 @@ const Cart = () => {
       });
     });
     let Offer = cartDetails?.cart?.offers.flatMap((item, index) => {
-      return item?.subServices?.flatMap((subService, index) => {
-        return {
-          service_id: subService?.subServiceId,
-          service_name: subService?.subServiceName,
-          price: subService?.originalPrice,
-        };
-      });
-    });
-    let Package = cartDetails?.cart?.packages.map((item, index) => {
-      return {
-        service_id: item?.serviceId,
-        service_name: item?.serviceName,
-        price: item?.price,
-      };
-    });
-    const serviceTypes = [];
-    const actions = cartDetails?.cart?.services?.map((item, index) => {
-      serviceTypes.push("service");
       return {
         actionId: item?.actionId,
-        serviceType: "service",
+        serviceId: item?.offerId,
+        serviceName: item?.offerName,
+        originalPrice: item?.offerTotal,
+        discountedPrice: item?.discountedPrice || 0,
+        quantity: 1,
+        packageDetails: null,
+        subServices: item?.subServices?.flatMap((subService, index) => {
+          return {
+            subServiceId: subService?.subServiceId,
+            subServiceName: subService?.subServiceName,
+            originalPrice: subService?.originalPrice,
+            discountedPrice: subService?.discountedPrice,
+          };
+        }),
       };
     });
+    let Package = cartDetails?.cart?.packages.flatMap((item, index) => {
+      return {
+        actionId: item?.actionId,
+        serviceId: item?.actionId,
+        serviceName: item?.serviceName,
+        originalPrice: item?.packageTotal,
+        discountedPrice: item?.discountedPrice || 0,
+        quantity: 1,
+        packageDetails: item?.packageName,
+        subServices: item?.subServices?.flatMap((subService, index) => {
+          return {
+            subServiceId: subService?.subServiceId,
+            subServiceName: subService?.subServiceName,
+            originalPrice: subService?.originalPrice,
+            discountedPrice: subService?.discountedPrice,
+          };
+        }),
+      };
+    });
+
     let userInfo = await getAsyncUserInfo();
+    const actionsService = cartDetails?.cart?.services?.map((item, index) => {
+      return {
+        actionId: item?.actionId,
+        serviceType: "Service",
+      };
+    });
+    const actionsOffer = cartDetails?.cart?.offers?.map((item, index) => {
+      return {
+        actionId: item?.actionId,
+        serviceType: "Offer",
+      };
+    });
+    const actionsPackage = cartDetails?.cart?.packages?.map((item, index) => {
+      return {
+        actionId: item?.actionId,
+        serviceType: "Package",
+      };
+    });
     let obj = {
       data: {
         bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
         userId: userInfo?._id,
-        expertId: cartDetails?.cart?.expertId,
-        customerName: cartDetails?.user?.name,
-        services: [...Service],
-        actions: actions,
-        serviceType: [...new Set(serviceTypes)],
+        expertId: selected_time_slot?.expertId,
+        customerName: cartDetails?.cart?.expertId,
+        actions: [...actionsService, ...actionsOffer, ...actionsPackage],
+        packages: Package,
+        offers: Offer,
+        services: Service,
+        serviceType: ["Offer", "Package", "Service"],
         timeSlot: [
           {
-            timeSlot_id: bookTime?._id,
-            availableDate: date,
-            availableTime: bookTime?.time,
+            timeSlot_id: cartDetails?.cart?.timeSlot?.[0]?.timeSlot_id,
+            availableDate: cartDetails?.cart?.timeSlot?.[0]?.availableDate,
+            availableTime: cartDetails?.cart?.timeSlot?.[0]?.availableTime,
           },
         ],
         paymentType: "COD",
@@ -500,7 +535,7 @@ const Cart = () => {
                               </View>
                               <View style={styles.topContainer}>
                                 <Text style={styles.packageTitle}>
-                                  {item?.packageName}
+                                  {item?.serviceName}
                                 </Text>
                                 <View style={styles.rightContainer}>
                                   <Text style={styles?.valueTextStyle}>

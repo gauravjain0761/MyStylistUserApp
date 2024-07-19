@@ -46,6 +46,7 @@ import FastImage from "react-native-fast-image";
 import { api } from "../../helper/apiConstants";
 import { getExpertAvailability } from "../../actions/commonActions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { SELECTED_TIME_SLOT } from "../../actions/dispatchTypes";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -248,13 +249,15 @@ const Packages = ({ navigation }) => {
     let userInfo = await getAsyncUserInfo();
     let DateString = `${date} ${bookTime?.time}`;
     let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
-    let subServiceData = selectPackages?.service_name?.map((items) => {
-      return {
-        subServiceId: items?.service_id,
-        subServiceName: items?.service_name,
-        originalPrice: items?.rate || 0,
-        discountedPrice: 0,
-      };
+    let subServiceData = selectPackages?.service_name?.flatMap((items) => {
+      return items?.sub_services?.flatMap((item) => {
+        return {
+          subServiceId: item?.sub_service_id,
+          subServiceName: item?.sub_service_name,
+          originalPrice: item?.price,
+          discountedPrice: 0,
+        };
+      });
     });
     let datas = {
       actionId: selectPackages?._id,
@@ -262,11 +265,26 @@ const Packages = ({ navigation }) => {
       serviceName: selectPackages?.package_name,
       originalPrice: selectPackages?.rate,
       discountedPrice: selectPackages?.discountedPrice || 0,
-      timeSlot: momentDate,
+      timeSlot: [
+        {
+          timeSlot_id: times[selectedTimeIndex]?._id,
+          availableTime: times[selectedTimeIndex]?.time,
+          availableDate: date,
+        },
+      ],
       packageDetails: selectPackages?.additional_information,
       subServices: subServiceData,
       quantity: 1,
     };
+    dispatch({
+      type: SELECTED_TIME_SLOT,
+      payload: {
+        timeSlot_id: times[selectedTimeIndex]?._id,
+        availableTime: times[selectedTimeIndex]?.time,
+        availableDate: date,
+        expertId: selectPackages?.expert_id,
+      },
+    });
     let passData = {
       userId: userInfo?._id,
       expertId: selectPackages?.expert_id,

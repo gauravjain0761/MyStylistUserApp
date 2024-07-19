@@ -25,7 +25,11 @@ import {
   removeMultipleCartItems,
   removeToCart,
 } from "../../actions";
-import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
+import {
+  ADD_TO_CART,
+  CART_DETAILS,
+  SELECTED_TIME_SLOT,
+} from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import SelectDateModal from "../common/SelectDateModal";
 import moment from "moment";
@@ -141,7 +145,6 @@ const StylistInnerItem = ({
       serviceName: data?.offer_name,
       originalPrice: data?.sub_services?.price,
       discountedPrice: data?.sub_services?.discounted_price,
-      timeSlot: momentDate,
       quantity: 1,
       packageDetails: data?.additional_information,
       subServices: [
@@ -156,10 +159,26 @@ const StylistInnerItem = ({
     let passData = {
       userId: userInfo._id,
       expertId: data?.expert_id,
+      timeSlot: [
+        {
+          timeSlot_id: times[selectedTimeIndex]?._id,
+          availableTime: times[selectedTimeIndex]?.time,
+          availableDate: selectedDate,
+        },
+      ],
       services: [],
       packages: [],
       offers: [objs],
     };
+    dispatch({
+      type: SELECTED_TIME_SLOT,
+      payload: {
+        timeSlot_id: times[selectedTimeIndex]?._id,
+        availableTime: times[selectedTimeIndex]?.time,
+        availableDate: selectedDate,
+        expertId: data?.expert_id,
+      },
+    });
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {

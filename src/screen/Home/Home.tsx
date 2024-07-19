@@ -633,29 +633,17 @@ const Home = () => {
   const onPressApplyDate = () => {
     let selected = cartSelectedService?.map((item) => item?._id);
     let DateString = `${date} ${bookTime?.time}`;
-    let dates = cartSelectedService
-      ?.map((item, index) => {
-        let time = {};
-        if (index == 0) {
-          time = {
-            time: times[selectedTimeIndex + index]?.time,
-            start_time_id: times[selectedTimeIndex + index]?._id,
-          };
-        } else if (cartSelectedService?.length - 1 == index) {
-          time = {
-            time: times[selectedTimeIndex + index]?.time,
-            end_time_id: times[selectedTimeIndex + index]?._id,
-          };
-        }
-        return time;
-      })
-      ?.filter((item) => Object?.values(item)?.length);
+    let time = {
+      time: times[selectedTimeIndex]?.time,
+      start_time_id: times[selectedTimeIndex]?._id,
+    };
     setListLoader(true);
+
     let data = {
       ...filterData,
       page: 1,
       dateTime: {
-        timeSlot_id: dates,
+        timeSlot_id: time,
         availableDate: date,
       },
       service_id: selected,

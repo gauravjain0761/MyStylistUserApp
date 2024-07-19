@@ -119,3 +119,33 @@ export const addAddress =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const searchAddress =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  async (dispatch) => {
+    let header = {
+      "Content-Type": "application/json",
+      Authorization: await getAsyncToken(),
+    };
+    dispatch({ type: IS_LOADING, payload: true });
+    return makeAPIRequest({
+      method: POST,
+      url: api.searchAddress,
+      headers: header,
+      data: request.data,
+    })
+      .then((result: any) => {
+        if (result.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+          dispatch({
+            type: GET_ADDRESS_LIST,
+            payload: result?.data,
+          });
+          if (request.onSuccess) request.onSuccess(result.data);
+        }
+      })
+      .catch((error: any) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

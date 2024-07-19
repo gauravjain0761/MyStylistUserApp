@@ -110,6 +110,7 @@ const Home = () => {
   const navigation = useNavigation();
   const dispatch = useAppDispatch();
   const { isLoading } = useAppSelector((state) => state.common);
+  const { defaultAddress } = useAppSelector((state) => state.address);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModal, setIsModal] = useState(false);
@@ -370,16 +371,19 @@ const Home = () => {
   };
 
   const getCurrentLocation = async () => {
+    let value = await getAsyncIsAddressed();
     dispatch({ type: IS_LOADING, payload: true });
     await requestLocationPermission(
       async (response) => {
         await getAddress(
           response,
           async (result: any) => {
-            SetLocation(result, response);
-            result?.results?.length
-              ? await setAsyncLocation(result?.results?.[0]?.formatted_address)
-              : await setAsyncLocation("Mohali,Punjab");
+            value === false &&
+              (result?.results?.length
+                ? await setAsyncLocation(
+                    result?.results?.[0]?.formatted_address
+                  )
+                : await setAsyncLocation("Mohali,Punjab"));
             await GetStatus();
           },
           (err) => {
@@ -406,40 +410,6 @@ const Home = () => {
   useEffect(() => {
     getCurrentLocation();
   }, []);
-
-  const SetLocation = async (item, responce: any) => {
-    let userInfo = await getAsyncUserInfo();
-    let addres = item?.results?.[0]?.address_components?.filter(
-      (items) =>
-        items?.types[0] == "sublocality" || items?.types[0] == "postal_code"
-    );
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-        addressData: {
-          addressType: "Home",
-          houseNumber: item?.results?.[0]?.formatted_address,
-          sector: addres?.[0]?.short_name,
-          pinCode: addres?.[1]?.short_name,
-          landmark: "",
-          location: {
-            type: "Point",
-            coordinates: [responce?.latitude, responce?.longitude],
-          },
-          isDefault: true,
-        },
-      },
-      onSuccess: async (res) => {
-        await setAsyncIsAddressed(false);
-      },
-      onFailure: async (Err: any) => {
-        await setAsyncIsAddressed(true);
-        console.log("Errr", Err);
-      },
-    };
-    let address = await getAsyncIsAddressed();
-    address && item?.results?.length ? dispatch(setLocation(obj)) : null;
-  };
 
   const LocationAllow = async (city: any) => {
     city ? await setAsyncLocation(city) : await setAsyncLocation(null);
@@ -971,7 +941,7 @@ const Home = () => {
           edges={[]}
           onPressProfile={() => navigation.openDrawer()}
           onPressCart={() => navigate(screenName.Cart)}
-          location={value}
+          location={defaultAddress?.length ? defaultAddress : value}
           onPresslocation={onPressLocation}
           onPressLike={() => navigate(screenName.MyFavorites)}
           containerStyle={{ backgroundColor: colors.background_grey }}
@@ -1803,7 +1773,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: wp(22),
   },
   card_conatiner: {
-    flexWrap: "wrap",
     gap: wp(30),
     justifyContent: "flex-start",
     marginTop: hp(10),

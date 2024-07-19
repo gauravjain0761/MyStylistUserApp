@@ -1,20 +1,13 @@
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-} from "react-native";
+import { View, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { hp, wp } from "../../helper/globalFunction";
 import { Colors } from "react-native/Libraries/NewAppScreen";
-import { BackIcon, SearchIcon, SearchIcon2 } from "../../theme/SvgIcon";
+import { BackIcon, SearchIcon } from "../../theme/SvgIcon";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../theme/color";
 import { strings } from "../../helper/string";
-import { icons } from "../../theme/icons";
+import { commonFontStyle, fontFamily } from "../../theme/fonts";
 
 type props = {
   onChangeText: (value: string) => void;
@@ -24,7 +17,7 @@ type props = {
 };
 
 const SearchBar = ({ onChangeText, value, onFocus, onBlur }: props) => {
-  const { goBack, navigate } = useNavigation();
+  const { goBack } = useNavigation();
 
   const onPressBack = () => goBack();
 
@@ -76,6 +69,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginLeft: wp(5),
+    ...commonFontStyle(fontFamily.regular, 14, colors.gery_5),
   },
   search_box: {},
 });

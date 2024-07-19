@@ -2,11 +2,13 @@ import {
   GET_ADDRESS_LIST,
   GET_CHATS_PARTICIPANTS,
   LOCATION,
+  SET_DEFAULT_ADDRESS,
 } from "../actions/dispatchTypes";
 
 const initialState = {
   addressList: {},
   location: {},
+  defaultAddress: "",
 };
 
 export default function (state = initialState, action: any) {
@@ -16,6 +18,9 @@ export default function (state = initialState, action: any) {
     }
     case LOCATION: {
       return { ...state, location: action?.payload };
+    }
+    case SET_DEFAULT_ADDRESS: {
+      return { ...state, defaultAddress: action?.payload };
     }
     default:
       return state;

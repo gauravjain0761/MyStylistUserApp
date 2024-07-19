@@ -58,7 +58,7 @@ const Login: FC = () => {
   }, []);
 
   const setAddress = async () => {
-    await setAsyncIsAddressed(true);
+    await setAsyncIsAddressed(false);
   };
 
   async function requestNotificationUserPermission() {
@@ -338,14 +338,14 @@ const styles = StyleSheet.create({
     marginTop: hp(57),
   },
   welcome_title: {
-    ...commonFontStyle("Inter-SemiBold", 40.33, colors.white),
+    ...commonFontStyle(fontFamily.semi_bold, 40.33, colors.white),
   },
   welcome_container: {
     alignItems: "flex-start",
     marginTop: hp(40),
   },
   welcome_contain: {
-    ...commonFontStyle("Inter-Regular", 14.33, colors.fc_light_gray),
+    ...commonFontStyle(fontFamily.medium, 14.33, colors.fc_light_gray),
     marginTop: hp(7),
   },
   input_container: {
@@ -354,10 +354,9 @@ const styles = StyleSheet.create({
     // marginHorizontal: wp(51),
   },
   mobile_title: {
-    color: colors?.fc_light_gray,
-    fontSize: fontSize(16),
     marginBottom: hp(14),
     marginTop: hp(24),
+    ...commonFontStyle(fontFamily.regular, 16, colors.fc_light_gray),
   },
   otp_btn: {
     width: wp(280),
@@ -371,7 +370,7 @@ const styles = StyleSheet.create({
   otp_btn_title: {
     fontSize: fontSize(20),
     color: colors?.black,
-    ...commonFontStyle("Inter-Medium", 20, colors?.black),
+    ...commonFontStyle(fontFamily.medium, 20, colors?.black),
   },
   modal_container: {
     justifyContent: "center",

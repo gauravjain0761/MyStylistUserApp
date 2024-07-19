@@ -12,6 +12,7 @@ import { hp, wp } from "../../helper/globalFunction";
 import { images } from "../../theme/icons";
 import { colors } from "../../theme/color";
 import LinearGradient from "react-native-linear-gradient";
+import { commonFontStyle, fontFamily } from "../../theme/fonts";
 
 interface input_props {
   placeholder: string;
@@ -71,6 +72,7 @@ const styles = StyleSheet.create({
   def_input_styles: {
     width: "100%",
     height: "100%",
+    ...commonFontStyle(fontFamily.regular, 16, colors.grey_10),
   },
   placeholder: {},
 });

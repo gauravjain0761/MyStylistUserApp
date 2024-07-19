@@ -31,8 +31,9 @@ import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions";
 import { useNavigation } from "@react-navigation/native";
 import { debounce } from "lodash";
+import { SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
 
-const ConfirmAddress = () => {
+const ConfirmAddress = ({ navigation }) => {
   const { location } = useAppSelector((state) => state?.address);
   const { coord } = useAppSelector((state) => state?.location);
   const [coords, setcoords] = useState(coord);
@@ -44,14 +45,16 @@ const ConfirmAddress = () => {
   const dispatch = useAppDispatch();
   const { goBack } = useNavigation();
 
+  const mapRef = React.useRef<MapView | null>(null);
+
   const OLA_API_KEY = api?.MAP_KEY;
   const OLA_API_URL = "https://api.olamaps.io/places/v1/autocomplete";
 
   const locations = {
-    latitude: Number(coords?.latitude || 37.4220936),
-    latitudeDelta: 0.0822,
-    longitude: Number(coords?.longitude || -122.083922),
-    longitudeDelta: 0.0821,
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
   };
   const [position, setPostion] = useState(locations);
 
@@ -66,6 +69,11 @@ const ConfirmAddress = () => {
           latitude: response?.latitude,
           longitude: response?.longitude,
         });
+        animateToInitialRegion({
+          latitude: response?.latitude,
+          longitude: response?.longitude,
+        });
+        setPostion(response);
       },
       (err) => {
         console.log("err", err);
@@ -74,7 +82,6 @@ const ConfirmAddress = () => {
       await getAddress(
         locations,
         (response: any) => {
-          setPostion(locations);
           setAddress(response);
           setValue(response?.results[0]?.formatted_address);
         },
@@ -86,35 +93,11 @@ const ConfirmAddress = () => {
   };
 
   const onPressEdit = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let addres = address?.results?.[0]?.address_components?.filter(
-      (items) =>
-        items?.types[0] == "sublocality" || items?.types[0] == "postal_code"
-    );
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-        addressData: {
-          addressType: "Home",
-          houseNumber: address?.results?.[0]?.formatted_address,
-          sector: addres?.[0]?.short_name,
-          pinCode: addres?.[1]?.short_name,
-          landmark: "",
-          location: {
-            type: "Point",
-            coordinates: [coords?.latitude, coords?.longitude],
-          },
-          isDefault: true,
-        },
-      },
-      onSuccess: () => {
-        goBack();
-      },
-      onFailure: (Errr: any) => {
-        console.log("Errrr", Errr);
-      },
-    };
-    dispatch(setLocation(obj));
+    dispatch({
+      type: SET_DEFAULT_ADDRESS,
+      payload: value,
+    });
+    navigation.pop(2);
   };
 
   const fetchSuggestions = async (input) => {
@@ -133,12 +116,17 @@ const ConfirmAddress = () => {
   };
 
   const handleSelectSuggestion = async (suggestion) => {
-    setPostion({
+    let coords = {
       latitude: suggestion?.geometry?.location?.lat,
       longitude: suggestion?.geometry?.location?.lng,
       latitudeDelta: 0.0822,
       longitudeDelta: 0.0821,
+    };
+    animateToInitialRegion({
+      latitude: suggestion?.geometry?.location?.lat,
+      longitude: suggestion?.geometry?.location?.lng,
     });
+    setPostion(coords);
     setcoords({
       latitude: suggestion?.geometry?.location?.lat,
       longitude: suggestion?.geometry?.location?.lng,
@@ -168,7 +156,6 @@ const ConfirmAddress = () => {
       event.nativeEvent.coordinate,
       (response: any) => {
         setAddress(response);
-
         setValue(response?.results[0]?.formatted_address);
         const newlocations = {
           latitude: Number(
@@ -201,25 +188,39 @@ const ConfirmAddress = () => {
     }
   };
 
+  const animateToInitialRegion = (center) => {
+    if (mapRef.current) {
+      mapRef.current.animateCamera(
+        {
+          center: center,
+          pitch: 0,
+          heading: 0,
+          altitude: 1000,
+          zoom: 10,
+        },
+        { duration: 1000 }
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Confirm your address"]} />
 
       <View style={styles.mapViewContainer}>
         <MapView
-          initialRegion={position}
-          region={position}
+          ref={mapRef}
           key={api?.MAP_KEY}
-          showsMyLocationButton={false}
-          followsUserLocation={true}
           style={styles.mapContainer}
-          zoomEnabled
-          toolbarEnabled={true}
-          loadingEnabled={true}
-          showsUserLocation
+          initialRegion={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
           onPress={handleMapPress}
         >
-          <Marker flat={false} coordinate={position} />
+          <Marker coordinate={position} />
         </MapView>
         <View style={styles.autoSearch}>
           <View style={styles?.search_box}>
@@ -269,9 +270,7 @@ const ConfirmAddress = () => {
             style={styles.bookImgStyle}
             source={images.book_button}
           >
-            <Text style={styles.bookTextStyle}>
-              {strings["Edit complete address"]}
-            </Text>
+            <Text style={styles.bookTextStyle}>{"Set address"}</Text>
           </ImageBackground>
         </TouchableOpacity>
       </View>

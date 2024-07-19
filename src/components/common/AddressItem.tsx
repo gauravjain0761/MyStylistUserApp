@@ -11,16 +11,22 @@ type props = {
   onPressEdit: () => void;
   onPressDelete: () => void;
   data: any;
+  onPressSetDefault: () => void;
 };
 
-const AddressItem = ({ onPressEdit, onPressDelete, data }: props) => {
+const AddressItem = ({
+  onPressEdit,
+  onPressDelete,
+  data,
+  onPressSetDefault,
+}: props) => {
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
 
   const showMenu = () => setVisible(true);
   return (
-    <View style={styles.itemContainer}>
+    <TouchableOpacity onPress={onPressSetDefault} style={styles.itemContainer}>
       <View style={styles.rowItemStyle}>
         <TabHome />
         <Text style={styles.boldTextStyle}>{data?.address?.addressType}</Text>
@@ -65,7 +71,7 @@ const AddressItem = ({ onPressEdit, onPressDelete, data }: props) => {
         {data?.address?.houseNumber} {data?.address?.sector}{" "}
         {data?.address?.pinCode} {data?.address?.landmark}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 

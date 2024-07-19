@@ -30,11 +30,17 @@ import {
   getUserAddresses,
   updateLocation,
 } from "../../actions";
-import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
+import {
+  getAsyncCoord,
+  getAsyncUserInfo,
+  setAsyncIsAddressed,
+  setAsyncLocation,
+} from "../../helper/asyncStorage";
+import { SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
 
 const SelectLocation = ({}) => {
   const dispatch = useAppDispatch();
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const [isAddModal, setIsAddModal] = useState(false);
   const [selectType, setSelectType] = useState("Home");
   const { addressList } = useAppSelector((state) => state.address);
@@ -44,13 +50,17 @@ const SelectLocation = ({}) => {
   const [pincode, setPincode] = useState("");
   const [type, setType] = useState("Add");
   const [editData, seteditData] = useState({});
-  const [address, setAddress] = useState(addressList?.addresses);
+  const [address, setAddress] = useState([]);
   const isFocused = useIsFocused();
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     getList();
   }, [isFocused]);
+
+  useEffect(() => {
+    setAddress(addressList?.addresses);
+  }, [addressList?.addresses]);
 
   const getList = async () => {
     let userInfo = await getAsyncUserInfo();
@@ -253,6 +263,15 @@ const SelectLocation = ({}) => {
                 data={item}
                 onPressEdit={() => onPressEditItem(item)}
                 onPressDelete={() => onPressDeleteItem(item)}
+                onPressSetDefault={async () => {
+                  dispatch({
+                    type: SET_DEFAULT_ADDRESS,
+                    payload: item?.address?.houseNumber || "",
+                  });
+                  await setAsyncIsAddressed(true);
+                  await setAsyncLocation(item?.address?.houseNumber);
+                  goBack();
+                }}
               />
             );
           }}

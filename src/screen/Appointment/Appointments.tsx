@@ -53,7 +53,6 @@ const Appointments = ({ navigation }) => {
 
   async function getList(isLoading: boolean) {
     const userInfo = await getAsyncUserInfo();
-    console.log("userInfo?._id", userInfo?._id);
     let data = {
       userId: userInfo?._id,
       page: page,

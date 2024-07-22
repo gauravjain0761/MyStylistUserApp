@@ -29,11 +29,7 @@ import {
   getAsyncUserInfo,
   setAsyncCartId,
 } from "../../helper/asyncStorage";
-import {
-  ADD_TO_CART,
-  CART_DETAILS,
-  SELECTED_TIME_SLOT,
-} from "../../actions/dispatchTypes";
+import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import SelectDateModal from "../common/SelectDateModal";
 import moment from "moment";
 
@@ -166,15 +162,6 @@ const PackagesInnerItem = ({
       offers: [],
       packages: [datas],
     };
-    dispatch({
-      type: SELECTED_TIME_SLOT,
-      payload: {
-        timeSlot_id: times[selectedTimeIndex]?._id,
-        availableTime: times[selectedTimeIndex]?.time,
-        availableDate: selectedDate,
-        expertId: data?.expert_id,
-      },
-    });
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
@@ -195,7 +182,9 @@ const PackagesInnerItem = ({
     return addtocart?.packages?.map(
       (items) =>
         items?.actionId == item?._id &&
-        moment(items?.timeSlot)?.format("hh:mmA, DD MMM, YYYY")
+        `${addtocart?.timeSlot?.[0]?.availableTime}, ${moment(
+          addtocart?.timeSlot?.[0]?.availableDate
+        )?.format("DD MMM, YYYY")}`
     );
   };
 

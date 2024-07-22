@@ -209,7 +209,6 @@ const ConfirmAddress = ({ navigation }) => {
             />
             <Text style={styles.boldTextStyle}>{value || location}</Text>
           </View>
-          <Text style={styles.addressTextStyle}>{value || location}</Text>
         </View>
         <TouchableOpacity onPress={onPressEdit}>
           <ImageBackground

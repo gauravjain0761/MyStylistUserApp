@@ -24,7 +24,6 @@ import {
   removeMultipleCartItems,
   removeToCart,
 } from "../../actions";
-import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import { useIsFocused, useRoute } from "@react-navigation/native";
 import Modals from "../common/Modals";
@@ -75,7 +74,9 @@ const ServiceInnerItem = ({
       items?.subServices?.map(
         (service) =>
           service?.subServiceId == item?.sub_service_id?._id &&
-          moment(items?.timeSlot)?.format("hh:mmA, DD MMM, YYYY")
+          `${addtocart?.timeSlot?.[0]?.availableTime}, ${moment(
+            addtocart?.timeSlot?.[0]?.availableDate
+          )?.format("DD MMM, YYYY")}`
       )
     );
   };
@@ -109,7 +110,10 @@ const ServiceInnerItem = ({
             </TouchableOpacity>
             <View style={styles.time}>
               <TimingIcon />
-              <Text style={styles.timeTitle}>{"30 Min."}</Text>
+              <Text style={styles.timeTitle}>
+                {" "}
+                {`${data?.time_taken?.hours} Hrs ${data?.time_taken?.minutes} Min.`}
+              </Text>
             </View>
           </View>
         ) : (
@@ -130,7 +134,9 @@ const ServiceInnerItem = ({
               </ImageBackground>
               <View style={styles.time}>
                 <TimingIcon />
-                <Text style={styles.timeTitle}>{"30 Min."}</Text>
+                <Text style={styles.timeTitle}>
+                  {`${data?.time_taken?.hours} Hrs ${data?.time_taken?.minutes} Min.`}
+                </Text>
               </View>
             </View>
             <Text style={styles.selectedTime}>{timeCounter(data)}</Text>

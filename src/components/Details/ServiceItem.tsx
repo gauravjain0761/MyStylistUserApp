@@ -35,7 +35,6 @@ import {
   ADD_TO_CART,
   CART_DETAILS,
   SELECTED_SERVICE,
-  SELECTED_TIME_SLOT,
   TIME_SLOT,
 } from "../../actions/dispatchTypes";
 import {
@@ -130,8 +129,8 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   };
 
   useEffect(() => {
-    if (selectedService?.length) {
-      if (timeSlot?.length == 0) {
+    if (selectedService?.length && times.length && selectedTimeIndex) {
+      if (Object?.values(timeSlot)?.length == 0) {
         setTimeout(() => {
           setVisible(!visible);
         }, 800);
@@ -139,9 +138,10 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         onPressApply();
       }
     }
-  }, []);
+  }, [date, times]);
 
   const getCart = async () => {
+    console.log("checking cart");
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
@@ -212,35 +212,28 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     let passData = {
       userId: userInfo?._id,
       expertId: expertId || actionId,
-      timeSlot: [
-        {
-          timeSlot_id: times[selectedTimeIndex]?._id,
-          availableTime: times[selectedTimeIndex]?.time,
-          availableDate: date,
-        },
-      ],
+      timeSlot: Object?.values(timeSlot)?.length
+        ? [timeSlot]
+        : [
+            {
+              timeSlot_id: times[selectedTimeIndex]?._id,
+              availableTime: times[selectedTimeIndex]?.time,
+              availableDate: date,
+            },
+          ],
       services: Object?.values(selectService)?.length
         ? [customSelect]
         : selectedData,
       packages: [],
       offers: [],
     };
-    dispatch({
-      type: SELECTED_TIME_SLOT,
-      payload: {
-        timeSlot_id: times[selectedTimeIndex]?._id,
-        availableTime: times[selectedTimeIndex]?.time,
-        availableDate: date,
-        expertId: expertId || actionId,
-      },
-    });
     let obj = {
       data: passData,
       onSuccess: async (response: any) => {
         await getCart();
         infoToast("Service added successfully");
         dispatch({ type: SELECTED_SERVICE, payload: [] });
-        dispatch({ type: TIME_SLOT, payload: "" });
+        dispatch({ type: TIME_SLOT, payload: {} });
       },
       onFailure: (Err: any) => {
         console.log("ServiceInner Err", Err);

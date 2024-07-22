@@ -518,7 +518,7 @@ const Home = () => {
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
-        dispatch({ type: TIME_SLOT, payload: "" });
+        dispatch({ type: TIME_SLOT, payload: {} });
       },
       onFailure: () => {
         setListLoader(false);
@@ -635,7 +635,6 @@ const Home = () => {
 
   const onPressApplyDate = () => {
     let selected = cartSelectedService?.map((item) => item?._id);
-    let DateString = `${date} ${bookTime?.time}`;
     let time = {
       time: times[selectedTimeIndex]?.time,
       start_time_id: times[selectedTimeIndex]?._id,
@@ -659,7 +658,15 @@ const Home = () => {
         setPage(page + 1);
         setFooterLoading(false);
         setListLoader(false);
-        dispatch({ type: TIME_SLOT, payload: DateString || "" });
+        dispatch({
+          type: TIME_SLOT,
+          payload:
+            {
+              timeSlot_id: times[selectedTimeIndex]?._id,
+              availableTime: times[selectedTimeIndex]?.time,
+              availableDate: date,
+            } || {},
+        });
       },
       onFailure: () => {
         setListLoader(false);

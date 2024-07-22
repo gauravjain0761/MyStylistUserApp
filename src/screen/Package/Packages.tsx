@@ -46,7 +46,6 @@ import FastImage from "react-native-fast-image";
 import { api } from "../../helper/apiConstants";
 import { getExpertAvailability } from "../../actions/commonActions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { SELECTED_TIME_SLOT } from "../../actions/dispatchTypes";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -276,15 +275,6 @@ const Packages = ({ navigation }) => {
       subServices: subServiceData,
       quantity: 1,
     };
-    dispatch({
-      type: SELECTED_TIME_SLOT,
-      payload: {
-        timeSlot_id: times[selectedTimeIndex]?._id,
-        availableTime: times[selectedTimeIndex]?.time,
-        availableDate: date,
-        expertId: selectPackages?.expert_id,
-      },
-    });
     let passData = {
       userId: userInfo?._id,
       expertId: selectPackages?.expert_id,

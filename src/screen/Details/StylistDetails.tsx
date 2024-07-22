@@ -163,10 +163,6 @@ const StylistDetails = () => {
       },
       onSuccess: async (response: any) => {
         dispatch({ type: CART_DETAILS, payload: response?.data });
-        dispatch({
-          type: ADD_TO_CART,
-          payload: { items: [...response?.data?.cart?.items] },
-        });
         let initialvalue = 0;
         let total = response?.data?.cart?.items.reduce(
           (acc, item) => acc + item?.price,

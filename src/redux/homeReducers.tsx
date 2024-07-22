@@ -18,7 +18,7 @@ const initialState = {
   barberList: [],
   searchList: [],
   searchStylistList: {},
-  timeSlot: "",
+  timeSlot: {},
   mainService: [],
 };
 

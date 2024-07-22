@@ -163,15 +163,14 @@ const AppointmentDetails = () => {
                 />
               );
             })}
-            {Appointment?.actions?.map((item: any) => {
-              return (
-                <RowItemValue
-                  title={`Discount of ${item?.serviceType}`}
-                  value={`₹ ${Appointment?.discount}`}
-                />
-              );
-            })}
-            <RowItemValue title="Tax" value={`₹ ${Appointment?.tax}`} />
+            <RowItemValue
+              title={`Discount of Service`}
+              value={`₹ ${Appointment?.discount}`}
+            />
+            <RowItemValue
+              title="Tax"
+              value={`₹ ${Number(Appointment?.tax).toFixed(2)}`}
+            />
             <RowItemValue
               title="Payment Method"
               value={Appointment?.paymentType}

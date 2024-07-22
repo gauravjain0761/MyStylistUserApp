@@ -106,7 +106,6 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(true);
   const [cartEmpty, setCartEmpty] = useState(false);
-  const { selected_time_slot } = useAppSelector((state) => state?.cart);
 
   useEffect(() => {
     getCart();
@@ -257,8 +256,8 @@ const Cart = () => {
       data: {
         bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
         userId: userInfo?._id,
-        expertId: selected_time_slot?.expertId,
-        customerName: cartDetails?.cart?.expertId,
+        expertId: cartDetails?.cart?.expertId,
+        customerName: cartDetails?.user?.name,
         actions: [...actionsService, ...actionsOffer, ...actionsPackage],
         packages: Package,
         offers: Offer,
@@ -424,7 +423,8 @@ const Cart = () => {
                       uri:
                         cartDetails?.featured_image_url +
                         "/" +
-                        cartDetails?.user?.user_profile_images[0]?.image,
+                        cartDetails?.cart?.expertId?.user_profile_images[0]
+                          ?.image,
                       priority: FastImage.priority.high,
                     }}
                   />
@@ -434,7 +434,7 @@ const Cart = () => {
                   >
                     <View style={styles.rowNameStyle}>
                       <Text numberOfLines={1} style={styles.nameTextStyle}>
-                        {cartDetails?.user?.name}
+                        {cartDetails?.cart?.expertName}
                       </Text>
                       <VerifyIcon />
                     </View>
@@ -497,9 +497,11 @@ const Cart = () => {
                       />
                       <View style={styles.timeContainer}>
                         <Text style={styles.timeTitle}>
-                          {moment(
-                            cartDetails?.cart?.services?.[0]?.timeSlot
-                          )?.format("hh:mm:A, DD MMM, YYYY")}
+                          {`${
+                            cartDetails?.cart?.timeSlot?.[0]?.availableTime
+                          }, ${moment(
+                            cartDetails?.cart?.timeSlot?.[0]?.availableDate
+                          )?.format("DD MMM, YYYY")}`}
                         </Text>
                         <TouchableOpacity style={styles.changebtn}>
                           <Image
@@ -586,9 +588,11 @@ const Cart = () => {
                       />
                       <View style={styles.timeContainer}>
                         <Text style={styles.timeTitle}>
-                          {moment(
-                            cartDetails?.cart?.packages?.[0]?.timeSlot
-                          )?.format("hh:mm:A, DD MMM, YYYY")}
+                          {`${
+                            cartDetails?.cart?.timeSlot?.[0]?.availableTime
+                          }, ${moment(
+                            cartDetails?.cart?.timeSlot?.[0]?.availableDate
+                          )?.format("DD MMM, YYYY")}`}
                         </Text>
                         <TouchableOpacity style={styles.changebtn}>
                           <Image
@@ -651,9 +655,11 @@ const Cart = () => {
                       />
                       <View style={styles.timeContainer}>
                         <Text style={styles.timeTitle}>
-                          {moment(
-                            cartDetails?.cart?.offers?.[0]?.timeSlot
-                          )?.format("hh:mm:A, DD MMM, YYYY")}
+                          {`${
+                            cartDetails?.cart?.timeSlot?.[0]?.availableTime
+                          }, ${moment(
+                            cartDetails?.cart?.timeSlot?.[0]?.availableDate
+                          )?.format("DD MMM, YYYY")}`}
                         </Text>
                         <TouchableOpacity style={styles.changebtn}>
                           <Image

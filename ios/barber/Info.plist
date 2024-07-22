@@ -59,14 +59,6 @@
 	<string>Barber is requires to show your current location it on the map</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Update your profile picture using the photo library</string>
-	<key>UIAppFonts</key>
-	<array>
-		<string>clarika-pro-geometric-regular.ttf</string>
-		<string>clarika-pro-geo-metric-semi-bold.ttf</string>
-		<string>clarika-pro-geometric-bold.ttf</string>
-		<string>clarika-pro-geometric-extraBold.ttf</string>
-		<string>clarika-pro-geometric-medium.ttf</string>
-	</array>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -86,5 +78,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Poppins-Black.ttf</string>
+		<string>Poppins-Bold.ttf</string>
+		<string>Poppins-ExtraBold.ttf</string>
+		<string>Poppins-Italic.ttf</string>
+		<string>Poppins-Light.ttf</string>
+		<string>Poppins-Medium.ttf</string>
+		<string>Poppins-Regular.ttf</string>
+		<string>Poppins-SemiBold.ttf</string>
+		<string>Poppins-Thin.ttf</string>
+	</array>
 </dict>
 </plist>

@@ -15,24 +15,9 @@ export function commonFontStyle(
 }
 
 export const fontFamily = {
-  regular:
-    Platform?.OS === "ios"
-      ? "Clarika Pro Geometric Medium"
-      : "clarika-pro-geometric-regular",
-  bold:
-    Platform?.OS === "ios"
-      ? "Clarika Pro Geometric Heavy"
-      : "clarika-pro-geometric-bold",
-  extra_bold:
-    Platform?.OS === "ios"
-      ? "Clarika Pro Geometric Black"
-      : "clarika-pro-geometric-extraBold",
-  medium:
-    Platform?.OS === "ios"
-      ? "Clarika Pro Geometric Demi"
-      : "clarika-pro-geometric-medium",
-  semi_bold:
-    Platform?.OS === "ios"
-      ? "Clarika Pro Geometric Bold"
-      : "clarika-pro-geo-metric-semi-bold",
+  regular: "Poppins-Regular",
+  bold: "Poppins-Bold",
+  extra_bold: "Poppins-ExtraBold",
+  medium: "Poppins-Medium",
+  semi_bold: "Poppins-SemiBold",
 };

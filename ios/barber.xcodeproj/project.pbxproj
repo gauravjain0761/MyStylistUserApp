@@ -8,18 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* BarberTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* BarberTests.m */; };
-		0A1EA316A3754C53A82E5A8C /* clarika-pro-geo-metric-semi-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */; };
 		0C80B921A6F3F58F76C31292 /* libPods-Barber.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */; };
+		135D0DA9315442D4A7880EB5 /* Poppins-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 31A50FE5218F4AB48990D1D5 /* Poppins-Bold.ttf */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		159D214093174FE68ED7C001 /* clarika-pro-geometric-extraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */; };
 		1F06D3552BBD8C1A00D05DC7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1F06D3542BBD8C1A00D05DC7 /* GoogleService-Info.plist */; };
-		1F4941122C4A779F00C38518 /* clarika-pro-geometric-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F49410C2C4A779E00C38518 /* clarika-pro-geometric-medium.ttf */; };
-		1F4941132C4A779F00C38518 /* clarika-pro-geometric-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1F49410D2C4A779E00C38518 /* clarika-pro-geometric-regular.ttf */; };
+		392C49A19550459B91A6BC37 /* Poppins-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B4A3EC792EEA41B68DECAE63 /* Poppins-Italic.ttf */; };
+		397CDB0825824968B0A420A8 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4D16F1C52CED453382F1FFDC /* Poppins-Medium.ttf */; };
+		59856D1A6966421BA5558881 /* Poppins-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6547D5EBA436473EAC7EF3E2 /* Poppins-ExtraBold.ttf */; };
 		7699B88040F8A987B510C191 /* libPods-Barber-BarberTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		CFE4E0B9D6634249817B8162 /* clarika-pro-geometric-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */; };
+		A0710F2E7BE746179EDD9F45 /* Poppins-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 06D78D0B19884C9C96101B44 /* Poppins-Thin.ttf */; };
+		A30AF834833A4108A3EB09B4 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9EBA5C5AF8A641988BAA2562 /* Poppins-Regular.ttf */; };
+		A67C8696CD244903ADA31CD5 /* Poppins-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 73325604BB6D48B682AB79C5 /* Poppins-Black.ttf */; };
+		A8C32AA323A94B1699129D89 /* Poppins-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B14FB39102F34457AFD8CD8E /* Poppins-Light.ttf */; };
+		C23A5F863A484A738A5967A1 /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ED3FB34C34AA4ABCB30DF9DA /* Poppins-SemiBold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,32 +40,31 @@
 		00E356EE1AD99517003FC87E /* BarberTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BarberTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* BarberTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BarberTests.m; sourceTree = "<group>"; };
-		0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geo-metric-semi-bold.ttf"; path = "../assets/fonts/clarika-pro-geo-metric-semi-bold.ttf"; sourceTree = "<group>"; };
+		06D78D0B19884C9C96101B44 /* Poppins-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Thin.ttf"; path = "../assets/fonts/Poppins-Thin.ttf"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Barber.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Barber.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Barber/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = Barber/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Barber/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Barber/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Barber/main.m; sourceTree = "<group>"; };
-		13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-extraBold.ttf"; path = "../assets/fonts/clarika-pro-geometric-extraBold.ttf"; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-Barber-BarberTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Barber-BarberTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F06D3542BBD8C1A00D05DC7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		1F06D3562BBD8E2F00D05DC7 /* Barber.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Barber.entitlements; path = Barber/Barber.entitlements; sourceTree = "<group>"; };
-		1F4941092C4A779E00C38518 /* clarika-pro-geo-metric-semi-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clarika-pro-geo-metric-semi-bold.ttf"; sourceTree = "<group>"; };
-		1F49410A2C4A779E00C38518 /* clarika-pro-geometric-bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clarika-pro-geometric-bold.ttf"; sourceTree = "<group>"; };
-		1F49410B2C4A779E00C38518 /* clarika-pro-geometric-extraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clarika-pro-geometric-extraBold.ttf"; sourceTree = "<group>"; };
-		1F49410C2C4A779E00C38518 /* clarika-pro-geometric-medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clarika-pro-geometric-medium.ttf"; sourceTree = "<group>"; };
-		1F49410D2C4A779E00C38518 /* clarika-pro-geometric-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "clarika-pro-geometric-regular.ttf"; sourceTree = "<group>"; };
-		2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-bold.ttf"; path = "../assets/fonts/clarika-pro-geometric-bold.ttf"; sourceTree = "<group>"; };
+		31A50FE5218F4AB48990D1D5 /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		3B4392A12AC88292D35C810B /* Pods-Barber.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber.debug.xcconfig"; path = "Target Support Files/Pods-Barber/Pods-Barber.debug.xcconfig"; sourceTree = "<group>"; };
-		3BB3648A92B94D5A94EE16B1 /* clarika-pro-geometric-regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-regular.ttf"; path = "../assets/fonts/clarika-pro-geometric-regular.ttf"; sourceTree = "<group>"; };
+		4D16F1C52CED453382F1FFDC /* Poppins-Medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Medium.ttf"; path = "../assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-Barber.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber.release.xcconfig"; path = "Target Support Files/Pods-Barber/Pods-Barber.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-Barber-BarberTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber-BarberTests.debug.xcconfig"; path = "Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-Barber.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Barber.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		62A48E81EBC74C8AA901CEAE /* clarika-pro-geometric-medium.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "clarika-pro-geometric-medium.ttf"; path = "../assets/fonts/clarika-pro-geometric-medium.ttf"; sourceTree = "<group>"; };
+		6547D5EBA436473EAC7EF3E2 /* Poppins-ExtraBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-ExtraBold.ttf"; path = "../assets/fonts/Poppins-ExtraBold.ttf"; sourceTree = "<group>"; };
+		73325604BB6D48B682AB79C5 /* Poppins-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Black.ttf"; path = "../assets/fonts/Poppins-Black.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Barber/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-Barber-BarberTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Barber-BarberTests.release.xcconfig"; path = "Target Support Files/Pods-Barber-BarberTests/Pods-Barber-BarberTests.release.xcconfig"; sourceTree = "<group>"; };
+		9EBA5C5AF8A641988BAA2562 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Regular.ttf"; path = "../assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; };
+		B14FB39102F34457AFD8CD8E /* Poppins-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Light.ttf"; path = "../assets/fonts/Poppins-Light.ttf"; sourceTree = "<group>"; };
+		B4A3EC792EEA41B68DECAE63 /* Poppins-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Italic.ttf"; path = "../assets/fonts/Poppins-Italic.ttf"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		ED3FB34C34AA4ABCB30DF9DA /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = undefined; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-SemiBold.ttf"; path = "../assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,19 +118,6 @@
 			name = Barber;
 			sourceTree = "<group>";
 		};
-		1F49410E2C4A779E00C38518 /* fonts */ = {
-			isa = PBXGroup;
-			children = (
-				1F4941092C4A779E00C38518 /* clarika-pro-geo-metric-semi-bold.ttf */,
-				1F49410A2C4A779E00C38518 /* clarika-pro-geometric-bold.ttf */,
-				1F49410B2C4A779E00C38518 /* clarika-pro-geometric-extraBold.ttf */,
-				1F49410C2C4A779E00C38518 /* clarika-pro-geometric-medium.ttf */,
-				1F49410D2C4A779E00C38518 /* clarika-pro-geometric-regular.ttf */,
-			);
-			name = fonts;
-			path = ../assets/fonts;
-			sourceTree = "<group>";
-		};
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -148,7 +138,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				1F49410E2C4A779E00C38518 /* fonts */,
 				1F06D3542BBD8C1A00D05DC7 /* GoogleService-Info.plist */,
 				13B07FAE1A68108700A75B9A /* Barber */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -175,11 +164,15 @@
 		8AC855A2F30B4E00BB4EED36 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				3BB3648A92B94D5A94EE16B1 /* clarika-pro-geometric-regular.ttf */,
-				0EDD49C2B1B94B5EAB721B87 /* clarika-pro-geo-metric-semi-bold.ttf */,
-				2B3D49F3A628442B8F571807 /* clarika-pro-geometric-bold.ttf */,
-				13B0D1C632FD4DFDA0660A54 /* clarika-pro-geometric-extraBold.ttf */,
-				62A48E81EBC74C8AA901CEAE /* clarika-pro-geometric-medium.ttf */,
+				73325604BB6D48B682AB79C5 /* Poppins-Black.ttf */,
+				31A50FE5218F4AB48990D1D5 /* Poppins-Bold.ttf */,
+				6547D5EBA436473EAC7EF3E2 /* Poppins-ExtraBold.ttf */,
+				B4A3EC792EEA41B68DECAE63 /* Poppins-Italic.ttf */,
+				B14FB39102F34457AFD8CD8E /* Poppins-Light.ttf */,
+				4D16F1C52CED453382F1FFDC /* Poppins-Medium.ttf */,
+				9EBA5C5AF8A641988BAA2562 /* Poppins-Regular.ttf */,
+				ED3FB34C34AA4ABCB30DF9DA /* Poppins-SemiBold.ttf */,
+				06D78D0B19884C9C96101B44 /* Poppins-Thin.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -291,12 +284,16 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				1F4941122C4A779F00C38518 /* clarika-pro-geometric-medium.ttf in Resources */,
-				1F4941132C4A779F00C38518 /* clarika-pro-geometric-regular.ttf in Resources */,
 				1F06D3552BBD8C1A00D05DC7 /* GoogleService-Info.plist in Resources */,
-				0A1EA316A3754C53A82E5A8C /* clarika-pro-geo-metric-semi-bold.ttf in Resources */,
-				CFE4E0B9D6634249817B8162 /* clarika-pro-geometric-bold.ttf in Resources */,
-				159D214093174FE68ED7C001 /* clarika-pro-geometric-extraBold.ttf in Resources */,
+				A67C8696CD244903ADA31CD5 /* Poppins-Black.ttf in Resources */,
+				135D0DA9315442D4A7880EB5 /* Poppins-Bold.ttf in Resources */,
+				59856D1A6966421BA5558881 /* Poppins-ExtraBold.ttf in Resources */,
+				392C49A19550459B91A6BC37 /* Poppins-Italic.ttf in Resources */,
+				A8C32AA323A94B1699129D89 /* Poppins-Light.ttf in Resources */,
+				397CDB0825824968B0A420A8 /* Poppins-Medium.ttf in Resources */,
+				A30AF834833A4108A3EB09B4 /* Poppins-Regular.ttf in Resources */,
+				C23A5F863A484A738A5967A1 /* Poppins-SemiBold.ttf in Resources */,
+				A0710F2E7BE746179EDD9F45 /* Poppins-Thin.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

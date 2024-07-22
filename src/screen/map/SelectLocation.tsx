@@ -268,19 +268,22 @@ const SelectLocation = ({}) => {
       {addressList?.addresses?.length ? (
         <FlatList
           data={address || []}
-          renderItem={({ item, index }) => {
+          renderItem={({ item, index }: any) => {
             return (
               <AddressItem
                 data={item}
                 onPressEdit={() => onPressEditItem(item)}
                 onPressDelete={() => onPressDeleteItem(item)}
                 onPressSetDefault={async () => {
+                  let address =
+                    item?.address?.houseNumber + ", " + item?.address?.sector ||
+                    "";
                   dispatch({
                     type: SET_DEFAULT_ADDRESS,
-                    payload: item?.address?.houseNumber || "",
+                    payload: address,
                   });
                   await setAsyncIsAddressed(true);
-                  await setAsyncLocation(item?.address?.houseNumber);
+                  await setAsyncLocation(address);
                   goBack();
                 }}
               />

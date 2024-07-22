@@ -92,18 +92,12 @@ const BackHeader = ({
 export default BackHeader;
 
 const styles = StyleSheet.create({
-  _container: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
     paddingVertical: hp(10),
     paddingHorizontal: wp(20),
     backgroundColor: colors?.white,
-  },
-  get container() {
-    return this._container;
-  },
-  set container(value) {
-    this._container = value;
   },
   titleTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors?.black),

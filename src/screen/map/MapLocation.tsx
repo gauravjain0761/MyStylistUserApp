@@ -51,6 +51,7 @@ const MapLocation = () => {
     longitudeDelta: 0.0421,
   };
   const [position, setPostion] = useState(locations);
+
   useEffect(() => {
     onPressCurruntLocation();
   }, []);

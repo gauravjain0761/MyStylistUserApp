@@ -28,10 +28,10 @@ import {
   deleteAddress,
   editAddress,
   getUserAddresses,
-  updateLocation,
 } from "../../actions";
 import {
   getAsyncCoord,
+  getAsyncLocation,
   getAsyncUserInfo,
   setAsyncIsAddressed,
   setAsyncLocation,
@@ -58,8 +58,19 @@ const SelectLocation = ({}) => {
     getList();
   }, [isFocused]);
 
+  const getCurreentLocation = async () => {
+    let check = await getAsyncLocation();
+    if (check) {
+      await setAsyncIsAddressed(false);
+      dispatch({ type: SET_DEFAULT_ADDRESS, payload: "" });
+    }
+  };
+
   useEffect(() => {
     setAddress(addressList?.addresses);
+    if (addressList?.addresses?.length === 0) {
+      getCurreentLocation();
+    }
   }, [addressList?.addresses]);
 
   const getList = async () => {

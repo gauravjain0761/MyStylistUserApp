@@ -7,10 +7,7 @@ import {
   ImageBackground,
   Image,
   TextInput,
-  Platform,
-  ActivityIndicator,
   FlatList,
-  ScrollView,
 } from "react-native";
 import { colors } from "../../theme/color";
 import { BackHeader } from "../../components";
@@ -26,12 +23,14 @@ import {
   getAddress,
   requestLocationPermission,
 } from "../../helper/locationHandler";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { setLocation } from "../../actions";
-import { useNavigation } from "@react-navigation/native";
-import { debounce } from "lodash";
 import { SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
+
+let initialRegion = {
+  latitude: 30.7001323,
+  longitude: 76.6990172,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+};
 
 const ConfirmAddress = ({ navigation }) => {
   const { location } = useAppSelector((state) => state?.address);
@@ -40,23 +39,12 @@ const ConfirmAddress = ({ navigation }) => {
   const [value, setValue] = useState("");
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [address, setAddress] = useState([]);
   const dispatch = useAppDispatch();
-  const { goBack } = useNavigation();
 
   const mapRef = React.useRef<MapView | null>(null);
 
   const OLA_API_KEY = api?.MAP_KEY;
   const OLA_API_URL = "https://api.olamaps.io/places/v1/autocomplete";
-
-  const locations = {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
-  const [position, setPostion] = useState(locations);
 
   useEffect(() => {
     getCurreentLocation();
@@ -65,31 +53,30 @@ const ConfirmAddress = ({ navigation }) => {
   const getCurreentLocation = async () => {
     await requestLocationPermission(
       async (response) => {
-        setcoords({
+        let data = {
           latitude: response?.latitude,
           longitude: response?.longitude,
-        });
-        animateToInitialRegion({
-          latitude: response?.latitude,
-          longitude: response?.longitude,
-        });
-        setPostion(response);
+        };
+        setcoords(data);
+        animateToInitialRegion(data);
+        setAddressUsingAPI(data);
       },
       (err) => {
         console.log("err", err);
       }
-    ).then(async () => {
-      await getAddress(
-        locations,
-        (response: any) => {
-          setAddress(response);
-          setValue(response?.results[0]?.formatted_address);
-        },
-        (err) => {
-          console.log("map", err);
-        }
-      );
-    });
+    );
+  };
+
+  const setAddressUsingAPI = async (data) => {
+    await getAddress(
+      data,
+      (response: any) => {
+        setValue(response?.results[0]?.formatted_address);
+      },
+      (err) => {
+        console.log("map", err);
+      }
+    );
   };
 
   const onPressEdit = async () => {
@@ -101,7 +88,6 @@ const ConfirmAddress = ({ navigation }) => {
   };
 
   const fetchSuggestions = async (input) => {
-    setLoading(true);
     try {
       const response = await fetch(
         `${OLA_API_URL}?location=${coords?.latitude},${coords?.longitude}&input=${input}&api_key=${OLA_API_KEY}`
@@ -111,72 +97,19 @@ const ConfirmAddress = ({ navigation }) => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
     }
   };
 
   const handleSelectSuggestion = async (suggestion) => {
-    let coords = {
+    let data = {
       latitude: suggestion?.geometry?.location?.lat,
       longitude: suggestion?.geometry?.location?.lng,
-      latitudeDelta: 0.0822,
-      longitudeDelta: 0.0821,
     };
-    animateToInitialRegion({
-      latitude: suggestion?.geometry?.location?.lat,
-      longitude: suggestion?.geometry?.location?.lng,
-    });
-    setPostion(coords);
-    setcoords({
-      latitude: suggestion?.geometry?.location?.lat,
-      longitude: suggestion?.geometry?.location?.lng,
-    });
+    animateToInitialRegion(data);
+    setcoords(data);
     setSuggestions([]);
-    await getAddress(
-      {
-        latitude: suggestion?.geometry?.location?.lat,
-        longitude: suggestion?.geometry?.location?.lng,
-        latitudeDelta: 0.0822,
-        longitudeDelta: 0.0821,
-      },
-      (response: any) => {
-        setAddress(response);
-        setValue(response?.results[0]?.formatted_address);
-      },
-      (err) => {
-        console.log("map Screen", err);
-      }
-    );
+    setAddressUsingAPI(data);
     setQuery(suggestion.description);
-  };
-
-  const handleMapPress = async (event: MapPressEvent) => {
-    event.persist();
-    await getAddress(
-      event.nativeEvent.coordinate,
-      (response: any) => {
-        setAddress(response);
-        setValue(response?.results[0]?.formatted_address);
-        const newlocations = {
-          latitude: Number(
-            event?.nativeEvent?.coordinate?.latitude || 37.4220936
-          ),
-          latitudeDelta: 0.0822,
-          longitude: Number(
-            event?.nativeEvent?.coordinate?.longitude || -122.083922
-          ),
-          longitudeDelta: 0.0821,
-        };
-        setPostion(newlocations);
-        setcoords({
-          latitude: newlocations?.latitude,
-          longitude: newlocations?.longitude,
-        });
-      },
-      (erro) => {
-        console.log("eeeee", erro);
-      }
-    );
   };
 
   const textChange = (text: any) => {
@@ -206,22 +139,27 @@ const ConfirmAddress = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Confirm your address"]} />
-
       <View style={styles.mapViewContainer}>
         <MapView
           ref={mapRef}
           key={api?.MAP_KEY}
           style={styles.mapContainer}
-          initialRegion={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+          initialRegion={initialRegion}
+          onRegionChangeComplete={(res) => {
+            let data = {
+              latitude: res.latitude,
+              longitude: res.longitude,
+            };
+            setAddressUsingAPI(data);
           }}
-          onPress={handleMapPress}
-        >
-          <Marker coordinate={position} />
-        </MapView>
+        ></MapView>
+        <View pointerEvents="none" style={styles.mapmarkerStyle}>
+          <Image
+            resizeMode="contain"
+            style={styles.markerIconStyle}
+            source={icons.location_map}
+          />
+        </View>
         <View style={styles.autoSearch}>
           <View style={styles?.search_box}>
             <SearchIcon2 />
@@ -250,6 +188,15 @@ const ConfirmAddress = ({ navigation }) => {
             }}
           />
         </View>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={getCurreentLocation}
+          style={styles.useCurrentLoactionContainer}
+        >
+          <Text style={styles.uselocationTextStyle}>
+            {"Use current location"}
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.bottomStyle}>
@@ -384,6 +331,31 @@ const styles = StyleSheet.create({
     zIndex: 1,
     borderRadius: wp(8),
     overflow: "hidden",
+  },
+  mapmarkerStyle: {
+    position: "absolute",
+    top: "50%",
+    bottom: "50%",
+    alignSelf: "center",
+    marginTop: -hp(30),
+  },
+  markerIconStyle: {
+    height: wp(30),
+    width: wp(30),
+  },
+  useCurrentLoactionContainer: {
+    position: "absolute",
+    bottom: hp(10),
+    alignSelf: "center",
+    borderWidth: 2,
+    paddingHorizontal: wp(15),
+    paddingVertical: hp(8),
+    borderRadius: 10,
+    backgroundColor: colors.white,
+    borderColor: colors.primary_light_blue,
+  },
+  uselocationTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 15, colors.black),
   },
 });
 

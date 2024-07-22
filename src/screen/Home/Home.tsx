@@ -407,9 +407,11 @@ const Home = () => {
     );
   };
 
-  useEffect(() => {
-    getCurrentLocation();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getCurrentLocation();
+    }, [])
+  );
 
   const LocationAllow = async (city: any) => {
     city ? await setAsyncLocation(city) : await setAsyncLocation(null);
@@ -418,6 +420,7 @@ const Home = () => {
 
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
+    console.log("CALALA", Status);
     Status ? setLocationModal(false) : setLocationModal(true);
     dispatch({ type: LOCATION, payload: Status });
     setValue(Status);

@@ -114,7 +114,7 @@ const BarberAppointmentCard = ({
             </Text>
           )} */}
           <View style={styles.location_container}>
-            <CarIcon color={colors.grey_10} />
+            <CarIcon width={25} height={25} color={colors.grey_10} />
             <Text style={styles.location_title}>{location}</Text>
           </View>
           <Text style={styles.service_title}>{service}</Text>
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.bold, 26, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 26, colors.black),
     maxWidth: wp(170),
   },
   info_container: {

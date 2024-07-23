@@ -102,8 +102,8 @@ const Appointments = ({ navigation }) => {
     } else {
       let obj = {
         data: {
-          expertId: appointmentItem.expertId,
-          userId: userInfo._id,
+          expertId: appointmentItem?.expertId,
+          userId: userInfo?._id,
           star_rating: rating,
           review: review,
         },

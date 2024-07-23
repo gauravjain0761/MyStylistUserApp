@@ -133,10 +133,10 @@ export const StarIcon: FC<{ width?: number; height?: number }> = ({
   </Svg>
 );
 
-export const CarIcon = ({ color = "#6E6E6E" }) => (
+export const CarIcon = ({ color = "#6E6E6E", width = 30, height = 30 }) => (
   <Svg
-    width="30"
-    height="30"
+    width={width}
+    height={height}
     viewBox="0 0 30 30"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

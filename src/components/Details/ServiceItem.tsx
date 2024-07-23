@@ -93,7 +93,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: userInfo?._id,
+          expertId: expertId,
         },
         onSuccess: async (response: any) => {
           let data = await convertToOutput(response);

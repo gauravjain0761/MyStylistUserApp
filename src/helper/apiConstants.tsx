@@ -28,6 +28,7 @@ export const api = {
   removeMultipleCartItems: "cart/removeMultipleCartItems",
   bookAppointments: "appointment/addAppointment?=&=",
   getAllServicesForMobile: "service/getAllServicesForMobile",
+  cartTimeSlot: "cart/updateCartTimeSlot",
 
   //Profile
   FAQ: "faq/getAllFAQ",

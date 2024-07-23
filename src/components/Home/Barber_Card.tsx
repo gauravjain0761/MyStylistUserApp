@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.bold, 23, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 23, colors.black),
     maxWidth: wp(160),
   },
   name_container: {

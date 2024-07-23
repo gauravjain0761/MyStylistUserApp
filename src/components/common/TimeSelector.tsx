@@ -78,10 +78,14 @@ const TimeSelector = ({
                     backgroundColor:
                       selectIndex === index
                         ? colors.green_opacity
+                        : item?.status == "booked"
+                        ? colors?.red
                         : colors.white,
                     borderColor:
                       selectIndex === index
                         ? colors.theme_1
+                        : item?.status == "booked"
+                        ? colors?.red
                         : colors.date_slot_border,
                   },
                   itemStyle,

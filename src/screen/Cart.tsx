@@ -16,6 +16,7 @@ import {
   BackHeader,
   CongratulationModal,
   Loader,
+  SelectDateModal,
   TimeSelector,
   UserItemLoader,
   WeekDateSelector,
@@ -52,6 +53,7 @@ import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../actions/dispatchTypes";
 import {
   bookAppointment,
+  cartTimeSlot,
   getCartlist,
   removeMultipleCartItems,
 } from "../actions";
@@ -106,6 +108,7 @@ const Cart = () => {
   const [loading, setLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(true);
   const [cartEmpty, setCartEmpty] = useState(false);
+  const [isModal, setIsModal] = useState(false);
 
   useEffect(() => {
     getCart();
@@ -117,15 +120,21 @@ const Cart = () => {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: userInfo?._id,
+          expertId: cartDetails?.cart?.expertId,
         },
         onSuccess: (response: any) => {
           let data = convertToOutput(response);
           let time = data[0].value;
           setDates(data);
+          let indexes = time
+            ?.map((time: any, index: number) =>
+              time?.isPast == false ? index : null
+            )
+            ?.filter((item) => item);
+          setSelectedTime(indexes[0]);
           setDate(data[0]?.title);
           setTimes(data[0]?.value);
-          setBookTime(time[0]);
+          setBookTime(time[indexes[0]]);
         },
         onFailure: () => {},
       };
@@ -170,6 +179,22 @@ const Cart = () => {
     dispatch(getCartlist(obj));
   };
 
+  useEffect(() => {
+    if (Object?.values(cartDetails)?.length) {
+      const availableDateTime = moment(
+        `${cartDetails?.cart?.timeSlot?.[0]?.availableDate.split("T")[0]} ${
+          cartDetails?.cart?.timeSlot?.[0]?.availableTime
+        }`,
+        "YYYY-MM-DD hh:mm A"
+      );
+      const currentDateTime = moment();
+      const isTimeSlotMissed = currentDateTime.isAfter(availableDateTime);
+      if (isTimeSlotMissed) {
+        removeMultipleCartItems();
+      }
+    }
+  }, [cartDetails]);
+
   const onPressDateItem = (index: any) => {
     setSelectedDate(index);
     setDate(dates[index].title);
@@ -213,7 +238,7 @@ const Cart = () => {
         }),
       };
     });
-    let Package = cartDetails?.cart?.packages.flatMap((item, index) => {
+    let Package = cartDetails?.cart?.packages?.flatMap((item, index) => {
       return {
         actionId: item?.actionId,
         serviceId: item?.actionId,
@@ -380,6 +405,31 @@ const Cart = () => {
     ]);
   };
 
+  const onPressApplyDate = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+        cartId: cartDetails?.cart?.cart_id,
+        updatedTimeSlots: [
+          {
+            timeSlot_id: times[selectedTimeIndex]?._id,
+            availableDate: date,
+            availableTime: times[selectedTimeIndex]?.time,
+          },
+        ],
+      },
+      onSuccess: (response: any) => {
+        getCart();
+      },
+      onFailure: (Err: any) => {
+        console.log("Err", Err);
+      },
+    };
+    console.log(obj?.data);
+    dispatch(cartTimeSlot(obj));
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -409,7 +459,7 @@ const Cart = () => {
         </View>
       ) : (
         <>
-          <ScrollView style={{ flex: 1 }}>
+          <ScrollView nestedScrollEnabled={true} style={{ flex: 1 }}>
             {cartLoading ? (
               <View style={{ ...styles.whiteContainer, paddingTop: 0 }}>
                 <UserItemLoader />
@@ -503,7 +553,10 @@ const Cart = () => {
                             cartDetails?.cart?.timeSlot?.[0]?.availableDate
                           )?.format("DD MMM, YYYY")}`}
                         </Text>
-                        <TouchableOpacity style={styles.changebtn}>
+                        <TouchableOpacity
+                          onPress={() => setIsModal(!isModal)}
+                          style={styles.changebtn}
+                        >
                           <Image
                             source={images.editIcon}
                             resizeMode="contain"
@@ -594,7 +647,10 @@ const Cart = () => {
                             cartDetails?.cart?.timeSlot?.[0]?.availableDate
                           )?.format("DD MMM, YYYY")}`}
                         </Text>
-                        <TouchableOpacity style={styles.changebtn}>
+                        <TouchableOpacity
+                          onPress={() => setIsModal(!isModal)}
+                          style={styles.changebtn}
+                        >
                           <Image
                             source={images.editIcon}
                             resizeMode="contain"
@@ -661,7 +717,10 @@ const Cart = () => {
                             cartDetails?.cart?.timeSlot?.[0]?.availableDate
                           )?.format("DD MMM, YYYY")}`}
                         </Text>
-                        <TouchableOpacity style={styles.changebtn}>
+                        <TouchableOpacity
+                          onPress={() => setIsModal(!isModal)}
+                          style={styles.changebtn}
+                        >
                           <Image
                             source={images.editIcon}
                             resizeMode="contain"
@@ -736,6 +795,21 @@ const Cart = () => {
               </ImageBackground>
             </TouchableOpacity>
           </View>
+          <SelectDateModal
+            visible={isModal}
+            close={setIsModal}
+            dates={dates}
+            onPressDateItem={(index: any) => onPressDateItem(index)}
+            onPressTimeItem={(index: any) => onPressTimeItem(index)}
+            setIsModal={setIsModal}
+            times={times}
+            selectedDateIndex={selectedDateIndex}
+            selectedTimeIndex={selectedTimeIndex}
+            onPressApply={onPressApplyDate}
+            DateItem_style={styles.dateStyle}
+            scrollEnabled={false}
+            withOutDisable={false}
+          />
         </>
       )}
     </View>
@@ -891,7 +965,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary_light_blue_4,
   },
   saveTitle: {
-    ...commonFontStyle(fontFamily.semi_bold, 18, colors?.green_5),
+    ...commonFontStyle(fontFamily.medium, 18, colors?.green_5),
     paddingVertical: hp(12),
     alignSelf: "center",
   },
@@ -1008,6 +1082,10 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     paddingHorizontal: wp(20),
     paddingVertical: hp(20),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });
 

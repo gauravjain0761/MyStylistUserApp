@@ -420,7 +420,6 @@ const Home = () => {
 
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
-    console.log("CALALA", Status);
     Status ? setLocationModal(false) : setLocationModal(true);
     dispatch({ type: LOCATION, payload: Status });
     setValue(Status);
@@ -592,6 +591,7 @@ const Home = () => {
 
   const ModalHendler = (item: any) => {
     if (item == 1) {
+      getDatesList();
       setIsModal(!isModal);
     } else if (item == 2) {
     } else if (item == 3) {

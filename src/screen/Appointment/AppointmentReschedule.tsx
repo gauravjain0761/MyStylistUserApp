@@ -71,22 +71,28 @@ const AppointmentReschedule = () => {
   useEffect(() => {
     async function getDatesList() {
       let userInfo = await getAsyncUserInfo();
-      let data = generateWeekDates();
+      let data = generateWeekDates(5);
 
       let obj = {
         data: {
           startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: userInfo._id,
+          expertId: expertId,
         },
         onSuccess: (response: any) => {
           let data = convertToOutput(response);
           let time = data[0].value;
           setDates(data);
+          let indexes = time
+            ?.map((time: any, index: number) =>
+              time?.isPast == false ? index : null
+            )
+            ?.filter((item) => item);
           setDate(data[0].title);
           setTimes(data[0].value);
-          setBookTime(time[0]);
+          setBookTime(time[indexes[0]]);
+          setSelectedTime(indexes[0]);
         },
         onFailure: () => {},
       };
@@ -100,6 +106,7 @@ const AppointmentReschedule = () => {
     setDate(dates[index].title);
     setTimes(dates[index].value);
     setSelectedTime(null);
+    setSelectedTime(0);
   };
 
   const onPressTimeItem = (index: any) => {
@@ -231,14 +238,14 @@ const AppointmentReschedule = () => {
           {Appointment?.services.map((item) => (
             <RowItemValue
               title={item?.service_name}
-              value={"₹" + item?.price}
+              value={"₹ " + item?.price}
             />
           ))}
           <RowItemValue
             title="Discount Applied"
-            value={"-₹" + Appointment?.discount}
+            value={"₹ " + Appointment?.discount}
           />
-          <RowItemValue title="Tax" value={"₹" + Appointment?.tax} />
+          <RowItemValue title="Tax" value={"₹ " + Appointment?.tax} />
           <RowItemValue title="Payment Method" value="Cash" />
           <View style={styles.lineStyle} />
           <View style={styles.rowSpaceStyle}>
@@ -255,6 +262,8 @@ const AppointmentReschedule = () => {
             list={dates}
             selectIndex={selectedDateIndex}
             onPressDate={(index) => onPressDateItem(index)}
+            scrollEnabled={false}
+            itemStyle={styles.dateStyle}
           />
         </View>
 
@@ -264,6 +273,7 @@ const AppointmentReschedule = () => {
             data={times}
             selectIndex={selectedTimeIndex}
             onPressTime={(index) => onPressTimeItem(index)}
+            containerStyle={{ justifyContent: "space-between" }}
           />
         </View>
       </ScrollView>
@@ -401,5 +411,9 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),
     paddingHorizontal: wp(80),
     paddingVertical: hp(20),
+  },
+  dateStyle: {
+    width: wp(50),
+    height: hp(60),
   },
 });

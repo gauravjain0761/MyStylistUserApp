@@ -98,7 +98,7 @@ const Packages = ({ navigation }) => {
         startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
         endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
         timeSlotDuration: 15,
-        expertId: userInfo._id,
+        expertId: selectPackages?.expert_id,
       },
       onSuccess: (response: any) => {
         let data = convertToOutput(response);

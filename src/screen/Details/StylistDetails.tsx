@@ -162,7 +162,7 @@ const StylistDetails = () => {
         userId: userInfo._id,
       },
       onSuccess: async (response: any) => {
-        dispatch({ type: CART_DETAILS, payload: response?.data });
+        dispatch({ type: CART_DETAILS, payload: response?.data?.cart });
         let initialvalue = 0;
         let total = response?.data?.cart?.items.reduce(
           (acc, item) => acc + item?.price,
@@ -171,6 +171,7 @@ const StylistDetails = () => {
         setTotal(total);
       },
       onFailure: (Errr: any) => {
+        dispatch({ type: CART_DETAILS, payload: {} });
         console.log("Errr", Errr);
       },
     };

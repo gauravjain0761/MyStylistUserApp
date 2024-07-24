@@ -29,6 +29,7 @@ import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import SelectDateModal from "../common/SelectDateModal";
 import moment from "moment";
+import PromptModal from "./PromptModal";
 
 type Props = {
   isOffer?: boolean;
@@ -60,8 +61,9 @@ const StylistInnerItem = ({
   selectedTime,
   times,
 }: Props) => {
-  const { addtocart } = useAppSelector((state) => state.cart);
+  const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
   const [visible, setVisible] = useState(false);
+  const [promptModal, setPromptModal] = useState(false);
 
   const getCart = async () => {
     let userInfo = await getAsyncUserInfo();
@@ -73,6 +75,10 @@ const StylistInnerItem = ({
         await setAsyncCartId(response?.data?.cart?.cart_id);
         dispatch({
           type: ADD_TO_CART,
+          payload: response?.data?.cart,
+        });
+        dispatch({
+          type: CART_DETAILS,
           payload: response?.data?.cart,
         });
         isInCart(data);
@@ -124,7 +130,14 @@ const StylistInnerItem = ({
   const dispatch = useAppDispatch();
 
   const onPressAdd = async () => {
-    setVisible(!visible);
+    if (
+      Object?.keys(cartDetails)?.length == 0 ||
+      cartDetails?.expertId?._id == data?.expert_id
+    ) {
+      setVisible(!visible);
+    } else {
+      setPromptModal(!promptModal);
+    }
   };
 
   const isInCart = (item) => {
@@ -133,8 +146,6 @@ const StylistInnerItem = ({
 
   const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
-    let DateString = `${selectedDate} ${selectedTime?.time}`;
-    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
     let objs: any = {
       actionId: data?._id,
       serviceId: data?.sub_services?.service_id,
@@ -186,6 +197,49 @@ const StylistInnerItem = ({
           addtocart?.timeSlot?.[0]?.availableDate
         )?.format("DD MMM, YYYY")}`
     );
+  };
+
+  const onPressYes = async () => {
+    setPromptModal(!promptModal);
+    let Ids = [];
+    cartDetails?.services?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.packages?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.offers?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    let userInfo = await getAsyncUserInfo();
+    let data = {
+      cartId: cartDetails?.cart_id,
+      userId: userInfo?._id,
+      itemIds: Ids,
+    };
+    let obj = {
+      data: data,
+      onSuccess: (response: any) => {
+        dispatch({
+          type: CART_DETAILS,
+          payload: {},
+        });
+        dispatch({
+          type: ADD_TO_CART,
+          payload: [],
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(removeMultipleCartItems(obj));
   };
 
   return (
@@ -273,6 +327,11 @@ const StylistInnerItem = ({
           uri: baseUrl + "/" + data?.sub_services?.fileName,
           priority: FastImage.priority.high,
         }}
+      />
+      <PromptModal
+        onPressCancel={() => setPromptModal(!promptModal)}
+        onPressYes={() => onPressYes()}
+        isVisible={promptModal}
       />
     </View>
   );

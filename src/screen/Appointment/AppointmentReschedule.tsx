@@ -66,11 +66,10 @@ const AppointmentReschedule = () => {
   const { navigate } = useNavigation();
   const dispatch = useAppDispatch();
 
-  console.log("appointmentDetails", appointmentDetails);
+  console.log("appointmentDetails", expertId);
 
   useEffect(() => {
     async function getDatesList() {
-      let userInfo = await getAsyncUserInfo();
       let data = generateWeekDates(5);
 
       let obj = {
@@ -78,7 +77,7 @@ const AppointmentReschedule = () => {
           startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: expertId,
+          expertId: expertId?._id,
         },
         onSuccess: (response: any) => {
           let data = convertToOutput(response);
@@ -245,7 +244,10 @@ const AppointmentReschedule = () => {
             title="Discount Applied"
             value={"₹ " + Appointment?.discount}
           />
-          <RowItemValue title="Tax" value={"₹ " + Appointment?.tax} />
+          <RowItemValue
+            title="Tax"
+            value={`₹ ${Number(Appointment?.tax).toFixed(2)}`}
+          />
           <RowItemValue title="Payment Method" value="Cash" />
           <View style={styles.lineStyle} />
           <View style={styles.rowSpaceStyle}>

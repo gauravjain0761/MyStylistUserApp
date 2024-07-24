@@ -253,7 +253,7 @@ const YourStylist = () => {
       onSuccess: async (response: any) => {
         await setAsyncCartId(response?.data?.cart?.cart_id);
         setLoading(false);
-        dispatch({ type: CART_DETAILS, payload: response?.data });
+        dispatch({ type: CART_DETAILS, payload: response?.data?.cart });
         dispatch({
           type: ADD_TO_CART,
           payload: response?.data?.cart,
@@ -262,6 +262,7 @@ const YourStylist = () => {
         setTotal(total);
       },
       onFailure: (Errr: any) => {
+        dispatch({ type: CART_DETAILS, payload: {} });
         dispatch({
           type: ADD_TO_CART,
           payload: [],

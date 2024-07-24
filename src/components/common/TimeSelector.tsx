@@ -67,7 +67,13 @@ const TimeSelector = ({
           {data?.map((item: any, index: number) => {
             return (
               <TouchableOpacity
-                disabled={item?.isPast}
+                disabled={
+                  item?.isPast == true
+                    ? true
+                    : false || item?.status == "booked"
+                    ? true
+                    : false
+                }
                 onPress={() => onPressTime(index)}
                 key={index}
                 style={[

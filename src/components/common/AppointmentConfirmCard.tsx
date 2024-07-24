@@ -86,7 +86,9 @@ const AppointmentConfirmCard = ({
 
           <View style={styles.location_container}>
             <CarIcon />
-            <Text style={styles.location_title}>{location}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.location_title}>{location}</Text>
+            </View>
           </View>
         </TouchableOpacity>
         <View style={styles.subtract_left}></View>
@@ -124,6 +126,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(8),
     paddingVertical: hp(17),
     flexDirection: "column",
+    flex: 1,
   },
   img_container: {
     paddingBottom: hp(20),
@@ -140,6 +143,7 @@ const styles = StyleSheet.create({
   barber_info_conatiner: {},
   name_container: {
     alignItems: "center",
+    flex: 1,
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 26, colors.black),
@@ -160,6 +164,7 @@ const styles = StyleSheet.create({
     marginTop: hp(8),
     alignItems: "center",
     alignSelf: "flex-start",
+    flex: 1,
   },
   location_title: {
     ...commonFontStyle(fontFamily.medium, 14, colors.gery_9),
@@ -175,6 +180,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.dashed_boredr,
     borderBottomWidth: 1,
     borderStyle: "dashed",
+    flex: 1,
   },
   subtract_left: {
     width: wp(16),

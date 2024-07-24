@@ -47,6 +47,7 @@ import { getExpertAvailability } from "../../actions/commonActions";
 import FastImage from "react-native-fast-image";
 import { images } from "../../theme/icons";
 import { strings } from "../../helper/string";
+import PromptModal from "./PromptModal";
 
 type Props = {
   data: any;
@@ -69,10 +70,13 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const [selectService, setSelectService] = useState({});
   const { params } = useRoute();
   const expertId = params?.id || "";
-  const { addtocart, selectedService } = useAppSelector((state) => state.cart);
+  const { addtocart, selectedService, cartDetails } = useAppSelector(
+    (state) => state.cart
+  );
   const { mainService } = useAppSelector((state) => state.home);
   const { timeSlot } = useAppSelector((state) => state?.home);
   const [services, setServices] = useState([]);
+  const [promptModal, setPromptModal] = useState(false);
 
   const dispatch = useAppDispatch();
 
@@ -148,11 +152,22 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         userId: userInfo?._id,
       },
       onSuccess: async (response: any) => {
-        await setAsyncCartId(response?.data?.cart?.cart_id);
-        dispatch({
-          type: ADD_TO_CART,
-          payload: response?.data?.cart,
-        });
+        if (Object.values(response.data?.cart)?.length > 0) {
+          await setAsyncCartId(response?.data?.cart?.cart_id);
+          dispatch({
+            type: ADD_TO_CART,
+            payload: response?.data?.cart,
+          });
+          dispatch({
+            type: CART_DETAILS,
+            payload: response?.data?.cart,
+          });
+        } else {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
       },
       onFailure: (Errr: any) => {
         console.log("Errrr", Errr);
@@ -211,7 +226,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     };
     let passData = {
       userId: userInfo?._id,
-      expertId: expertId || actionId,
+      expertId: expertId?._id || actionId,
       timeSlot: Object?.values(timeSlot)?.length
         ? [timeSlot]
         : [
@@ -293,8 +308,58 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   };
 
   const onPressAddService = (item) => {
-    setSelectService(item);
-    setVisible(!visible);
+    if (
+      Object?.keys(cartDetails)?.length == 0 ||
+      cartDetails?.expertId?._id == actionId
+    ) {
+      setSelectService(item);
+      setVisible(!visible);
+    } else {
+      setPromptModal(!promptModal);
+    }
+  };
+
+  const onPressYes = async () => {
+    setPromptModal(!promptModal);
+    let Ids = [];
+    cartDetails?.services?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.packages?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.offers?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    let userInfo = await getAsyncUserInfo();
+    let data = {
+      cartId: cartDetails?.cart_id,
+      userId: userInfo?._id,
+      itemIds: Ids,
+    };
+    let obj = {
+      data: data,
+      onSuccess: (response: any) => {
+        dispatch({
+          type: CART_DETAILS,
+          payload: {},
+        });
+        dispatch({
+          type: ADD_TO_CART,
+          payload: [],
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(removeMultipleCartItems(obj));
   };
 
   return (
@@ -359,6 +424,11 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
         }
         withOutDisable={false}
         onPressApply={() => onPressApply()}
+      />
+      <PromptModal
+        onPressCancel={() => setPromptModal(!promptModal)}
+        onPressYes={() => onPressYes()}
+        isVisible={promptModal}
       />
     </View>
   );

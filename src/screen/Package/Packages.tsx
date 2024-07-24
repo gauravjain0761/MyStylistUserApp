@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   LayoutAnimation,
+  Platform,
 } from "react-native";
 import {
   BackHeader,
@@ -90,7 +91,6 @@ const Packages = ({ navigation }) => {
   }, [mainService]);
 
   async function getDatesList() {
-    let userInfo = await getAsyncUserInfo();
     let data = generateWeekDates(5);
 
     let obj = {
@@ -161,46 +161,6 @@ const Packages = ({ navigation }) => {
     });
   };
 
-  const onPressPercetageItem = (discount: number) => {
-    let obj = {
-      isLoading: true,
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 10,
-        page: 1,
-        discount: discount,
-        service_for: serviceType,
-      },
-      onSuccess: () => {
-        setDiscount(discount);
-        setPage(2);
-        setFooterLoading(false);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getAllPackageByLocation(obj));
-  };
-
-  const onPressFilterItem = (item: any) => {
-    let obj = {
-      isLoading: true,
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 10,
-        page: 1,
-        discount: discount,
-        service_for: item.title,
-      },
-      onSuccess: () => {
-        setServiceType(item.title);
-        setPage(2);
-        setFooterLoading(false);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getAllPackageByLocation(obj));
-  };
-
   const loadMoreData = () => {
     if (packageList?.length !== allpackages?.totalPackages) {
       setFooterLoading(true);
@@ -246,8 +206,6 @@ const Packages = ({ navigation }) => {
 
   const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
-    let DateString = `${date} ${bookTime?.time}`;
-    let momentDate = moment(DateString, "YYYY-MM-DD hh:mm A").toISOString();
     let subServiceData = selectPackages?.service_name?.flatMap((items) => {
       return items?.sub_services?.flatMap((item) => {
         return {

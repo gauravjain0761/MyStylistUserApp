@@ -72,6 +72,7 @@ import {
   getUsersByLocation,
 } from "../../actions/homeAction";
 import {
+  CART_DETAILS,
   COORD,
   IS_LOADING,
   LOCATION,
@@ -255,8 +256,12 @@ const Home = () => {
       data: {
         userId: userInfo?._id,
       },
-      onSuccess: () => {},
-      onFailure: () => {},
+      onSuccess: (response) => {
+        dispatch({ type: CART_DETAILS, payload: response?.data?.cart });
+      },
+      onFailure: () => {
+        dispatch({ type: CART_DETAILS, payload: {} });
+      },
     };
     dispatch(getCartlist(obj));
   };

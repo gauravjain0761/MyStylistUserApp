@@ -32,6 +32,7 @@ import {
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import SelectDateModal from "../common/SelectDateModal";
 import moment from "moment";
+import PromptModal from "./PromptModal";
 
 type Props = {
   data: any;
@@ -62,11 +63,11 @@ const PackagesInnerItem = ({
 }: Props) => {
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
   const [visible, setVisible] = useState(false);
+  const [promptModal, setPromptModal] = useState(false);
 
   const dispatch = useAppDispatch();
 
   const getCart = async () => {
-    console.log("callll");
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
@@ -74,6 +75,10 @@ const PackagesInnerItem = ({
       },
       onSuccess: async (response: any) => {
         await setAsyncCartId(response?.data?.cart?.cart_id);
+        dispatch({
+          type: CART_DETAILS,
+          payload: response?.data?.cart,
+        });
         dispatch({
           type: ADD_TO_CART,
           payload: response?.data?.cart,
@@ -188,6 +193,49 @@ const PackagesInnerItem = ({
     );
   };
 
+  const onPressYes = async () => {
+    setPromptModal(!promptModal);
+    let Ids = [];
+    cartDetails?.services?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.packages?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    cartDetails?.offers?.forEach((mainService) => {
+      mainService?.subServices?.forEach((subService) => {
+        Ids.push(subService?._id);
+      });
+    });
+    let userInfo = await getAsyncUserInfo();
+    let data = {
+      cartId: cartDetails?.cart_id,
+      userId: userInfo?._id,
+      itemIds: Ids,
+    };
+    let obj = {
+      data: data,
+      onSuccess: (response: any) => {
+        dispatch({
+          type: CART_DETAILS,
+          payload: {},
+        });
+        dispatch({
+          type: ADD_TO_CART,
+          payload: [],
+        });
+      },
+      onFailure: (Errr: any) => {
+        console.log("Errr", Errr);
+      },
+    };
+    dispatch(removeMultipleCartItems(obj));
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.cloumStyle}>
@@ -285,6 +333,11 @@ const PackagesInnerItem = ({
         scrollEnabled={false}
         DateItem_style={styles.dateStyle}
         onPressApply={onPressApply}
+      />
+      <PromptModal
+        onPressCancel={() => setPromptModal(!promptModal)}
+        onPressYes={() => onPressYes()}
+        isVisible={promptModal}
       />
     </View>
   );

@@ -51,6 +51,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { getExpertAvailability } from "../actions/commonActions";
 import { getAsyncToken, getAsyncUserInfo } from "../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../actions/dispatchTypes";
+import OrderplaseSheet from "../components/Details/OrderplaceSheet";
 import {
   bookAppointment,
   cartTimeSlot,
@@ -109,6 +110,7 @@ const Cart = () => {
   const [cartLoading, setCartLoading] = useState(true);
   const [cartEmpty, setCartEmpty] = useState(false);
   const [isModal, setIsModal] = useState(false);
+  const [orderPlaceSheet, setOrderPlaceSheet] = useState(false);
 
   useEffect(() => {
     getCart();
@@ -120,7 +122,7 @@ const Cart = () => {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: cartDetails?.cart?.expertId,
+          expertId: cartDetails?.cart?.expertId?._id,
         },
         onSuccess: (response: any) => {
           let data = convertToOutput(response);
@@ -783,7 +785,9 @@ const Cart = () => {
             />
           </ScrollView>
           <View style={styles.bottomStyle}>
-            <TouchableOpacity onPress={onPressBook}>
+            <TouchableOpacity
+              onPress={() => setOrderPlaceSheet(!orderPlaceSheet)}
+            >
               <ImageBackground
                 resizeMode="contain"
                 style={styles.bookImgStyle}
@@ -809,6 +813,14 @@ const Cart = () => {
             DateItem_style={styles.dateStyle}
             scrollEnabled={false}
             withOutDisable={false}
+          />
+          <OrderplaseSheet
+            visibility={orderPlaceSheet}
+            setVisibility={setOrderPlaceSheet}
+            onSuccess={() => onPressBook()}
+            onPressCancel={() => setOrderPlaceSheet(!orderPlaceSheet)}
+            title="Book your Appointment"
+            discription="We need access to your location to show you relevant Stylists, Offers and Packages"
           />
         </>
       )}

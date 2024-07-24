@@ -58,8 +58,6 @@ const ServiceInnerItem = ({
   onPressDelete,
 }: Props) => {
   const { addtocart, selectedService } = useAppSelector((state) => state.cart);
-  const dispatch = useAppDispatch();
-  const [visible, setVisible] = useState(false);
 
   const isInCart = (item) => {
     return addtocart?.services?.some((items) =>

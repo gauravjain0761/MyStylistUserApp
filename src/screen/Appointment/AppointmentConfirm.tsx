@@ -65,8 +65,8 @@ const AppointmentConfirm = () => {
     } else {
       let obj = {
         data: {
-          expertId: expertId._id,
-          userId: userId._id,
+          expertId: expertId?._id,
+          userId: userId?._id,
           star_rating: rating,
           review: review,
         },
@@ -84,6 +84,8 @@ const AppointmentConfirm = () => {
   const onPressBookagain = () => {
     navigate(screenName.Cart);
   };
+
+  console.log("kokkoko", Appointment);
 
   return (
     <View style={styles.container}>
@@ -114,16 +116,32 @@ const AppointmentConfirm = () => {
 
         <View style={{ ...styles.whiteContainer, marginTop: hp(19) }}>
           <Text style={styles.titleStyle}>{strings["Bill Details"]}</Text>
-          <RowItemValue title="Hair Cut" value="₹200" />
-          <RowItemValue title="Beard Trim" value="₹100" />
-          <RowItemValue title="Hair color" value="₹500" />
-          <RowItemValue title="Discount Applied" value="-₹300" />
-          <RowItemValue title="Tax" value="₹50" />
-          <RowItemValue title="Payment Method" value="Cash" />
+          {Appointment?.services?.map((item: any) => {
+            return (
+              <RowItemValue
+                title={item?.service_name}
+                value={`₹ ${item?.price}`}
+              />
+            );
+          })}
+          <RowItemValue
+            title="Discount Applied"
+            value={`₹ ${Appointment?.discount}`}
+          />
+          <RowItemValue
+            title="Tax"
+            value={`₹ ${Number(Appointment?.tax).toFixed(2)}`}
+          />
+          <RowItemValue
+            title="Payment Method"
+            value={Appointment?.paymentType}
+          />
           <View style={styles.lineStyle} />
           <View style={styles.rowSpaceStyle}>
             <Text style={styles.valueTextStyle}>{"Total (INR)"}</Text>
-            <Text style={styles.valueTextStyle}>{"₹550.00"}</Text>
+            <Text
+              style={styles.valueTextStyle}
+            >{`₹ ${Appointment?.totalAmount}`}</Text>
           </View>
         </View>
       </ScrollView>

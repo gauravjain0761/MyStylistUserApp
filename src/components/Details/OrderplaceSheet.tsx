@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   barbg: {
     width: "70%",
     height: hp(12),
-    backgroundColor: Color?.stylists_border_color,
+    backgroundColor: Color?.grey_E7,
     borderRadius: wp(100),
     overflow: "hidden",
   },

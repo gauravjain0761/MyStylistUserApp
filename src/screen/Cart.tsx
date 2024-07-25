@@ -101,7 +101,7 @@ const Cart = () => {
   const [dates, setDates] = useState([]);
   const [times, setTimes] = useState([]);
   const [isShowCongrestModal, setIsShowCongrestModal] = useState(false);
-  const { navigate } = useNavigation();
+  const { navigate, goBack } = useNavigation();
   const [selectedDateIndex, setSelectedDate] = useState(0);
   const [selectedTimeIndex, setSelectedTime] = useState(0);
   const [bookTime, setBookTime] = useState({});
@@ -115,14 +115,14 @@ const Cart = () => {
   useEffect(() => {
     getCart();
     async function getDatesList() {
-      let userInfo = await getAsyncUserInfo();
       let data = generateWeekDates();
       let obj = {
         data: {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: cartDetails?.cart?.expertId?._id,
+          expertId:
+            cartDetails?.expertId?._id || cartDetails?.cart?.expertId?._id,
         },
         onSuccess: (response: any) => {
           let data = convertToOutput(response);
@@ -152,7 +152,7 @@ const Cart = () => {
       data: {
         userId: userInfo?._id,
       },
-      onSuccess: (response: any) => {
+      onSuccess: async (response: any) => {
         if (Object.values(response.data?.cart)?.length > 0) {
           dispatch({
             type: CART_DETAILS,
@@ -167,7 +167,7 @@ const Cart = () => {
         }
         setCartLoading(false);
       },
-      onFailure: (Errr: any) => {
+      onFailure: async (Errr: any) => {
         if (Errr?.data?.message === "Cart not found") {
           setCartEmpty(true);
           dispatch({
@@ -438,7 +438,7 @@ const Cart = () => {
         isDelete
         title={strings["Cart"]}
         onPressDelete={onPressDeleteCart}
-        onPressScreenBack={() => navigate(screenName.Home)}
+        onPressScreenBack={() => goBack()}
       />
       <Loader visible={loading} />
       {cartEmpty ? (
@@ -508,11 +508,20 @@ const Cart = () => {
                     <View style={styles.rowNameStyle}>
                       <CarIcon />
                       <Text style={styles.locationTextStyle}>
-                        {cartDetails?.user?.city[0]?.city_name}
-                        {","}
-                        {cartDetails?.user?.district[0]?.district_name}
-                        {","}
-                        {cartDetails?.user?.state[0]?.state_name}
+                        {
+                          cartDetails?.cart?.expertId?.addresses[0]?.address
+                            ?.houseNumber
+                        }
+                        {", "}
+                        {
+                          cartDetails?.cart?.expertId?.addresses[0]?.address
+                            ?.landmark
+                        }
+                        {", "}
+                        {
+                          cartDetails?.cart?.expertId?.addresses[0]?.address
+                            ?.sector
+                        }
                       </Text>
                     </View>
                   </TouchableOpacity>

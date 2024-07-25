@@ -13,7 +13,7 @@ export const api = {
 
   // Home
   allServices: "service/getAllServices",
-  allbanners: "banner/getAllBannerForUsers/Top",
+  allbanners: "banner/getAllBannerForExpert/Top/Home",
   allServicesForMaleAndFemale: "service/getAllServicesForMaleAndFemale/",
   allSubServicesForMobile: "service/getAllSubServicesForMobile",
   usersByLocation: "user/getUsersByLocation",
@@ -84,6 +84,9 @@ export const api = {
   userAddresses: "user/getUserAddresses",
   unsetUserAddress: "user/UnsetUserAddress",
   editUserAddress: "user/EditUserAddress",
+
+  //Notification
+  notification: "notification/getAllNotifications",
 };
 
 export const POST = "POST";

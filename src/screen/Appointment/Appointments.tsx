@@ -10,14 +10,19 @@ import {
   Alert,
 } from "react-native";
 import { strings } from "../../helper/string";
-import { PastServices, barbers } from "../../helper/constunts";
+import {
+  PastServices,
+  appointmentFilter,
+  barbers,
+  notificationFilter,
+} from "../../helper/constunts";
 import BarberAppointmentCard from "../../components/common/BarberAppointmentCard";
 import { hp, isCloseToBottom, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { AppointmentLoader, BackHeader } from "../../components";
+import { AppointmentLoader, BackHeader, OvalShapView } from "../../components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import {
@@ -43,6 +48,7 @@ const Appointments = ({ navigation }) => {
 
   const [IsModal, setIsModal] = useState(false);
   const [appointmentItem, setAppointmentItem] = useState<any>({});
+  const [selectIndex, setSelectIndex] = useState("Upcoming");
 
   useFocusEffect(
     useCallback(() => {
@@ -125,6 +131,26 @@ const Appointments = ({ navigation }) => {
         title={strings.Your_Appointments}
         onPressMenu={() => navigation.openDrawer()}
       />
+      <View style={styles.filtercontainer}>
+        <FlatList
+          style={styles.horizontalListStyle}
+          horizontal
+          data={appointmentFilter}
+          showsHorizontalScrollIndicator={false}
+          ListFooterComponent={<View style={{ width: wp(20) }}></View>}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => {
+            return (
+              <OvalShapView
+                data={item}
+                index={index}
+                selectIndex={selectIndex}
+                onPress={(e) => setSelectIndex(e)}
+              />
+            );
+          }}
+        />
+      </View>
       <ScrollView
         contentContainerStyle={{ flexGrow: 1 }}
         onScroll={({ nativeEvent }) => {
@@ -298,6 +324,31 @@ const styles = StyleSheet.create({
   },
   noTextStyle: {
     ...commonFontStyle(fontFamily.medium, 14, colors?.black),
+  },
+  horizontalListStyle: {
+    paddingBottom: hp(20),
+    paddingVertical: hp(10),
+    backgroundColor: colors.white,
+  },
+  rowSpaceStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: wp(20),
+    marginVertical: hp(10),
+    marginTop: hp(15),
+    justifyContent: "space-between",
+  },
+  flexStyle: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  notificationTextStyle: {
+    marginHorizontal: wp(4),
+    ...commonFontStyle(fontFamily.regular, 15, colors.gery_6),
+  },
+  filtercontainer: {
+    paddingHorizontal: wp(20),
+    backgroundColor: colors?.white,
   },
 });
 

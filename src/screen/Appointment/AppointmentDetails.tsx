@@ -127,6 +127,7 @@ const AppointmentDetails = () => {
               )}
               time={Appointment?.timeSlot?.[0]?.availableTime}
               onPressChat={onPressChat}
+              bookingID={Appointment?.bookingNumber}
             />
           </View>
         )}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, Image } from "react-native";
 import { colors } from "../../theme/color";
 import { BackHeader, NotificationItem, OvalShapView } from "../../components";
@@ -7,9 +7,30 @@ import { notificationFilter } from "../../helper/constunts";
 import { hp, wp } from "../../helper/globalFunction";
 import { MarkReadIcon, NotificationIcon } from "../../theme/SvgIcon";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { getNotificationList } from "../../actions/notificationAction";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const Notifications = () => {
-  const [selectIndex, setSelectIndex] = useState(0);
+  const [selectIndex, setSelectIndex] = useState("All");
+  const { notification_list } = useAppSelector((state) => state?.notification);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    getNotification("All");
+  }, []);
+  const getNotification = async (item: any) => {
+    setSelectIndex(item);
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+        notification_type: item == "All" ? "" : item?.toLowerCase(),
+      },
+      onSuccess: (res: any) => {},
+      onFaliure: () => {},
+    };
+    dispatch(getNotificationList(obj));
+  };
   return (
     <View style={styles.container}>
       <BackHeader title={strings["Notifications"]} />
@@ -25,7 +46,7 @@ const Notifications = () => {
                 data={item}
                 index={index}
                 selectIndex={selectIndex}
-                onPress={setSelectIndex}
+                onPress={(e) => getNotification(e)}
               />
             );
           }}
@@ -47,10 +68,24 @@ const Notifications = () => {
       </View>
       <FlatList
         style={styles.flatListStyle}
-        data={[1, 2, 3, 4, 5, , 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]}
+        data={notification_list}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}
         keyExtractor={(item, index) => index.toString()}
+        ListEmptyComponent={
+          <View style={styles.emptyComponent}>
+            <Text>{"No Notification Found"}</Text>
+          </View>
+        }
         renderItem={({ item, index }) => {
-          return <NotificationItem />;
+          return (
+            <NotificationItem
+              time={item?.createdAt}
+              name={item?.userId?.name}
+              message={item?.message}
+            />
+          );
         }}
         ItemSeparatorComponent={() => <View style={styles.lineStyle} />}
         ListFooterComponent={<View style={{ marginTop: hp(30) }} />}
@@ -97,6 +132,13 @@ const styles = StyleSheet.create({
   },
   flatListStyle: {
     marginTop: hp(15),
+    flex: 1,
+  },
+  emptyComponent: {
+    flex: 1,
+    alignSelf: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 

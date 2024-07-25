@@ -539,15 +539,34 @@ export const notificationFilter = [
   },
   {
     id: 2,
-    title: "Offer",
+    title: "Appointment",
   },
   {
     id: 3,
-    title: "Promotion",
+    title: "Offer",
   },
   {
     id: 4,
-    title: "Appointment",
+    title: "Promotion",
+  },
+];
+
+export const appointmentFilter = [
+  {
+    id: 1,
+    title: "Upcoming",
+  },
+  {
+    id: 2,
+    title: "Rescheduled",
+  },
+  {
+    id: 3,
+    title: "Cancelled",
+  },
+  {
+    id: 4,
+    title: "Completed",
   },
 ];
 

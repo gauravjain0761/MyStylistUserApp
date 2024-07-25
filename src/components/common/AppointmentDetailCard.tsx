@@ -52,6 +52,7 @@ type props = {
   phoneNumber?: string;
   lat: number;
   lng: number;
+  bookingID: string | number;
 };
 
 const AppointmentDetailCard = ({
@@ -72,6 +73,7 @@ const AppointmentDetailCard = ({
   phoneNumber,
   lat,
   lng,
+  bookingID,
 }: props) => {
   const { navigate } = useNavigation();
 
@@ -198,6 +200,14 @@ const AppointmentDetailCard = ({
                   <Text style={styles.time_lable}>{strings.Date}</Text>
                 </View>
                 <Text style={styles.time}>{date}</Text>
+              </View>
+              <View style={styles.time_conatiner}>
+                <View style={styles.time_img}>
+                  <Text style={{ ...styles.time_lable, paddingLeft: 5 }}>
+                    {"Booking ID"}
+                  </Text>
+                </View>
+                <Text style={styles.time}>{bookingID}</Text>
               </View>
             </>
           )}

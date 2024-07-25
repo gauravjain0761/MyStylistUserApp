@@ -14,6 +14,7 @@ import appointmentReducer from "./appointmentReducer";
 import cartReducers from "./cartReducers";
 import chatReducer from "./chatReducer";
 import addressReducer from "./addressReducer";
+import notificationReducer from "./notificationReducer";
 
 const middleware = [thunk];
 const reducers = combineReducers({
@@ -29,6 +30,7 @@ const reducers = combineReducers({
   cart: cartReducers,
   chat: chatReducer,
   address: addressReducer,
+  notification: notificationReducer,
 });
 
 const RootReducer = (state: any, action: any) => {

@@ -1,11 +1,19 @@
-import React from "react";
+import React, { FC } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
+import moment from "moment";
 
-const NotificationItem = () => {
+type card = {
+  name?: string;
+  time?: string;
+  message?: string;
+  image?: string;
+};
+
+const NotificationItem: FC<card> = ({ image, message, name, time }) => {
   return (
     <View style={styles.conatiner}>
       <FastImage
@@ -18,10 +26,10 @@ const NotificationItem = () => {
       />
       <View style={{ marginLeft: wp(10), flex: 1 }}>
         <Text style={styles.textStyle}>
-          {"Your appointment has been successfully schedule with "}
-          <Text style={styles.nameTextStyle}>{"Nickson John"}</Text>
+          {message}
+          <Text style={styles.nameTextStyle}>{` ${name}`}</Text>
         </Text>
-        <Text style={styles.timeTextStyle}>{"1 hr ago"}</Text>
+        <Text style={styles.timeTextStyle}>{moment(time).fromNow()}</Text>
       </View>
     </View>
   );

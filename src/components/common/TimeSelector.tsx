@@ -68,11 +68,7 @@ const TimeSelector = ({
             return (
               <TouchableOpacity
                 disabled={
-                  item?.isPast == true
-                    ? true
-                    : false || item?.status == "booked"
-                    ? true
-                    : false
+                  item?.isPast || item?.status == "booked" ? true : false
                 }
                 onPress={() => onPressTime(index)}
                 key={index}

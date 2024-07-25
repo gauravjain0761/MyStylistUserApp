@@ -13,8 +13,8 @@ import { images } from "../../theme/icons";
 
 type props = {
   data: any;
-  onPress?: (value?: number) => void;
-  selectIndex: number;
+  onPress?: (value: any) => void;
+  selectIndex: number | any;
   index: number;
 };
 
@@ -23,11 +23,11 @@ const OvalShapView = ({ data, onPress, selectIndex, index }: props) => {
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.btn_conatiner}
-        onPress={() => onPress(index)}
+        onPress={() => onPress(data?.title)}
       >
         <ImageBackground
           source={
-            selectIndex === index
+            selectIndex === data?.title
               ? images.blue_border_button
               : images.oval_grey_button
           }

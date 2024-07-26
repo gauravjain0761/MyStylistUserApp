@@ -1030,7 +1030,7 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-maps (1.11.3):
+  - react-native-maps (1.14.0):
     - React-Core
   - react-native-render-html (6.3.4):
     - React-Core
@@ -1540,7 +1540,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 7c35cd53a22d0be04d3f26f7881c7fb7dd230216
   react-native-date-picker: ebcb936d72fc3bbde0dea47c6641e913523231ca
   react-native-geolocation: 6c20401249e4f426bc03a2bc30bdcefc85f64a9a
-  react-native-maps: 79610ffcd0ec2ca8e0cefb48aa8ae7c62a75d7cc
+  react-native-maps: cbf2f03bfeebfd7ec45966b066db13a075fd2af3
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457

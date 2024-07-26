@@ -18,6 +18,8 @@ import {
   VerifyIcon,
   Offer_Badge,
   StarIcon,
+  ClockIcon,
+  GreenClock,
 } from "../../theme/SvgIcon";
 import { strings } from "../../helper/string";
 import FastImage from "react-native-fast-image";
@@ -254,6 +256,11 @@ const Barber_Card = ({
                 barberdetailscontinerStyle,
               ]}
             >
+              <View style={styles.salooninfo}>
+                <Text style={styles?.saloontitle}>{"Hair Razor Salon"}</Text>
+                <View style={styles.seprator} />
+                <Text style={styles?.saloontitle}>{"5 km"}</Text>
+              </View>
               <View style={styles.name_container}>
                 <View>
                   <Text numberOfLines={1} style={styles.barber_name}>
@@ -275,20 +282,6 @@ const Barber_Card = ({
                 <Text style={styles.jobs_title}>
                   {jobs} {strings.Jobs_Done}
                 </Text>
-              </View>
-              <View style={styles.location_container}>
-                <CarIcon />
-                {isOtherWayLocation ? (
-                  <Text style={styles.location_title}>{location}</Text>
-                ) : (
-                  <Text style={styles.location_title}>
-                    {data?.city?.[0]?.city_name}
-                    {", "}
-                    {data?.district?.[0]?.district_name}
-                    {", "}
-                    {data?.state?.[0]?.state_name}
-                  </Text>
-                )}
               </View>
               {isNewYearOffer ? (
                 <>
@@ -318,14 +311,13 @@ const Barber_Card = ({
                     }}
                   >
                     <View style={styles.totalcontaier}>
-                      <Text style={styles.label}>{"Time"}</Text>
+                      <GreenClock color={colors?.black} />
                       <Text
                         style={styles.total}
                       >{`${hours} hr ${mins} min`}</Text>
                     </View>
                     <View style={styles.totalcontaier}>
-                      <Text style={styles.label}>{"Total"}</Text>
-                      <Text style={styles.total}>{`₹ ${total}`}</Text>
+                      <Text style={styles.total}>{`₹ ${total}.00`}</Text>
                     </View>
                   </View>
                 </>
@@ -366,7 +358,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   barber_name: {
-    ...commonFontStyle(fontFamily.semi_bold, 23, colors.black),
+    ...commonFontStyle(fontFamily.semi_bold, 28, colors.black),
     maxWidth: wp(160),
   },
   name_container: {
@@ -377,12 +369,12 @@ const styles = StyleSheet.create({
   barber_job_coantiner: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: hp(12),
+    marginVertical: hp(10),
   },
   rating_badge: {
     backgroundColor: colors.light_green,
     borderRadius: wp(6),
-    padding: hp(3),
+    padding: hp(2),
     alignSelf: "flex-start",
     flexDirection: "row",
     alignItems: "center",
@@ -405,7 +397,7 @@ const styles = StyleSheet.create({
   location_container: {
     flexDirection: "row",
     gap: wp(5),
-    marginTop: hp(8),
+    marginTop: hp(5),
     alignItems: "center",
     marginBottom: hp(5),
   },
@@ -479,15 +471,23 @@ const styles = StyleSheet.create({
     ...commonFontStyle(fontFamily.regular, 14, colors.black),
   },
   label: {
-    ...commonFontStyle(fontFamily.medium, 12, colors.dark_grey),
+    ...commonFontStyle(fontFamily.medium, 12, colors.black),
   },
   total: {
-    ...commonFontStyle(fontFamily.regular, 12, colors.black),
+    ...commonFontStyle(fontFamily.medium, 15, colors.black),
   },
   totalcontaier: {
     flexDirection: "row",
     alignItems: "center",
     marginTop: hp(10),
     gap: wp(5),
+  },
+  salooninfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  saloontitle: {
+    ...commonFontStyle(fontFamily.medium, 12, colors.black),
+    lineHeight: hp(20),
   },
 });

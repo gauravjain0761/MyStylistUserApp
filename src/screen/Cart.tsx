@@ -192,7 +192,7 @@ const Cart = () => {
       const currentDateTime = moment();
       const isTimeSlotMissed = currentDateTime.isAfter(availableDateTime);
       if (isTimeSlotMissed) {
-        removeMultipleCartItems();
+        RemoveItems();
       }
     }
   }, [cartDetails]);

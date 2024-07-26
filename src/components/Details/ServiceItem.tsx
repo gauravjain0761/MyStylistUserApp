@@ -82,10 +82,9 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
 
   useEffect(() => {
     setServices(mainService);
-    let selectedObj = {};
+    let selectedObj = { [mainService[0]?.service_name]: true };
     addtocart?.services?.forEach((service) => {
       Object.assign(selectedObj, {
-        [mainService[0]?.service_name]: true,
         [service?.serviceName]: true,
       });
     });
@@ -316,7 +315,8 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const onPressAddService = (item) => {
     if (
       Object?.keys(cartDetails)?.length == 0 ||
-      cartDetails?.expertId?._id == actionId
+      cartDetails?.expertId?._id == actionId ||
+      cartDetails?.cart?.expertId?._id == actionId
     ) {
       setSelectService(item);
       setVisible(!visible);

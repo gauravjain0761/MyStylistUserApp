@@ -748,7 +748,7 @@ const Home = () => {
         startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
         endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
         timeSlotDuration: 15,
-        expertId: userInfo?._id,
+        expertId: "61eed0259e6593d24b2a7215",
       },
       onSuccess: (response: any) => {
         let data = convertToOutput(response);

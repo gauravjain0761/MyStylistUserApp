@@ -22,7 +22,12 @@ import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
-import { AppointmentLoader, BackHeader, OvalShapView } from "../../components";
+import {
+  AppointmentLoader,
+  BackHeader,
+  Loader,
+  OvalShapView,
+} from "../../components";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import {
@@ -33,6 +38,7 @@ import {
 import moment from "moment";
 import debounce from "lodash.debounce"; // Import debounce from lodash library
 import FeedbackModal from "../../components/common/FeedbackModal";
+import { setIsLoading } from "../../actions/commonActions";
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
@@ -49,6 +55,7 @@ const Appointments = ({ navigation }) => {
   const [IsModal, setIsModal] = useState(false);
   const [appointmentItem, setAppointmentItem] = useState<any>({});
   const [selectIndex, setSelectIndex] = useState("Upcoming");
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -57,7 +64,12 @@ const Appointments = ({ navigation }) => {
     }, [])
   );
 
+  // useEffect(() => {
+  //   setLoading(isLoading);
+  // }, [isLoading]);
+
   async function getList(isLoading: boolean) {
+    setLoading(true);
     const userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?._id,
@@ -70,9 +82,11 @@ const Appointments = ({ navigation }) => {
       onSuccess: () => {
         setPage(page + 1);
         setFooterLoading(false);
+        setLoading(false);
       },
       onFailure: (Err: any) => {
         console.log(Err);
+        setLoading(false);
       },
     };
     dispatch(getUserAppointments(obj));
@@ -164,13 +178,8 @@ const Appointments = ({ navigation }) => {
           <RefreshControl refreshing={refreshControl} onRefresh={onRefresh} />
         }
       >
-        {isLoading ? (
-          <FlatList
-            data={[1, 2, 3, 4, 5]}
-            renderItem={({ item, index }) => {
-              return <AppointmentLoader />;
-            }}
-          />
+        {loading ? (
+          <Loader visible={loading} />
         ) : (
           <>
             {appointment?.length ? (
@@ -270,6 +279,7 @@ const Appointments = ({ navigation }) => {
 
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
+
       <FeedbackModal
         userImg={
           appointmentList?.featured_image_url +

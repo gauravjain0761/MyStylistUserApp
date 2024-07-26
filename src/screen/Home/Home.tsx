@@ -42,6 +42,7 @@ import {
   CarouselLoader,
   Filter_Button,
   HomeHeader,
+  Loader,
   LocationModal,
   Modals,
   ReviewModal,
@@ -740,7 +741,6 @@ const Home = () => {
   }, [refreshControl]);
 
   async function getDatesList() {
-    let userInfo = await getAsyncUserInfo();
     let data = generateWeekDates(5);
 
     let obj = {

@@ -82,16 +82,14 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
 
   useEffect(() => {
     setServices(mainService);
-    let selectedObj = { [mainService[0]?.service_name]: true };
-    addtocart?.services?.forEach((service) => {
-      Object.assign(selectedObj, {
-        [service?.serviceName]: true,
-      });
+    let selectedObj = {};
+    mainService?.forEach((service) => {
+      Object?.assign(selectedObj, { [service?.service_name]: true });
     });
     if (Object?.values(expanded)?.length == 0 && mainService?.length) {
       setExpanded(selectedObj);
     }
-  }, [mainService, cartDetails]);
+  }, [mainService]);
 
   useEffect(() => {
     async function getDatesList() {

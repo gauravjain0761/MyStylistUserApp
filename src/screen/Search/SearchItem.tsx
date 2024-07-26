@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  LayoutAnimation,
+  TouchableOpacity,
+} from "react-native";
 import { RecentItem, SearchBar, SearchImageItem } from "../../components";
 import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getAllSubServicesSearch } from "../../actions";
+import { getAllSubServicesSearch, getMainServices } from "../../actions";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
+import { ArrowUp } from "../../theme/SvgIcon";
 
 const SearchItem = () => {
   const { navigate } = useNavigation();
@@ -15,10 +23,35 @@ const SearchItem = () => {
   const [searchText, setSearchText] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const { searchList } = useAppSelector((state) => state.home);
+  const [services, setServices] = useState([]);
+  const { mainService } = useAppSelector((state) => state.home);
+  const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
+    getMainService();
     getSearch("");
   }, []);
+
+  const getMainService = async () => {
+    let obj = {
+      onSuccess: () => {},
+      onFailure: (Err) => {
+        console.log("Errr in Offer", Err);
+      },
+    };
+    dispatch(getMainServices(obj));
+  };
+
+  useEffect(() => {
+    setServices(mainService);
+    let selectedObj = {};
+    mainService?.forEach((service) => {
+      Object?.assign(selectedObj, { [service?.service_name]: true });
+    });
+    if (Object?.values(expanded)?.length == 0 && mainService?.length) {
+      setExpanded(selectedObj);
+    }
+  }, [mainService]);
 
   const getSearch = (text: string) => {
     let data = {
@@ -44,6 +77,14 @@ const SearchItem = () => {
     navigate(screenName.ImageDetails, { item: item });
   };
 
+  const onPressArrow = (item) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
+    setExpanded((prevExpandedItems) => ({
+      ...prevExpandedItems,
+      [item.service_name]: !prevExpandedItems[item.service_name],
+    }));
+  };
+
   return (
     <View style={styles.container}>
       <SearchBar
@@ -54,17 +95,45 @@ const SearchItem = () => {
       />
       {!isFocused ? (
         <FlatList
-          numColumns={3}
-          data={searchList?.subService}
-          style={styles.listContainerStyle}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => {
+          data={services}
+          renderItem={({ item: items, index }) => {
+            const isExpanded = expanded[items?.service_name];
+
             return (
-              <SearchImageItem
-                data={item}
-                key={index}
-                onPressItem={() => onPressItem(item)}
-              />
+              <>
+                <TouchableOpacity
+                  onPress={() => onPressArrow(items)}
+                  style={styles.headerRowStyle}
+                >
+                  <Text style={styles.titleTextStyle}>
+                    {items?.service_name}
+                  </Text>
+                  <View
+                    style={{
+                      transform: [{ rotate: isExpanded ? "0deg" : "180deg" }],
+                    }}
+                  >
+                    <ArrowUp />
+                  </View>
+                </TouchableOpacity>
+                {isExpanded ? (
+                  <FlatList
+                    numColumns={3}
+                    data={searchList?.subService}
+                    style={styles.listContainerStyle}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => {
+                      return (
+                        <SearchImageItem
+                          data={item}
+                          key={index}
+                          onPressItem={() => onPressItem(item)}
+                        />
+                      );
+                    }}
+                  />
+                ) : null}
+              </>
             );
           }}
         />
@@ -112,6 +181,17 @@ const styles = StyleSheet.create({
   listContainerStyle: {
     paddingHorizontal: wp(17),
     marginTop: hp(20),
+  },
+  headerRowStyle: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginVertical: hp(10),
+    alignItems: "center",
+    paddingHorizontal: wp(20),
+    marginTop: hp(30),
+  },
+  titleTextStyle: {
+    ...commonFontStyle(fontFamily.semi_bold, 20, colors.black),
   },
 });
 

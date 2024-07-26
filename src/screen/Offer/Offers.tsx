@@ -92,8 +92,12 @@ const Offers = ({ navigation }) => {
 
   useEffect(() => {
     setServices(mainService);
+    let selectedObj = {};
+    mainService?.forEach((service) => {
+      Object?.assign(selectedObj, { [service?.service_name]: true });
+    });
     if (Object?.values(expanded)?.length == 0 && mainService?.length) {
-      setExpanded({ [mainService[0]?.service_name]: true });
+      setExpanded(selectedObj);
     }
   }, [mainService]);
 

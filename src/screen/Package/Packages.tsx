@@ -46,7 +46,7 @@ import {
 import FastImage from "react-native-fast-image";
 import { api } from "../../helper/apiConstants";
 import { getExpertAvailability } from "../../actions/commonActions";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -124,13 +124,17 @@ const Packages = ({ navigation }) => {
     dispatch(getExpertAvailability(obj));
   }
 
-  const getPackagesData = (isLoading: boolean) => {
+  const getPackagesData = async (isLoading: boolean) => {
+    const response = await getAsyncCoord();
+
     let obj = {
       isLoading: isLoading,
       data: {
         city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
         page: page,
+        latitude: response?.latitude,
+        longitude: response?.longitude,
       },
       onSuccess: () => {
         setPage(page + 1);
@@ -248,6 +252,7 @@ const Packages = ({ navigation }) => {
       data: passData,
       onSuccess: async (response: any) => {
         infoToast("Package added successfully");
+        navigation?.navigate("Cart");
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
@@ -393,7 +398,7 @@ const Packages = ({ navigation }) => {
                                       </View>
                                     </View>
                                     <Text style={styles?.distanceTitle}>
-                                      {"4 km away"}
+                                      {`${item?.distance} km away`}
                                     </Text>
                                   </View>
                                 </View>

@@ -78,7 +78,11 @@ import {
   removeAsfavourite,
   saveAsfavourite,
 } from "../../actions";
-import { getAsyncUserInfo, setAsyncCartId } from "../../helper/asyncStorage";
+import {
+  getAsyncCoord,
+  getAsyncUserInfo,
+  setAsyncCartId,
+} from "../../helper/asyncStorage";
 import { ADD_TO_CART, CART_DETAILS } from "../../actions/dispatchTypes";
 import FastImage from "react-native-fast-image";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
@@ -374,11 +378,14 @@ const YourStylist = () => {
       : dispatch(saveAsfavourite(obj));
   };
 
-  const getDetails = () => {
+  const getDetails = async () => {
+    const response = await getAsyncCoord();
     let userid = id;
     let obj = {
       data: {
         userid: userid,
+        latitude: response?.latitude,
+        longitude: response?.longitude,
       },
       onSuccess: (res: any) => {},
       onFailure: () => {},
@@ -474,6 +481,23 @@ const YourStylist = () => {
               />
             </TouchableOpacity>
             <View style={styles.columStyle}>
+              {(itemDetails?.user?.salon_name ||
+                itemDetails?.user?.distance) && (
+                <View style={styles.salooninfo}>
+                  <Text style={styles?.saloontitle}>
+                    {itemDetails?.user?.salon_name}
+                  </Text>
+                  {itemDetails?.user?.distance &&
+                    itemDetails?.user?.salon_name && (
+                      <View style={styles.seprator} />
+                    )}
+                  {itemDetails?.user?.distance && (
+                    <Text
+                      style={styles?.saloontitle}
+                    >{`${itemDetails?.user?.distance} km`}</Text>
+                  )}
+                </View>
+              )}
               <View
                 style={{
                   ...styles.rowNameStyle,
@@ -499,16 +523,6 @@ const YourStylist = () => {
                 <Text style={styles.greyTextStyle}>
                   {itemDetails?.user?.jobDone}
                   {" Jobs Done"}
-                </Text>
-              </View>
-              <View style={styles.rowNameStyle}>
-                <CarIcon />
-                <Text style={styles.locationTextStyle}>
-                  {itemDetails?.user?.city?.[0].city_name}
-                  {","}
-                  {itemDetails?.user?.district?.[0].district_name}
-                  {","}
-                  {itemDetails?.user?.state?.[0].state_name}
                 </Text>
               </View>
             </View>
@@ -767,6 +781,7 @@ const styles = StyleSheet.create({
   rowStyle: {
     flexDirection: "row",
     paddingHorizontal: wp(20),
+    alignItems: "center",
   },
   personStyle: {
     height: hp(111),
@@ -998,5 +1013,20 @@ const styles = StyleSheet.create({
   rowOfferMainContainer: {
     position: "absolute",
     top: -120,
+  },
+  salooninfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  saloontitle: {
+    ...commonFontStyle(fontFamily.medium, 12, colors.black),
+    lineHeight: hp(20),
+  },
+  seprator: {
+    width: wp(4),
+    height: wp(4),
+    backgroundColor: colors.dark_grey,
+    borderRadius: wp(50),
+    marginHorizontal: wp(7),
   },
 });

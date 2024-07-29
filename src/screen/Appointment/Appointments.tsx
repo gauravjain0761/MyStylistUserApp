@@ -60,21 +60,18 @@ const Appointments = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       setPage(1);
-      getList(true);
+      getList(true, selectIndex);
     }, [])
   );
 
-  // useEffect(() => {
-  //   setLoading(isLoading);
-  // }, [isLoading]);
-
-  async function getList(isLoading: boolean) {
-    setLoading(true);
+  async function getList(isLoading: boolean, select: string) {
+    setLoading(isLoading);
     const userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?._id,
       page: page,
       limit: 10,
+      status: select?.toLowerCase(),
     };
     let obj = {
       isLoading: isLoading,
@@ -100,14 +97,14 @@ const Appointments = ({ navigation }) => {
   const loadMoreData = () => {
     if (appointment?.length !== appointmentList?.totalAppointments) {
       setFooterLoading(true);
-      getList(false);
+      getList(false, selectIndex);
     }
   };
 
   const onRefresh = useCallback(async () => {
     setRefreshControle(true);
     setPage(1);
-    getList(true);
+    getList(true, selectIndex);
     setRefreshControle(false);
   }, [refreshControl]);
 
@@ -138,6 +135,12 @@ const Appointments = ({ navigation }) => {
     }
   };
 
+  const onPressFilter = (e: string) => {
+    setPage(1);
+    setSelectIndex(e);
+    getList(true, e);
+  };
+
   return (
     <View style={styles.container}>
       <BackHeader
@@ -159,7 +162,7 @@ const Appointments = ({ navigation }) => {
                 data={item}
                 index={index}
                 selectIndex={selectIndex}
-                onPress={(e) => setSelectIndex(e)}
+                onPress={(e) => onPressFilter(e)}
               />
             );
           }}

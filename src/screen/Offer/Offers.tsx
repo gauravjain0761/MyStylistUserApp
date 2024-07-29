@@ -41,7 +41,7 @@ import {
 } from "../../actions/offerAction";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
-import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
 import {
   addToCart,
   getMainServices,
@@ -49,7 +49,6 @@ import {
   getUsersFavList,
 } from "../../actions";
 import { getExpertAvailability } from "../../actions/commonActions";
-import { err } from "react-native-svg";
 import { LayoutAnimationConfig } from "react-native-reanimated";
 
 let offersOffList = [
@@ -87,7 +86,7 @@ const Offers = ({ navigation }) => {
   useEffect(() => {
     getMainService();
     getAllOfferData(true);
-    getDatesList();
+    getDatesList(null);
   }, []);
 
   useEffect(() => {
@@ -107,13 +106,17 @@ const Offers = ({ navigation }) => {
     }
   }, [offerList]);
 
-  const getAllOfferData = (isLoading: boolean) => {
+  const getAllOfferData = async (isLoading: boolean) => {
+    const response = await getAsyncCoord();
+
     let obj = {
       isLoading: isLoading,
       data: {
         city_id: profileData?.user?.city?.[0]?.city_id,
         limit: 10,
         page: page,
+        latitude: response?.latitude,
+        longitude: response?.longitude,
       },
       onSuccess: (res: any) => {
         setPage(page + 1);
@@ -124,11 +127,15 @@ const Offers = ({ navigation }) => {
     dispatch(getAllOffersByLocation(obj));
   };
 
-  const getDetails = () => {
+  const getDetails = async () => {
+    const response = await getAsyncCoord();
+
     let userid = offerList?.[0]?.expert_id;
     let obj = {
       data: {
         userid: userid,
+        latitude: response?.latitude,
+        longitude: response?.longitude,
       },
       onSuccess: (res) => {},
       onFailure: () => {},
@@ -140,7 +147,7 @@ const Offers = ({ navigation }) => {
     navigation.openDrawer();
   };
 
-  async function getDatesList() {
+  async function getDatesList(ids: any) {
     let userInfo = await getAsyncUserInfo();
     let data = generateWeekDates(5);
 
@@ -149,7 +156,7 @@ const Offers = ({ navigation }) => {
         startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
         endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
         timeSlotDuration: 15,
-        expertId: userInfo._id,
+        expertId: ids || userInfo._id,
       },
       onSuccess: (response: any) => {
         let data = convertToOutput(response);
@@ -228,8 +235,11 @@ const Offers = ({ navigation }) => {
   };
 
   const onPressOfferItem = (item: any) => {
-    setSelectOffer(item);
-    setVisible(!visible);
+    getDatesList(item?.expert_id);
+    setTimeout(() => {
+      setSelectOffer(item);
+      setVisible(!visible);
+    }, 1000);
   };
 
   const loadMoreData = () => {
@@ -299,6 +309,7 @@ const Offers = ({ navigation }) => {
       data: passData,
       onSuccess: async (response: any) => {
         infoToast("Offer added successfully");
+        navigation?.navigate("Cart");
       },
       onFailure: (Err: any) => {
         console.log("Errrr", Err);
@@ -457,7 +468,7 @@ const Offers = ({ navigation }) => {
                                       </View>
                                     </View>
                                     <Text style={styles?.distanceTitle}>
-                                      {"4 km away"}
+                                      {`${item?.distance} km away`}
                                     </Text>
                                   </View>
                                 </View>

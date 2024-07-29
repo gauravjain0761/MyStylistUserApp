@@ -51,6 +51,10 @@ const NewYearOffer = () => {
       onSuccess: () => {},
       onFailure: () => {},
     };
+    console.log(
+      "params?.item?.campaign?._idparams?.item?.campaign?._id",
+      params?.item?.campaign?._id
+    );
     dispatch(getCampaignExpert(obj));
   }, []);
 

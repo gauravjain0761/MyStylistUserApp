@@ -98,7 +98,9 @@ const SearchItem = () => {
           data={services}
           renderItem={({ item: items, index }) => {
             const isExpanded = expanded[items?.service_name];
-
+            const newData = searchList?.subService?.filter(
+              (item) => item?.service_name == items?.service_name
+            );
             return (
               <>
                 <TouchableOpacity
@@ -119,7 +121,7 @@ const SearchItem = () => {
                 {isExpanded ? (
                   <FlatList
                     numColumns={3}
-                    data={searchList?.subService}
+                    data={newData}
                     style={styles.listContainerStyle}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => {

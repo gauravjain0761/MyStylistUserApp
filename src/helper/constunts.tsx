@@ -558,7 +558,7 @@ export const appointmentFilter = [
   },
   {
     id: 2,
-    title: "Rescheduled",
+    title: "Reschedule",
   },
   {
     id: 3,

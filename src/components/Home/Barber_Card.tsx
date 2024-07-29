@@ -256,11 +256,19 @@ const Barber_Card = ({
                 barberdetailscontinerStyle,
               ]}
             >
-              <View style={styles.salooninfo}>
-                <Text style={styles?.saloontitle}>{"Hair Razor Salon"}</Text>
-                <View style={styles.seprator} />
-                <Text style={styles?.saloontitle}>{"5 km"}</Text>
-              </View>
+              {(data?.salon_name || data?.distance) && (
+                <View style={styles.salooninfo}>
+                  <Text style={styles?.saloontitle}>{data?.salon_name}</Text>
+                  {data?.distance && data?.salon_name && (
+                    <View style={styles.seprator} />
+                  )}
+                  {data?.distance && (
+                    <Text
+                      style={styles?.saloontitle}
+                    >{`${data?.distance} km`}</Text>
+                  )}
+                </View>
+              )}
               <View style={styles.name_container}>
                 <View>
                   <Text numberOfLines={1} style={styles.barber_name}>
@@ -292,7 +300,6 @@ const Barber_Card = ({
                   />
                   <View style={styles.rowSpaceStyle}>
                     <Text style={styles.newofferTextStyle}>{offerName}</Text>
-                    <Text style={styles.newofferTextStyle}>{"₹1299"}</Text>
                   </View>
                 </>
               ) : null}

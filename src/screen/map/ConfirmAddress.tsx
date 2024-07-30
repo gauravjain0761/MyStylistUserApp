@@ -23,7 +23,8 @@ import {
   getAddress,
   requestLocationPermission,
 } from "../../helper/locationHandler";
-import { SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
+import { COORD, SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
+import { setAsyncCoord } from "../../helper/asyncStorage";
 
 let initialRegion = {
   latitude: 30.7001323,
@@ -80,6 +81,8 @@ const ConfirmAddress = ({ navigation }) => {
   };
 
   const onPressEdit = async () => {
+    await setAsyncCoord(coords);
+    dispatch({ type: COORD, payload: coords });
     dispatch({
       type: SET_DEFAULT_ADDRESS,
       payload: value,

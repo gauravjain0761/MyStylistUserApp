@@ -44,12 +44,14 @@ import FastImage from "react-native-fast-image";
 import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
 import {
   addToCart,
+  getCartlist,
   getMainServices,
   getUserItemDetails,
   getUsersFavList,
 } from "../../actions";
 import { getExpertAvailability } from "../../actions/commonActions";
 import { LayoutAnimationConfig } from "react-native-reanimated";
+import { CART_DETAILS } from "../../actions/dispatchTypes";
 
 let offersOffList = [
   { id: 1, off: "10%", discount: 10 },
@@ -86,6 +88,7 @@ const Offers = ({ navigation }) => {
   useEffect(() => {
     getMainService();
     getAllOfferData(true);
+    getCart();
     getDatesList(null);
   }, []);
 
@@ -105,6 +108,37 @@ const Offers = ({ navigation }) => {
       getDetails();
     }
   }, [offerList]);
+
+  const getCart = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        userId: userInfo?._id,
+      },
+      onSuccess: async (response: any) => {
+        if (Object.values(response.data?.cart)?.length > 0) {
+          dispatch({
+            type: CART_DETAILS,
+            payload: response?.data,
+          });
+        } else {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
+      },
+      onFailure: async (Errr: any) => {
+        if (Errr?.data?.message === "Cart not found") {
+          dispatch({
+            type: CART_DETAILS,
+            payload: {},
+          });
+        }
+      },
+    };
+    dispatch(getCartlist(obj));
+  };
 
   const getAllOfferData = async (isLoading: boolean) => {
     const response = await getAsyncCoord();
@@ -286,7 +320,7 @@ const Offers = ({ navigation }) => {
       serviceName: selectOffer?.offer_name,
       originalPrice: selectOffer?.sub_services?.price,
       discountedPrice: selectOffer?.sub_services?.discounted_price || 0,
-      timeSlot: momentDate,
+      // timeSlot: momentDate,
       quantity: 1,
       packageDetails: selectOffer?.additional_information,
       subServices: [
@@ -301,6 +335,13 @@ const Offers = ({ navigation }) => {
     let passData = {
       userId: userInfo?._id,
       expertId: selectOffer?.expert_id,
+      timeSlot: [
+        {
+          timeSlot_id: times[selectedTimeIndex]?._id,
+          availableTime: times[selectedTimeIndex]?.time,
+          availableDate: date,
+        },
+      ],
       services: [],
       packages: [],
       offers: [objs],

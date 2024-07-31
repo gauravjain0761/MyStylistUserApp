@@ -16,6 +16,7 @@ import { getAllSubServicesSearch, getMainServices } from "../../actions";
 import { useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { ArrowUp } from "../../theme/SvgIcon";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 const SearchItem = () => {
   const { navigate } = useNavigation();
@@ -24,7 +25,7 @@ const SearchItem = () => {
   const [isFocused, setIsFocused] = useState(false);
   const { searchList } = useAppSelector((state) => state.home);
   const [services, setServices] = useState([]);
-  const { mainService } = useAppSelector((state) => state.home);
+  const { mainService, itemDetails } = useAppSelector((state) => state.home);
   const [expanded, setExpanded] = useState({});
 
   useEffect(() => {
@@ -72,9 +73,12 @@ const SearchItem = () => {
     getSearch(text);
   };
 
-  const onPressItem = (item: any) => {
+  const onPressItem = async (item: any) => {
     // @ts-ignore
-    navigate(screenName.ImageDetails, { item: item });
+    navigate(screenName.YourStylist, {
+      id: item?.user_id,
+      itemDetails: itemDetails,
+    });
   };
 
   const onPressArrow = (item) => {
@@ -120,16 +124,23 @@ const SearchItem = () => {
                 </TouchableOpacity>
                 {isExpanded ? (
                   <FlatList
-                    numColumns={3}
                     data={newData}
                     style={styles.listContainerStyle}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) => {
                       return (
-                        <SearchImageItem
-                          data={item}
-                          key={index}
-                          onPressItem={() => onPressItem(item)}
+                        <FlatList
+                          data={item?.fileName}
+                          numColumns={3}
+                          renderItem={({ item: items, index }) => {
+                            return (
+                              <SearchImageItem
+                                data={items}
+                                key={index}
+                                onPressItem={() => onPressItem(items)}
+                              />
+                            );
+                          }}
                         />
                       );
                     }}

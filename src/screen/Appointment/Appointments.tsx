@@ -136,7 +136,6 @@ const Appointments = ({ navigation }) => {
   };
 
   const onPressFilter = (e: string) => {
-    setPage(1);
     setSelectIndex(e);
     getList(true, e);
   };
@@ -188,7 +187,11 @@ const Appointments = ({ navigation }) => {
             {appointment?.length ? (
               <>
                 {appointment
-                  ?.filter((i: any) => i.appointmentType !== "past")
+                  ?.filter(
+                    (i: any) =>
+                      i.appointmentType !== "past" &&
+                      i?.appointmentType == selectIndex.toLowerCase()
+                  )
                   .map((item, index) => {
                     return (
                       <View key={index} style={styles.cards}>
@@ -222,8 +225,11 @@ const Appointments = ({ navigation }) => {
                     );
                   })}
 
-                {appointment?.filter((i: any) => i.appointmentType === "past")
-                  ?.length > 0 ? (
+                {appointment?.filter(
+                  (i: any) =>
+                    i.appointmentType == "past" &&
+                    i?.appointmentType == selectIndex?.toLowerCase()
+                )?.length > 0 ? (
                   <View style={styles?.stylists_title_container}>
                     <View style={styles?.title_border}></View>
                     <Text style={styles?.your_stylists_title}>
@@ -233,7 +239,11 @@ const Appointments = ({ navigation }) => {
                   </View>
                 ) : null}
                 {appointment
-                  ?.filter((i: any) => i.appointmentType === "past")
+                  ?.filter(
+                    (i: any) =>
+                      i.appointmentType == "past" &&
+                      i?.appointmentType == selectIndex?.toLowerCase()
+                  )
                   .map((item, index) => {
                     return (
                       <View key={index} style={styles.cards}>

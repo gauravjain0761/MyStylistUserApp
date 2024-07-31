@@ -33,10 +33,13 @@ import {
   getAsyncCoord,
   getAsyncLocation,
   getAsyncUserInfo,
+  setAsyncCoord,
   setAsyncIsAddressed,
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import { SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
+import { requestLocationPermission } from "../../helper/locationHandler";
+import { api } from "../../helper/apiConstants";
 
 const SelectLocation = ({}) => {
   const dispatch = useAppDispatch();
@@ -57,6 +60,9 @@ const SelectLocation = ({}) => {
   useEffect(() => {
     getList();
   }, [isFocused]);
+
+  const OLA_API_KEY = api?.MAP_KEY;
+  const OLA_API_URL = "https://api.olamaps.io/places/v1/autocomplete";
 
   const getCurreentLocation = async () => {
     let check = await getAsyncLocation();
@@ -101,6 +107,45 @@ const SelectLocation = ({}) => {
 
   const onPressLabel = (type: string) => setSelectType(type);
 
+  const getUserCurreentLocation = async () => {
+    if (!house.trim().length) {
+      infoToast("Enter House num");
+    } else if (!sector.trim().length) {
+      infoToast("Enter Sector");
+    } else if (!pincode.trim().length) {
+      infoToast("Enter Pincode");
+    } else {
+      await requestLocationPermission(
+        async (response) => {
+          let data = {
+            latitude: response?.latitude,
+            longitude: response?.longitude,
+          };
+          await setAsyncCoord(data);
+          fetchSuggestions(data);
+        },
+        (err) => {
+          console.log("err", err);
+        }
+      );
+    }
+  };
+
+  const fetchSuggestions = async (coords) => {
+    try {
+      const response = await fetch(
+        `${OLA_API_URL}?location=${coords?.latitude},${
+          coords?.longitude
+        }&input=${sector?.toLowerCase()} ${landmark?.toLowerCase()} ${pincode}&api_key=${OLA_API_KEY}`
+      );
+      const data = await response.json();
+      console.log("logggggggg", data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
+  };
+
   const onPressSave = async () => {
     let userInfo = await getAsyncUserInfo();
     let coord = await getAsyncCoord();
@@ -129,15 +174,14 @@ const SelectLocation = ({}) => {
         getList();
       },
       onFailure: (Err) => {
-        // getList();
         infoToast(Err.data.error);
       },
     };
-    if (house.trim().length < 0) {
+    if (!house.trim().length) {
       infoToast("Enter House num");
-    } else if (sector.trim().length < 0) {
+    } else if (!sector.trim().length) {
       infoToast("Enter Sector");
-    } else if (pincode.trim().length < 0) {
+    } else if (!pincode.trim().length) {
       infoToast("Enter Pincode");
     }
 
@@ -153,7 +197,7 @@ const SelectLocation = ({}) => {
           landmark: landmark,
           location: {
             type: "Point",
-            coordinates: [coord.latitude, coord.longitude],
+            coordinates: [coord?.latitude, coord?.longitude],
           },
           isDefault: true,
         },
@@ -171,11 +215,11 @@ const SelectLocation = ({}) => {
         infoToast(Err.data.error);
       },
     };
-    if (house.trim().length < 0) {
+    if (!house.trim().length) {
       infoToast("Enter House num");
-    } else if (sector.trim().length < 0) {
+    } else if (!sector.trim().length) {
       infoToast("Enter Sector");
-    } else if (pincode.trim().length < 0) {
+    } else if (!pincode.trim().length) {
       infoToast("Enter Pincode");
     }
 
@@ -185,6 +229,36 @@ const SelectLocation = ({}) => {
       dispatch(addAddress(obj));
     }
     console.log(editData[0]?._id);
+  };
+
+  const EditAddress = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let coord = await getAsyncCoord();
+    let obj = {
+      data: {
+        addressId: editData[0]?._id,
+        userId: userInfo?._id,
+        addressData: {
+          addressType: selectType,
+          houseNumber: house,
+          sector: sector,
+          pinCode: pincode,
+          landmark: landmark,
+          location: {
+            type: "Point",
+            coordinates: [coord?.latitude, coord?.longitude],
+          },
+          isDefault: true,
+        },
+      },
+      onSuccess: (res: any) => {
+        goBack();
+      },
+      onFailure: (error: any) => {
+        console.log("Errrr", error);
+      },
+    };
+    dispatch(editAddress(obj));
   };
 
   const onPressEditItem = async (item: any) => {
@@ -202,7 +276,6 @@ const SelectLocation = ({}) => {
     let obj = {
       data: {
         userId: userInfo._id,
-        // userId: "65eed0259e6593d24b2a5210",
         addressId: item?._id,
       },
       onSuccess: () => {
@@ -284,7 +357,6 @@ const SelectLocation = ({}) => {
                   });
                   await setAsyncIsAddressed(true);
                   await setAsyncLocation(address);
-                  goBack();
                 }}
               />
             );

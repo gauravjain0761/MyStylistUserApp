@@ -59,7 +59,7 @@ const SearchImageItem = ({ data, onPressItem }: Props) => {
         resizeMode="cover"
         style={styles.imgStyle}
         source={{
-          uri: searchList?.imageUrl + "/" + data?.fileName,
+          uri: searchList?.imageUrl + "/" + data?.image,
           priority: FastImage.priority.high,
         }}
       />

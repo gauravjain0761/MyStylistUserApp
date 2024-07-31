@@ -451,7 +451,7 @@ const Offers = ({ navigation }) => {
                                     uri:
                                       allOffers?.featured_image_url +
                                       "/" +
-                                      item?.campaign.fileName,
+                                      item?.fileName,
                                     priority: FastImage.priority.high,
                                   }}
                                 />

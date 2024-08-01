@@ -411,6 +411,27 @@ const Offers = ({ navigation }) => {
         )}
         <View>
           <FlatList
+            data={allOffers?.campaigns}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  onPress={() => onPressCampaignItem(item)}
+                  style={styles?.campaignsbtn}
+                >
+                  <FastImage
+                    resizeMode="cover"
+                    style={styles.imgStyle}
+                    source={{
+                      uri: allOffers?.featured_image_url + "/" + item?.fileName,
+                      priority: FastImage.priority.high,
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <FlatList
             data={services}
             renderItem={({ item: items }) => {
               const isExpanded = expanded[items?.service_name];
@@ -436,30 +457,6 @@ const Offers = ({ navigation }) => {
                       <CarouselLoader marginTop={hp(10)} height={hp(280)} />
                     ) : (
                       <>
-                        <FlatList
-                          data={allOffers?.campaigns}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <TouchableOpacity
-                                onPress={() => onPressCampaignItem(item)}
-                                style={styles?.campaignsbtn}
-                              >
-                                <FastImage
-                                  resizeMode="cover"
-                                  style={styles.imgStyle}
-                                  source={{
-                                    uri:
-                                      allOffers?.featured_image_url +
-                                      "/" +
-                                      item?.fileName,
-                                    priority: FastImage.priority.high,
-                                  }}
-                                />
-                              </TouchableOpacity>
-                            );
-                          }}
-                          keyExtractor={(item, index) => index.toString()}
-                        />
                         <FlatList
                           style={{ marginTop: hp(15) }}
                           data={offerList || []}

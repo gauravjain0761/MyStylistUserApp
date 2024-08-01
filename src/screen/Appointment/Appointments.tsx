@@ -60,18 +60,21 @@ const Appointments = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       setPage(1);
-      getList(true, selectIndex);
+      getList(true);
+      return () => {
+        setPage(1);
+      };
     }, [])
   );
 
-  async function getList(isLoading: boolean, select: string) {
+  async function getList(isLoading: boolean) {
     setLoading(isLoading);
     const userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?._id,
       page: page,
       limit: 10,
-      status: select?.toLowerCase(),
+      status: selectIndex?.toLowerCase(),
     };
     let obj = {
       isLoading: isLoading,
@@ -86,6 +89,7 @@ const Appointments = ({ navigation }) => {
         setLoading(false);
       },
     };
+    console.log(selectIndex);
     dispatch(getUserAppointments(obj));
   }
 
@@ -97,14 +101,14 @@ const Appointments = ({ navigation }) => {
   const loadMoreData = () => {
     if (appointment?.length !== appointmentList?.totalAppointments) {
       setFooterLoading(true);
-      getList(false, selectIndex);
+      getList(false);
     }
   };
 
   const onRefresh = useCallback(async () => {
-    setRefreshControle(true);
     setPage(1);
-    getList(true, selectIndex);
+    setRefreshControle(true);
+    getList(true);
     setRefreshControle(false);
   }, [refreshControl]);
 
@@ -135,9 +139,13 @@ const Appointments = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    getList(true);
+  }, [selectIndex]);
+
   const onPressFilter = (e: string) => {
+    setPage(1);
     setSelectIndex(e);
-    getList(true, e);
   };
 
   return (
@@ -187,11 +195,7 @@ const Appointments = ({ navigation }) => {
             {appointment?.length ? (
               <>
                 {appointment
-                  ?.filter(
-                    (i: any) =>
-                      i.appointmentType !== "past" &&
-                      i?.appointmentType == selectIndex.toLowerCase()
-                  )
+                  ?.filter((i: any) => i?.status == selectIndex.toLowerCase())
                   .map((item, index) => {
                     return (
                       <View key={index} style={styles.cards}>
@@ -220,63 +224,6 @@ const Appointments = ({ navigation }) => {
                           }
                           onPress={() => onPressItem(item)}
                           imgBaseURL={appointmentList?.featured_image_url}
-                        />
-                      </View>
-                    );
-                  })}
-
-                {appointment?.filter(
-                  (i: any) =>
-                    i.appointmentType == "past" &&
-                    i?.appointmentType == selectIndex?.toLowerCase()
-                )?.length > 0 ? (
-                  <View style={styles?.stylists_title_container}>
-                    <View style={styles?.title_border}></View>
-                    <Text style={styles?.your_stylists_title}>
-                      {strings?.Past_Services}
-                    </Text>
-                    <View style={styles?.title_border}></View>
-                  </View>
-                ) : null}
-                {appointment
-                  ?.filter(
-                    (i: any) =>
-                      i.appointmentType == "past" &&
-                      i?.appointmentType == selectIndex?.toLowerCase()
-                  )
-                  .map((item, index) => {
-                    return (
-                      <View key={index} style={styles.cards}>
-                        <BarberAppointmentCard
-                          name={item.expertDetails?.name}
-                          date={moment(
-                            item?.timeSlot?.[0]?.availableDate
-                          ).format("DD MMM YYYY, ")}
-                          time={item?.timeSlot?.[0]?.availableTime}
-                          location={
-                            item.expertDetails?.city?.[0]?.city_name +
-                            ", " +
-                            item.expertDetails?.district?.[0]?.district_name +
-                            ", " +
-                            item.expertDetails?.state?.[0]?.state_name
-                          }
-                          service={item?.services
-                            ?.map((i: any) => i.service_name)
-                            .join(", ")}
-                          type={item.appointmentType}
-                          rating={item?.expertDetails?.averageRating}
-                          isCompleted={true}
-                          status={item?.status}
-                          price={item.totalAmount}
-                          image={
-                            item.expertDetails.user_profile_images?.[0]?.image
-                          }
-                          onPress={() => onPressItem(item)}
-                          imgBaseURL={appointmentList?.featured_image_url}
-                          onPressFeedBack={() => {
-                            setAppointmentItem(item);
-                            setIsModal(true);
-                          }}
                         />
                       </View>
                     );

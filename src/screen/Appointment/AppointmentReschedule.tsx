@@ -66,8 +66,6 @@ const AppointmentReschedule = () => {
   const { navigate } = useNavigation();
   const dispatch = useAppDispatch();
 
-  console.log("appointmentDetails", expertId);
-
   useEffect(() => {
     async function getDatesList() {
       let data = generateWeekDates(5);
@@ -132,7 +130,9 @@ const AppointmentReschedule = () => {
         },
         onSuccess: (response: any) => {
           setLoading(false);
-          navigate(screenName.AppointmentConfirm);
+          navigate(screenName.AppointmentConfirm, {
+            AppointmentId: response?.appointment?._id,
+          });
         },
         onFailure: () => {
           setLoading(false);
@@ -151,7 +151,6 @@ const AppointmentReschedule = () => {
   const onPressChat = () => {
     setLoading(true);
     let data = {
-      // participants: ["65eed0259e6593d24b2a5210", profileData?.user?._id],
       participants: [params?.id, profileData?.user?._id],
     };
     let obj = {

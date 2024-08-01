@@ -501,8 +501,12 @@ const Cart = () => {
                       </View>
                       <View style={styles.dotStyle} />
                       <Text style={styles.greyTextStyle}>
-                        {cartDetails?.user?.jobDone}
-                        {" Jobs Done"}
+                        {cartDetails?.user?.jobDone > 0
+                          ? cartDetails?.user?.jobDone
+                          : null}
+                        {cartDetails?.user?.jobDone > 0
+                          ? " Jobs Done"
+                          : "New Stylist"}
                       </Text>
                     </View>
                     <View style={styles.rowNameStyle}>

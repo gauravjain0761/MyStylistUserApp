@@ -357,6 +357,7 @@ const SelectLocation = ({}) => {
                   });
                   await setAsyncIsAddressed(true);
                   await setAsyncLocation(address);
+                  goBack();
                 }}
               />
             );

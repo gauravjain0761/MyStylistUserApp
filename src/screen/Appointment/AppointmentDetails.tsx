@@ -55,8 +55,6 @@ const AppointmentDetails = () => {
     dispatch(getAppointmentDetails(obj));
   }, [params?.id]);
 
-  console.log(params?.id);
-
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
   };

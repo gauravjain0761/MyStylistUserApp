@@ -80,7 +80,8 @@ const AppointmentConfirmCard = ({
             </View>
             <View style={styles.seprator}></View>
             <Text style={styles.jobs_title}>
-              {jobs} {strings.Jobs_Done}
+              {jobs > 0 ? jobs : null}{" "}
+              {jobs > 0 ? strings.Jobs_Done : "New Stylist"}
             </Text>
           </View>
 

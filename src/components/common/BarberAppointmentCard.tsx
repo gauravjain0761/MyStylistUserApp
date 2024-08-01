@@ -87,7 +87,7 @@ const BarberAppointmentCard = ({
               {time}
             </Text>
             <ImageBackground
-              resizeMode="contain"
+              resizeMode="stretch"
               source={images.completebadge}
               style={styles.complete_badge}
             >

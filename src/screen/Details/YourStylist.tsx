@@ -521,8 +521,12 @@ const YourStylist = () => {
                 </TouchableOpacity>
                 <View style={styles.dotStyle} />
                 <Text style={styles.greyTextStyle}>
-                  {itemDetails?.user?.jobDone}
-                  {" Jobs Done"}
+                  {itemDetails?.user?.jobDone > 0
+                    ? itemDetails?.user?.jobDone
+                    : null}
+                  {itemDetails?.user?.jobDone > 0
+                    ? " Jobs Done"
+                    : "New Stylist"}
                 </Text>
               </View>
             </View>

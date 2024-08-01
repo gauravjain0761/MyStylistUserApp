@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BackHeader } from "../../components";
 import { strings } from "../../helper/string";
 import AppointmentConfirmCard from "../../components/common/AppointmentConfirmCard";
@@ -17,10 +17,10 @@ import { colors } from "../../theme/color";
 import { fontFamily } from "../../theme/fonts";
 import { commonFontStyle } from "../../theme/fonts";
 import FeedbackModal from "../../components/common/FeedbackModal";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { writeReview } from "../../actions";
+import { getAppointmentDetails, writeReview } from "../../actions";
 import { api } from "../../helper/apiConstants";
 import FastImage from "react-native-fast-image";
 import moment from "moment";
@@ -47,15 +47,22 @@ const AppointmentConfirm = () => {
   const { userId, expertId } = Appointment;
   const [IsModal, setIsModal] = useState(false);
   const dispatch = useAppDispatch();
+  const { params }: any = useRoute();
 
   const { navigate } = useNavigation();
 
   const onPressFeedback = () => {
     setIsModal(!IsModal);
   };
-  const onPressCancel = () => {
-    navigate(screenName.AppointmentCancellation);
-  };
+
+  useEffect(() => {
+    let obj = {
+      id: params?.AppointmentId,
+      onSuccess: () => {},
+      onFailure: () => {},
+    };
+    dispatch(getAppointmentDetails(obj));
+  }, [params?.id]);
 
   const onPressSubmit = (rating: number, review: string) => {
     if (review.trim().length < 0) {
@@ -85,11 +92,14 @@ const AppointmentConfirm = () => {
     navigate(screenName.Cart);
   };
 
-  console.log("kokkoko", Appointment);
-
   return (
     <View style={styles.container}>
-      <BackHeader title={strings.Appointment_Detail} />
+      <BackHeader
+        onPressScreenBack={() =>
+          navigate(screenName?.tab_bar_name?.Appointment)
+        }
+        title={strings.Appointment_Detail}
+      />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <AppointmentConfirmCard

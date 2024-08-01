@@ -184,6 +184,7 @@ const Packages = ({ navigation }) => {
 
   const onPressItem = (item: any) => {
     setSelectPackages(item);
+    getDatesList();
     setVisible(!visible);
   };
 
@@ -298,6 +299,28 @@ const Packages = ({ navigation }) => {
         )}
         <View>
           <FlatList
+            data={allpackages.campaigns}
+            renderItem={({ item, index }) => {
+              return (
+                <TouchableOpacity
+                  style={styles.packageBtn}
+                  onPress={() => onPressCampaignItem(item)}
+                >
+                  <FastImage
+                    resizeMode="cover"
+                    style={styles.imgStyle}
+                    source={{
+                      uri:
+                        allpackages?.featured_image_url + "/" + item?.fileName,
+                      priority: FastImage.priority.high,
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            }}
+            keyExtractor={(item, index) => index.toString()}
+          />
+          <FlatList
             data={services}
             renderItem={({ item: items, index }) => {
               const isExpanded = expanded[items?.service_name];
@@ -323,30 +346,6 @@ const Packages = ({ navigation }) => {
                       <CarouselLoader marginTop={hp(10)} height={hp(280)} />
                     ) : (
                       <>
-                        <FlatList
-                          data={allpackages.campaigns}
-                          renderItem={({ item, index }) => {
-                            return (
-                              <TouchableOpacity
-                                style={styles.packageBtn}
-                                onPress={() => onPressCampaignItem(item)}
-                              >
-                                <FastImage
-                                  resizeMode="cover"
-                                  style={styles.imgStyle}
-                                  source={{
-                                    uri:
-                                      allpackages?.featured_image_url +
-                                      "/" +
-                                      item?.fileName,
-                                    priority: FastImage.priority.high,
-                                  }}
-                                />
-                              </TouchableOpacity>
-                            );
-                          }}
-                          keyExtractor={(item, index) => index.toString()}
-                        />
                         <FlatList
                           style={{ marginTop: hp(15) }}
                           data={packageList || []}

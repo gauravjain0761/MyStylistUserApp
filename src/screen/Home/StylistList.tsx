@@ -503,7 +503,8 @@ const StylistList = ({ navigation }) => {
                     </TouchableOpacity>
                     <View style={styles.seprator}></View>
                     <Text style={styles.jobs_title}>
-                      {item?.jobDone} {strings.Jobs_Done}
+                      {item?.jobDone > 0 ? item?.jobDone : null}{" "}
+                      {item?.jobDone > 0 ? strings.Jobs_Done : "New Stylist"}
                     </Text>
                   </View>
                   <View style={styles.marginStyle} />

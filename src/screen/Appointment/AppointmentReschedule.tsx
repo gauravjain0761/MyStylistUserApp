@@ -33,7 +33,11 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import moment from "moment";
 import { getExpertAvailability } from "../../actions/commonActions";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
-import { createChatRoom, rescheduleAppointment } from "../../actions";
+import {
+  createChatRoom,
+  getAppointmentDetails,
+  rescheduleAppointment,
+} from "../../actions";
 
 type RowItemValueProps = {
   title: string;
@@ -129,17 +133,31 @@ const AppointmentReschedule = () => {
           },
         },
         onSuccess: (response: any) => {
-          setLoading(false);
-          navigate(screenName.AppointmentConfirm, {
-            AppointmentId: response?.appointment?._id,
-          });
+          getAppointmentDetail(response?.appointment?._id);
         },
-        onFailure: () => {
+        onFailure: (err: any) => {
+          infoToast(err?.data?.error);
           setLoading(false);
         },
       };
       dispatch(rescheduleAppointment(obj));
     }
+  };
+
+  const getAppointmentDetail = (id: any) => {
+    let obj = {
+      id: id,
+      onSuccess: () => {
+        setLoading(false);
+        navigate(screenName.AppointmentConfirm, {
+          AppointmentId: id,
+        });
+      },
+      onFailure: () => {
+        setLoading(false);
+      },
+    };
+    dispatch(getAppointmentDetails(obj));
   };
 
   const initialValue = 0;

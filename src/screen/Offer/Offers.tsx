@@ -119,7 +119,7 @@ const Offers = ({ navigation }) => {
         if (Object.values(response.data?.cart)?.length > 0) {
           dispatch({
             type: CART_DETAILS,
-            payload: response?.data,
+            payload: response?.data?.cart,
           });
         } else {
           dispatch({

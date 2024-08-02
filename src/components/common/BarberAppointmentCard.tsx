@@ -130,38 +130,10 @@ const BarberAppointmentCard = ({
         <View style={styles.subtract_right}></View>
       </View>
       <View style={styles.card_down}>
-        {type === "past" ? (
-          <View style={styles.down_contain}>
-            {rating > 0 ? (
-              <View style={styles.start_conatiner}>
-                {Array.from(
-                  { length: rating },
-                  (_, index) => `Item ${index + 1}`
-                )?.map(() => {
-                  return <RatingStars />;
-                })}
-                {Array.from(
-                  { length: 5 - rating },
-                  (_, index) => `Item ${index + 1}`
-                )?.map(() => {
-                  return <RatingStars color={colors.active_dot} />;
-                })}
-              </View>
-            ) : (
-              <TouchableOpacity onPress={onPressFeedBack}>
-                <Text style={styles.feedbackTextStyle}>
-                  {strings.Give_Feedback}
-                </Text>
-              </TouchableOpacity>
-            )}
-            <Text style={styles.price}> ₹ {price}</Text>
-          </View>
-        ) : (
-          <View style={styles.down_contain}>
-            <Text style={styles.price}>{strings["Total (INR)"]}</Text>
-            <Text style={styles.price}> ₹ {price}</Text>
-          </View>
-        )}
+        <View style={styles.down_contain}>
+          <Text style={styles.price}>{strings["Total (INR)"]}</Text>
+          <Text style={styles.price}> ₹ {price}</Text>
+        </View>
       </View>
     </Pressable>
   );

@@ -143,6 +143,7 @@ export const rescheduleAppointment =
     })
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
+          console.log("respsopsops", response.status);
           dispatch({ type: APPOINTMENTS_RESCHEDULE, payload: response.data });
           dispatch({ type: IS_LOADING, payload: false });
           if (request.onSuccess) request.onSuccess(response.data);

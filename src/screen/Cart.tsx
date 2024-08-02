@@ -60,7 +60,6 @@ import {
 } from "../actions";
 import FastImage from "react-native-fast-image";
 import { set, truncate } from "lodash";
-import { err } from "react-native-svg";
 
 type RowItemValueProps = {
   title: string;
@@ -128,6 +127,7 @@ const Cart = () => {
           let data = convertToOutput(response);
           let time = data[0].value;
           setDates(data);
+          setCartLoading(false);
           let indexes = time
             ?.map((time: any, index: number) =>
               time?.isPast == false ? index : null
@@ -138,7 +138,9 @@ const Cart = () => {
           setTimes(data[0]?.value);
           setBookTime(time[indexes[0]]);
         },
-        onFailure: () => {},
+        onFailure: () => {
+          setCartLoading(false);
+        },
       };
       dispatch(getExpertAvailability(obj));
     }
@@ -283,13 +285,17 @@ const Cart = () => {
       data: {
         bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
         userId: userInfo?._id,
-        expertId: cartDetails?.cart?.expertId,
+        expertId: cartDetails?.cart?.expertId?._id,
         customerName: cartDetails?.user?.name,
         actions: [...actionsService, ...actionsOffer, ...actionsPackage],
         packages: Package,
         offers: Offer,
         services: Service,
-        serviceType: ["Offer", "Package", "Service"],
+        serviceType: [
+          Offer?.length && "Offer",
+          Package?.length && "Package",
+          Service?.length && "Service",
+        ]?.filter((item) => item),
         timeSlot: [
           {
             timeSlot_id: cartDetails?.cart?.timeSlot?.[0]?.timeSlot_id,
@@ -428,7 +434,6 @@ const Cart = () => {
         console.log("Err", Err);
       },
     };
-    console.log(obj?.data);
     dispatch(cartTimeSlot(obj));
   };
 

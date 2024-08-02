@@ -55,15 +55,6 @@ const AppointmentConfirm = () => {
     setIsModal(!IsModal);
   };
 
-  useEffect(() => {
-    let obj = {
-      id: params?.AppointmentId,
-      onSuccess: () => {},
-      onFailure: () => {},
-    };
-    dispatch(getAppointmentDetails(obj));
-  }, [params?.id]);
-
   const onPressSubmit = (rating: number, review: string) => {
     if (review.trim().length < 0) {
       Alert.alert("Enter review");
@@ -121,6 +112,7 @@ const AppointmentConfirm = () => {
               "DD MMM YYYY, "
             )}
             time={Appointment?.timeSlot?.[0]?.availableTime}
+            bookingID={Appointment?.bookingNumber}
           />
         </View>
 
@@ -155,39 +147,6 @@ const AppointmentConfirm = () => {
           </View>
         </View>
       </ScrollView>
-
-      <View style={styles.elevationStyle}>
-        <TouchableOpacity
-          disabled={Appointment?.status !== "completed"}
-          onPress={() => onPressFeedback()}
-        >
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.cartBtnStyle}
-            source={images.gery_button}
-          >
-            <Text style={styles.goTextStyle}>{strings.Give_Feedback}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-        {/* <TouchableOpacity onPress={() => onPressCancel()}>
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.cartBtnStyle}
-            source={images.gery_button}
-          >
-            <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
-          </ImageBackground>
-        </TouchableOpacity> */}
-        <TouchableOpacity onPress={() => onPressBookagain()}>
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.cartBtnStyle}
-            source={images.blue_button}
-          >
-            <Text style={styles.goTextStyle}>{strings.Book_Again}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
       <FeedbackModal
         userImg={
           appointmentDetails?.featured_image_url +

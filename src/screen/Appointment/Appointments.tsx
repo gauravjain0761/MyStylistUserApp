@@ -20,7 +20,11 @@ import BarberAppointmentCard from "../../components/common/BarberAppointmentCard
 import { hp, isCloseToBottom, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { fontFamily, commonFontStyle } from "../../theme/fonts";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import {
   AppointmentLoader,
@@ -56,25 +60,22 @@ const Appointments = ({ navigation }) => {
   const [appointmentItem, setAppointmentItem] = useState<any>({});
   const [selectIndex, setSelectIndex] = useState("Upcoming");
   const [loading, setLoading] = useState(false);
+  const { params } = useRoute();
 
   useFocusEffect(
     useCallback(() => {
-      setPage(1);
-      getList(true);
-      return () => {
-        setPage(1);
-      };
+      getList(true, params?.type, 1);
     }, [])
   );
 
-  async function getList(isLoading: boolean) {
+  async function getList(isLoading: boolean, type?: any, pages?: number) {
     setLoading(isLoading);
     const userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?._id,
-      page: page,
+      page: pages ? pages : page,
       limit: 10,
-      status: selectIndex?.toLowerCase(),
+      status: type ? type?.toLowerCase() : selectIndex?.toLowerCase(),
     };
     let obj = {
       isLoading: isLoading,
@@ -89,13 +90,15 @@ const Appointments = ({ navigation }) => {
         setLoading(false);
       },
     };
-    console.log(selectIndex);
     dispatch(getUserAppointments(obj));
   }
 
   const onPressItem = (item: any) => {
     //@ts-ignore
-    navigate(screenName.AppointmentDetails, { id: item?._id });
+    navigate(screenName.AppointmentDetails, {
+      id: item?._id,
+      status: selectIndex,
+    });
   };
 
   const loadMoreData = () => {

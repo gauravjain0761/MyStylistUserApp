@@ -37,6 +37,7 @@ type props = {
   service?: string;
   price?: string;
   jobs?: number | string;
+  bookingID?: string;
 };
 
 const AppointmentConfirmCard = ({
@@ -51,6 +52,7 @@ const AppointmentConfirmCard = ({
   onPress,
   jobs,
   rating,
+  bookingID,
 }: props) => {
   const { navigate } = useNavigation();
 
@@ -110,6 +112,14 @@ const AppointmentConfirmCard = ({
               <Text style={styles.time_lable}>{strings.Date}</Text>
             </View>
             <Text style={styles.time}>{date}</Text>
+          </View>
+          <View style={styles.time_conatiner}>
+            <View style={styles.time_img}>
+              <Text style={{ ...styles.time_lable, paddingLeft: 5 }}>
+                {"Booking ID"}
+              </Text>
+            </View>
+            <Text style={styles.time}>{bookingID}</Text>
           </View>
         </View>
       </View>

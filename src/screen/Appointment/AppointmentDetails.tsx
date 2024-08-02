@@ -1,4 +1,5 @@
 import {
+  Alert,
   ImageBackground,
   ScrollView,
   StyleSheet,
@@ -18,9 +19,14 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import moment from "moment";
-import { createChatRoom, getAppointmentDetails } from "../../actions";
+import {
+  createChatRoom,
+  getAppointmentDetails,
+  writeReview,
+} from "../../actions";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import { log } from "console";
+import FeedbackModal from "../../components/common/FeedbackModal";
 
 type RowItemValueProps = {
   title: string;
@@ -45,6 +51,7 @@ const AppointmentDetails = () => {
   const { Appointment } = appointmentDetails;
   const { isLoading } = useAppSelector((state) => state.common);
   const [loading, setLoading] = useState(false);
+  const [IsModal, setIsModal] = useState(false);
 
   useEffect(() => {
     let obj = {
@@ -89,9 +96,43 @@ const AppointmentDetails = () => {
     };
     dispatch(createChatRoom(obj));
   };
+  const onPressFeedback = () => {
+    setIsModal(!IsModal);
+  };
+  const onPressSubmit = (rating: number, review: string) => {
+    if (review.trim().length < 0) {
+      Alert.alert("Enter review");
+    } else if (rating < 1) {
+      Alert.alert("Enter rating");
+    } else {
+      let obj = {
+        data: {
+          expertId: expertId?._id,
+          userId: userId?._id,
+          star_rating: rating,
+          review: review,
+        },
+        onSuccess: () => {
+          navigate(screenName.Feedback);
+        },
+        onFailure: (Err) => {
+          console.log(Err);
+        },
+      };
+      dispatch(writeReview(obj));
+    }
+  };
+
   return (
     <View style={styles.conatiner}>
-      <BackHeader title={strings.Appointment_Detail} />
+      <BackHeader
+        onPressScreenBack={() =>
+          navigate(screenName?.tab_bar_name?.Appointment, {
+            type: params?.status,
+          })
+        }
+        title={strings.Appointment_Detail}
+      />
       <Loader visible={loading} />
       <ScrollView>
         {isLoading ? (
@@ -184,26 +225,69 @@ const AppointmentDetails = () => {
           </View>
         )}
       </ScrollView>
-      <View style={styles.elevationStyle}>
-        <TouchableOpacity onPress={() => onPressCancel()}>
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.cartBtnStyle}
-            source={images.gery_button}
+      <FeedbackModal
+        userImg={
+          appointmentDetails?.featured_image_url +
+          "/" +
+          Appointment?.expertId?.user_profile_images?.[0]?.image
+        }
+        expertInfo={Appointment?.expertId}
+        close={setIsModal}
+        visible={IsModal}
+        onPresssubmit={(rating, review) => onPressSubmit(rating, review)}
+      />
+      {params?.status?.toLowerCase() == "upcoming" ? (
+        <View style={styles.elevationStyle}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => onPressCancel()}>
+            <ImageBackground
+              resizeMode="stretch"
+              style={styles.cartBtnStyle}
+              source={images.gery_button}
+            >
+              <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => onPressReschedule()}
           >
-            <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => onPressReschedule()}>
-          <ImageBackground
-            resizeMode="stretch"
-            style={styles.cartBtnStyle}
-            source={images.blue_button}
+            <ImageBackground
+              resizeMode="stretch"
+              style={styles.cartBtnStyle}
+              source={images.blue_button}
+            >
+              <Text style={styles.goTextStyle}>{strings.Reschedule}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+      ) : params?.status?.toLowerCase() == "reschedule" ? (
+        <View style={styles.elevationStyle}>
+          <TouchableOpacity style={{ flex: 1 }} onPress={() => onPressCancel()}>
+            <ImageBackground
+              resizeMode="stretch"
+              style={styles.cartBtnStyle}
+              source={images.gery_button}
+            >
+              <Text style={styles.goTextStyle}>{strings.Cancel}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+      ) : params?.status?.toLowerCase() == "completed" ? (
+        <View style={styles.elevationStyle}>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => onPressFeedback()}
           >
-            <Text style={styles.goTextStyle}>{strings.Reschedule}</Text>
-          </ImageBackground>
-        </TouchableOpacity>
-      </View>
+            <ImageBackground
+              resizeMode="stretch"
+              style={styles.cartBtnStyle}
+              source={images.blue_button}
+            >
+              <Text style={styles.goTextStyle}>{strings.Give_Feedback}</Text>
+            </ImageBackground>
+          </TouchableOpacity>
+        </View>
+      ) : null}
     </View>
   );
 };
@@ -280,6 +364,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    gap: wp(10),
   },
   priceTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 24, colors.black_2),
@@ -288,7 +373,6 @@ const styles = StyleSheet.create({
   },
   cartBtnStyle: {
     height: hp(60),
-    width: wp(160),
     alignItems: "center",
     justifyContent: "center",
   },

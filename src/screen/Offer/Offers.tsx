@@ -181,8 +181,7 @@ const Offers = ({ navigation }) => {
     navigation.openDrawer();
   };
 
-  async function getDatesList(ids: any) {
-    let userInfo = await getAsyncUserInfo();
+  async function getDatesList(ids?: any) {
     let data = generateWeekDates(5);
 
     let obj = {
@@ -190,7 +189,7 @@ const Offers = ({ navigation }) => {
         startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
         endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
         timeSlotDuration: 15,
-        expertId: ids || userInfo._id,
+        expertId: ids,
       },
       onSuccess: (response: any) => {
         let data = convertToOutput(response);
@@ -270,10 +269,7 @@ const Offers = ({ navigation }) => {
 
   const onPressOfferItem = (item: any) => {
     getDatesList(item?.expert_id);
-    setTimeout(() => {
-      setSelectOffer(item);
-      setVisible(!visible);
-    }, 1000);
+    setVisible(!visible);
   };
 
   const loadMoreData = () => {

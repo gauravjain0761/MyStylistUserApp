@@ -242,6 +242,7 @@ const Cart = () => {
         }),
       };
     });
+
     let Package = cartDetails?.cart?.packages?.flatMap((item, index) => {
       return {
         actionId: item?.actionId,
@@ -804,7 +805,10 @@ const Cart = () => {
           </ScrollView>
           <View style={styles.bottomStyle}>
             <TouchableOpacity
-              onPress={() => setOrderPlaceSheet(!orderPlaceSheet)}
+              // onPress={() => setOrderPlaceSheet(!orderPlaceSheet)}
+              onPress={() => {
+                onPressBook();
+              }}
             >
               <ImageBackground
                 resizeMode="contain"

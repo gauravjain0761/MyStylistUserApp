@@ -9,7 +9,12 @@ import {
 } from "react-native";
 import React from "react";
 import { icons, images } from "../../theme/icons";
-import { dispatchNavigation, hp, wp } from "../../helper/globalFunction";
+import {
+  dispatchNavigation,
+  hp,
+  successToast,
+  wp,
+} from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { strings } from "../../helper/string";
@@ -44,9 +49,23 @@ const CustomDrawer = () => {
   };
 
   const onPressLogOut = async () => {
-    await clearAsync().then(() => {
-      return dispatchNavigation(screenName.Login);
-    });
+    Alert.alert("Log out", "Are you sure you want to log out ?", [
+      {
+        text: "Yes",
+        onPress: async () => {
+          await clearAsync().then(() => {
+            successToast("Logout Successfully");
+            return dispatchNavigation(screenName.Login);
+          });
+        },
+        style: "destructive",
+      },
+      {
+        text: "No",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel",
+      },
+    ]);
   };
 
   const onPressFavorite = () => {

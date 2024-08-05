@@ -21,7 +21,11 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import { getCartlist } from "../../actions";
 import { CART_DETAILS } from "../../actions/dispatchTypes";
-import { useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 import moment from "moment";
 import { getExpertAvailability } from "../../actions/commonActions";
 
@@ -42,6 +46,7 @@ const StylistItem = ({ isOffer, data, offers, index }: Props) => {
   const [date, setDate] = useState("");
   const [selectedDateIndex, setSelectedDate] = useState(0);
   const [selectedTimeIndex, setSelectedTime] = useState(0);
+  const { params } = useRoute();
 
   const dispatch = useAppDispatch();
 
@@ -52,7 +57,6 @@ const StylistItem = ({ isOffer, data, offers, index }: Props) => {
 
   useEffect(() => {
     async function getDatesList() {
-      let userInfo = await getAsyncUserInfo();
       let data = generateWeekDates();
 
       let obj = {
@@ -60,10 +64,9 @@ const StylistItem = ({ isOffer, data, offers, index }: Props) => {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: userInfo?._id,
+          expertId: params?.id,
         },
         onSuccess: (response: any) => {
-          console.log("response", response);
           let data = convertToOutput(response);
           let time = data?.[0]?.value;
           setDates(data);

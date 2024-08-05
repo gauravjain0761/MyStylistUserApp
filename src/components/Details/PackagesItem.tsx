@@ -21,6 +21,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
 import moment from "moment";
 import { getExpertAvailability } from "../../actions/commonActions";
+import { useRoute } from "@react-navigation/native";
 
 type Props = {
   data: any;
@@ -38,6 +39,7 @@ const PackagesItem = ({ packages, index }: Props) => {
   const [date, setDate] = useState("");
   const [selectedDateIndex, setSelectedDate] = useState(0);
   const [selectedTimeIndex, setSelectedTime] = useState(0);
+  const { params } = useRoute();
 
   const dispatch = useAppDispatch();
 
@@ -55,10 +57,9 @@ const PackagesItem = ({ packages, index }: Props) => {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: cartDetails?.expertId?._id,
+          expertId: params?.id,
         },
         onSuccess: (response: any) => {
-          console.log("response", response);
           let data = convertToOutput(response);
           let time = data?.[0]?.value;
           setDates(data);

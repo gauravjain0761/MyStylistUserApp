@@ -100,3 +100,28 @@ export const Citylist =
         if (request.onFailure) request.onFailure(error.response);
       });
   };
+
+export const getrefreshToken =
+  (request: any): ThunkAction<void, RootState, unknown, AnyAction> =>
+  (dispatch) => {
+    let headers = {
+      "Content-Type": "application/json",
+    };
+    return makeAPIRequest({
+      method: POST,
+      url: api.refreshToken,
+      headers: headers,
+    })
+      .then(async (response: any) => {
+        if (response.status === 200) {
+          dispatch({ type: IS_LOADING, payload: false });
+          if (request.onSuccess) request.onSuccess(response.data);
+        } else {
+          errorToast(response.data?.status);
+        }
+      })
+      .catch((error) => {
+        dispatch({ type: IS_LOADING, payload: false });
+        if (request.onFailure) request.onFailure(error.response);
+      });
+  };

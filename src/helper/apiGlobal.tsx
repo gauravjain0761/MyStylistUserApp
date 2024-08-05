@@ -15,6 +15,48 @@ interface makeAPIRequestProps {
   params?: any;
 }
 
+const apiClient = axios.create({
+  baseURL: api.BASE_URL,
+});
+
+let isRefreshing = false;
+let failedQueue: any[] = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
+const refreshToken = async () => {
+  try {
+    const refreshToken = await AsyncStorage.getItem("refreshToken");
+    if (!refreshToken) throw new Error("No refresh token available");
+
+    const response = await axios.post(`${api.BASE_URL}`, {
+      refreshToken,
+    });
+
+    const { accessToken } = response.data;
+    await AsyncStorage.setItem("accessToken", accessToken);
+
+    return accessToken;
+  } catch (error) {
+    clearAsync();
+    navigationRef?.current?.reset({
+      index: 1,
+      routes: [{ name: screenName.Login }],
+    });
+    throw error;
+  }
+};
+
 export const makeAPIRequest = ({
   method,
   url,

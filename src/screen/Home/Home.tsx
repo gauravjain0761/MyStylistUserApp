@@ -88,12 +88,14 @@ import {
   setAsyncCoord,
   setAsyncIsAddressed,
   setAsyncLocation,
+  setAsyncToken,
 } from "../../helper/asyncStorage";
 import { setLocation } from "../../actions/locationAction";
 import {
   addToCart,
   getAllExpertReview,
   getCartlist,
+  getrefreshToken,
   getUserDetails,
 } from "../../actions";
 import FastImage from "react-native-fast-image";
@@ -106,6 +108,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { debounce, lowerFirst } from "lodash";
 import ServiceSelect from "../../components/common/ServiceSelect";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
+import messaging from "@react-native-firebase/messaging";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -148,6 +151,7 @@ const Home = () => {
   const [selectedServiceModal, setSelectedServiceModal] = useState(false);
   const [imageModal, setImageModal] = useState(false);
   const [image, setImage] = useState([]);
+  const [deviceToken, setDeviceToken] = useState<string>("");
   const { selectedService: cartSelectedService } = useAppSelector(
     (state) => state?.cart
   );
@@ -161,6 +165,13 @@ const Home = () => {
   const isInitialRender = useRef(true);
 
   useEffect(() => {
+    const unsubscribe = onTokenRefreshListener();
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     const socket = io(api.BASE_URL);
     // console.log(socket)
     socket.on("connect", () => {
@@ -172,6 +183,27 @@ const Home = () => {
       });
     };
   }, []);
+
+  const onTokenRefreshListener = () => {
+    return messaging()?.onTokenRefresh(async (newToken) => {
+      if (newToken) {
+        await setAsyncToken(newToken);
+        setDeviceToken(JSON.stringify(newToken));
+        console.log("New FCM Token:", JSON.stringify(newToken));
+      }
+    });
+  };
+
+  const getRefreshToken = async () => {
+    let obj = {
+      data: {},
+      onSuccess: (response: any) => {
+        console.log("Resssss", response);
+      },
+      onFailure: (Err: any) => {},
+    };
+    dispatch(getrefreshToken(obj));
+  };
 
   useEffect(() => {
     Linking.getInitialURL().then((url) => {
@@ -277,8 +309,8 @@ const Home = () => {
     await requestLocationPermission(
       async (response) => {
         let data = {
-          latitude: response?.latitude,
-          longitude: response?.longitude,
+          latitude: response?.latitude || 76.7233438,
+          longitude: response?.longitude || 30.6776689,
           maxDistance: 50000,
           page: page,
           limit: 5,
@@ -397,8 +429,8 @@ const Home = () => {
           }
         ).then(async (res) => {
           const coord = {
-            latitude: Number(response?.latitude),
-            longitude: Number(response?.longitude),
+            latitude: Number(response?.latitude || 30.6776689),
+            longitude: Number(response?.longitude || 76.7233438),
             maxDistance: 50000,
           };
           await setAsyncCoord(coord);

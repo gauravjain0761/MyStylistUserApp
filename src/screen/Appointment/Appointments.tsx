@@ -117,30 +117,30 @@ const Appointments = ({ navigation }) => {
 
   const debouncedLoadMoreData = debounce(loadMoreData, 500); // Adjust the delay as needed
 
-  const onPressSubmit = async (rating: number, review: string) => {
-    let userInfo = await getAsyncUserInfo();
-    if (review.trim().length < 0) {
-      Alert.alert("Enter review");
-    } else if (rating < 1) {
-      Alert.alert("Enter rating");
-    } else {
-      let obj = {
-        data: {
-          expertId: appointmentItem?.expertId,
-          userId: userInfo?._id,
-          star_rating: rating,
-          review: review,
-        },
-        onSuccess: () => {
-          navigate(screenName.Feedback);
-        },
-        onFailure: (Err) => {
-          console.log(Err);
-        },
-      };
-      dispatch(writeReview(obj));
-    }
-  };
+  // const onPressSubmit = async (rating: number, review: string) => {
+  //   let userInfo = await getAsyncUserInfo();
+  //   if (review.trim().length < 0) {
+  //     Alert.alert("Enter review");
+  //   } else if (rating < 1) {
+  //     Alert.alert("Enter rating");
+  //   } else {
+  //     let obj = {
+  //       data: {
+  //         expertId: appointmentItem?.expertId,
+  //         userId: userInfo?._id,
+  //         star_rating: rating,
+  //         review: review,
+  //       },
+  //       onSuccess: () => {
+  //         navigate(screenName.Feedback);
+  //       },
+  //       onFailure: (Err) => {
+  //         console.log(Err);
+  //       },
+  //     };
+  //     dispatch(writeReview(obj));
+  //   }
+  // };
 
   useEffect(() => {
     getList(true);
@@ -221,7 +221,7 @@ const Appointments = ({ navigation }) => {
                           type={item.appointmentType}
                           rating={item?.expertDetails?.averageRating}
                           status={item?.status}
-                          price={item.totalAmount}
+                          price={item?.totalAmount}
                           image={
                             item.expertDetails.user_profile_images?.[0]?.image
                           }
@@ -243,7 +243,7 @@ const Appointments = ({ navigation }) => {
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
 
-      <FeedbackModal
+      {/* <FeedbackModal
         userImg={
           appointmentList?.featured_image_url +
           "/" +
@@ -253,7 +253,7 @@ const Appointments = ({ navigation }) => {
         close={setIsModal}
         visible={IsModal}
         onPresssubmit={(rating, review) => onPressSubmit(rating, review)}
-      />
+      /> */}
     </View>
   );
 };

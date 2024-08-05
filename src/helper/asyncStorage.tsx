@@ -23,6 +23,8 @@ export const clearAsync = async () => {
     asyncKeys.location,
     asyncKeys.cartId,
     asyncKeys.isAddressed,
+    asyncKeys.device_token,
+    asyncKeys.cartId,
   ]);
 };
 

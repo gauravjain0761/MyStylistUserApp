@@ -185,7 +185,6 @@ const Home = () => {
           deviceToken: newToken,
         };
         getRefreshToken(obj);
-        await setAsyncToken(newToken);
       }
     });
   };

@@ -111,6 +111,7 @@ export const getrefreshToken =
       method: POST,
       url: api.refreshToken,
       headers: headers,
+      data: request.data,
     })
       .then(async (response: any) => {
         if (response.status === 200) {

@@ -5,13 +5,10 @@ import {
 import { FC } from "react";
 import StackNavigator from "./StackNavigator";
 import React from "react";
-import { Loader } from "../components";
-import { useAppSelector } from "../redux/hooks";
 
 export const navigationRef = createNavigationContainerRef();
 
 const RootContainer: FC = () => {
-  const { isLoading } = useAppSelector((state) => state.common);
   return (
     <NavigationContainer ref={navigationRef}>
       <StackNavigator />

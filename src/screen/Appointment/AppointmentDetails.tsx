@@ -25,7 +25,6 @@ import {
   writeReview,
 } from "../../actions";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
-import { log } from "console";
 import FeedbackModal from "../../components/common/FeedbackModal";
 
 type RowItemValueProps = {
@@ -73,7 +72,7 @@ const AppointmentDetails = () => {
   const onPressChat = () => {
     setLoading(true);
     let data = {
-      participants: [params?.id, profileData?.user?._id],
+      participants: [Appointment?.expertId?._id, profileData?.user?._id],
     };
     let obj = {
       data: data,
@@ -81,13 +80,15 @@ const AppointmentDetails = () => {
         setLoading(false);
         let roomId = response?.roomId;
         let receiver = response?.participants?.filter(
-          (item: any) => item._id == params?.id
+          (item: any) => item._id !== profileData?.user?._id
         )?.[0];
         //@ts-ignore
         navigate(screenName.ChatDetails, {
           roomId: roomId,
           name: receiver?.name,
           receiverId: receiver?._id,
+          receiverImage: Appointment?.expertId?.user_profile_images?.[0]?.image,
+          device_token: receiver?.device_token,
         });
       },
       onFailure: () => {

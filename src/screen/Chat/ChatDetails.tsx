@@ -27,7 +27,6 @@ const ChatDetails = () => {
   const [roomId, setRoomId] = useState("");
 
   const { image } = profileData?.user?.user_profile_images?.[0] || [];
-  const { IMG_URL } = api;
 
   const joinRoom = async (roomId: string) => {
     const userInfo = await getAsyncUserInfo();

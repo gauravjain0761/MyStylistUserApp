@@ -10,7 +10,7 @@ export const api = {
   send_verify_code: "user/user-login",
   verify_OTP: "user/verify-otp",
   city: "city/getAllCityNameForMobile",
-  refreshToken: "user/refreshToken",
+  refreshToken: "user/updateMobileToken",
 
   // Home
   allServices: "service/getAllServices",

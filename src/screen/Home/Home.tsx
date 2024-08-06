@@ -12,14 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, {
-  FC,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { colors } from "../../theme/color";
 import {
   convertToOutput,
@@ -42,7 +35,6 @@ import {
   CarouselLoader,
   Filter_Button,
   HomeHeader,
-  Loader,
   LocationModal,
   Modals,
   ReviewModal,
@@ -86,6 +78,7 @@ import {
   getAsyncLocation,
   getAsyncUserInfo,
   setAsyncCoord,
+  setAsyncDevice_token,
   setAsyncIsAddressed,
   setAsyncLocation,
   setAsyncToken,
@@ -151,7 +144,6 @@ const Home = () => {
   const [selectedServiceModal, setSelectedServiceModal] = useState(false);
   const [imageModal, setImageModal] = useState(false);
   const [image, setImage] = useState([]);
-  const [deviceToken, setDeviceToken] = useState<string>("");
   const { selectedService: cartSelectedService } = useAppSelector(
     (state) => state?.cart
   );
@@ -186,19 +178,23 @@ const Home = () => {
 
   const onTokenRefreshListener = () => {
     return messaging()?.onTokenRefresh(async (newToken) => {
+      let userInfo = await getAsyncUserInfo();
       if (newToken) {
+        let obj = {
+          userId: userInfo._id,
+          deviceToken: newToken,
+        };
+        getRefreshToken(obj);
         await setAsyncToken(newToken);
-        setDeviceToken(JSON.stringify(newToken));
-        console.log("New FCM Token:", JSON.stringify(newToken));
       }
     });
   };
 
-  const getRefreshToken = async () => {
+  const getRefreshToken = async (data: any) => {
     let obj = {
-      data: {},
-      onSuccess: (response: any) => {
-        console.log("Resssss", response);
+      data: data,
+      onSuccess: async (response: any) => {
+        await setAsyncDevice_token(response?.data?.device_token.toString());
       },
       onFailure: (Err: any) => {},
     };
@@ -277,7 +273,18 @@ const Home = () => {
       data: {
         userid: userInfo._id,
       },
-      onSuccess: () => {},
+      onSuccess: async (response: any) => {
+        let userId = response?.user?._id;
+        let current_device_token = response?.user?.device_token;
+        let new_device_token = await messaging().getToken();
+        if (new_device_token !== current_device_token) {
+          let obj = {
+            userId: userId,
+            deviceToken: new_device_token,
+          };
+          getRefreshToken(obj);
+        }
+      },
       onFailure: () => {},
     };
     dispatch(getUserDetails(obj));

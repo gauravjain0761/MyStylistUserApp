@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
   },
   barber_details_continer: {
     paddingLeft: wp(20),
-    justifyContent: "center",
+    flex: 1,
   },
   barber_name: {
     ...commonFontStyle(fontFamily.semi_bold, 28, colors.black),
@@ -494,6 +494,7 @@ const styles = StyleSheet.create({
   salooninfo: {
     flexDirection: "row",
     alignItems: "center",
+    flexWrap: "wrap",
   },
   saloontitle: {
     ...commonFontStyle(fontFamily.medium, 12, colors.black),

@@ -67,6 +67,7 @@ const OtpVerification = ({ route }: any) => {
           dispatchNavigation(screenName?.Home);
         },
         onFailure: (error) => {
+          console.log("Errrrr", error);
           setLoading(false);
           infoToast(error?.data?.message);
         },

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { api } from "./apiConstants";
+import { POST, api } from "./apiConstants";
 import {
   clearAsync,
   getAsyncRefreshToken,

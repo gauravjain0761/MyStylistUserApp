@@ -32,7 +32,7 @@ const ChatDetails = () => {
     const userInfo = await getAsyncUserInfo();
     if (roomId !== "") {
       socket.emit("join_room", roomId);
-      socket.emit("user_online", { chatId: roomId, name: userInfo?._id });
+      socket.emit("user_online", { chatId: roomId, name: userInfo?.userId });
       getOldMessages(roomId);
     }
   };

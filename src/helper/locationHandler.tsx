@@ -141,13 +141,11 @@ export const getAddress = async (
   onFailure?: any
 ) => {
   const headersList = {};
-  fetch(
-    `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${region?.latitude},${region?.longitude}&api_key=${api?.MAP_KEY}`,
-    {
-      method: "GET",
-      headers: headersList,
-    }
-  )
+  let url = `https://api.olamaps.io/places/v1/reverse-geocode?latlng=${region?.latitude},${region?.longitude}&api_key=${api?.MAP_KEY}`;
+  fetch(url, {
+    method: "GET",
+    headers: headersList,
+  })
     .then(function (response) {
       return response.json();
     })

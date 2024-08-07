@@ -84,7 +84,6 @@ export const editAddress =
       .then((result: any) => {
         if (result.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
-
           if (request.onSuccess) request.onSuccess(result.data);
         }
       })

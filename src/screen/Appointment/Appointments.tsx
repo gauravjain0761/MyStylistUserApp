@@ -72,7 +72,7 @@ const Appointments = ({ navigation }) => {
     setLoading(isLoading);
     const userInfo = await getAsyncUserInfo();
     let data = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       page: pages ? pages : page,
       limit: 10,
       status: type ? type?.toLowerCase() : selectIndex?.toLowerCase(),
@@ -127,7 +127,7 @@ const Appointments = ({ navigation }) => {
   //     let obj = {
   //       data: {
   //         expertId: appointmentItem?.expertId,
-  //         userId: userInfo?._id,
+  //         userId: userInfo?.userId,
   //         star_rating: rating,
   //         review: review,
   //       },

@@ -42,7 +42,7 @@ const Chats = ({ navigation }) => {
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
-      url: `${api?.chatParticipants}${userInfo?._id}?role=expert`,
+      url: `${api?.chatParticipants}${userInfo?.userId}?role=expert`,
       onSuccess: () => {
         setLoading(false);
         setIsRefresh(false);
@@ -60,7 +60,7 @@ const Chats = ({ navigation }) => {
     const userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        participants: [item?._id, userInfo?._id],
+        participants: [item?._id, userInfo?.userId],
       },
       onSuccess: async (res: any) => {
         console.log("res::::", res);

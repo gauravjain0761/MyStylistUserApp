@@ -152,7 +152,7 @@ const Cart = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         if (Object.values(response.data?.cart)?.length > 0) {
@@ -285,7 +285,7 @@ const Cart = () => {
     let obj = {
       data: {
         bookingNumber: Math.floor(Math.random() * 9000000000) + 1000000000,
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
         expertId: cartDetails?.cart?.expertId?._id,
         customerName: cartDetails?.user?.name,
         actions: [...actionsService, ...actionsOffer, ...actionsPackage],
@@ -341,7 +341,7 @@ const Cart = () => {
       });
     }
     let data = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       itemIds: itemIdes,
       cartId: cartDetails?.cart?.cart_id,
     };
@@ -375,7 +375,7 @@ const Cart = () => {
     let userInfo = await getAsyncUserInfo();
     let data = {
       cartId: cartDetails?.cart?.cart_id,
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       itemIds: Ids,
     };
     let obj = {
@@ -418,7 +418,7 @@ const Cart = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
         cartId: cartDetails?.cart?.cart_id,
         updatedTimeSlots: [
           {

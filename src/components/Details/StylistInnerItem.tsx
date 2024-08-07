@@ -69,7 +69,7 @@ const StylistInnerItem = ({
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         await setAsyncCartId(response?.data?.cart?.cart_id);
@@ -110,7 +110,7 @@ const StylistInnerItem = ({
     let cartId = await getAsyncCartId();
     let userInfo = await getAsyncUserInfo();
     let passData = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       itemIds: [serviceId],
       cartId: cartId,
     };
@@ -164,7 +164,7 @@ const StylistInnerItem = ({
       ],
     };
     let passData = {
-      userId: userInfo._id,
+      userId: userInfo.userId,
       expertId: data?.expert_id,
       timeSlot: [
         {
@@ -220,7 +220,7 @@ const StylistInnerItem = ({
     let userInfo = await getAsyncUserInfo();
     let data = {
       cartId: cartDetails?.cart_id,
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       itemIds: Ids,
     };
     let obj = {

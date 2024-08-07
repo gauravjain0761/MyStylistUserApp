@@ -79,7 +79,7 @@ const StylistList = ({ navigation }) => {
         startDate: moment(data?.[0].date).format("YYYY-MM-DD"),
         endDate: moment(data?.[data?.length - 1].date).format("YYYY-MM-DD"),
         timeSlotDuration: 60,
-        expertId: userInfo._id,
+        expertId: userInfo.userId,
       },
       onSuccess: (response: any) => {
         let data = convertToOutput(response);
@@ -130,7 +130,7 @@ const StylistList = ({ navigation }) => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: (response: any) => {
         response?.data.forEach((item) => {

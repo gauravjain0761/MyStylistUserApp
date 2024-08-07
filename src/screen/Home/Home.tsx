@@ -1,8 +1,6 @@
 import {
   ActivityIndicator,
   FlatList,
-  // FlatList,
-  Image,
   ImageBackground,
   Linking,
   RefreshControl,
@@ -41,15 +39,9 @@ import {
   SelectDateModal,
   UserItemLoader,
 } from "../../components";
-import babelConfig from "../../../babel.config";
-import {
-  useFocusEffect,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
-import { DrawerNavigationProp } from "@react-navigation/drawer";
 import CityModal from "../../components/common/CityModal";
 import {
   getAddress,
@@ -74,18 +66,15 @@ import {
 } from "../../actions/dispatchTypes";
 import {
   getAsyncCoord,
+  getAsyncDefaultLatLng,
   getAsyncIsAddressed,
   getAsyncLocation,
   getAsyncUserInfo,
   setAsyncCoord,
   setAsyncDevice_token,
-  setAsyncIsAddressed,
   setAsyncLocation,
-  setAsyncToken,
 } from "../../helper/asyncStorage";
-import { setLocation } from "../../actions/locationAction";
 import {
-  addToCart,
   getAllExpertReview,
   getCartlist,
   getrefreshToken,
@@ -147,7 +136,7 @@ const Home = () => {
   const { selectedService: cartSelectedService } = useAppSelector(
     (state) => state?.cart
   );
-
+  const { currentCoords } = useAppSelector((state) => state?.address);
   const { getallservices, userList, barberList, itemDetails } = useAppSelector(
     (state) => state.home
   );
@@ -181,7 +170,7 @@ const Home = () => {
       let userInfo = await getAsyncUserInfo();
       if (newToken) {
         let obj = {
-          userId: userInfo._id,
+          userId: userInfo.userId,
           deviceToken: newToken,
         };
         getRefreshToken(obj);
@@ -243,9 +232,6 @@ const Home = () => {
                 }
                 setMaleData(outputData);
                 getUserList(true);
-                setTimeout(() => {
-                  GetStatus();
-                }, 500);
               },
               onFailure: () => {},
             };
@@ -270,7 +256,7 @@ const Home = () => {
     let obj = {
       isLoading: false,
       data: {
-        userid: userInfo._id,
+        userid: userInfo.userId,
       },
       onSuccess: async (response: any) => {
         let userId = response?.user?._id;
@@ -293,7 +279,7 @@ const Home = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: (response) => {
         dispatch({ type: CART_DETAILS, payload: response?.data?.cart });
@@ -308,15 +294,28 @@ const Home = () => {
   useFocusEffect(
     useCallback(() => {
       getCartData();
+      getUserList(true);
     }, [])
   );
 
   const getUserList = async (isLoading: boolean) => {
+    let defaultLatLng = await getAsyncDefaultLatLng();
+    let coord = await getAsyncCoord();
+    let isAddress = await getAsyncIsAddressed();
+
     await requestLocationPermission(
       async (response) => {
+        let latitude =
+          isAddress && Object.keys(currentCoords).length === 0
+            ? defaultLatLng?.latitude || 30.6776689
+            : response?.latitude || coord?.latitude || 30.6776689;
+        let longitude =
+          isAddress && Object.keys(currentCoords).length === 0
+            ? defaultLatLng?.longitude || 76.7233438
+            : response?.longitude || coord?.longitude || 76.7233438;
         let data = {
-          latitude: response?.latitude || 76.7233438,
-          longitude: response?.longitude || 30.6776689,
+          latitude: latitude,
+          longitude: longitude,
           maxDistance: 50000,
           page: page,
           limit: 5,
@@ -457,14 +456,13 @@ const Home = () => {
     }, [])
   );
 
-  const LocationAllow = async (city: any) => {
-    city ? await setAsyncLocation(city) : await setAsyncLocation(null);
-    GetStatus();
-  };
+  // const LocationAllow = async (city: any) => {
+  //   city ? await setAsyncLocation(city) : await setAsyncLocation(null);
+  //   GetStatus();
+  // };
 
   const GetStatus = async () => {
     const Status = await getAsyncLocation();
-    Status ? setLocationModal(false) : setLocationModal(true);
     dispatch({ type: LOCATION, payload: Status });
     setValue(Status);
   };
@@ -961,13 +959,13 @@ const Home = () => {
 
   return (
     <SafeAreaView edges={["top"]} style={styles?.container}>
-      <LocationModal
+      {/* <LocationModal
         isVisible={locationModal}
         close={setLocationModal}
         onPressDontAllow={setCityModal}
         onPressAllow={getCurrentLocation}
-      />
-      {!cityModal ? null : <CityModal LocationAllow={LocationAllow} />}
+      /> */}
+      {/* {!cityModal ? null : <CityModal LocationAllow={LocationAllow} />} */}
 
       <ScrollView
         stickyHeaderIndices={[1, 7]}

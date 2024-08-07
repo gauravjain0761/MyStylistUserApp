@@ -25,6 +25,7 @@ export const GET_PROFILE_DATA = "GET_PROFILE_DATA";
 export const SETLOCATION = "SETLOCATION";
 export const UPDATELOCATION = "UPDATE_LOCATION";
 export const COORD = "COORD";
+export const CURRENT_COORDS = "CURRENT_COORDS";
 
 //offers
 export const GET_ALL_OFFER = "GET_ALL_OFFER";

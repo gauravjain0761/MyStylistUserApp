@@ -41,6 +41,8 @@ const CustomDrawer = () => {
   const { navigate } = useNavigation();
   const { profileData } = useAppSelector((state) => state.profile);
 
+  console.log("profileData", profileData);
+
   const onPressName = () => {
     navigate(screenName.Profile);
   };
@@ -88,7 +90,7 @@ const CustomDrawer = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo.userId,
       },
       onSuccess: () => {
         dispatchNavigation(screenName.Login);

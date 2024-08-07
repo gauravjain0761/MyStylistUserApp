@@ -10,8 +10,8 @@ export const api = {
   send_verify_code: "user/user-login",
   verify_OTP: "user/verify-otp",
   city: "city/getAllCityNameForMobile",
-  refreshToken: "user/updateMobileToken",
-
+  refresh_device_token: "user/updateMobileToken",
+  auth_refresh_token: "user/refresh-token",
   // Home
   allServices: "service/getAllServices",
   allbanners: "banner/getAllBannerForExpert/Top/Home",
@@ -42,7 +42,6 @@ export const api = {
   location: "user/getUsersByLocation",
   updatelocation: "user/updateUserLocation",
   adduserAddress: "user/updateUserAddress",
-  edituserAddress: "user/updateUserAddress",
   searchAddress: "user/searchAddress",
 
   //Offers

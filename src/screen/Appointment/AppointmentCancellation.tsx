@@ -76,7 +76,7 @@ const AppointmentCancellation = () => {
       data: {
         reason_id: select,
         appointment_id: Appointment?._id,
-        user_id: userInfo?._id,
+        user_id: userInfo?.userId,
       },
       onSuccess: () => {
         setLoading(false);

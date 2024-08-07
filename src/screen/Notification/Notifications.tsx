@@ -23,7 +23,7 @@ const Notifications = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
         notification_type: item == "All" ? "" : item?.toLowerCase(),
       },
       onSuccess: (res: any) => {},

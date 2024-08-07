@@ -242,7 +242,7 @@ const Packages = ({ navigation }) => {
       quantity: 1,
     };
     let passData = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       expertId: selectPackages?.expert_id,
       services: [],
       offers: [],

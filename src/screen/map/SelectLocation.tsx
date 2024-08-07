@@ -34,11 +34,19 @@ import {
   getAsyncLocation,
   getAsyncUserInfo,
   setAsyncCoord,
+  setAsyncDefaultLatLng,
   setAsyncIsAddressed,
   setAsyncLocation,
 } from "../../helper/asyncStorage";
-import { SET_DEFAULT_ADDRESS } from "../../actions/dispatchTypes";
-import { requestLocationPermission } from "../../helper/locationHandler";
+import {
+  COORD,
+  CURRENT_COORDS,
+  SET_DEFAULT_ADDRESS,
+} from "../../actions/dispatchTypes";
+import {
+  getAddress,
+  requestLocationPermission,
+} from "../../helper/locationHandler";
 import { api } from "../../helper/apiConstants";
 
 const SelectLocation = ({}) => {
@@ -84,7 +92,7 @@ const SelectLocation = ({}) => {
     let obj = {
       isLoading: true,
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: (responce) => {
         // getLocation();
@@ -95,40 +103,41 @@ const SelectLocation = ({}) => {
     dispatch(getUserAddresses(obj));
   };
 
-  const onPressCurrentLocation = () => {
-    // @ts-ignore
-    navigate(screenName.ConfirmAddress);
+  const onPressCurrentLocation = async () => {
+    await requestLocationPermission(
+      async (response) => {
+        let data = {
+          latitude: response?.latitude,
+          longitude: response?.longitude,
+        };
+        await getAddress(
+          data,
+          async (response: any) => {
+            await setAsyncCoord(data);
+            dispatch({ type: COORD, payload: data });
+            dispatch({ type: CURRENT_COORDS, payload: data });
+            dispatch({
+              type: SET_DEFAULT_ADDRESS,
+              payload: response?.results[0]?.formatted_address,
+            });
+            goBack();
+          },
+          (err: any) => {
+            console.log("map", err);
+          }
+        );
+      },
+      (err) => {
+        console.log("err", err);
+      }
+    );
   };
 
   const onPressAddNew = () => {
-    setIsAddModal(true);
-    setType("Add");
-  };
-
-  const onPressLabel = (type: string) => setSelectType(type);
-
-  const getUserCurreentLocation = async () => {
-    if (!house.trim().length) {
-      infoToast("Enter House num");
-    } else if (!sector.trim().length) {
-      infoToast("Enter Sector");
-    } else if (!pincode.trim().length) {
-      infoToast("Enter Pincode");
-    } else {
-      await requestLocationPermission(
-        async (response) => {
-          let data = {
-            latitude: response?.latitude,
-            longitude: response?.longitude,
-          };
-          await setAsyncCoord(data);
-          fetchSuggestions(data);
-        },
-        (err) => {
-          console.log("err", err);
-        }
-      );
-    }
+    // setIsAddModal(true);
+    // setType("Add");
+    //@ts-ignore
+    navigate(screenName.ConfirmAddress);
   };
 
   const fetchSuggestions = async (coords) => {
@@ -146,136 +155,16 @@ const SelectLocation = ({}) => {
     }
   };
 
-  const onPressSave = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let coord = await getAsyncCoord();
-    let obj = {
-      data: {
-        userId: userInfo?._id,
-        addressData: {
-          addressType: selectType,
-          houseNumber: house,
-          sector: sector,
-          pinCode: pincode,
-          landmark: landmark,
-          location: {
-            type: "Point",
-            coordinates: [coord.latitude, coord.longitude],
-          },
-          isDefault: true,
-        },
-      },
-      onSuccess: () => {
-        setIsAddModal(false);
-        setHouse("");
-        setSector("");
-        setlandMark("");
-        setPincode("");
-        getList();
-      },
-      onFailure: (Err) => {
-        infoToast(Err.data.error);
-      },
-    };
-    if (!house.trim().length) {
-      infoToast("Enter House num");
-    } else if (!sector.trim().length) {
-      infoToast("Enter Sector");
-    } else if (!pincode.trim().length) {
-      infoToast("Enter Pincode");
-    }
-
-    let editobj = {
-      data: {
-        addressId: editData[0]?._id,
-        userId: userInfo?._id,
-        addressData: {
-          addressType: selectType,
-          houseNumber: house,
-          sector: sector,
-          pinCode: pincode,
-          landmark: landmark,
-          location: {
-            type: "Point",
-            coordinates: [coord?.latitude, coord?.longitude],
-          },
-          isDefault: true,
-        },
-      },
-      onSuccess: () => {
-        setIsAddModal(false);
-        setHouse("");
-        setSector("");
-        setlandMark("");
-        setPincode("");
-        getList();
-      },
-      onFailure: (Err) => {
-        getList();
-        infoToast(Err.data.error);
-      },
-    };
-    if (!house.trim().length) {
-      infoToast("Enter House num");
-    } else if (!sector.trim().length) {
-      infoToast("Enter Sector");
-    } else if (!pincode.trim().length) {
-      infoToast("Enter Pincode");
-    }
-
-    if (type === "Edit") {
-      dispatch(editAddress(editobj));
-    } else {
-      dispatch(addAddress(obj));
-    }
-    console.log(editData[0]?._id);
-  };
-
-  const EditAddress = async () => {
-    let userInfo = await getAsyncUserInfo();
-    let coord = await getAsyncCoord();
-    let obj = {
-      data: {
-        addressId: editData[0]?._id,
-        userId: userInfo?._id,
-        addressData: {
-          addressType: selectType,
-          houseNumber: house,
-          sector: sector,
-          pinCode: pincode,
-          landmark: landmark,
-          location: {
-            type: "Point",
-            coordinates: [coord?.latitude, coord?.longitude],
-          },
-          isDefault: true,
-        },
-      },
-      onSuccess: (res: any) => {
-        goBack();
-      },
-      onFailure: (error: any) => {
-        console.log("Errrr", error);
-      },
-    };
-    dispatch(editAddress(obj));
-  };
-
   const onPressEditItem = async (item: any) => {
-    setType("Edit");
-    setIsAddModal(true);
-    setHouse(item?.address?.houseNumber);
-    setSector(item?.address?.sector);
-    setPincode(item?.address?.pinCode);
-    setlandMark(item?.address?.landmark);
-    setSelectType(item?.address?.addressType);
+    // @ts-ignore
+    navigate(screenName.ConfirmAddress, { isEdit: true, item });
   };
 
   const onPressDeleteItem = async (item: any) => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo.userId,
         addressId: item?._id,
       },
       onSuccess: () => {
@@ -348,6 +237,10 @@ const SelectLocation = ({}) => {
                 onPressEdit={() => onPressEditItem(item)}
                 onPressDelete={() => onPressDeleteItem(item)}
                 onPressSetDefault={async () => {
+                  let data = {
+                    latitude: item?.address?.location?.coordinates?.[0],
+                    longitude: item?.address?.location?.coordinates?.[1],
+                  };
                   let address =
                     item?.address?.houseNumber + ", " + item?.address?.sector ||
                     "";
@@ -357,6 +250,7 @@ const SelectLocation = ({}) => {
                   });
                   await setAsyncIsAddressed(true);
                   await setAsyncLocation(address);
+                  await setAsyncDefaultLatLng(data);
                   goBack();
                 }}
               />
@@ -367,125 +261,6 @@ const SelectLocation = ({}) => {
       ) : (
         <Text style={styles.noDataTextStyle}>{"No Data found"}</Text>
       )}
-
-      <Modals
-        isIcon
-        visible={isAddModal}
-        close={setIsAddModal}
-        contain={
-          <View style={{ width: "100%" }}>
-            <Text style={styles.labelTextStyle}>
-              {strings["Save address as"]}
-            </Text>
-            <View style={styles.rowLabelContaier}>
-              <View style={styles.rowLabelStyle}>
-                <TouchableOpacity onPress={() => onPressLabel("Home")}>
-                  <ImageBackground
-                    resizeMode="contain"
-                    source={
-                      selectType === "Home"
-                        ? images.label_black
-                        : images.label_grey
-                    }
-                    style={styles.btnStyle}
-                  >
-                    <Text>{strings["Home"]}</Text>
-                  </ImageBackground>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.rowLabelStyle}>
-                <TouchableOpacity onPress={() => onPressLabel("Work")}>
-                  <ImageBackground
-                    resizeMode="contain"
-                    source={
-                      selectType === "Work"
-                        ? images.label_black
-                        : images.label_grey
-                    }
-                    style={styles.btnStyle}
-                  >
-                    <Text>{strings["Work"]}</Text>
-                  </ImageBackground>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.rowLabelStyle}>
-                <TouchableOpacity onPress={() => onPressLabel("Other")}>
-                  <ImageBackground
-                    resizeMode="contain"
-                    source={
-                      selectType === "Other"
-                        ? images.label_black
-                        : images.label_grey
-                    }
-                    style={styles.btnStyle}
-                  >
-                    <Text>{strings["Other"]}</Text>
-                  </ImageBackground>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View>
-              <Text style={styles.inputLabelTextStyle}>
-                {strings["House / Flat No."]}
-              </Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder={strings["Enter here"]}
-                placeholderTextColor={"#A7A7A7"}
-                value={house}
-                onChangeText={setHouse}
-              />
-            </View>
-            <View>
-              <Text style={styles.inputLabelTextStyle}>
-                {strings["Sector / Block"]}
-              </Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder={strings["Enter here"]}
-                placeholderTextColor={"#A7A7A7"}
-                value={sector}
-                onChangeText={setSector}
-              />
-            </View>
-            <View>
-              <Text style={styles.inputLabelTextStyle}>
-                {strings["Pincode"]}
-              </Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder={strings["Enter here"]}
-                placeholderTextColor={"#A7A7A7"}
-                value={pincode}
-                onChangeText={setPincode}
-              />
-            </View>
-            <View>
-              <Text style={styles.inputLabelTextStyle}>
-                {strings["Landmark (optional)"]}
-              </Text>
-              <TextInput
-                style={styles.inputStyle}
-                placeholder={strings["Enter here"]}
-                placeholderTextColor={"#A7A7A7"}
-                value={landmark}
-                onChangeText={setlandMark}
-              />
-            </View>
-            <TouchableOpacity onPress={onPressSave}>
-              <ImageBackground
-                resizeMode="contain"
-                style={styles.bookImgStyle}
-                source={images.book_button}
-              >
-                <Text style={styles.bookTextStyle}>
-                  {strings["Save address"]}
-                </Text>
-              </ImageBackground>
-            </TouchableOpacity>
-          </View>
-        }
-      />
     </View>
   );
 };

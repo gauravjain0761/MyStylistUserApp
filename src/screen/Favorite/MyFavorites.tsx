@@ -36,7 +36,7 @@ const MyFavorites = () => {
 
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: () => {
         setLoading(false);

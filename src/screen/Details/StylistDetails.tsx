@@ -133,7 +133,7 @@ const StylistDetails = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: (response: any) => {
         getCart();
@@ -159,7 +159,7 @@ const StylistDetails = () => {
 
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo.userId,
       },
       onSuccess: async (response: any) => {
         dispatch({ type: CART_DETAILS, payload: response?.data?.cart });

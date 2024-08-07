@@ -113,7 +113,7 @@ const Offers = ({ navigation }) => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         if (Object.values(response.data?.cart)?.length > 0) {
@@ -329,7 +329,7 @@ const Offers = ({ navigation }) => {
       ],
     };
     let passData = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       expertId: selectOffer?.expert_id,
       timeSlot: [
         {

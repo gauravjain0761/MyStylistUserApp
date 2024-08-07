@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const asyncKeys = {
   // clear in logout time
   token: "@token",
+  refreshToken: "@refreshToken",
   user_info: "@user_info",
   notifiaction_data: "@notifiaction_data",
   search_user_list: "@search_user_list",
@@ -13,6 +14,7 @@ export const asyncKeys = {
   cartId: "@cart_id",
   device_token: "@device_token",
   isAddressed: "@is_addressed",
+  defaultLatLng: "@default_lat_lng",
 };
 
 export const clearAsync = async () => {
@@ -25,7 +27,20 @@ export const clearAsync = async () => {
     asyncKeys.isAddressed,
     asyncKeys.device_token,
     asyncKeys.cartId,
+    asyncKeys.defaultLatLng,
+    asyncKeys.refreshToken,
   ]);
+};
+
+export const setAsyncRefreshToken = async (token: string) => {
+  await AsyncStorage.setItem(asyncKeys.refreshToken, JSON.stringify(token));
+};
+
+export const getAsyncRefreshToken = async () => {
+  const token = await AsyncStorage.getItem(asyncKeys.refreshToken);
+  if (token) {
+    return JSON.parse(token);
+  }
 };
 
 export const setAsyncToken = async (token: string) => {
@@ -140,6 +155,19 @@ export const getAsyncIsAddressed = async () => {
   const isAddressed = await AsyncStorage.getItem(asyncKeys.isAddressed);
   if (isAddressed) {
     return JSON.parse(isAddressed);
+  } else {
+    return null;
+  }
+};
+
+export const setAsyncDefaultLatLng = async (data: any) => {
+  await AsyncStorage.setItem(asyncKeys.defaultLatLng, JSON.stringify(data));
+};
+
+export const getAsyncDefaultLatLng = async () => {
+  const data = await AsyncStorage.getItem(asyncKeys.defaultLatLng);
+  if (data) {
+    return JSON.parse(data);
   } else {
     return null;
   }

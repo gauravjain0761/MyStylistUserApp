@@ -152,7 +152,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         if (Object.values(response.data?.cart)?.length > 0) {
@@ -228,7 +228,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
       ],
     };
     let passData = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       expertId: expertId?._id || actionId,
       timeSlot: Object?.values(timeSlot)?.length
         ? [timeSlot]
@@ -273,7 +273,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     let cartId = await getAsyncCartId();
     let userInfo = await getAsyncUserInfo();
     let passData = {
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       itemIds: [serviceId],
       cartId: cartId,
     };
@@ -344,7 +344,7 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
     let userInfo = await getAsyncUserInfo();
     let data = {
       cartId: cartDetails?.cart_id,
-      userId: userInfo?._id,
+      userId: userInfo?.userId,
       itemIds: Ids,
     };
     let obj = {

@@ -1,4 +1,5 @@
 import {
+  CURRENT_COORDS,
   GET_ADDRESS_LIST,
   GET_CHATS_PARTICIPANTS,
   LOCATION,
@@ -9,6 +10,7 @@ const initialState = {
   addressList: [],
   location: {},
   defaultAddress: "",
+  currentCoords: {},
 };
 
 export default function (state = initialState, action: any) {
@@ -21,6 +23,9 @@ export default function (state = initialState, action: any) {
     }
     case SET_DEFAULT_ADDRESS: {
       return { ...state, defaultAddress: action?.payload };
+    }
+    case CURRENT_COORDS: {
+      return { ...state, currentCoords: action?.payload };
     }
     default:
       return state;

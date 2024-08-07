@@ -6,6 +6,7 @@ import { makeAPIRequest } from "../helper/apiGlobal";
 import { POST, api } from "../helper/apiConstants";
 import {
   setAsyncGuest,
+  setAsyncRefreshToken,
   setAsyncToken,
   setAsyncUserInfo,
 } from "../helper/asyncStorage";
@@ -55,18 +56,17 @@ export const verifyOTP =
       .then(async (response: any) => {
         if (response.status === 200 || response.status === 201) {
           dispatch({ type: IS_LOADING, payload: false });
-          if (response.data.status) {
-            setAsyncToken(response?.data?.token);
-            setAsyncGuest(false);
-            setAsyncUserInfo(response?.data);
-            dispatch({
-              type: USER_INFO,
-              payload: { ...response?.data, isGuest: false },
-            });
-            if (request.onSuccess) request.onSuccess(response.data);
-          } else {
-            errorToast(response.data.message);
-          }
+          setAsyncToken(response?.data?.accessToken);
+          setAsyncRefreshToken(response?.data?.refreshToken);
+          setAsyncGuest(false);
+          setAsyncUserInfo(response?.data);
+          dispatch({
+            type: USER_INFO,
+            payload: { ...response?.data, isGuest: false },
+          });
+          if (request.onSuccess) request.onSuccess(response.data);
+        } else {
+          errorToast(response.data.message);
         }
       })
       .catch((error) => {
@@ -109,7 +109,7 @@ export const getrefreshToken =
     };
     return makeAPIRequest({
       method: POST,
-      url: api.refreshToken,
+      url: api.refresh_device_token,
       headers: headers,
       data: request.data,
     })

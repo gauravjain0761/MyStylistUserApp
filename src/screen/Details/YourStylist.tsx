@@ -220,7 +220,7 @@ const YourStylist = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo?._id,
+        userId: userInfo?.userId,
       },
       onSuccess: (response: any) => {
         response?.data.forEach((item) => {
@@ -252,7 +252,7 @@ const YourStylist = () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo._id,
+        userId: userInfo.userId,
       },
       onSuccess: async (response: any) => {
         await setAsyncCartId(response?.data?.cart?.cart_id);
@@ -348,7 +348,7 @@ const YourStylist = () => {
   const onPressLike = async () => {
     let userInfo = await getAsyncUserInfo();
     let data = {
-      userId: userInfo._id,
+      userId: userInfo.userId,
       expertId: id,
     };
     let obj = {

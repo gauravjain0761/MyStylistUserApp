@@ -56,14 +56,12 @@ const Chats = ({ navigation }) => {
   };
 
   const onPressItem = async (item: any) => {
-    console.log("item", item);
     const userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
         participants: [item?._id, userInfo?.userId],
       },
       onSuccess: async (res: any) => {
-        console.log("res::::", res);
         messagesReads(res?.roomId);
         navigation.navigate(screenName.ChatDetails, {
           roomId: res?.roomId,

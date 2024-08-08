@@ -36,6 +36,7 @@ export const getExpertAvailability =
       data: request.data,
     })
       .then((result: any) => {
+        console.log("HIT", result.status);
         if (result.status === 200) {
           if (request.onSuccess) request.onSuccess(result.data);
         }

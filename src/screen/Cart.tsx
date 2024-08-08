@@ -517,7 +517,7 @@ const Cart = () => {
                     </View>
                     <View style={styles.rowNameStyle}>
                       <CarIcon />
-                      <Text style={styles.locationTextStyle}>
+                      <Text numberOfLines={2} style={styles.locationTextStyle}>
                         {
                           cartDetails?.cart?.expertId?.addresses[0]?.address
                             ?.houseNumber
@@ -877,10 +877,12 @@ const styles = StyleSheet.create({
   },
   columStyle: {
     marginLeft: wp(15),
+    flex: 1,
   },
   rowNameStyle: {
     flexDirection: "row",
     alignItems: "center",
+    marginRight: wp(2),
   },
   startContainer: {
     backgroundColor: colors.green_1,

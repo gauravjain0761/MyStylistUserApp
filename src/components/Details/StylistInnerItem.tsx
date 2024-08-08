@@ -141,7 +141,11 @@ const StylistInnerItem = ({
   };
 
   const isInCart = (item) => {
-    return addtocart?.offers?.some((items) => items?.actionId == item?._id);
+    return addtocart?.offers?.some(
+      (items) =>
+        items?.actionId == item?._id &&
+        cartDetails?.expertId?._id == data?.expert_id
+    );
   };
 
   const onPressApply = async () => {
@@ -164,7 +168,7 @@ const StylistInnerItem = ({
       ],
     };
     let passData = {
-      userId: userInfo.userId,
+      userId: userInfo?.userId,
       expertId: data?.expert_id,
       timeSlot: [
         {

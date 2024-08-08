@@ -15,28 +15,24 @@ import { images } from "../../theme/icons";
 type props = {
   visible: any;
   close: any;
+  onPressApply?: (data?: any) => any;
+  onPressCancel?: (data?: any) => any;
 };
 
-const CostModal: FC<props> = ({ visible, close }) => {
+const CostModal: FC<props> = ({
+  visible,
+  close,
+  onPressApply,
+  onPressCancel,
+}) => {
   const [isModal, setIsModal] = useState(false);
-  const [cost, setCost] = useState("");
+  const [cost, setCost] = useState("Low");
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{strings.Cost}</Text>
       <View style={styles.cost_container}>
         <View style={styles.btn_conatiner}>
           <Text style={styles.btn}>{strings.Low_To_High}</Text>
-          <TouchableOpacity
-            style={styles.radio_btn}
-            onPress={() => setCost("High")}
-          >
-            {cost === "High" ? (
-              <View style={styles.radio_btn_icon}></View>
-            ) : null}
-          </TouchableOpacity>
-        </View>
-        <View style={styles.btn_conatiner}>
-          <Text style={styles.btn}>{strings.High_To_Low}</Text>
           <TouchableOpacity
             style={styles.radio_btn}
             onPress={() => setCost("Low")}
@@ -46,10 +42,25 @@ const CostModal: FC<props> = ({ visible, close }) => {
             ) : null}
           </TouchableOpacity>
         </View>
+        <View style={styles.btn_conatiner}>
+          <Text style={styles.btn}>{strings.High_To_Low}</Text>
+          <TouchableOpacity
+            style={styles.radio_btn}
+            onPress={() => setCost("High")}
+          >
+            {cost === "High" ? (
+              <View style={styles.radio_btn_icon}></View>
+            ) : null}
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.btn_container}>
-        <TouchableOpacity onPress={() => close(!visible)}>
+        <TouchableOpacity
+          onPress={() => {
+            close(!visible), onPressCancel();
+          }}
+        >
           <ImageBackground
             source={images?.grey_border_button}
             style={styles.btn_style}
@@ -59,7 +70,11 @@ const CostModal: FC<props> = ({ visible, close }) => {
           </ImageBackground>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => close(!visible)}>
+        <TouchableOpacity
+          onPress={() => {
+            close(!visible), onPressApply(cost);
+          }}
+        >
           <ImageBackground
             source={images?.blue_button}
             style={styles.btn_style}

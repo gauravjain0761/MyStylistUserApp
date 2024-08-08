@@ -170,7 +170,7 @@ const Home = () => {
       let userInfo = await getAsyncUserInfo();
       if (newToken) {
         let obj = {
-          userId: userInfo.userId,
+          userId: userInfo?.userId,
           deviceToken: newToken,
         };
         getRefreshToken(obj);
@@ -256,7 +256,7 @@ const Home = () => {
     let obj = {
       isLoading: false,
       data: {
-        userid: userInfo.userId,
+        userid: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         let userId = response?.user?._id;
@@ -318,10 +318,11 @@ const Home = () => {
           longitude: longitude,
           maxDistance: 50000,
           page: page,
-          limit: 5,
+          limit: 10,
           rating: rating,
           gender: gender,
           service_id: [],
+          ...filterData,
         };
         let obj = {
           isLoading: isLoading,
@@ -636,6 +637,7 @@ const Home = () => {
       getDatesList();
       setIsModal(!isModal);
     } else if (item == 2) {
+      onPressNearest();
     } else if (item == 3) {
       setCostmodal(!costmodal);
     } else if (item == 4) {
@@ -651,8 +653,9 @@ const Home = () => {
     if (id == 1) {
       dateClear(true);
     } else if (id == 2) {
+      clearNearest();
     } else if (id == 3) {
-      // setCostmodal(!costmodal);
+      clearconst();
     } else if (id == 4) {
       ratingClear(true);
       setRating(null);
@@ -660,6 +663,115 @@ const Home = () => {
       clearBestService();
     }
     clearFilter(id);
+  };
+
+  const onPressconst = async (datas: any) => {
+    let selected = cartSelectedService?.map((item) => item?._id);
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      service_id: selected,
+      costHight: datas == "High" ? true : false,
+      costlow: datas == "Low" ? true : false,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const clearconst = async () => {
+    let selected = cartSelectedService?.map((item) => item?._id);
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      service_id: selected,
+      costHight: false,
+      costlow: false,
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const onPressNearest = async () => {
+    let selected = cartSelectedService?.map((item) => item?._id);
+    let latlong = await getAsyncCoord();
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      service_id: selected,
+      nearest: {
+        NearestLatitude: latlong?.latitude,
+        NearestLongitude: latlong?.longitude,
+      },
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
+  };
+
+  const clearNearest = async () => {
+    let selected = cartSelectedService?.map((item) => item?._id);
+    setListLoader(true);
+    let data = {
+      ...filterData,
+      page: 1,
+      service_id: selected,
+      nearest: {
+        NearestLatitude: 0,
+        NearestLongitude: 0,
+      },
+    };
+    let obj = {
+      isLoading: isLoading,
+      data: data,
+      onSuccess: () => {
+        setFilterData(data);
+        setPage(page + 1);
+        setFooterLoading(false);
+        setListLoader(false);
+      },
+      onFailure: () => {
+        setListLoader(false);
+      },
+    };
+    dispatch(getUsersByLocation(obj));
   };
 
   const onPressDateItem = (index: any) => {
@@ -1353,7 +1465,22 @@ const Home = () => {
         <Modals
           visible={costmodal}
           close={setCostmodal}
-          contain={<CostModal visible={costmodal} close={setCostmodal} />}
+          contain={
+            <CostModal
+              onPressCancel={() => {
+                setTimeout(() => {
+                  clearFilter(3);
+                }, 600);
+              }}
+              onPressApply={(e: any) => {
+                setTimeout(() => {
+                  onPressconst(e);
+                }, 600);
+              }}
+              visible={costmodal}
+              close={setCostmodal}
+            />
+          }
         />
 
         <Modals

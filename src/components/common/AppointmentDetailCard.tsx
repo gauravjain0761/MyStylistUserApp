@@ -141,7 +141,7 @@ const AppointmentDetailCard = ({
             </View>
             <View style={styles.location_container}>
               <CarIcon />
-              <Text numberOfLines={1} style={styles.location_title}>
+              <Text numberOfLines={2} style={styles.location_title}>
                 {location}
               </Text>
             </View>
@@ -244,6 +244,7 @@ const styles = StyleSheet.create({
   },
   name_container: {
     alignItems: "center",
+    flex: 1,
   },
   barber_name: {
     ...commonFontStyle(fontFamily.bold, 28, colors.black),
@@ -264,7 +265,8 @@ const styles = StyleSheet.create({
     gap: wp(5),
     marginTop: hp(3),
     alignItems: "center",
-    alignSelf: "flex-start",
+    flexWrap: "wrap",
+    flex: 1,
   },
   location_title: {
     ...commonFontStyle(fontFamily.medium, 15, colors.grey_9),

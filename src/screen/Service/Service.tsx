@@ -63,7 +63,7 @@ const Service = () => {
           startDate: moment(data?.[0]?.date).format("YYYY-MM-DD"),
           endDate: moment(data?.[data?.length - 1]?.date).format("YYYY-MM-DD"),
           timeSlotDuration: 60,
-          expertId: userInfo.userId,
+          expertId: userInfo?.userId,
         },
         onSuccess: (response: any) => {
           setDates(convertToOutput(response));

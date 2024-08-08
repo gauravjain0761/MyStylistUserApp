@@ -81,7 +81,6 @@ const FeedbackModal = ({
             <TouchableOpacity
               style={styles.btn}
               onPress={() => {
-                close();
                 onPresssubmit(defaultrating, input);
               }}
             >

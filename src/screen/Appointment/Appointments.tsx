@@ -80,7 +80,8 @@ const Appointments = ({ navigation }) => {
     let obj = {
       isLoading: isLoading,
       data,
-      onSuccess: () => {
+      onSuccess: (res: any) => {
+        console.log("Appoiititit", data);
         setPage(page + 1);
         setFooterLoading(false);
         setLoading(false);
@@ -98,11 +99,12 @@ const Appointments = ({ navigation }) => {
     navigate(screenName.AppointmentDetails, {
       id: item?._id,
       status: selectIndex,
+      expertId: item?.expertDetails?._id,
     });
   };
 
   const loadMoreData = () => {
-    if (appointment?.length !== appointmentList?.totalAppointments) {
+    if (appointment?.length > 5) {
       setFooterLoading(true);
       getList(false);
     }
@@ -116,31 +118,6 @@ const Appointments = ({ navigation }) => {
   }, [refreshControl]);
 
   const debouncedLoadMoreData = debounce(loadMoreData, 500); // Adjust the delay as needed
-
-  // const onPressSubmit = async (rating: number, review: string) => {
-  //   let userInfo = await getAsyncUserInfo();
-  //   if (review.trim().length < 0) {
-  //     Alert.alert("Enter review");
-  //   } else if (rating < 1) {
-  //     Alert.alert("Enter rating");
-  //   } else {
-  //     let obj = {
-  //       data: {
-  //         expertId: appointmentItem?.expertId,
-  //         userId: userInfo?.userId,
-  //         star_rating: rating,
-  //         review: review,
-  //       },
-  //       onSuccess: () => {
-  //         navigate(screenName.Feedback);
-  //       },
-  //       onFailure: (Err) => {
-  //         console.log(Err);
-  //       },
-  //     };
-  //     dispatch(writeReview(obj));
-  //   }
-  // };
 
   useEffect(() => {
     getList(true);
@@ -242,18 +219,6 @@ const Appointments = ({ navigation }) => {
 
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
-
-      {/* <FeedbackModal
-        userImg={
-          appointmentList?.featured_image_url +
-          "/" +
-          appointmentItem?.expertDetails?.user_profile_images?.[0]?.image
-        }
-        expertInfo={appointmentItem?.expertDetails}
-        close={setIsModal}
-        visible={IsModal}
-        onPresssubmit={(rating, review) => onPressSubmit(rating, review)}
-      /> */}
     </View>
   );
 };

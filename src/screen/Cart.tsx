@@ -805,10 +805,7 @@ const Cart = () => {
           </ScrollView>
           <View style={styles.bottomStyle}>
             <TouchableOpacity
-              // onPress={() => setOrderPlaceSheet(!orderPlaceSheet)}
-              onPress={() => {
-                onPressBook();
-              }}
+              onPress={() => setOrderPlaceSheet(!orderPlaceSheet)}
             >
               <ImageBackground
                 resizeMode="contain"
@@ -883,6 +880,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginRight: wp(2),
+    flex: 1,
+    flexWrap: "wrap",
   },
   startContainer: {
     backgroundColor: colors.green_1,
@@ -910,6 +909,7 @@ const styles = StyleSheet.create({
   locationTextStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 14, colors.gery_2),
     marginHorizontal: wp(5),
+    flex: 1,
   },
   titleStyle: {
     ...commonFontStyle(fontFamily.semi_bold, 18, colors.black),

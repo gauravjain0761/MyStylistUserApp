@@ -159,7 +159,7 @@ const StylistDetails = () => {
 
     let obj = {
       data: {
-        userId: userInfo.userId,
+        userId: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         dispatch({ type: CART_DETAILS, payload: response?.data?.cart });

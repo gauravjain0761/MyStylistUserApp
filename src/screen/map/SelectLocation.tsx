@@ -164,7 +164,7 @@ const SelectLocation = ({}) => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo.userId,
+        userId: userInfo?.userId,
         addressId: item?._id,
       },
       onSuccess: () => {

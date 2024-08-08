@@ -68,7 +68,11 @@ const TimeSelector = ({
             return (
               <TouchableOpacity
                 disabled={
-                  item?.isPast || item?.status == "booked" ? true : false
+                  item?.isPast ||
+                  item?.status == "booked" ||
+                  item?.status == "unavailable"
+                    ? true
+                    : false
                 }
                 onPress={() => onPressTime(index)}
                 key={index}
@@ -80,13 +84,15 @@ const TimeSelector = ({
                     backgroundColor:
                       selectIndex === index
                         ? colors.green_opacity
-                        : item?.status == "booked"
+                        : item?.status == "booked" ||
+                          item?.status == "unavailable"
                         ? colors?.red
                         : colors.white,
                     borderColor:
                       selectIndex === index
                         ? colors.theme_1
-                        : item?.status == "booked"
+                        : item?.status == "booked" ||
+                          item?.status == "unavailable"
                         ? colors?.red
                         : colors.date_slot_border,
                   },

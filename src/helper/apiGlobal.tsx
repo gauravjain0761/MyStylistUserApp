@@ -36,7 +36,7 @@ export const makeAPIRequest = ({
       })
       .catch((error) => {
         console.log("error?.response?", error?.response);
-        errorToast(error?.response?.data?.message || "");
+        // errorToast(error?.response?.data?.message || "");
         reject(error);
       });
   });

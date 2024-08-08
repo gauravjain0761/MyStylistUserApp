@@ -22,7 +22,7 @@ const TermsCondition = () => {
 
       let obj = {
         // id: "661fa6f7f1b6729c33cd4bb1",
-        id: userInfo.userId,
+        id: userInfo?.userId,
       };
       dispatch(getTermsAndCondtition(obj));
     };

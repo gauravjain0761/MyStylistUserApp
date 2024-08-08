@@ -76,7 +76,7 @@ const Profile = () => {
     let obj = {
       isLoading: false,
       data: {
-        userid: userInfo.userId,
+        userid: userInfo?.userId,
       },
       onSuccess: () => {
         setLoading(false);

@@ -169,7 +169,7 @@ const AppointmentReschedule = () => {
   const onPressChat = () => {
     setLoading(true);
     let data = {
-      participants: [params?.id, profileData?.user?._id],
+      participants: [params?.expertId, profileData?.user?._id],
     };
     let obj = {
       data: data,
@@ -177,7 +177,7 @@ const AppointmentReschedule = () => {
         setLoading(false);
         let roomId = response?.roomId;
         let receiver = response?.participants?.filter(
-          (item: any) => item._id == params?.id
+          (item: any) => item._id == params?.expertId
         )?.[0];
         //@ts-ignore
         navigate(screenName.ChatDetails, {

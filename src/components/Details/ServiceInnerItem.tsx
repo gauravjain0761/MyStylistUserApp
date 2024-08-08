@@ -57,12 +57,16 @@ const ServiceInnerItem = ({
   onPressApply,
   onPressDelete,
 }: Props) => {
-  const { addtocart, selectedService } = useAppSelector((state) => state.cart);
+  const { addtocart, selectedService, cartDetails } = useAppSelector(
+    (state) => state.cart
+  );
 
   const isInCart = (item) => {
     return addtocart?.services?.some((items) =>
       items?.subServices?.some(
-        (service) => service?.subServiceId == item?.sub_service_id?._id
+        (service) =>
+          service?.subServiceId == item?.sub_service_id?._id &&
+          cartDetails?.expertId?._id == data?.expert_id
       )
     );
   };

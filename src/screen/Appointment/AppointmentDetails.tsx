@@ -26,6 +26,7 @@ import {
 } from "../../actions";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import FeedbackModal from "../../components/common/FeedbackModal";
+import { getAsyncUserInfo } from "../../helper/asyncStorage";
 
 type RowItemValueProps = {
   title: string;
@@ -43,7 +44,7 @@ const RowItemValue = ({ title, value }: RowItemValueProps) => {
 
 const AppointmentDetails = () => {
   const dispatch = useAppDispatch();
-  const { navigate } = useNavigation();
+  const { navigate, goBack, setParams } = useNavigation();
   const { params }: any = useRoute();
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
   const { profileData } = useAppSelector((state) => state.profile);
@@ -100,7 +101,8 @@ const AppointmentDetails = () => {
   const onPressFeedback = () => {
     setIsModal(!IsModal);
   };
-  const onPressSubmit = (rating: number, review: string) => {
+  const onPressSubmit = async (rating: number, review: string) => {
+    let userInfo = await getAsyncUserInfo();
     if (review.trim().length < 0) {
       Alert.alert("Enter review");
     } else if (rating < 1) {
@@ -108,13 +110,14 @@ const AppointmentDetails = () => {
     } else {
       let obj = {
         data: {
-          expertId: expertId?._id,
-          userId: userId?._id,
+          expertId: params?.expertId,
+          userId: userInfo?.userId,
           star_rating: rating,
           review: review,
         },
         onSuccess: () => {
           navigate(screenName.Feedback);
+          setIsModal(!IsModal);
         },
         onFailure: (Err) => {
           console.log(Err);
@@ -127,11 +130,17 @@ const AppointmentDetails = () => {
   return (
     <View style={styles.conatiner}>
       <BackHeader
-        onPressScreenBack={() =>
-          navigate(screenName?.tab_bar_name?.Appointment, {
-            type: params?.status,
-          })
-        }
+        onPressScreenBack={() => {
+          navigate(screenName.Home, {
+            screen: screenName.BottomTabBar,
+            params: {
+              screen: screenName.tab_bar_name.Appointment,
+              params: {
+                type: params?.status,
+              },
+            },
+          });
+        }}
         title={strings.Appointment_Detail}
       />
       <Loader visible={loading} />
@@ -235,7 +244,9 @@ const AppointmentDetails = () => {
         expertInfo={Appointment?.expertId}
         close={setIsModal}
         visible={IsModal}
-        onPresssubmit={(rating, review) => onPressSubmit(rating, review)}
+        onPresssubmit={(rating, review) => {
+          onPressSubmit(rating, review);
+        }}
       />
       {params?.status?.toLowerCase() == "upcoming" ? (
         <View style={styles.elevationStyle}>

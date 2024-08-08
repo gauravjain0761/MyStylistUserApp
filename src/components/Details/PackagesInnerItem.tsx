@@ -71,7 +71,7 @@ const PackagesInnerItem = ({
     let userInfo = await getAsyncUserInfo();
     let obj = {
       data: {
-        userId: userInfo.userId,
+        userId: userInfo?.userId,
       },
       onSuccess: async (response: any) => {
         await setAsyncCartId(response?.data?.cart?.cart_id);
@@ -154,7 +154,7 @@ const PackagesInnerItem = ({
       quantity: 1,
     };
     let passData = {
-      userId: userInfo.userId,
+      userId: userInfo?.userId,
       expertId: data?.expert_id,
       timeSlot: [
         {
@@ -180,7 +180,11 @@ const PackagesInnerItem = ({
   };
 
   const isInCart = (item: any) => {
-    return addtocart?.packages?.some((items) => items?.actionId == item?._id);
+    return addtocart?.packages?.some(
+      (items) =>
+        items?.actionId == item?._id &&
+        cartDetails?.expertId?._id == data?.expert_id
+    );
   };
 
   const timeCounter = (item: any) => {

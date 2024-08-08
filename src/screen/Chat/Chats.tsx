@@ -158,6 +158,9 @@ const Chats = ({ navigation }) => {
               <FlatList
                 style={styles.flatListStyle}
                 data={chatParticipants?.users || []}
+                ListFooterComponent={() => (
+                  <View style={{ marginTop: hp(12) }} />
+                )}
                 renderItem={({ item, index }) => {
                   return (
                     <MessageItem

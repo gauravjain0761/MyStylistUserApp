@@ -3,22 +3,14 @@ import {
   StyleSheet,
   View,
   Text,
-  Image,
   FlatList,
-  TouchableOpacity,
-  ImageBackground,
   ScrollView,
-  ActivityIndicator,
   RefreshControl,
   LayoutAnimation,
+  TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
-import {
-  BackHeader,
-  CarouselLoader,
-  Filter_Button,
-  SelectDateModal,
-} from "../../components";
-import { strings } from "../../helper/string";
+import { BackHeader, CarouselLoader, SelectDateModal } from "../../components";
 import {
   convertToOutput,
   generateWeekDates,
@@ -30,15 +22,10 @@ import {
 } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
-import { images } from "../../theme/icons";
 import { ArrowUp, StarIcon, VerifyIcon } from "../../theme/SvgIcon";
-import { offer_filter } from "../../helper/constunts";
 import { screenName } from "../../helper/routeNames";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import {
-  getAllOffersByLocation,
-  getCampaignExpert,
-} from "../../actions/offerAction";
+import { getAllOffersByLocation } from "../../actions/offerAction";
 import moment from "moment";
 import FastImage from "react-native-fast-image";
 import { getAsyncCoord, getAsyncUserInfo } from "../../helper/asyncStorage";
@@ -47,19 +34,9 @@ import {
   getCartlist,
   getMainServices,
   getUserItemDetails,
-  getUsersFavList,
 } from "../../actions";
 import { getExpertAvailability } from "../../actions/commonActions";
-import { LayoutAnimationConfig } from "react-native-reanimated";
 import { CART_DETAILS } from "../../actions/dispatchTypes";
-
-let offersOffList = [
-  { id: 1, off: "10%", discount: 10 },
-  { id: 2, off: "20%", discount: 20 },
-  { id: 3, off: "30%", discount: 30 },
-  { id: 4, off: "40%", discount: 40 },
-  { id: 5, off: "50%", discount: 50 },
-];
 
 const Offers = ({ navigation }) => {
   const dispatch = useAppDispatch();
@@ -84,6 +61,7 @@ const Offers = ({ navigation }) => {
   const [expanded, setExpanded] = useState({});
   const [visible, setVisible] = useState(false);
   const [selectOffer, setSelectOffer] = useState({});
+  const [isModalLoader, setIsModalLoader] = useState(true);
 
   useEffect(() => {
     getMainService();
@@ -182,6 +160,7 @@ const Offers = ({ navigation }) => {
   };
 
   async function getDatesList(ids?: any) {
+    setIsModalLoader(true);
     let data = generateWeekDates(5);
 
     let obj = {
@@ -205,8 +184,11 @@ const Offers = ({ navigation }) => {
           ?.filter((item) => item);
         setBookTime(time[indexes[0]]);
         setSelectedTime(indexes[0]);
+        setIsModalLoader(false);
       },
-      onFailure: () => {},
+      onFailure: () => {
+        setIsModalLoader(false);
+      },
     };
     dispatch(getExpertAvailability(obj));
   }
@@ -521,6 +503,7 @@ const Offers = ({ navigation }) => {
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
       <SelectDateModal
+        isModalLoader={isModalLoader}
         visible={visible}
         close={setVisible}
         dates={dates}

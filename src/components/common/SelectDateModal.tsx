@@ -7,6 +7,7 @@ import {
   ImageBackground,
   ViewStyle,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import Modals from "./Modals";
 import { hp, wp } from "../../helper/globalFunction";
@@ -33,9 +34,11 @@ type props = {
   DateItem_style?: ViewStyle;
   scrollEnabled?: boolean;
   timeselect_container?: ViewStyle;
+  isModalLoader?: boolean;
 };
 
 const SelectDateModal = ({
+  isModalLoader = false,
   visible,
   close,
   dates,
@@ -61,28 +64,36 @@ const SelectDateModal = ({
           {title && <Text style={styles.modalTitle}>{title}</Text>}
           <Text style={styles.select_date_title}>{strings.Select_Date}</Text>
           <View style={styles.week_container}>
-            <WeekDateSelector
-              list={dates}
-              onPressDate={(index) => onPressDateItem(index)}
-              containerStyle={styles.date_container}
-              itemStyle={[styles.item_style, DateItem_style]}
-              selectIndex={selectedDateIndex}
-              scrollEnabled={scrollEnabled}
-            />
+            {isModalLoader ? (
+              <ActivityIndicator />
+            ) : (
+              <WeekDateSelector
+                list={dates}
+                onPressDate={(index) => onPressDateItem(index)}
+                containerStyle={styles.date_container}
+                itemStyle={[styles.item_style, DateItem_style]}
+                selectIndex={selectedDateIndex}
+                scrollEnabled={scrollEnabled}
+              />
+            )}
           </View>
           <View style={styles.time_container}>
             <Text style={styles.time_title}>{strings.Select_Time}</Text>
             <ScrollView
               style={[styles.timeselect_container, timeselect_container]}
             >
-              <TimeSelector
-                data={times}
-                withOutDisable={withOutDisable}
-                onPressTime={(index) => onPressTimeItem(index)}
-                itemStyle={styles.timeslot_style}
-                selectIndex={selectedTimeIndex}
-                containerStyle={{ justifyContent: "space-between" }}
-              />
+              {isModalLoader ? (
+                <ActivityIndicator />
+              ) : (
+                <TimeSelector
+                  data={times}
+                  withOutDisable={withOutDisable}
+                  onPressTime={(index) => onPressTimeItem(index)}
+                  itemStyle={styles.timeslot_style}
+                  selectIndex={selectedTimeIndex}
+                  containerStyle={{ justifyContent: "space-between" }}
+                />
+              )}
             </ScrollView>
           </View>
           <Text style={styles.info}>

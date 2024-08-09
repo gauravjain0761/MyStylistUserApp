@@ -38,7 +38,7 @@ const BackHeader = ({
   onPressMenu,
   onPressScreenSearch,
   onPressDelete,
-  onPressScreenBack = () => {},
+  onPressScreenBack,
   containerStyle,
   titleTextStyle,
 }: Props) => {

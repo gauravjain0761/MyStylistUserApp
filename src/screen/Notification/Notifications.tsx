@@ -10,8 +10,11 @@ import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getNotificationList } from "../../actions/notificationAction";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { useNavigation } from "@react-navigation/native";
+import { screenName } from "../../helper/routeNames";
 
 const Notifications = () => {
+  const { navigate } = useNavigation();
   const [selectIndex, setSelectIndex] = useState("All");
   const { notification_list } = useAppSelector((state) => state?.notification);
   const dispatch = useAppDispatch();
@@ -75,7 +78,9 @@ const Notifications = () => {
         keyExtractor={(item, index) => index.toString()}
         ListEmptyComponent={
           <View style={styles.emptyComponent}>
-            <Text>{"No Notification Found"}</Text>
+            <Text style={styles.nodataTextStyle}>
+              {"No Notification Found"}
+            </Text>
           </View>
         }
         renderItem={({ item, index }) => {
@@ -84,6 +89,15 @@ const Notifications = () => {
               time={item?.createdAt}
               name={item?.userId?.name}
               message={item?.message}
+              image={item.userId?.user_profile_images?.[0]?.image}
+              onPress={() => {
+                const type = item?.notification_type;
+                if (type == "appointment") {
+                  navigate(screenName.AppointmentDetails, {
+                    id: item?.actionId,
+                  });
+                }
+              }}
             />
           );
         }}
@@ -139,6 +153,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
+  },
+  nodataTextStyle: {
+    ...commonFontStyle(fontFamily.regular, 15, colors.gery_1),
   },
 });
 

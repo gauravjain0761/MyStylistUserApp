@@ -76,6 +76,7 @@ const Packages = ({ navigation }) => {
   const [selectedTimeIndex, setSelectedTime] = useState(Number);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
+  const [isModalLoader, setIsModalLoader] = useState(true);
 
   useEffect(() => {
     getMainService();
@@ -95,6 +96,7 @@ const Packages = ({ navigation }) => {
   }, [mainService]);
 
   async function getDatesList(expert_id?: any) {
+    setIsModalLoader(true);
     let data = generateWeekDates(5);
 
     let obj = {
@@ -118,8 +120,11 @@ const Packages = ({ navigation }) => {
           ?.filter((item) => item);
         setBookTime(time[indexes[0]]);
         setSelectedTime(indexes[0]);
+        setIsModalLoader(false);
       },
-      onFailure: () => {},
+      onFailure: () => {
+        setIsModalLoader(false);
+      },
     };
     dispatch(getExpertAvailability(obj));
   }
@@ -415,6 +420,7 @@ const Packages = ({ navigation }) => {
         {footerLoading && <ActivityIndicator />}
       </ScrollView>
       <SelectDateModal
+        isModalLoader={isModalLoader}
         visible={visible}
         close={setVisible}
         dates={dates}

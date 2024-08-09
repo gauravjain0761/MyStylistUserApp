@@ -1,26 +1,34 @@
 import React, { FC } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { hp, wp } from "../../helper/globalFunction";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { colors } from "../../theme/color";
 import FastImage from "react-native-fast-image";
 import moment from "moment";
+import { api } from "../../helper/apiConstants";
 
 type card = {
   name?: string;
   time?: string;
   message?: string;
   image?: string;
+  onPress: () => void;
 };
 
-const NotificationItem: FC<card> = ({ image, message, name, time }) => {
+const NotificationItem: FC<card> = ({
+  image,
+  message,
+  name,
+  time,
+  onPress,
+}) => {
   return (
-    <View style={styles.conatiner}>
+    <TouchableOpacity onPress={onPress} style={styles.conatiner}>
       <FastImage
         resizeMode="cover"
         style={styles.imgStyle}
         source={{
-          uri: "https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg",
+          uri: api.IMG_URL + image,
           priority: FastImage.priority.high,
         }}
       />
@@ -31,7 +39,7 @@ const NotificationItem: FC<card> = ({ image, message, name, time }) => {
         </Text>
         <Text style={styles.timeTextStyle}>{moment(time).fromNow()}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -44,6 +52,7 @@ const styles = StyleSheet.create({
     height: wp(50),
     width: wp(50),
     borderRadius: wp(50 / 2),
+    backgroundColor: colors.gery_7,
   },
   textStyle: {
     ...commonFontStyle(fontFamily.regular, 16, colors.gery_6),

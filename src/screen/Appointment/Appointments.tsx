@@ -54,10 +54,7 @@ const Appointments = ({ navigation }) => {
   const [footerLoading, setFooterLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [refreshControl, setRefreshControle] = useState(false);
-  const { isLoading } = useAppSelector((state) => state.common);
 
-  const [IsModal, setIsModal] = useState(false);
-  const [appointmentItem, setAppointmentItem] = useState<any>({});
   const [selectIndex, setSelectIndex] = useState("Upcoming");
   const [loading, setLoading] = useState(false);
   const { params } = useRoute();

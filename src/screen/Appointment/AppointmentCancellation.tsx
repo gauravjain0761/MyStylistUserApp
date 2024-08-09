@@ -38,7 +38,9 @@ const AppointmentCancellation = () => {
       params: {
         reason_type: "Appointments",
       },
-      onSuccess: () => {},
+      onSuccess: (res: any) => {
+        console.log("ress", res);
+      },
       onFailure: () => {},
     };
     dispatch(getReasonList(obj));

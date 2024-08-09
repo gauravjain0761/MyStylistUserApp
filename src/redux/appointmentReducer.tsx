@@ -1,4 +1,5 @@
 import {
+  APPOINTMENT_TYPE,
   GET_APPOINTMENT,
   REASON_LIST,
   REVIEW_LIST,
@@ -16,6 +17,7 @@ const initialState = {
   appointmentReschedule: {},
   reviewData: {},
   reasonList: [],
+  appointmentType: "upcoming",
 };
 
 export default function (state = initialState, action: any) {
@@ -44,6 +46,9 @@ export default function (state = initialState, action: any) {
     }
     case REASON_LIST: {
       return { ...state, reasonList: action.payload };
+    }
+    case APPOINTMENT_TYPE: {
+      return { ...state, appointmentType: action?.payload };
     }
     default:
       return state;

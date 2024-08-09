@@ -90,7 +90,9 @@ const AppointmentConfirmCard = ({
           <View style={styles.location_container}>
             <CarIcon />
             <View style={{ flex: 1 }}>
-              <Text style={styles.location_title}>{location}</Text>
+              <Text numberOfLines={2} style={styles.location_title}>
+                {location}
+              </Text>
             </View>
           </View>
         </TouchableOpacity>

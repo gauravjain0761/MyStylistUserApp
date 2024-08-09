@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   ImageBackground,
   ScrollView,
@@ -12,7 +13,7 @@ import { AppointmentDetailsLoader, BackHeader, Loader } from "../../components";
 import { strings } from "../../helper/string";
 import AppointmentDetailCard from "../../components/common/AppointmentDetailCard";
 import { images } from "../../theme/icons";
-import { hp, wp } from "../../helper/globalFunction";
+import { hp, infoToast, wp } from "../../helper/globalFunction";
 import { colors } from "../../theme/color";
 import { commonFontStyle, fontFamily } from "../../theme/fonts";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -27,6 +28,7 @@ import {
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import FeedbackModal from "../../components/common/FeedbackModal";
 import { getAsyncUserInfo } from "../../helper/asyncStorage";
+import { APPOINTMENT_TYPE } from "../../actions/dispatchTypes";
 
 type RowItemValueProps = {
   title: string;
@@ -48,10 +50,11 @@ const AppointmentDetails = () => {
   const { params }: any = useRoute();
   const { appointmentDetails } = useAppSelector((state) => state.appointment);
   const { profileData } = useAppSelector((state) => state.profile);
-  const { Appointment } = appointmentDetails;
+  const { Appointment } = appointmentDetails || {};
   const { isLoading } = useAppSelector((state) => state.common);
   const [loading, setLoading] = useState(false);
   const [IsModal, setIsModal] = useState(false);
+  const { appointmentType } = useAppSelector((state) => state?.appointment);
 
   useEffect(() => {
     let obj = {
@@ -61,6 +64,8 @@ const AppointmentDetails = () => {
     };
     dispatch(getAppointmentDetails(obj));
   }, [params?.id]);
+
+  console.log("appointmentType", appointmentType);
 
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
@@ -108,6 +113,7 @@ const AppointmentDetails = () => {
     } else if (rating < 1) {
       Alert.alert("Enter rating");
     } else {
+      setLoading(true);
       let obj = {
         data: {
           expertId: params?.expertId,
@@ -116,10 +122,13 @@ const AppointmentDetails = () => {
           review: review,
         },
         onSuccess: () => {
+          setLoading(false);
           navigate(screenName.Feedback);
           setIsModal(!IsModal);
         },
         onFailure: (Err) => {
+          setLoading(false);
+          infoToast(Err?.data?.message);
           console.log(Err);
         },
       };
@@ -129,20 +138,7 @@ const AppointmentDetails = () => {
 
   return (
     <View style={styles.conatiner}>
-      <BackHeader
-        onPressScreenBack={() => {
-          navigate(screenName.Home, {
-            screen: screenName.BottomTabBar,
-            params: {
-              screen: screenName.tab_bar_name.Appointment,
-              params: {
-                type: params?.status,
-              },
-            },
-          });
-        }}
-        title={strings.Appointment_Detail}
-      />
+      <BackHeader title={strings.Appointment_Detail} />
       <Loader visible={loading} />
       <ScrollView>
         {isLoading ? (
@@ -284,7 +280,8 @@ const AppointmentDetails = () => {
             </ImageBackground>
           </TouchableOpacity>
         </View>
-      ) : params?.status?.toLowerCase() == "completed" ? (
+      ) : params?.status?.toLowerCase() == "completed" &&
+        appointmentDetails?.reviewGiven == "No" ? (
         <View style={styles.elevationStyle}>
           <TouchableOpacity
             style={{ flex: 1 }}

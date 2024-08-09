@@ -43,6 +43,7 @@ import moment from "moment";
 import debounce from "lodash.debounce"; // Import debounce from lodash library
 import FeedbackModal from "../../components/common/FeedbackModal";
 import { setIsLoading } from "../../actions/commonActions";
+import { APPOINTMENT_TYPE } from "../../actions/dispatchTypes";
 
 const Appointments = ({ navigation }) => {
   const { navigate } = useNavigation();
@@ -58,27 +59,29 @@ const Appointments = ({ navigation }) => {
   const [selectIndex, setSelectIndex] = useState("Upcoming");
   const [loading, setLoading] = useState(false);
   const { params } = useRoute();
+  const { appointmentType } = useAppSelector((state) => state?.appointment);
 
   useFocusEffect(
     useCallback(() => {
-      getList(true, params?.type, 1);
-    }, [])
+      getList(true, 1);
+    }, [appointmentType])
   );
 
-  async function getList(isLoading: boolean, type?: any, pages?: number) {
+  async function getList(isLoading: boolean, pages?: number) {
     setLoading(isLoading);
     const userInfo = await getAsyncUserInfo();
     let data = {
       userId: userInfo?.userId,
       page: pages ? pages : page,
       limit: 10,
-      status: type ? type?.toLowerCase() : selectIndex?.toLowerCase(),
+      status: appointmentType
+        ? appointmentType?.toLowerCase()
+        : selectIndex?.toLowerCase(),
     };
     let obj = {
       isLoading: isLoading,
       data,
       onSuccess: (res: any) => {
-        console.log("Appoiititit", data);
         setPage(page + 1);
         setFooterLoading(false);
         setLoading(false);
@@ -95,7 +98,6 @@ const Appointments = ({ navigation }) => {
     //@ts-ignore
     navigate(screenName.AppointmentDetails, {
       id: item?._id,
-      status: selectIndex,
       expertId: item?.expertDetails?._id,
     });
   };
@@ -121,6 +123,8 @@ const Appointments = ({ navigation }) => {
   }, [selectIndex]);
 
   const onPressFilter = (e: string) => {
+    console.log("e?.toLowerCase()", e?.toLowerCase());
+    dispatch({ type: APPOINTMENT_TYPE, payload: e?.toLowerCase() });
     setPage(1);
     setSelectIndex(e);
   };

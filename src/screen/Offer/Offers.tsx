@@ -467,8 +467,10 @@ const Offers = ({ navigation }) => {
                                           uri:
                                             allOffers?.featured_image_url +
                                             "/" +
-                                            item?.expertDetails
-                                              ?.user_profile_images?.[0].image,
+                                            item?.expertDetails?.user_profile_images?.filter(
+                                              (images) =>
+                                                images?.is_featured == 1
+                                            )?.[0]?.image,
                                           priority: FastImage.priority.high,
                                         }}
                                         style={styles.barberImgStyle}

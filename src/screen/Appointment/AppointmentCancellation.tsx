@@ -123,7 +123,9 @@ const AppointmentCancellation = () => {
             image={
               appointmentDetails?.featured_image_url +
               "/" +
-              Appointment?.expertId?.user_profile_images?.[0]?.image
+              Appointment?.expertId?.user_profile_images?.filter(
+                (images) => images?.is_featured == 1
+              )?.[0]?.image
             }
             date={moment(Appointment?.timeSlot?.[0]?.availableDate).format(
               "DD MMM,YYYY"

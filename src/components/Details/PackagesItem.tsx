@@ -27,9 +27,10 @@ type Props = {
   data: any;
   packages: any;
   index: number;
+  actionId?: string;
 };
 
-const PackagesItem = ({ packages, index }: Props) => {
+const PackagesItem = ({ packages, index, actionId }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
 

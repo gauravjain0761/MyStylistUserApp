@@ -123,7 +123,6 @@ const Appointments = ({ navigation }) => {
   }, [selectIndex]);
 
   const onPressFilter = (e: string) => {
-    console.log("e?.toLowerCase()", e?.toLowerCase());
     dispatch({ type: APPOINTMENT_TYPE, payload: e?.toLowerCase() });
     setPage(1);
     setSelectIndex(e);
@@ -178,6 +177,7 @@ const Appointments = ({ navigation }) => {
                 {appointment
                   ?.filter((i: any) => i?.status == selectIndex.toLowerCase())
                   .map((item, index) => {
+                    console.log("item item", item);
                     return (
                       <View key={index} style={styles.cards}>
                         <BarberAppointmentCard
@@ -201,7 +201,9 @@ const Appointments = ({ navigation }) => {
                           status={item?.status}
                           price={item?.totalAmount}
                           image={
-                            item.expertDetails.user_profile_images?.[0]?.image
+                            item.expertDetails.user_profile_images?.filter(
+                              (images) => images?.is_featured == 1
+                            )?.[0]?.image
                           }
                           onPress={() => onPressItem(item)}
                           imgBaseURL={appointmentList?.featured_image_url}

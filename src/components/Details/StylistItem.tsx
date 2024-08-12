@@ -34,9 +34,10 @@ type Props = {
   data: any;
   offers: any;
   index: number;
+  actionId?: string;
 };
 
-const StylistItem = ({ isOffer, data, offers, index }: Props) => {
+const StylistItem = ({ isOffer, data, offers, index, actionId }: Props) => {
   const [expanded, setExpanded] = useState(true);
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
 
@@ -127,6 +128,7 @@ const StylistItem = ({ isOffer, data, offers, index }: Props) => {
                 selectedTimeIndex={selectedTimeIndex}
                 selectedTime={bookTime}
                 selectedDate={date}
+                actionId={actionId}
               />
             );
           }}

@@ -65,7 +65,10 @@ const AppointmentDetails = () => {
     dispatch(getAppointmentDetails(obj));
   }, [params?.id]);
 
-  console.log("appointmentType", appointmentType);
+  console.log(
+    "appointmentDetails?.reviewGiven",
+    appointmentDetails?.reviewGiven
+  );
 
   const onPressCancel = () => {
     navigate(screenName.AppointmentCancellation);
@@ -93,7 +96,9 @@ const AppointmentDetails = () => {
           roomId: roomId,
           name: receiver?.name,
           receiverId: receiver?._id,
-          receiverImage: Appointment?.expertId?.user_profile_images?.[0]?.image,
+          receiverImage: Appointment?.expertId?.user_profile_images?.filter(
+            (images) => images?.is_featured == 1
+          )?.[0]?.image,
           device_token: receiver?.device_token,
         });
       },
@@ -155,7 +160,11 @@ const AppointmentDetails = () => {
                   ?.coordinates?.[1]
               }
               imgBaseURL={appointmentDetails?.featured_image_url}
-              userImg={Appointment?.expertId?.user_profile_images?.[0]?.image}
+              userImg={
+                Appointment?.expertId?.user_profile_images?.filter(
+                  (images) => images?.is_featured == 1
+                )?.[0]?.image
+              }
               name={Appointment?.expertId?.name}
               rating={Appointment?.expertId?.averageRating}
               jobs={Appointment?.expertId?.jobDone}
@@ -235,7 +244,9 @@ const AppointmentDetails = () => {
         userImg={
           appointmentDetails?.featured_image_url +
           "/" +
-          Appointment?.expertId?.user_profile_images?.[0]?.image
+          Appointment?.expertId?.user_profile_images?.filter(
+            (images) => images?.is_featured == 1
+          )?.[0]?.image
         }
         expertInfo={Appointment?.expertId}
         close={setIsModal}
@@ -244,7 +255,7 @@ const AppointmentDetails = () => {
           onPressSubmit(rating, review);
         }}
       />
-      {params?.status?.toLowerCase() == "upcoming" ? (
+      {appointmentType == "upcoming" ? (
         <View style={styles.elevationStyle}>
           <TouchableOpacity style={{ flex: 1 }} onPress={() => onPressCancel()}>
             <ImageBackground
@@ -268,7 +279,7 @@ const AppointmentDetails = () => {
             </ImageBackground>
           </TouchableOpacity>
         </View>
-      ) : params?.status?.toLowerCase() == "reschedule" ? (
+      ) : appointmentType == "reschedule" ? (
         <View style={styles.elevationStyle}>
           <TouchableOpacity style={{ flex: 1 }} onPress={() => onPressCancel()}>
             <ImageBackground
@@ -280,7 +291,7 @@ const AppointmentDetails = () => {
             </ImageBackground>
           </TouchableOpacity>
         </View>
-      ) : params?.status?.toLowerCase() == "completed" &&
+      ) : appointmentType == "completed" &&
         appointmentDetails?.reviewGiven == "No" ? (
         <View style={styles.elevationStyle}>
           <TouchableOpacity

@@ -96,7 +96,11 @@ const AppointmentConfirm = () => {
           <AppointmentConfirmCard
             name={expertId?.name}
             image={{
-              uri: api.IMG_URL + expertId?.user_profile_images[0]?.image,
+              uri:
+                api.IMG_URL +
+                expertId?.user_profile_images?.filter(
+                  (images) => images?.is_featured == 1
+                )?.[0]?.image,
               priority: FastImage.priority.high,
             }}
             jobs={expertId?.jobDone}
@@ -151,7 +155,9 @@ const AppointmentConfirm = () => {
         userImg={
           appointmentDetails?.featured_image_url +
           "/" +
-          Appointment?.expertId?.user_profile_images?.[0]?.image
+          Appointment?.expertId?.user_profile_images?.filter(
+            (images) => images?.is_featured == 1
+          )?.[0]?.image
         }
         expertInfo={Appointment?.expertId}
         close={setIsModal}

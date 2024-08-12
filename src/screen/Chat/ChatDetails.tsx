@@ -26,7 +26,10 @@ const ChatDetails = () => {
   const [userTyping, setUserTyping] = useState<boolean>(false);
   const [roomId, setRoomId] = useState("");
 
-  const { image } = profileData?.user?.user_profile_images?.[0] || [];
+  const image =
+    profileData?.user?.user_profile_images?.filter(
+      (images) => images?.is_featured == 1
+    )?.[0]?.image || [];
 
   const joinRoom = async (roomId: string) => {
     const userInfo = await getAsyncUserInfo();
@@ -63,7 +66,9 @@ const ChatDetails = () => {
         senderId: item.sender._id,
         content: item.content,
         time: item.timestamp,
-        image: item?.sender?.user_profile_images?.[0]?.image,
+        image: item?.sender?.user_profile_images?.filter(
+          (images) => images?.is_featured == 1
+        )?.[0]?.image,
       }));
       setMessageList(messages.reverse());
     });
@@ -123,7 +128,7 @@ const ChatDetails = () => {
         name={params?.name}
         isTyping={userTyping}
         status={userOnline ? "Online" : "Offline"}
-        image={params?.receiverImage || {}}
+        image={params?.receiverImage || image || {}}
       />
       <FlatList
         ref={flatListRef}

@@ -10,7 +10,10 @@ import { useAppSelector } from "../../redux/hooks";
 
 const SenderItem = ({ data }: any) => {
   const { profileData } = useAppSelector((state) => state?.profile);
-  const { image } = profileData?.user?.user_profile_images?.[0] || [];
+  const image =
+    profileData?.user?.user_profile_images?.filter(
+      (images) => images?.is_featured == 1
+    )?.[0]?.image || [];
   return (
     <View style={styles.conatiner}>
       <View style={styles.rowStyle}>

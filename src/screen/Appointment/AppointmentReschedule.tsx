@@ -201,7 +201,11 @@ const AppointmentReschedule = () => {
         <View style={styles.card}>
           <AppointmentDetailCard
             imgBaseURL={appointmentDetails?.featured_image_url}
-            userImg={Appointment?.expertId?.user_profile_images?.[0]?.image}
+            userImg={
+              Appointment?.expertId?.user_profile_images?.filter(
+                (images) => images?.is_featured == 1
+              )?.[0]?.imagee
+            }
             name={expertId?.name}
             rating={expertId?.averageRating}
             jobs={expertId?.jobDone}

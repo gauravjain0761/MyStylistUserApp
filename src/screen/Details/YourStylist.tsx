@@ -475,7 +475,9 @@ const YourStylist = () => {
                   uri:
                     itemDetails?.featured_image_url +
                     "/" +
-                    itemDetails?.user?.user_profile_images?.[0]?.image,
+                    itemDetails?.user?.user_profile_images?.filter(
+                      (images) => images?.is_featured == 1
+                    )?.[0]?.image,
                   priority: FastImage.priority.high,
                 }}
               />
@@ -633,6 +635,7 @@ const YourStylist = () => {
                           data={item}
                           offers={userOfferList}
                           index={index}
+                          actionId={itemDetails?.user?._id}
                         />
                       );
                     }}
@@ -661,6 +664,7 @@ const YourStylist = () => {
                           data={item}
                           packages={userPackageList}
                           index={index}
+                          actionId={itemDetails?.user?._id}
                         />
                       );
                     }}

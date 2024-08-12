@@ -56,6 +56,7 @@ const ServiceInnerItem = ({
   baseUrl,
   onPressApply,
   onPressDelete,
+  actionId,
 }: Props) => {
   const { addtocart, selectedService, cartDetails } = useAppSelector(
     (state) => state.cart
@@ -66,7 +67,8 @@ const ServiceInnerItem = ({
       items?.subServices?.some(
         (service) =>
           service?.subServiceId == item?.sub_service_id?._id &&
-          cartDetails?.expertId?._id == data?.expert_id
+          (cartDetails?.expertId?._id || cartDetails?.cart?.expertId?._id) ==
+            actionId
       )
     );
   };

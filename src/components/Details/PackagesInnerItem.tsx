@@ -46,6 +46,7 @@ type Props = {
   selectedTimeIndex?: number;
   selectedTime?: any;
   selectedDate?: any;
+  actionId?: string;
 };
 
 const PackagesInnerItem = ({
@@ -60,6 +61,7 @@ const PackagesInnerItem = ({
   selectedTimeIndex,
   selectedTime,
   times,
+  actionId,
 }: Props) => {
   const { addtocart, cartDetails } = useAppSelector((state) => state.cart);
   const [visible, setVisible] = useState(false);
@@ -183,7 +185,8 @@ const PackagesInnerItem = ({
     return addtocart?.packages?.some(
       (items) =>
         items?.actionId == item?._id &&
-        cartDetails?.expertId?._id == data?.expert_id
+        (cartDetails?.expertId?._id || cartDetails?.cart?.expertId?._id) ==
+          actionId
     );
   };
 

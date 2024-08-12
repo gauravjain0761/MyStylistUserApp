@@ -32,7 +32,12 @@ const RecentItem = ({
     <TouchableOpacity onPress={onPressItem} style={styles.container}>
       <FastImage
         source={{
-          uri: featured_image_url + "/" + data?.user_profile_images?.[0]?.image,
+          uri:
+            featured_image_url +
+            "/" +
+            data?.user_profile_images?.filter(
+              (images) => images?.is_featured == 1
+            )?.[0]?.image,
           priority: FastImage.priority.high,
         }}
         style={styles.imgStyle}

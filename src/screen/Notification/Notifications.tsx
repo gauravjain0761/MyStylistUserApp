@@ -89,7 +89,11 @@ const Notifications = () => {
               time={item?.createdAt}
               name={item?.userId?.name}
               message={item?.message}
-              image={item.userId?.user_profile_images?.[0]?.image}
+              image={
+                item.userId?.user_profile_images?.filter(
+                  (images) => images?.is_featured == 1
+                )?.[0]?.image
+              }
               onPress={() => {
                 const type = item?.notification_type;
                 if (type == "appointment") {

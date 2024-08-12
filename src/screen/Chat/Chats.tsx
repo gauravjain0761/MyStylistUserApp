@@ -41,6 +41,7 @@ const Chats = ({ navigation }) => {
 
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
+    console.log("userInfo?.userId", userInfo?.userId);
     let obj = {
       url: `${api?.chatParticipants}${userInfo?.userId}?role=expert`,
       onSuccess: () => {
@@ -67,7 +68,9 @@ const Chats = ({ navigation }) => {
           roomId: res?.roomId,
           name: item?.name,
           receiverId: item?._id,
-          receiverImage: item?.user_profile_images?.[0]?.image,
+          receiverImage: item?.user_profile_images?.filter(
+            (images) => images?.is_featured == 1
+          )?.[0]?.image,
           device_token: item?.device_token,
         });
       },

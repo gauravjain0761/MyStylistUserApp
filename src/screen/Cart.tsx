@@ -481,8 +481,9 @@ const Cart = () => {
                       uri:
                         cartDetails?.featured_image_url +
                         "/" +
-                        cartDetails?.cart?.expertId?.user_profile_images[0]
-                          ?.image,
+                        cartDetails?.cart?.expertId?.user_profile_images?.filter(
+                          (images) => images?.is_featured == 1
+                        )?.[0]?.image,
                       priority: FastImage.priority.high,
                     }}
                   />

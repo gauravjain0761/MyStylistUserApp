@@ -125,12 +125,16 @@ const CustomDrawer = () => {
             <FastImage
               resizeMode="cover"
               source={
-                profileData?.user?.user_profile_images?.[0]?.image
+                profileData?.user?.user_profile_images?.filter(
+                  (images) => images?.is_featured == 1
+                )?.[0]?.image
                   ? {
                       uri:
                         profileData?.featured_image_url +
                         "/" +
-                        profileData?.user?.user_profile_images?.[0]?.image,
+                        profileData?.user?.user_profile_images?.filter(
+                          (images) => images?.is_featured == 1
+                        )?.[0]?.image,
                       priority: FastImage.priority.high,
                     }
                   : images.profile

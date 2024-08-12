@@ -478,7 +478,9 @@ const StylistList = ({ navigation }) => {
                     uri:
                       userList?.featured_image_url +
                       "/" +
-                      item?.user_profile_images?.[0]?.image,
+                      item?.user_profile_images?.filter(
+                        (images) => images?.is_featured == 1
+                      )?.[0]?.image,
                   }}
                   style={styles.imgStyle}
                 />

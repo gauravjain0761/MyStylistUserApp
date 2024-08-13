@@ -58,28 +58,15 @@ const Offers = ({ navigation }) => {
   const [selectedTimeIndex, setSelectedTime] = useState(Number);
   const [date, setDate] = useState("");
   const [bookTime, setBookTime] = useState({});
-  const [expanded, setExpanded] = useState({});
   const [visible, setVisible] = useState(false);
   const [selectOffer, setSelectOffer] = useState({});
   const [isModalLoader, setIsModalLoader] = useState(true);
 
   useEffect(() => {
-    getMainService();
     getAllOfferData(true);
     getCart();
     getDatesList(null);
   }, []);
-
-  useEffect(() => {
-    setServices(mainService);
-    let selectedObj = {};
-    mainService?.forEach((service) => {
-      Object?.assign(selectedObj, { [service?.service_name]: true });
-    });
-    if (Object?.values(expanded)?.length == 0 && mainService?.length) {
-      setExpanded(selectedObj);
-    }
-  }, [mainService]);
 
   useEffect(() => {
     if (offerList.length > 0) {
@@ -120,7 +107,6 @@ const Offers = ({ navigation }) => {
 
   const getAllOfferData = async (isLoading: boolean) => {
     const response = await getAsyncCoord();
-
     let obj = {
       isLoading: isLoading,
       data: {
@@ -131,6 +117,7 @@ const Offers = ({ navigation }) => {
         longitude: response?.longitude,
       },
       onSuccess: (res: any) => {
+        getMainService(res?.offers);
         setPage(page + 1);
         setFooterLoading(false);
       },
@@ -271,22 +258,33 @@ const Offers = ({ navigation }) => {
     navigation.navigate(screenName.SearchStylistName);
   };
 
-  const getMainService = async () => {
+  const getMainService = async (listData: any) => {
     let obj = {
-      onSuccess: () => {},
-      onFailure: (Err) => {
-        console.log("Errr in Offer", err);
+      onSuccess: (response: any) => {
+        let data = [...response?.services];
+        data.map((item, index) => {
+          let offers = listData.filter(
+            (i, index) => i.service?.service_name === item.service_name
+          );
+          item.isExpand = true;
+          item.subService = offers || [];
+        });
+        setServices([...data]);
       },
+      onFailure: () => {},
     };
     dispatch(getMainServices(obj));
   };
 
   const onPressArrow = (item) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setExpanded((prevExpandedItems) => ({
-      ...prevExpandedItems,
-      [item.service_name]: !prevExpandedItems[item.service_name],
-    }));
+    let data = [...services];
+    data.map((e, index) => {
+      if (item._id === e._id) {
+        item.isExpand = !item.isExpand;
+      }
+    });
+    setServices([...data]);
   };
   const onPressApply = async () => {
     let userInfo = await getAsyncUserInfo();
@@ -411,93 +409,88 @@ const Offers = ({ navigation }) => {
           />
           <FlatList
             data={services}
-            renderItem={({ item: items }) => {
-              const isExpanded = expanded[items?.service_name];
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => {
               return (
-                <>
+                <View>
                   <TouchableOpacity
-                    onPress={() => onPressArrow(items)}
+                    key={index}
+                    onPress={() => onPressArrow(item)}
                     style={styles.headerRowStyle}
                   >
                     <Text style={styles.titleTextStyle}>
-                      {items?.service_name}
+                      {item?.service_name}
                     </Text>
                     <View
                       style={{
-                        transform: [{ rotate: isExpanded ? "0deg" : "180deg" }],
+                        transform: [
+                          { rotate: item?.isExpand ? "0deg" : "180deg" },
+                        ],
                       }}
                     >
                       <ArrowUp />
                     </View>
                   </TouchableOpacity>
-                  {isExpanded ? (
-                    isLoading ? (
-                      <CarouselLoader marginTop={hp(10)} height={hp(280)} />
-                    ) : (
-                      <>
-                        <FlatList
-                          style={{ marginTop: hp(15) }}
-                          data={offerList || []}
-                          keyExtractor={(item, index) => index.toString()}
-                          renderItem={({ item, index }) => {
-                            return items?.service_name ==
-                              item?.service?.service_name ? (
-                              <TouchableOpacity
-                                onPress={() => onPressOfferItem(item)}
-                                style={styles.offerContainer}
-                              >
-                                <FastImage
-                                  borderTopLeftRadius={10}
-                                  borderTopRightRadius={10}
-                                  source={{
-                                    uri:
-                                      allOffers?.featured_image_url +
-                                      "/" +
-                                      item?.featured_image,
-                                    priority: FastImage.priority.high,
-                                  }}
-                                  style={styles.manImgStyle}
-                                />
-                                <View style={styles.infoContainer}>
-                                  <View style={styles.offerFooter}>
-                                    <View style={styles.rowStyle}>
-                                      <FastImage
-                                        resizeMode="cover"
-                                        source={{
-                                          uri:
-                                            allOffers?.featured_image_url +
-                                            "/" +
-                                            item?.expertDetails?.user_profile_images?.filter(
-                                              (images) =>
-                                                images?.is_featured == 1
-                                            )?.[0]?.image,
-                                          priority: FastImage.priority.high,
-                                        }}
-                                        style={styles.barberImgStyle}
-                                      />
-                                      <Text style={styles.nameTextStyle}>
-                                        {item?.expertDetails?.name}
-                                      </Text>
-                                      <View style={styles.rating_badge}>
-                                        <Text style={styles.rating_title}>
-                                          {item?.expertDetails?.rating || 0}
-                                        </Text>
-                                        <StarIcon height={8} width={8} />
-                                      </View>
-                                    </View>
-                                    <Text style={styles?.distanceTitle}>
-                                      {`${item?.distance} km away`}
+                  {item?.isExpand ? (
+                    <FlatList
+                      style={{ marginTop: hp(15) }}
+                      data={item.subService}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => onPressOfferItem(item)}
+                            style={styles.offerContainer}
+                          >
+                            <FastImage
+                              borderTopLeftRadius={10}
+                              borderTopRightRadius={10}
+                              source={{
+                                uri:
+                                  allOffers?.featured_image_url +
+                                  "/" +
+                                  item?.featured_image,
+                                priority: FastImage.priority.high,
+                              }}
+                              style={styles.manImgStyle}
+                            />
+                            <View style={styles.infoContainer}>
+                              <View style={styles.offerFooter}>
+                                <View style={styles.rowStyle}>
+                                  <FastImage
+                                    resizeMode="cover"
+                                    source={{
+                                      uri:
+                                        allOffers?.featured_image_url +
+                                        "/" +
+                                        item?.expertDetails?.user_profile_images?.filter(
+                                          (images) => images?.is_featured == 1
+                                        )?.[0]?.image,
+                                      priority: FastImage.priority.high,
+                                    }}
+                                    style={styles.barberImgStyle}
+                                  />
+                                  <Text style={styles.nameTextStyle}>
+                                    {item?.expertDetails?.name}
+                                  </Text>
+                                  <View style={styles.rating_badge}>
+                                    <Text style={styles.rating_title}>
+                                      {item?.expertDetails?.rating || 0}
                                     </Text>
+                                    <StarIcon height={8} width={8} />
                                   </View>
                                 </View>
-                              </TouchableOpacity>
-                            ) : null;
-                          }}
-                        />
-                      </>
-                    )
+                                <Text style={styles?.distanceTitle}>
+                                  {`${item?.distance} km away`}
+                                </Text>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
                   ) : null}
-                </>
+                </View>
               );
             }}
           />

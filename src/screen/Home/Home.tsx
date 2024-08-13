@@ -62,6 +62,7 @@ import {
   IS_LOADING,
   LOCATION,
   SELECTED_SERVICE,
+  SET_DEFAULT_ADDRESS,
   TIME_SLOT,
 } from "../../actions/dispatchTypes";
 import {
@@ -71,13 +72,16 @@ import {
   getAsyncLocation,
   getAsyncUserInfo,
   setAsyncCoord,
+  setAsyncDefaultLatLng,
   setAsyncDevice_token,
+  setAsyncIsAddressed,
   setAsyncLocation,
 } from "../../helper/asyncStorage";
 import {
   getAllExpertReview,
   getCartlist,
   getrefreshToken,
+  getUserAddresses,
   getUserDetails,
 } from "../../actions";
 import FastImage from "react-native-fast-image";
@@ -91,6 +95,7 @@ import { debounce, lowerFirst } from "lodash";
 import ServiceSelect from "../../components/common/ServiceSelect";
 import { Dropdown_Down_Arrow } from "../../theme/SvgIcon";
 import messaging from "@react-native-firebase/messaging";
+import axios from "axios";
 
 const Home = () => {
   const { navigate } = useNavigation();
@@ -447,8 +452,72 @@ const Home = () => {
       },
       (err) => {
         console.log("Home Location API", err);
+        getAddressList();
       }
     );
+  };
+
+  const getWithOutLatLangLocation = async () => {
+    try {
+      const response = await axios.get(`https://ipapi.co/json/`);
+      if (response.data) {
+        let data = response?.data;
+        let coord = {
+          latitude: data.latitude,
+          longitude: data.longitude,
+        };
+        let address = data?.city + ", " + data?.region || "";
+        dispatch({
+          type: SET_DEFAULT_ADDRESS,
+          payload: address,
+        });
+        await setAsyncIsAddressed(false);
+        await setAsyncLocation(address);
+        await setAsyncCoord(coord);
+        dispatch({ type: COORD, payload: coord });
+        await GetStatus();
+      }
+    } catch (error) {
+      console.error("Unable to get location from IP:", error);
+    }
+  };
+
+  const getAddressList = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      isLoading: true,
+      data: {
+        userId: userInfo?.userId,
+      },
+      onSuccess: async (responce: any) => {
+        if (responce?.addresses?.length > 0) {
+          let data = responce?.addresses;
+          setLoading(false);
+          let item = data?.[0];
+          let coord = {
+            latitude: item?.address?.location?.coordinates?.[0],
+            longitude: item?.address?.location?.coordinates?.[1],
+          };
+          let address =
+            item?.address?.houseNumber + ", " + item?.address?.sector || "";
+          dispatch({
+            type: SET_DEFAULT_ADDRESS,
+            payload: address,
+          });
+          await setAsyncIsAddressed(true);
+          await setAsyncLocation(address);
+          await setAsyncDefaultLatLng(coord);
+          await setAsyncCoord(coord);
+          dispatch({ type: COORD, payload: coord });
+          await GetStatus();
+        } else {
+          setLoading(false);
+          getWithOutLatLangLocation();
+        }
+      },
+      onFailure: () => {},
+    };
+    dispatch(getUserAddresses(obj));
   };
 
   useFocusEffect(

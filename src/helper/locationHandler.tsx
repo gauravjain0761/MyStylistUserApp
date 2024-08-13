@@ -17,7 +17,7 @@ export const requestLocationPermission = async (
       },
       (error) => {
         if (onFail) onFail(error);
-        _openAppSetting();
+        // _openAppSetting();
       }
     );
   } else {
@@ -73,9 +73,9 @@ const getCurrentPosition = async (
       if (onFail) onFail(error);
     },
     {
-      enableHighAccuracy: false,
-      timeout: 20000,
-      maximumAge: 1000,
+      enableHighAccuracy: true,
+      timeout: 60000,
+      maximumAge: 10000,
     }
   );
 };

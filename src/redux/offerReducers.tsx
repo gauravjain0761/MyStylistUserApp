@@ -29,12 +29,12 @@ export default function (state = initialState, action: any) {
       };
     }
     case GET_OFFERS_LIST: {
-      if (action.payload?.page === 1) {
-        return { ...state, offerList: action.payload?.offers };
+      if (action?.payload?.page === 1) {
+        return { ...state, offerList: action?.payload?.offers };
       } else {
         return {
           ...state,
-          offerList: [...state.offerList, ...action.payload?.offers],
+          offerList: [...state.offerList, ...action?.payload?.offers],
         };
       }
     }

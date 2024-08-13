@@ -95,7 +95,7 @@ const Chats = ({ navigation }) => {
   };
 
   const onPressMenu = () => {
-    navigation.openDrawer();
+    navigation?.openDrawer();
   };
 
   const onRefresh = () => {

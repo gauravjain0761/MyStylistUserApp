@@ -56,7 +56,7 @@ export const getAllOffersByLocation =
       .then((result: any) => {
         if (result.status === 200) {
           dispatch({ type: IS_LOADING, payload: false });
-          let data = { ...result.data, page: request.data.page };
+          let data = { ...result?.data, page: request?.data?.page };
           dispatch({
             type: GET_ALL_OFFERS,
             payload: data,

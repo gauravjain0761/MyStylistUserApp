@@ -81,17 +81,6 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    setServices(mainService);
-    let selectedObj = {};
-    mainService?.forEach((service) => {
-      Object?.assign(selectedObj, { [service?.service_name]: true });
-    });
-    if (Object?.values(expanded)?.length == 0 && mainService?.length) {
-      setExpanded(selectedObj);
-    }
-  }, [mainService]);
-
-  useEffect(() => {
     async function getDatesList() {
       let data = generateWeekDates();
 
@@ -127,7 +116,17 @@ const ServiceItem = ({ data, service, index, baseUrl, actionId }: Props) => {
 
   const getMainService = async () => {
     let obj = {
-      onSuccess: () => {},
+      onSuccess: (response: any) => {
+        let data = [...response?.services];
+        let selectedObj = {};
+        data?.forEach((service) => {
+          Object?.assign(selectedObj, { [service?.service_name]: true });
+        });
+        if (Object?.values(expanded)?.length == 0 && data?.length) {
+          setExpanded(selectedObj);
+        }
+        setServices(data);
+      },
       onFailure: (Err) => {
         console.log("Errr in Offer", Err);
       },

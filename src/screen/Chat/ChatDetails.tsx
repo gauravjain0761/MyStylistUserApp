@@ -62,10 +62,10 @@ const ChatDetails = () => {
 
     socket.on("past_messages", (data: any) => {
       const messages = data?.messages.map((item: any) => ({
-        chatId: item.chat,
-        senderId: item.sender._id,
-        content: item.content,
-        time: item.timestamp,
+        chatId: item?.chat,
+        senderId: item?.sender?._id,
+        content: item?.content,
+        time: item?.timestamp,
         image: item?.sender?.user_profile_images?.filter(
           (images) => images?.is_featured == 1
         )?.[0]?.image,
@@ -107,6 +107,7 @@ const ChatDetails = () => {
       user_image: image,
       device_token: params?.device_token,
       name: profileData?.user?.name,
+      receiverId: params?.receiverId,
     };
 
     socket.emit("send_message", messageData);

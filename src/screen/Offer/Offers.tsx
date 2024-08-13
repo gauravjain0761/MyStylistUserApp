@@ -180,52 +180,6 @@ const Offers = ({ navigation }) => {
     dispatch(getExpertAvailability(obj));
   }
 
-  const onPressPercetageItem = (discount: number) => {
-    let obj = {
-      isLoading: true,
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 10,
-        page: 1,
-        discount: discount,
-        service_for: serviceType,
-      },
-      onSuccess: () => {
-        setDiscount(discount);
-        setPage(2);
-        setFooterLoading(false);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getAllOffersByLocation(obj));
-  };
-
-  const onPressFilterItem = (item: any) => {
-    if (item == 1) {
-      setIsModal(!isModal);
-    }
-  };
-
-  const nearest = (item) => {
-    let obj = {
-      isLoading: true,
-      data: {
-        city_id: profileData?.user?.city?.[0]?.city_id,
-        limit: 10,
-        page: 1,
-        discount: discount,
-        service_for: item.title,
-      },
-      onSuccess: () => {
-        setPage(2);
-        setServiceType(item.title);
-        setFooterLoading(false);
-      },
-      onFailure: () => {},
-    };
-    dispatch(getAllOffersByLocation(obj));
-  };
-
   const onPressCampaignItem = (item: any) => {
     navigation.navigate(screenName.NewYearOffer, {
       item: {

@@ -39,7 +39,11 @@ import {
   SelectDateModal,
   UserItemLoader,
 } from "../../components";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import { screenName } from "../../helper/routeNames";
 import CostModal from "../../components/common/CostModal";
 import CityModal from "../../components/common/CityModal";
@@ -256,6 +260,15 @@ const Home = () => {
     getDatesList();
   }, []);
 
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    if (isFocused) {
+      getCartData();
+      getUserList(true);
+      getCurrentLocation();
+    }
+  }, [isFocused]);
+
   const getProfileData = async () => {
     let userInfo = await getAsyncUserInfo();
     let obj = {
@@ -295,13 +308,6 @@ const Home = () => {
     };
     dispatch(getCartlist(obj));
   };
-
-  useFocusEffect(
-    useCallback(() => {
-      getCartData();
-      getUserList(true);
-    }, [])
-  );
 
   const getUserList = async (isLoading: boolean) => {
     let defaultLatLng = await getAsyncDefaultLatLng();

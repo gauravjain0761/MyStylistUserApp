@@ -79,21 +79,9 @@ const Packages = ({ navigation }) => {
   const [isModalLoader, setIsModalLoader] = useState(true);
 
   useEffect(() => {
-    getMainService();
     getPackagesData(true);
     getDatesList();
   }, []);
-
-  useEffect(() => {
-    setServices(mainService);
-    let selectedObj = {};
-    mainService?.forEach((service) => {
-      Object?.assign(selectedObj, { [service?.service_name]: true });
-    });
-    if (Object?.values(expanded)?.length == 0 && mainService?.length) {
-      setExpanded(selectedObj);
-    }
-  }, [mainService]);
 
   async function getDatesList(expert_id?: any) {
     setIsModalLoader(true);
@@ -141,7 +129,8 @@ const Packages = ({ navigation }) => {
         latitude: response?.latitude,
         longitude: response?.longitude,
       },
-      onSuccess: () => {
+      onSuccess: (response: any) => {
+        getMainService(response?.packages);
         setPage(page + 1);
         setFooterLoading(false);
       },
@@ -150,9 +139,19 @@ const Packages = ({ navigation }) => {
     dispatch(getAllPackageByLocation(obj));
   };
 
-  const getMainService = async () => {
+  const getMainService = async (listData: any) => {
     let obj = {
-      onSuccess: () => {},
+      onSuccess: (response: any) => {
+        let data = [...response?.services];
+        data.map((item, index) => {
+          let offers = listData.filter(
+            (i, index) => i.service?.service_name === item?.service_name
+          );
+          item.isExpand = true;
+          item.subService = offers || [];
+        });
+        setServices([...data]);
+      },
       onFailure: (Err) => {
         console.log("Errr in Offer", Err);
       },
@@ -198,10 +197,13 @@ const Packages = ({ navigation }) => {
 
   const onPressArrow = (item) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.linear);
-    setExpanded((prevExpandedItems) => ({
-      ...prevExpandedItems,
-      [item.service_name]: !prevExpandedItems[item.service_name],
-    }));
+    let data = [...services];
+    data.map((e, index) => {
+      if (item._id === e._id) {
+        item.isExpand = !item.isExpand;
+      }
+    });
+    setServices([...data]);
   };
 
   const onPressDateItem = (index: any) => {
@@ -326,8 +328,7 @@ const Packages = ({ navigation }) => {
           />
           <FlatList
             data={services}
-            renderItem={({ item: items, index }) => {
-              const isExpanded = expanded[items?.service_name];
+            renderItem={({ item, index }) => {
               return (
                 <>
                   <TouchableOpacity
@@ -335,84 +336,74 @@ const Packages = ({ navigation }) => {
                     style={styles.headerRowStyle}
                   >
                     <Text style={styles.titleTextStyle}>
-                      {items?.service_name}
+                      {item?.service_name}
                     </Text>
                     <View
                       style={{
-                        transform: [{ rotate: isExpanded ? "0deg" : "180deg" }],
+                        transform: [
+                          { rotate: item?.isExpand ? "0deg" : "180deg" },
+                        ],
                       }}
                     >
                       <ArrowUp />
                     </View>
                   </TouchableOpacity>
-                  {isExpanded ? (
-                    isLoading ? (
-                      <CarouselLoader marginTop={hp(10)} height={hp(280)} />
-                    ) : (
-                      <>
-                        <FlatList
-                          style={{ marginTop: hp(15) }}
-                          data={packageList || []}
-                          keyExtractor={(item, index) => index.toString()}
-                          renderItem={({ item, index }) => {
-                            return item?.service_name?.some(
-                              (item) =>
-                                item?.service_name == items?.service_name
-                            ) ? (
-                              <TouchableOpacity
-                                onPress={() => onPressItem(item)}
-                                style={styles.offerContainer}
-                              >
-                                <FastImage
-                                  borderTopLeftRadius={10}
-                                  borderTopRightRadius={10}
-                                  source={{
-                                    uri:
-                                      api?.IMG_URL_2 +
-                                      "/" +
-                                      item?.featured_image,
-                                    priority: FastImage.priority.high,
-                                  }}
-                                  style={styles.manImgStyle}
-                                />
-                                <View style={styles.infoContainer}>
-                                  <View style={styles.offerFooter}>
-                                    <View style={styles.rowStyle}>
-                                      <FastImage
-                                        resizeMode="cover"
-                                        source={{
-                                          uri:
-                                            api?.IMG_URL_2 +
-                                            "/" +
-                                            item?.expertDetails?.user_profile_images?.filter(
-                                              (images) =>
-                                                images?.is_featured == 1
-                                            )?.[0]?.image,
-                                          priority: FastImage.priority.high,
-                                        }}
-                                        style={styles.barberImgStyle}
-                                      />
-                                      <Text style={styles.nameTextStyle}>
-                                        {item?.expertDetails?.name}
-                                      </Text>
-                                      <View style={styles.rating_badge}>
-                                        <Text style={styles.rating_title}>
-                                          {item?.expertDetails?.rating || 0}
-                                        </Text>
-                                        <StarIcon height={9} width={9} />
-                                      </View>
-                                    </View>
-                                    <Text style={styles?.distanceTitle}>
-                                      {`${item?.distance} km away`}
+                  {item?.isExpand ? (
+                    <FlatList
+                      style={{ marginTop: hp(15) }}
+                      data={packageList || []}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => {
+                        return (
+                          <TouchableOpacity
+                            onPress={() => onPressItem(item)}
+                            style={styles.offerContainer}
+                          >
+                            <FastImage
+                              borderTopLeftRadius={10}
+                              borderTopRightRadius={10}
+                              source={{
+                                uri:
+                                  api?.IMG_URL_2 + "/" + item?.featured_image,
+                                priority: FastImage.priority.high,
+                              }}
+                              style={styles.manImgStyle}
+                            />
+                            <View style={styles.infoContainer}>
+                              <View style={styles.offerFooter}>
+                                <View style={styles.rowStyle}>
+                                  <FastImage
+                                    resizeMode="cover"
+                                    source={{
+                                      uri:
+                                        api?.IMG_URL_2 +
+                                        "/" +
+                                        item?.expertDetails?.user_profile_images?.filter(
+                                          (images) => images?.is_featured == 1
+                                        )?.[0]?.image,
+                                      priority: FastImage.priority.high,
+                                    }}
+                                    style={styles.barberImgStyle}
+                                  />
+                                  <Text style={styles.nameTextStyle}>
+                                    {item?.expertDetails?.name}
+                                  </Text>
+                                  <View style={styles.rating_badge}>
+                                    <Text style={styles.rating_title}>
+                                      {item?.expertDetails?.rating || 0}
                                     </Text>
+                                    <StarIcon height={9} width={9} />
                                   </View>
                                 </View>
-                              </TouchableOpacity>
-                            ) : null;
-                          }}
-                        />
-                      </>
-                    )
+                                <Text style={styles?.distanceTitle}>
+                                  {`${item?.distance} km away`}
+                                </Text>
+                              </View>
+                            </View>
+                          </TouchableOpacity>
+                        );
+                      }}
+                    />
                   ) : null}
                 </>
               );

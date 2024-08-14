@@ -107,8 +107,8 @@ const SelectLocation = ({}) => {
     await requestLocationPermission(
       async (response) => {
         let data = {
-          latitude: response?.latitude,
-          longitude: response?.longitude,
+          latitude: response?.latitude || 30.6776689,
+          longitude: response?.longitude || 76.7233438,
         };
         await getAddress(
           data,

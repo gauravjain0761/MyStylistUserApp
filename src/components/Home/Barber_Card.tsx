@@ -91,6 +91,15 @@ const Barber_Card = ({
   const hours = Math.floor(duration.asHours());
   const mins = duration.minutes();
 
+  const featuredIndex = images?.findIndex(
+    (image) => image?.is_featured === "1"
+  );
+
+  if (featuredIndex > -1) {
+    const [featuredImage] = images?.splice(featuredIndex, 1);
+    images?.unshift(featuredImage);
+  }
+
   return (
     <>
       {type == "with Service" ? (

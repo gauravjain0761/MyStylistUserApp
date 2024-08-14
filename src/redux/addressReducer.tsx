@@ -1,7 +1,6 @@
 import {
   CURRENT_COORDS,
   GET_ADDRESS_LIST,
-  GET_CHATS_PARTICIPANTS,
   LOCATION,
   SET_DEFAULT_ADDRESS,
 } from "../actions/dispatchTypes";

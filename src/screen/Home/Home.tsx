@@ -240,7 +240,6 @@ const Home = () => {
                   outputData.push(response.services.slice(i, i + 2));
                 }
                 setMaleData(outputData);
-                getUserList(true);
               },
               onFailure: () => {},
             };
@@ -263,9 +262,9 @@ const Home = () => {
   const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
-      getCartData();
       getUserList(true);
       getCurrentLocation();
+      getCartData();
     }
   }, [isFocused]);
 
@@ -310,12 +309,14 @@ const Home = () => {
   };
 
   const getUserList = async (isLoading: boolean) => {
+    console.log("getUserList getUserList");
     let defaultLatLng = await getAsyncDefaultLatLng();
     let coord = await getAsyncCoord();
     let isAddress = await getAsyncIsAddressed();
 
     await requestLocationPermission(
       async (response) => {
+        console.log("requestLocationPermission", response);
         let latitude =
           isAddress && Object.keys(currentCoords).length === 0
             ? defaultLatLng?.latitude || 30.6776689
@@ -344,7 +345,10 @@ const Home = () => {
             setFooterLoading(false);
             setLoading(false);
           },
-          onFailure: () => {},
+          onFailure: () => {
+            setFooterLoading(false);
+            setLoading(false);
+          },
         };
         dispatch(getUsersByLocation(obj));
       },
@@ -525,12 +529,6 @@ const Home = () => {
     };
     dispatch(getUserAddresses(obj));
   };
-
-  useFocusEffect(
-    useCallback(() => {
-      getCurrentLocation();
-    }, [])
-  );
 
   // const LocationAllow = async (city: any) => {
   //   city ? await setAsyncLocation(city) : await setAsyncLocation(null);

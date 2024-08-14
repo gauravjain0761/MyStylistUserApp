@@ -79,6 +79,7 @@ export const api = {
   chatParticipants: "user/getUsersList/",
   room: "user/createRoom",
   messagesReads: `chat/messagesRead`,
+  unreadlist: `user/getChatsWithUnreadMessagesFromOthers`,
 
   // Address
   userAddresses: "user/getUserAddresses",

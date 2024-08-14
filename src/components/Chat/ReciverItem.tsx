@@ -7,14 +7,14 @@ import FastImage from "react-native-fast-image";
 import { api } from "../../helper/apiConstants";
 import moment from "moment";
 
-const ReciverItem = ({ data }: any) => {
+const ReciverItem = ({ data, image }: any) => {
   return (
     <View style={styles.conatiner}>
       <View style={styles.rowStyle}>
         <FastImage
           style={styles.imgStyle}
           source={{
-            uri: api.IMG_URL + data?.image,
+            uri: api.IMG_URL + image,
             priority: FastImage.priority.high,
           }}
         />

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -21,27 +21,31 @@ import {
   createChatRoom,
   getChatParticipants,
   messagesRead,
+  unReadList,
 } from "../../actions";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { api } from "../../helper/apiConstants";
 
 const Chats = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const [type, setType] = useState("All");
-  const { chatParticipants } = useAppSelector((state) => state.chat);
+  const { chatParticipants, unreadList } = useAppSelector(
+    (state) => state.chat
+  );
   const [loading, setLoading] = useState(true);
   const [isRefresh, setIsRefresh] = useState(false);
+  const { profileData } = useAppSelector((state) => state?.profile);
 
-  useFocusEffect(
-    useCallback(() => {
-      setLoading(true);
-      getChatsUserList();
-    }, [])
-  );
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    setLoading(true);
+    getChatsUserList();
+    getUnreadList();
+  }, [isFocused]);
 
   const getChatsUserList = async () => {
     let userInfo = await getAsyncUserInfo();
-    console.log("userInfo?.userId", userInfo?.userId);
+
     let obj = {
       url: `${api?.chatParticipants}${userInfo?.userId}?role=expert`,
       onSuccess: () => {
@@ -54,6 +58,24 @@ const Chats = ({ navigation }) => {
       },
     };
     dispatch(getChatParticipants(obj));
+  };
+
+  const getUnreadList = async () => {
+    let userInfo = await getAsyncUserInfo();
+    let obj = {
+      data: {
+        currentUserId: userInfo?.userId,
+      },
+      onSuccess: () => {
+        setLoading(false);
+        setIsRefresh(false);
+      },
+      onFailure: () => {
+        setLoading(false);
+        setIsRefresh(false);
+      },
+    };
+    dispatch(unReadList(obj));
   };
 
   const onPressItem = async (item: any) => {
@@ -103,9 +125,7 @@ const Chats = ({ navigation }) => {
     getChatsUserList();
   };
 
-  const count = chatParticipants?.users?.filter(
-    (user) => user?.isRead == false
-  );
+  const count = unreadList?.users?.filter((user) => user?.isRead == false);
 
   return (
     <View style={styles.container}>
@@ -185,25 +205,21 @@ const Chats = ({ navigation }) => {
             ) : (
               <FlatList
                 style={styles.flatListStyle}
-                data={chatParticipants?.users || []}
+                data={unreadList?.users || []}
                 renderItem={({ item, index }) => {
                   return (
-                    !item?.isRead && (
-                      <MessageItem
-                        index={index}
-                        data={item}
-                        onPressItem={() => onPressItem(item)}
-                        unreadMessageCount={item?.unreadMessageCount}
-                      />
-                    )
+                    <MessageItem
+                      index={index}
+                      data={item}
+                      onPressItem={() => onPressItem(item)}
+                      unreadMessageCount={item?.unreadMessageCount}
+                    />
                   );
                 }}
                 keyExtractor={(item, index) => index.toString()}
-                ItemSeparatorComponent={(item) =>
-                  !item?.leadingItem?.isRead && (
-                    <View style={styles.lineStyle} />
-                  )
-                }
+                ItemSeparatorComponent={(item) => (
+                  <View style={styles.lineStyle} />
+                )}
                 refreshControl={
                   <RefreshControl
                     refreshing={isRefresh}

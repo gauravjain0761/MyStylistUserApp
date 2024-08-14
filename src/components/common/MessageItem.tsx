@@ -21,7 +21,9 @@ const MessageItem = ({
   data,
   unreadMessageCount = 0,
 }: props) => {
-  const { image } = data?.user_profile_images?.[0] || {};
+  const image =
+    data?.user_profile_images?.filter((images) => images?.is_featured == 1)?.[0]
+      ?.image || {};
   const { IMG_URL } = api;
   const { lastMessage, name, time, user_profile_images } = data || {};
   return (

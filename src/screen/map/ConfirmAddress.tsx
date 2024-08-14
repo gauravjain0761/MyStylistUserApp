@@ -60,8 +60,8 @@ const ConfirmAddress = ({ navigation }) => {
   useEffect(() => {
     if (params?.isEdit) {
       let data = {
-        latitude: params.item?.address?.location?.coordinates?.[0],
-        longitude: params.item?.address?.location?.coordinates?.[1],
+        latitude: params?.item?.address?.location?.coordinates?.[0],
+        longitude: params?.item?.address?.location?.coordinates?.[1],
       };
       setValue(params.item?.address?.sector);
       setPincode(params.item?.address?.pinCode);
@@ -80,8 +80,8 @@ const ConfirmAddress = ({ navigation }) => {
     await requestLocationPermission(
       async (response) => {
         let data = {
-          latitude: response?.latitude,
-          longitude: response?.longitude,
+          latitude: response?.latitude || 30.6776689,
+          longitude: response?.longitude || 76.7233438,
         };
         setcoords(data);
         animateToInitialRegion(data);
@@ -299,7 +299,9 @@ const ConfirmAddress = ({ navigation }) => {
               source={icons.marker_red}
               style={styles.markerStyle}
             />
-            <Text style={styles.boldTextStyle}>{value || location}</Text>
+            <Text style={styles.boldTextStyle}>
+              {value || Object.values(location)?.length ? location : ""}
+            </Text>
           </View>
         </View>
         <TouchableOpacity onPress={onPressEdit}>

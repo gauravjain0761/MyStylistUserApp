@@ -49,6 +49,7 @@ const ChatDetails = () => {
     setRoomId(params?.roomId);
 
     socket.on("receive_message", (data: any) => {
+      console.log("datatatata", data);
       setMessageList((prevList: any) => [data, ...prevList]);
     });
 
@@ -109,7 +110,6 @@ const ChatDetails = () => {
       name: profileData?.user?.name,
       receiverId: params?.receiverId,
     };
-
     socket.emit("send_message", messageData);
     setText("");
     scrollToBottom();
@@ -141,7 +141,12 @@ const ChatDetails = () => {
           if (item?.senderId === profileData?.user?._id) {
             return <SenderItem data={item} />;
           } else {
-            return <ReciverItem data={item} />;
+            return (
+              <ReciverItem
+                image={params?.receiverImage || image || {}}
+                data={item}
+              />
+            );
           }
         }}
       />

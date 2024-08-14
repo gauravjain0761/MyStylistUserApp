@@ -61,6 +61,7 @@ export const SELECTED_SERVICE = "SELECTED_SERVICE";
 
 // chat
 export const GET_CHATS_PARTICIPANTS = "GET_CHATS_PARTICIPANTS";
+export const GET_UNREAD_LIST = "GET_UNREAD_LIST";
 
 // Address
 export const GET_ADDRESS_LIST = "GET_ADDRESS_LIST";

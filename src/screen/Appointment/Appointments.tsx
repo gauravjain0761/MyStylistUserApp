@@ -177,7 +177,6 @@ const Appointments = ({ navigation }) => {
                 {appointment
                   ?.filter((i: any) => i?.status == selectIndex.toLowerCase())
                   .map((item, index) => {
-                    console.log("item item", item);
                     return (
                       <View key={index} style={styles.cards}>
                         <BarberAppointmentCard

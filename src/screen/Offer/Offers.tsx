@@ -65,7 +65,6 @@ const Offers = ({ navigation }) => {
   useEffect(() => {
     getAllOfferData(true);
     getCart();
-    getDatesList(null);
   }, []);
 
   useEffect(() => {

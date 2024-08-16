@@ -73,6 +73,7 @@ const StackNavigator: FC = () => {
 
   const CheckNotification = (remoteMessage: any) => {
     let type = remoteMessage?.data?.action;
+    console.log("tyepepepepepe", remoteMessage);
     if (type == "CHAT_DETAILS") {
       messagesReads(remoteMessage?.data?.value);
       navigation.navigate(screenName.ChatDetails, {
@@ -82,6 +83,12 @@ const StackNavigator: FC = () => {
         device_token: remoteMessage?.data?.device_token,
         name: remoteMessage?.data?.name,
       });
+    }
+    if (type == "appointment_notification") {
+      // navigation.navigate(screenName.tab_bar_name.Appointment, {
+      //   id: item?._id,
+      //   expertId: item?.expertDetails?._id,
+      // });
     }
   };
 

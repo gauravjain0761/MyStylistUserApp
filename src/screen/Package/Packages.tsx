@@ -143,12 +143,15 @@ const Packages = ({ navigation }) => {
     let obj = {
       onSuccess: (response: any) => {
         let data = [...response?.services];
-        data.map((item, index) => {
-          let offers = listData.filter(
-            (i, index) => i.service?.service_name === item?.service_name
-          );
+        data?.map((item, index) => {
+          let offerData = listData?.flatMap((i, index) => {
+            let datas = i?.service_name?.filter(
+              (e, index) => e?.service_name == item?.service_name
+            );
+            return datas?.length ? i : [];
+          });
           item.isExpand = true;
-          item.subService = offers || [];
+          item.subService = offerData || [];
         });
         setServices([...data]);
       },
@@ -351,7 +354,7 @@ const Packages = ({ navigation }) => {
                   {item?.isExpand ? (
                     <FlatList
                       style={{ marginTop: hp(15) }}
-                      data={packageList || []}
+                      data={item.subService || []}
                       keyExtractor={(item, index) => index.toString()}
                       renderItem={({ item, index }) => {
                         return (

@@ -39,6 +39,8 @@ import StylistDetails from "../screen/Details/StylistDetails";
 import StylistList from "../screen/Home/StylistList";
 import messaging from "@react-native-firebase/messaging";
 import { useNavigation } from "@react-navigation/native";
+import { messagesRead } from "../actions";
+import { useAppDispatch } from "../redux/hooks";
 
 const options: NativeStackNavigationOptions = {
   headerShown: false,
@@ -52,16 +54,17 @@ const StackNavigator: FC = () => {
   useEffect(() => {
     getNotification();
   }, []);
+  const dispatch = useAppDispatch();
 
   const getNotification = async () => {
     await messaging()
-      .getInitialNotification()
+      ?.getInitialNotification()
       .then(async (remoteMessage) => {
         if (remoteMessage) {
           CheckNotification(remoteMessage);
         }
       });
-    messaging().onNotificationOpenedApp((remoteMessage) => {
+    messaging()?.onNotificationOpenedApp((remoteMessage) => {
       if (remoteMessage) {
         CheckNotification(remoteMessage);
       }
@@ -71,6 +74,7 @@ const StackNavigator: FC = () => {
   const CheckNotification = (remoteMessage: any) => {
     let type = remoteMessage?.data?.action;
     if (type == "CHAT_DETAILS") {
+      messagesReads(remoteMessage?.data?.value);
       navigation.navigate(screenName.ChatDetails, {
         roomId: remoteMessage?.data?.value,
         receiverId: remoteMessage?.data?.user_id,
@@ -79,6 +83,19 @@ const StackNavigator: FC = () => {
         name: remoteMessage?.data?.name,
       });
     }
+  };
+
+  const messagesReads = async (item: string) => {
+    const obj = {
+      data: {
+        messageId: item,
+      },
+      onSuccess: (Res: any) => {},
+      onFailure: (Err: any) => {
+        console.log("Errr", Err);
+      },
+    };
+    dispatch(messagesRead(obj));
   };
 
   return (
